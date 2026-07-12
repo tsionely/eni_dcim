@@ -45,10 +45,10 @@
 
 **צ'קליסט Windows**
 
-1. הפעלת `FlightSim.exe`; ‏`python scripts/fly_once.py --mode listen --duration 60`.
-2. וידוא בקונסול: ‏HEARTBEAT, קצב פריימים, ‏timesync offset מתייצב.
-3. ‏`python scripts/frame_probe.py` ושמירת הפלט.
-4. העברת תיקיית ההקלטות + הלוגים חזרה למאגר.
+1. הפעלת `FlightSim.exe` והתחברות לחשבון הסימולטור; ‏`python scripts/phase1_check.py --duration 60` — סקריפט פסיבי (לא מחמש ולא שולח פקודות): מדפיס דוח קצבים (IMU/פריימים/race status), ‏timesync offset ופסיקת PASS/FAIL על כל קריטריוני הקבלה, ומקליט אוטומטית ל-`recordings/phase1-<ts>.aigprec`.
+2. אם עבר — ‏`python scripts/fly_once.py --max-duration 20` לטיסה מבוקרת ראשונה (arm + המראה + חיפוש).
+3. ‏`python scripts/frame_probe.py` ושמירת הפלט (`logs/frame_probe/probe.json`); עדכון `control.velocity.frame` ב-`config/params_default.json` לפי המסקנה.
+4. העברת תיקיית ההקלטות + הלוגים חזרה למאגר (commit או העלאה לסשן).
 
 ---
 

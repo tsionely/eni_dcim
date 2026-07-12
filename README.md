@@ -49,7 +49,8 @@ python -m aigp.main --mode mock --max-duration 30
 and the pilot endpoints at their defaults — MAVLink UDP 14550, video UDP 5600):
 
 ```bash
-python scripts/fly_once.py
+python scripts/phase1_check.py --duration 60   # passive connectivity check first
+python scripts/fly_once.py                     # then a real flight
 ```
 
 **Tuning campaign** (flight-to-flight improvement loop):

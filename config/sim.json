@@ -15,6 +15,7 @@
   },
   "logging": {
     "dir": "logs",
-    "save_frames_every_n": 0
+    "save_frames_every_n": 0,
+    "record_vision": true
   }
 }

@@ -23,6 +23,7 @@ from aigp.core.params import ParamSet
 from aigp.core.scheduler import RateLoop
 from aigp.io.mavlink_io import MavlinkIO
 from aigp.io.timesync import TimeSyncTX
+from aigp.io.udp_tap import STREAM_VISION, DatagramRecorder
 from aigp.io.vision_rx import VisionRX
 from aigp.control.attitude_rate_backend import AttitudeRateBackend
 from aigp.control.velocity_backend import VelocityBackend
@@ -47,6 +48,7 @@ class SimConfig:
     timesync_hz: float = 10.0
     log_dir: str = "logs"
     save_frames_every_n: int = 0
+    record_vision: bool = True
 
     @classmethod
     def load(cls, path: str | Path) -> "SimConfig":
@@ -63,6 +65,7 @@ class SimConfig:
             timesync_hz=raw["rates"].get("timesync_hz", 10.0),
             log_dir=raw["logging"].get("dir", "logs"),
             save_frames_every_n=raw["logging"].get("save_frames_every_n", 0),
+            record_vision=raw["logging"].get("record_vision", True),
         )
 
 
@@ -114,6 +117,12 @@ class App:
         logger.start()
         self.bus.set_tap(logger.tap)
 
+        # Raw vision recording per flight -> replayable regression fixture.
+        recorder = None
+        if self.cfg.record_vision:
+            recorder = DatagramRecorder(flight_dir / "vision.aigprec")
+            self.vision.raw_sink = recorder.sink_for(STREAM_VISION)
+
         detector = HsvGateDetector(params)
         perception = PerceptionAgent(self.bus, detector)
         estimator = StateEstimator(params)
@@ -129,6 +138,9 @@ class App:
             perception.stop()
             self.bus.set_tap(None)
             logger.stop(timeout=5.0)
+            if recorder is not None:
+                self.vision.raw_sink = None
+                recorder.close()
 
         result["flight_id"] = flight_id
         result["log_dir"] = str(flight_dir)
