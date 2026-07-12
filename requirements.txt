@@ -1,0 +1,12 @@
+# Comms
+pymavlink
+
+# Vision
+opencv-python
+numpy
+
+# Analysis / debug
+matplotlib
+
+# Testing
+pytest

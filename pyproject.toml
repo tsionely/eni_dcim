@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aigp-pilot"
+version = "0.1.0"
+description = "Autonomous drone racing AI pilot for the AI Grand Prix (AI-GP) competition"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pymavlink",
+    "opencv-python",
+    "numpy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+aigp = "aigp.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]

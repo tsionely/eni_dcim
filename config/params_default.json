@@ -1,0 +1,67 @@
+{
+  "control": {
+    "backend": "velocity",
+    "velocity": {
+      "frame": "body",
+      "max_speed_mps": 4.0,
+      "max_climb_mps": 2.0,
+      "slew_mps2": 6.0,
+      "yaw_rate_max_rps": 1.5
+    },
+    "att_rate": {
+      "vel_p": 0.35,
+      "vel_i": 0.05,
+      "vel_d": 0.0,
+      "tilt_max_rad": 0.6,
+      "rate_p": 8.0,
+      "rate_i": 0.0,
+      "rate_d": 0.05,
+      "hover_thrust": 0.5
+    }
+  },
+  "planner": {
+    "takeoff": { "climb_mps": 1.0, "duration_s": 1.5 },
+    "search": { "yaw_rate_rps": 0.6, "climb_mps": 0.0 },
+    "approach": {
+      "speed_far_mps": 3.0,
+      "speed_near_mps": 1.5,
+      "near_distance_m": 4.0,
+      "center_gain": 1.2,
+      "yaw_center_gain": 1.5
+    },
+    "commit": { "distance_m": 2.0, "duration_s": 1.2, "speed_mps": 2.5 },
+    "recover": { "brake_s": 0.8 }
+  },
+  "perception": {
+    "camera": { "fov_deg": 90.0 },
+    "gate": { "width_m": 1.6, "height_m": 1.6 },
+    "detector": {
+      "threshold": 180,
+      "min_area_frac": 0.0008,
+      "max_area_frac": 0.7,
+      "approx_eps_frac": 0.04,
+      "min_confidence": 0.3
+    }
+  },
+  "estimation": {
+    "mahony_kp": 2.0,
+    "vel_leak": 0.2,
+    "vision_blend": 0.6,
+    "gate_rel_max_age_s": 1.5
+  },
+  "safety": {
+    "imu_stale_s": 0.05,
+    "frame_stale_s": 0.5,
+    "loop_overrun_abort_frac": 0.2,
+    "env_collision_abort_threat": 2,
+    "max_gate_clips": 10,
+    "flight_timeout_s": 120.0
+  },
+  "learning": {
+    "score": {
+      "gate_weight": 100.0,
+      "collision_penalty": 20.0,
+      "abort_penalty": 200.0
+    }
+  }
+}
