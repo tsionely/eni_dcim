@@ -1,0 +1,55 @@
+===== Phase 1c topology_probe — sim state: IDLE at qualifier (NOT racing) 2026-07-13T22:48:21.6338791+03:00 =====
+A) legacy udpin:14550 � waiting for heartbeat (10s)...
+
+--- legacy 14550 ---
+  HIGHRES_IMU                     924  (115.5 Hz)
+  ACTUATOR_OUTPUT_STATUS          750  (93.8 Hz)
+  HEARTBEAT                        79  (9.9 Hz)
+  ENCAPSULATED_DATA                32  (4.0 Hz)
+  heartbeat sources (sys, comp, armed): [(1, 200, False)]
+  IMU liveness: gyro_z mean=-1.025 std=0.000000  accel_z mean=-23.46
+  -> IMU values FROZEN (constant)
+
+B) udpout to sim:14560 � sending our heartbeat, waiting (10s)...
+  no response on 14560
+
+--- vision poke: hello -> 127.0.0.1:5601, listening on local 5600 ---
+  received 0 datagrams
+
+=== summary ===
+  14550 alive: no
+  14560 alive: no
+  5601 vision: no
+
+Recommended config/sim.json changes (for the cloud agent):
+  none of the hypotheses confirmed � capture a fuller netstat (-anob as admin) and sim-side logs
+EXITCODE=0
+
+
+===== Phase 1c ad-hoc race-state check — starting an ACTIVE RACE via GUI automation 2026-07-13T22:51:33.2878320+03:00 =====
+launched elyatim race starter (background); waiting 12s for race to become active...
+--- sockets DURING race (14550/14560/5601 owners + remote) ---
+udp 14560 <- PID 49312 DCGame-Win64-Shipping
+udp 14550 <- PID 57128 python
+udp 5601 <- PID 49312 DCGame-Win64-Shipping
+udp 5600 <- PID 57128 python
+--- running ad-hoc 14560/5601 probe during race ---
+== ad-hoc race-state probe (14560 mavlink-ish + 5601 vision), 8s each ==
+  port 14560: received 0 datagrams
+  port 5601: received 0 datagrams
+== result: 14560_reply=False  5601_reply=False ==
+PROBE_EXIT=0
+--- elyatim still running? ---
+python procs: 0
+
+
+===== Phase 1c race-state probe v2 (proper MAVLink heartbeat to 14560) 2026-07-13T22:52:57.6585423+03:00 =====
+launched race; waiting 10s...
+--- sockets during race ---
+udp 14560 <- PID 49312 DCGame-Win64-Shipping
+udp 5601 <- PID 49312 DCGame-Win64-Shipping
+== race-state probe v2: proper MAVLink heartbeat to sim:14560 + vision poke 5601 ==
+  14560: no response to proper MAVLink heartbeat
+  5601: received 0 datagrams
+== result v2: 14560_reply=False  5601_reply=False ==
+PROBE_EXIT=0
