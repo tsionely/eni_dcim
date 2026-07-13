@@ -12,11 +12,13 @@ def detector():
     return HsvGateDetector(ParamSet.load("config/params_default.json"))
 
 
-def render_gate_ring(w=640, h=360, cx=320, cy=180, size=120, thickness=16):
+def render_gate_ring(w=640, h=360, cx=320, cy=180, size=120, thickness=16,
+                     color=(30, 30, 230)):
+    """Red gate ring on a dark background — matches the real Round-1 scene."""
     img = np.full((h, w, 3), 40, dtype=np.uint8)
     half = size // 2
     cv2.rectangle(img, (cx - half - thickness, cy - half - thickness),
-                  (cx + half + thickness, cy + half + thickness), (255, 255, 255), -1)
+                  (cx + half + thickness, cy + half + thickness), color, -1)
     cv2.rectangle(img, (cx - half, cy - half), (cx + half, cy + half), (40, 40, 40), -1)
     return img
 
@@ -48,6 +50,18 @@ def test_noise_frame(detector):
     rng = np.random.default_rng(0)
     img = rng.integers(0, 90, (360, 640, 3), dtype=np.uint8)  # dark noise
     assert detector.detect(CameraFrame(1, 0, img)) is None
+
+
+def test_picks_largest_of_multiple_gates(detector):
+    # Two gates like the real track: near (large) and far (small).
+    img = render_gate_ring(cx=320, cy=170, size=100)
+    small = render_gate_ring(cx=340, cy=200, size=24, thickness=5)
+    mask = small.sum(axis=2) > 200
+    img[mask] = small[mask]
+    det = detector.detect(CameraFrame(1, 0, img))
+    assert det is not None
+    assert abs(det.center_px[0] - 320) < 10
+    assert abs(det.center_px[1] - 170) < 10
 
 
 def test_distance_scales_inversely_with_size(detector):

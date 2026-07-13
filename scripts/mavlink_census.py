@@ -12,6 +12,7 @@ Also breaks ENCAPSULATED_DATA down by its embedded data_type id.
 from __future__ import annotations
 
 import argparse
+import math
 import statistics
 import sys
 import time
@@ -78,16 +79,23 @@ def main() -> int:
         n = counts[key]
         live_fields = []
         frozen_fields = []
+        nan_fields = []
         for name, vals in fields[key].items():
-            if len(vals) < 10:
+            finite = [v for v in vals if math.isfinite(v)]
+            if len(finite) < len(vals):
+                nan_fields.append(name)
                 continue
-            (live_fields if statistics.pstdev(vals) > 1e-5 else frozen_fields).append(name)
+            if len(finite) < 10:
+                continue
+            (live_fields if statistics.pstdev(finite) > 1e-5 else frozen_fields).append(name)
         print(f"{mtype:32s} src=({src_sys},{src_comp})  {n:6d}  {n / window:7.1f} Hz",
               flush=True)
         if live_fields:
             print(f"    LIVE fields:   {', '.join(sorted(live_fields))}", flush=True)
         if frozen_fields:
             print(f"    frozen fields: {', '.join(sorted(frozen_fields))}", flush=True)
+        if nan_fields:
+            print(f"    nan/inf:       {', '.join(sorted(nan_fields))}", flush=True)
     if encap_types:
         print(f"\nENCAPSULATED_DATA payload type ids: "
               f"{dict(sorted(encap_types.items()))}", flush=True)

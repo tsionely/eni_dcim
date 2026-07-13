@@ -371,7 +371,8 @@ class MockSim:
             if all(p is not None for p in outer) and all(p is not None for p in inner):
                 outer_px = np.array(outer, dtype=np.int32)
                 inner_px = np.array(inner, dtype=np.int32)
-                cv2.fillPoly(img, [outer_px], (255, 255, 255))
+                # Red ring, matching the real Round-1 gates (phase1e frames).
+                cv2.fillPoly(img, [outer_px], (30, 30, 230))
                 cv2.fillPoly(img, [inner_px], (40, 40, 40))
 
         ok, jpeg = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 80])

@@ -13,6 +13,7 @@ class FakeIO:
     def __init__(self):
         self.arm_calls = 0
         self.reset_calls = 0
+        self.throttle_down_sends = 0
 
     def arm(self):
         self.arm_calls += 1
@@ -20,11 +21,16 @@ class FakeIO:
     def sim_reset(self):
         self.reset_calls += 1
 
+    def send_attitude_rates(self, roll_rate, pitch_rate, yaw_rate, thrust):
+        assert thrust == 0.0
+        self.throttle_down_sends += 1
+
 
 @pytest.fixture
 def params():
     return ParamSet.load("config/params_default.json").patch({
         "planner.takeoff.duration_s": 0.05,
+        "control.throttle_down_s": 0.05,
         "safety.flight_timeout_s": 10.0,
     })
 
@@ -50,6 +56,11 @@ def test_happy_path(manager):
     assert manager.io.arm_calls == 1
 
     manager.tick(hb(True), race(active=0, start=100), [])
+    assert manager.state == FlightState.THROTTLE_DOWN
+    assert manager.io.throttle_down_sends >= 1
+
+    time.sleep(0.06)
+    manager.tick(hb(True), race(active=0, start=100), [])
     assert manager.state == FlightState.TAKEOFF
     assert manager.planner_mode() == "takeoff"
 
@@ -74,9 +85,15 @@ def test_happy_path(manager):
     assert manager.done
 
 
+def to_flying(manager):
+    manager.tick(hb(True), race(start=1), [])          # ARMING -> THROTTLE_DOWN
+    time.sleep(0.06)
+    manager.tick(hb(True), race(start=1), [])          # -> TAKEOFF
+
+
 def test_env_collision_aborts(manager):
     manager.start_flight()
-    manager.tick(hb(True), race(start=1), [])          # -> TAKEOFF
+    to_flying(manager)
     event = CollisionEvent(ts_ns=0, collision_id=CollisionEvent.ENVIRONMENT,
                            threat_level=2, impulse=5.0)
     manager.tick(hb(True), race(start=1), [event])
@@ -87,7 +104,7 @@ def test_env_collision_aborts(manager):
 
 def test_gate_clips_tolerated_up_to_budget(manager):
     manager.start_flight()
-    manager.tick(hb(True), race(start=1), [])
+    to_flying(manager)
     clip = CollisionEvent(ts_ns=0, collision_id=CollisionEvent.GATE,
                           threat_level=1, impulse=0.5)
     for _ in range(10):   # max_gate_clips = 10
@@ -99,7 +116,7 @@ def test_gate_clips_tolerated_up_to_budget(manager):
 
 def test_watchdog_abort(manager):
     manager.start_flight()
-    manager.tick(hb(True), race(start=1), [])          # -> TAKEOFF
+    to_flying(manager)
     manager.watchdog.feed("imu", now=time.monotonic() - 1.0)   # stale
     manager.tick(hb(True), race(start=1), [])
     assert manager.result.aborted

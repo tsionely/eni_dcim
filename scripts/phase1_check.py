@@ -35,6 +35,20 @@ from aigp.io.vision_rx import VisionRX
 OFFSET_STD_LIMIT_MS = 5.0
 
 
+def _max_axis_std(samples: list[list[float]]) -> float:
+    """Max standard deviation across IMU components, ignoring nan/inf."""
+    import math
+    import statistics
+    if len(samples) < 6:
+        return 0.0
+    best = 0.0
+    for axis in range(len(samples[0])):
+        vals = [s[axis] for s in samples if math.isfinite(s[axis])]
+        if len(vals) >= 6:
+            best = max(best, statistics.pstdev(vals))
+    return best
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Phase-1 passive connectivity check")
     parser.add_argument("--config", default="config/sim.json")
@@ -82,9 +96,10 @@ def main() -> int:
     # The real sim was observed emitting heartbeats from multiple sources
     # with different armed flags — track the distinct sources.
     heartbeat_sources: set[tuple[int, int, bool]] = set()
-    # v1.0.3385 lesson: the 14550 channel streams at full rate with FROZEN
-    # values. Counting messages is not enough — sample values for liveness.
-    gyro_z_samples: list[float] = []
+    # v1.0.3385 lessons: message counts alone lie (values can be static), and
+    # gyro_z specifically is a PINNED axis on the real sim — so liveness is
+    # judged on the max std across all six IMU components, nan-guarded.
+    imu_samples: list[list[float]] = []
 
     t_start = time.monotonic()
     t_end = t_start + args.duration
@@ -108,19 +123,20 @@ def main() -> int:
                 if name == "heartbeat":
                     heartbeat_sources.add((msg.src_system, msg.src_component, msg.armed))
                 elif name == "imu":
-                    if len(gyro_z_samples) < 20000:
-                        gyro_z_samples.append(float(msg.gyro[2]))
-                    window_gyro.append(float(msg.gyro[2]))
+                    components = [*msg.accel.tolist(), *msg.gyro.tolist()]
+                    if len(imu_samples) < 20000:
+                        imu_samples.append(components)
+                    window_gyro.append(components)
                 elif name == "frame":
                     window_frames += new
                 elif name == "race":
                     race_started = msg.started
         if now >= next_progress:
             # Per-window liveness: catches the idle->racing transition live.
-            w_std = statistics.pstdev(window_gyro) if len(window_gyro) > 5 else 0.0
-            live = "ALIVE" if w_std > 1e-5 else "frozen"
+            w_std = _max_axis_std(window_gyro)
+            live = "ALIVE" if w_std > 1e-5 else "static"
             print(f"  ...{now - t_start:4.0f}s  imu={counts['imu']} ({live}, "
-                  f"std={w_std:.4f})  frames+={window_frames}  "
+                  f"max_std={w_std:.4f})  frames+={window_frames}  "
                   f"race_started={race_started}", flush=True)
             next_progress += 10.0
             window_gyro = []
@@ -149,11 +165,12 @@ def main() -> int:
     print("heartbeat sources (system, component, armed): "
           + (", ".join(str(s) for s in sorted(heartbeat_sources)) or "none"), flush=True)
     imu_alive = False
-    if len(gyro_z_samples) >= 10:
-        gz_std = statistics.pstdev(gyro_z_samples)
-        imu_alive = gz_std > 1e-5
-        print(f"imu liveness: gyro_z mean={statistics.mean(gyro_z_samples):+.3f} "
-              f"std={gz_std:.6f} -> {'ALIVE' if imu_alive else 'FROZEN'}", flush=True)
+    if len(imu_samples) >= 10:
+        max_std = _max_axis_std(imu_samples)
+        imu_alive = max_std > 1e-5
+        print(f"imu liveness: max per-axis std={max_std:.6f} "
+              f"-> {'ALIVE' if imu_alive else 'STATIC'} "
+              f"(static is expected for a parked drone)", flush=True)
     if race is not None:
         print(f"race status: active_gate_index={race.active_gate_index} "
               f"started={race.started} finished={race.finished}", flush=True)

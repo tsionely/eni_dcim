@@ -29,6 +29,7 @@ from aigp.supervisor.watchdog import Watchdog
 class FlightState:
     IDLE = "IDLE"
     ARMING = "ARMING"
+    THROTTLE_DOWN = "THROTTLE_DOWN"
     TAKEOFF = "TAKEOFF"
     RACING = "RACING"
     FINISHED = "FINISHED"
@@ -75,6 +76,10 @@ class RaceManager:
         self.collision_policy = CollisionPolicy(params)
         self.takeoff_duration_s = float(params.get("planner.takeoff.duration_s"))
         self.flight_timeout_s = float(params.get("safety.flight_timeout_s"))
+        # The real sim gates motor release behind a "THROTTLE DOWN please"
+        # handshake (phase1e finding): hold zero thrust after arming before
+        # commanding anything else.
+        self.throttle_down_s = float(params.get("control.throttle_down_s", default=1.5))
 
         self.watchdog = Watchdog()
         self.watchdog.register("imu", float(params.get("safety.imu_stale_s")))
@@ -148,7 +153,8 @@ class RaceManager:
         self.result.env_hits = self.collision_policy.env_hits
 
         # Watchdogs (only while flying).
-        if self.state in (FlightState.TAKEOFF, FlightState.RACING):
+        if self.state in (FlightState.TAKEOFF, FlightState.RACING,
+                          FlightState.THROTTLE_DOWN):
             stale = self.watchdog.stale_channels(now)
             if stale:
                 self._abort(f"stale channels: {', '.join(stale)}")
@@ -157,13 +163,20 @@ class RaceManager:
 
         # State transitions.
         if self.state == FlightState.ARMING:
+            # Hold throttle at zero through the arming handshake.
+            self.io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
             if heartbeat is not None and heartbeat.armed:
-                self._transition(FlightState.TAKEOFF, "armed")
+                self._transition(FlightState.THROTTLE_DOWN, "armed")
             elif now - self._t_last_arm > ARM_RETRY_S:
                 self.io.arm()
                 self._t_last_arm = now
             if self.state == FlightState.ARMING and now - self._t_state > ARM_TIMEOUT_S:
                 self._abort("arming timeout")
+
+        elif self.state == FlightState.THROTTLE_DOWN:
+            self.io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
+            if now - self._t_state >= self.throttle_down_s:
+                self._transition(FlightState.TAKEOFF, "throttle-down handshake done")
 
         elif self.state == FlightState.TAKEOFF:
             if now - self._t_state >= self.takeoff_duration_s:

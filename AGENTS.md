@@ -62,7 +62,36 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 1e — in-flight IMU verdict + real-vision fixtures
+## CURRENT TASK: Phase 1f — control-authority probe (which interface moves the drone?)
+
+Phase-1e analysis (cloud side):
+
+- Your vision slice was put to work: the detector was rewritten for the REAL
+  Round-1 scene (red gate rings, dark warehouse) — **100% detection on all
+  658 real frames**, stable PnP. Perception is no longer a blocker.
+- "THROTTLE DOWN please" is now handled: the FSM gained a THROTTLE_DOWN state
+  (zero-thrust hold after arming) and the census NaN crash + gyro_z-only
+  liveness checks are fixed.
+- Remaining unknown: WHICH control interface the sim actually honors once the
+  handshake clears. That is this cycle.
+
+Run this cycle:
+
+1. `git pull`. Single engine instance as usual.
+2. Start a real race, then run (capture with Tee-Object):
+   `python scripts/control_probe.py`
+   It resets/arms per mode, does the throttle-down handshake, then tests
+   attitude-thrust (A), velocity (B) and motor (C) commands in turn. For EACH
+   mode note: did the THROTTLE DOWN overlay clear? did the drone visibly
+   move/lift? (screenshots welcome). If a sim reset kicks it out of the race,
+   restart the race between modes and say so in notes.md.
+3. If any mode moves the drone — immediately also run
+   `python scripts/fly_once.py --max-duration 45` (the pilot now does the
+   handshake itself) and describe what happens on screen.
+4. Collect with `--label phase1f --report <report>`, notes.md with per-mode
+   observations, commit `[sim-run] phase1f control probe`, push.
+
+## PREVIOUS: Phase 1e — in-flight IMU verdict + real-vision fixtures
 
 Phase-1d analysis (cloud side): vision on 5600 WORKS during an active race
 (20k frames @224Hz, clean decode). The "frozen" IMU now reads mean≈0 with a

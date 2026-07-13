@@ -1,6 +1,7 @@
 {
   "control": {
     "backend": "velocity",
+    "throttle_down_s": 1.5,
     "velocity": {
       "frame": "ned",
       "world_yaw_offset_rad": 0.0,
@@ -37,7 +38,12 @@
     "camera": { "fov_deg": 90.0 },
     "gate": { "width_m": 1.6, "height_m": 1.6 },
     "detector": {
+      "mode": "red_hsv",
       "threshold": 180,
+      "red_hue_low_max": 12,
+      "red_hue_high_min": 168,
+      "red_sat_min": 90,
+      "red_val_min": 70,
       "min_area_frac": 0.0008,
       "max_area_frac": 0.7,
       "approx_eps_frac": 0.04,
