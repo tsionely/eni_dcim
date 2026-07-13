@@ -43,7 +43,16 @@ def main() -> int:
     parser.add_argument("--label", required=True, help="e.g. phase1, hover, gate")
     parser.add_argument("--report", default=None, help="captured console output file")
     parser.add_argument("--max-recording-mb", type=float, default=50.0)
+    parser.add_argument("--fresh-minutes", type=float, default=180.0,
+                        help="skip artifacts older than this (avoids bundling "
+                             "stale logs from previous cycles)")
     args = parser.parse_args()
+
+    import time as _time
+    freshness_cutoff = _time.time() - args.fresh_minutes * 60.0
+
+    def is_fresh(p: Path) -> bool:
+        return p.stat().st_mtime >= freshness_cutoff
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
     out_dir = REPO_ROOT / "fixtures" / f"{stamp}-{args.label}"
@@ -68,15 +77,21 @@ def main() -> int:
     # frame_probe output.
     probe = REPO_ROOT / "logs" / "frame_probe" / "probe.json"
     if probe.exists():
-        dest = out_dir / "probe.json"
-        shutil.copy(probe, dest)
-        note("frame_probe", str(probe), dest)
+        if is_fresh(probe):
+            dest = out_dir / "probe.json"
+            shutil.copy(probe, dest)
+            note("frame_probe", str(probe), dest)
+        else:
+            print("  ~ skipping stale probe.json (previous cycle)")
 
     # Newest flight log directory.
     logs_root = REPO_ROOT / "logs"
     flight_dirs = [d for d in logs_root.glob("*") if d.is_dir()
-                   and (d / "flight.jsonl").exists()] if logs_root.exists() else []
+                   and (d / "flight.jsonl").exists()
+                   and is_fresh(d / "flight.jsonl")] if logs_root.exists() else []
     flight = newest(flight_dirs)
+    if flight is None:
+        print("  ~ no fresh flight log this cycle")
     if flight is not None:
         for name in ("flight.jsonl", "result.json", "params.json"):
             src = flight / name
@@ -86,7 +101,8 @@ def main() -> int:
                 note("flight_log", str(src), dest)
 
     # Newest recording (flight-embedded or standalone), zipped.
-    candidates = list((REPO_ROOT / "recordings").glob("*.aigprec")) if (REPO_ROOT / "recordings").exists() else []
+    candidates = [p for p in (REPO_ROOT / "recordings").glob("*.aigprec")
+                  if is_fresh(p)] if (REPO_ROOT / "recordings").exists() else []
     if flight is not None and (flight / "vision.aigprec").exists():
         candidates.append(flight / "vision.aigprec")
     recording = newest(candidates)

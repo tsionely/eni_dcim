@@ -62,32 +62,41 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 1c — port-topology probe
+## CURRENT TASK: Phase 1d — clean single-instance race validation
 
-Phase-1b analysis (cloud side) concluded:
+Phase-1c analysis (cloud side) reframed everything:
 
-- The IMU stream on udp:14550 is **frozen** — full rate, but constant values
-  (std 0.000 over 20s; the "spin" and "yaw sign flip" you measured were
-  artifacts of reading static garbage). Message counts lie; value liveness is
-  now checked by phase1_check.
-- The sim engine binds udp:5601 and udp:14560 itself → working hypothesis:
-  v1.0.3385 moved the LIVE vehicle channel to a connect-style topology
-  (client sends TO the sim; sim streams back to the sender): MAVLink on
-  14560, vision on 5601. Port 14550 is a legacy/lobby channel (accepts arm,
-  streams frozen telemetry).
+- 14560/5601 never answer pokes (idle or racing) → they are most likely the
+  sim's own OUTBOUND source sockets (14560 -> client:14550 telemetry,
+  5601 -> client:5600 vision), not services to connect to. The connect-mode
+  hypothesis is dropped; the classic topology stands.
+- Every earlier "frozen telemetry" measurement was taken either with the
+  ORPHANED second sim process still alive, or with the sim at the menu/idle.
+  Frozen values are plausibly just idle/menu placeholder telemetry.
+- The one measurement never taken: 14550/5600 liveness DURING an active race
+  with exactly ONE sim process. That is this cycle.
 
 Run this cycle:
 
-1. `git pull`, launch the sim, enter the qualifier as usual.
-2. `python scripts/topology_probe.py 2>&1 | Tee-Object -FilePath topology_report.txt`
-   — it tests all three channels (legacy 14550 liveness, connect to 14560,
-   vision poke to 5601) and prints per-channel verdicts + recommended config.
-3. If 14560/5601 respond — also rerun
-   `python scripts/phase1_check.py --duration 30` (it now checks IMU value
-   liveness) and append its output to the report.
-4. `python scripts/collect_artifacts.py --label phase1c --report topology_report.txt`,
-   add notes.md (include: does the drone need to be IN a race for 14560/5601
-   to answer?), commit `[sim-run] phase1c topology probe`, push.
+1. `git pull`. Verify exactly ONE engine process:
+   `Get-Process | Where-Object {$_.Name -match 'FlightSim|DCGame'}` — kill
+   orphans, document PIDs in notes.md.
+2. Start `python scripts/phase1_check.py --duration 90 2>&1 | Tee-Object -FilePath phase1d_report.txt`
+   and WHILE IT RUNS drive the sim into a real active race (your RACE
+   automation). The check now prints a per-10s liveness window
+   (`imu=... (ALIVE/frozen, std=...) frames+=N race_started=...`) — the
+   idle->racing transition will be visible live. Note in notes.md the exact
+   moment (which 10s window) the race became active.
+3. If frames appear: let it finish — the recording it writes is our first
+   real vision fixture. If IMU goes ALIVE too: rerun
+   `python scripts/frame_probe.py` (bias-aware v2) for a clean frame verdict.
+4. If vision is STILL silent during a clean single-instance race: capture
+   where the sim's 5601 socket sends:
+   `pktmon filter add -p 5601; pktmon start --etw -m real-time -c 30` (admin),
+   stop with `pktmon stop`, note destination IP:port seen.
+5. `python scripts/collect_artifacts.py --label phase1d --report phase1d_report.txt`
+   (it now skips stale artifacts from previous cycles), add notes.md, commit
+   `[sim-run] phase1d clean race validation`, push.
 
 ## Phase tasks (general roadmap)
 

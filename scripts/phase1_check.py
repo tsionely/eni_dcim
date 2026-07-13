@@ -85,25 +85,42 @@ def main() -> int:
     t_start = time.monotonic()
     t_end = t_start + args.duration
     next_progress = t_start + 10.0
+    window_gyro: list[float] = []      # per-10s liveness window
+    window_frames = 0
+    race_started = False
+    import statistics
     while time.monotonic() < t_end:
         now = time.monotonic()
         for name, cell in cells.items():
             fresh = cell.get_if_newer(last_seq[name])
             if fresh is not None:
                 msg, seq = fresh
-                counts[name] += seq - last_seq[name]
+                new = seq - last_seq[name]
+                counts[name] += new
                 last_seq[name] = seq
                 if last_change[name] is not None:
                     max_gap[name] = max(max_gap[name], now - last_change[name])
                 last_change[name] = now
                 if name == "heartbeat":
                     heartbeat_sources.add((msg.src_system, msg.src_component, msg.armed))
-                elif name == "imu" and len(gyro_z_samples) < 20000:
-                    gyro_z_samples.append(float(msg.gyro[2]))
+                elif name == "imu":
+                    if len(gyro_z_samples) < 20000:
+                        gyro_z_samples.append(float(msg.gyro[2]))
+                    window_gyro.append(float(msg.gyro[2]))
+                elif name == "frame":
+                    window_frames += new
+                elif name == "race":
+                    race_started = msg.started
         if now >= next_progress:
+            # Per-window liveness: catches the idle->racing transition live.
+            w_std = statistics.pstdev(window_gyro) if len(window_gyro) > 5 else 0.0
+            live = "ALIVE" if w_std > 1e-5 else "frozen"
+            print(f"  ...{now - t_start:4.0f}s  imu={counts['imu']} ({live}, "
+                  f"std={w_std:.4f})  frames+={window_frames}  "
+                  f"race_started={race_started}", flush=True)
             next_progress += 10.0
-            print(f"  ...{now - t_start:4.0f}s  imu={counts['imu']}  "
-                  f"frames={counts['frame']}  race={counts['race']}", flush=True)
+            window_gyro = []
+            window_frames = 0
         time.sleep(0.002)
 
     elapsed = time.monotonic() - t_start
@@ -127,7 +144,6 @@ def main() -> int:
           f"std={offset_std_ms:.2f} ms", flush=True)
     print("heartbeat sources (system, component, armed): "
           + (", ".join(str(s) for s in sorted(heartbeat_sources)) or "none"), flush=True)
-    import statistics
     imu_alive = False
     if len(gyro_z_samples) >= 10:
         gz_std = statistics.pstdev(gyro_z_samples)
