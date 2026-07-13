@@ -56,6 +56,10 @@ class CameraFrame:
 class Heartbeat:
     ts_ns: int
     armed: bool
+    # MAVLink source ids — the real sim emits heartbeats from more than one
+    # component (observed in Phase 1: two sources alternating armed state).
+    src_system: int = 0
+    src_component: int = 0
 
 
 @dataclass(frozen=True, slots=True)

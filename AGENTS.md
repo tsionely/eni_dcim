@@ -62,7 +62,33 @@ pip install -r requirements.txt
    git push
    ```
 
-## Phase tasks (current status: Phase 1)
+## CURRENT TASK: Phase 1b — vision diagnosis + frame re-probe
+
+Your Phase-1 fixtures (`fixtures/20260713T190414-phase1/`) were analyzed.
+Findings: MAVLink healthy; the race DID start during the armed flight yet
+zero vision datagrams reached udp:5600; the frame_probe verdict was
+unreliable (the drone was spinning at -1 rad/s during the step). New
+diagnostic tools were pushed — run this cycle:
+
+1. `git pull`, launch the sim, enter the qualifier as usual.
+2. Vision diagnosis (capture all output with Tee-Object):
+   - `python scripts/vision_probe.py --duration 30` (passive port scan 5595-5615)
+   - `python scripts/vision_probe.py --duration 30 --arm` (same, during an armed flight)
+   - If both report no traffic: run `netstat -ano | findstr 5600`; search the
+     sim install dir:
+     `Get-ChildItem <simdir> -Recurse -Include *.ini,*.json,*.cfg | Select-String -Pattern '5600|[Vv]ideo|[Ss]tream'`
+     and check Windows Defender Firewall inbound rules for python.exe (UDP).
+     Record everything you find in notes.md.
+   - Note: during your own R1 run you captured 4 frames with your external
+     capture tooling — state clearly in notes.md HOW those were captured
+     (UDP stream? screen capture?) and under what sim state (race running?).
+3. Frame re-probe with the rewritten `scripts/frame_probe.py` (now records
+   all phases, checks for uncommanded spin, and prints a world_yaw_offset
+   estimate). If it warns the verdict is unreliable, note the spin behavior.
+4. `python scripts/collect_artifacts.py --label phase1b --report <report>`,
+   add notes.md, commit `[sim-run] phase1b vision+frame diagnosis`, push.
+
+## Phase tasks (general roadmap)
 
 The full roadmap with acceptance criteria is in `docs/05-avney-derech.md`
 (Hebrew). Summary of what to run per phase:

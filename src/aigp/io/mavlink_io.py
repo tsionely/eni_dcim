@@ -108,7 +108,10 @@ class MavlinkIO(Agent):
 
     def _on_heartbeat(self, msg) -> None:
         armed = bool(msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED)
-        self.bus.publish_latest(Topic.HEARTBEAT, Heartbeat(self.clock.sim_now_ns(), armed))
+        self.bus.publish_latest(Topic.HEARTBEAT, Heartbeat(
+            self.clock.sim_now_ns(), armed,
+            src_system=msg.get_srcSystem(), src_component=msg.get_srcComponent(),
+        ))
 
     def _on_timesync(self, msg) -> None:
         # Response carries our original stamp in ts1 and the server time in tc1.

@@ -35,7 +35,12 @@ def make_cfg(tmp_path: Path) -> SimConfig:
 
 
 def base_params() -> ParamSet:
-    return ParamSet.load("config/params_default.json")
+    # The mock sim encodes JPEG frames on the same thread that paces IMU
+    # sends, so under CI load IMU gaps can exceed the real-sim watchdog
+    # threshold (real sim: max gap 11ms; mock under load: occasional 50ms+).
+    # Relax it here — watchdog logic itself is unit-tested.
+    return ParamSet.load("config/params_default.json").patch(
+        {"safety.imu_stale_s": 0.25})
 
 
 @pytest.fixture

@@ -2,7 +2,8 @@
   "control": {
     "backend": "velocity",
     "velocity": {
-      "frame": "body",
+      "frame": "ned",
+      "world_yaw_offset_rad": 0.0,
       "max_speed_mps": 4.0,
       "max_climb_mps": 2.0,
       "slew_mps2": 6.0,

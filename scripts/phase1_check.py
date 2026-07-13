@@ -75,6 +75,9 @@ def main() -> int:
     last_seq = {name: 0 for name in cells}
     last_change = {name: None for name in cells}
     max_gap = {name: 0.0 for name in cells}
+    # The real sim was observed emitting heartbeats from multiple sources
+    # with different armed flags — track the distinct sources.
+    heartbeat_sources: set[tuple[int, int, bool]] = set()
 
     t_start = time.monotonic()
     t_end = t_start + args.duration
@@ -84,12 +87,14 @@ def main() -> int:
         for name, cell in cells.items():
             fresh = cell.get_if_newer(last_seq[name])
             if fresh is not None:
-                _, seq = fresh
+                msg, seq = fresh
                 counts[name] += seq - last_seq[name]
                 last_seq[name] = seq
                 if last_change[name] is not None:
                     max_gap[name] = max(max_gap[name], now - last_change[name])
                 last_change[name] = now
+                if name == "heartbeat":
+                    heartbeat_sources.add((msg.src_system, msg.src_component, msg.armed))
         if now >= next_progress:
             next_progress += 10.0
             print(f"  ...{now - t_start:4.0f}s  imu={counts['imu']}  "
@@ -115,6 +120,8 @@ def main() -> int:
           f"pending_partials={vision.assembler.pending}", flush=True)
     print(f"timesync: synced={clock.synced}  offset={clock.offset_ns / 1e6:.2f} ms  "
           f"std={offset_std_ms:.2f} ms", flush=True)
+    print("heartbeat sources (system, component, armed): "
+          + (", ".join(str(s) for s in sorted(heartbeat_sources)) or "none"), flush=True)
     if race is not None:
         print(f"race status: active_gate_index={race.active_gate_index} "
               f"started={race.started} finished={race.finished}", flush=True)

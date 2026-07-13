@@ -45,6 +45,12 @@ def quat_rotate_inv(q: np.ndarray, v: np.ndarray) -> np.ndarray:
     return quat_rotate(q_conj, v)
 
 
+def yaw_from_quat(q: np.ndarray) -> float:
+    """Yaw angle [rad] of quaternion (w, x, y, z), NED convention."""
+    return float(np.arctan2(2.0 * (q[0] * q[3] + q[1] * q[2]),
+                            1.0 - 2.0 * (q[2] ** 2 + q[3] ** 2)))
+
+
 class MahonyFilter:
     def __init__(self, kp: float = 2.0) -> None:
         self.kp = kp
