@@ -1,0 +1,73 @@
+===== Phase 1d preflight process verification 2026-07-13T23:03:47.7008858+03:00 =====
+--- Get-Process FlightSim/DCGame ---
+
+   Id Name                  StartTime           Path
+   -- ----                  ---------           ----
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+56276 FlightSim             13/07/2026 19:57:55 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+--- CIM parent/commandline ---
+
+ProcessId ParentProcessId Name                      CommandLine
+--------- --------------- ----                      -----------
+    56276           14556 FlightSim.exe             "C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe" 
+    49312           56276 DCGame-Win64-Shipping.exe "C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binari
+                                                    es\Win64\DCGame-Win64-Shipping.exe" FlightSim
+
+
+--- UDP endpoints 14550/14560/5600/5601 ---
+
+LocalAddress LocalPort   PID Proc                  Path
+------------ ---------   --- ----                  ----
+0.0.0.0          14560 49312 DCGame-Win64-Shipping C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries
+                                                   \Win64\DCGame-Win64-Shipping.exe
+0.0.0.0           5601 49312 DCGame-Win64-Shipping C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries
+                                                   \Win64\DCGame-Win64-Shipping.exe
+
+
+
+
+===== Phase 1d phase1_check --duration 90 (RACE started ~15s in via click automation) 2026-07-13T23:08:14.5623137+03:00 =====
+click-starter launched (sleeps 15s, then event r1 + RACE)...
+Waiting for sim heartbeat on udp:127.0.0.1:14550 (timeout 30.0s)...
+Heartbeat received. Listening (passive � not arming)...
+  ...  10s  imu=1140 (frozen, std=0.0000)  frames+=0  race_started=True
+  ...  20s  imu=2281 (frozen, std=0.0000)  frames+=0  race_started=True
+  ...  30s  imu=3426 (ALIVE, std=0.0000)  frames+=3627  race_started=True
+  ...  40s  imu=4572 (frozen, std=0.0000)  frames+=5053  race_started=True
+  ...  50s  imu=5716 (frozen, std=0.0000)  frames+=4525  race_started=True
+  ...  60s  imu=6863 (frozen, std=0.0000)  frames+=4379  race_started=True
+  ...  70s  imu=8006 (frozen, std=0.0000)  frames+=2572  race_started=True
+  ...  80s  imu=9149 (frozen, std=0.0000)  frames+=0  race_started=True
+
+=== Phase-1 report ===
+window: 90.0s
+      imu:  10293 msgs  ( 114.4 Hz, max gap     14 ms)
+    frame:  20156 msgs  ( 224.0 Hz, max gap      8 ms)
+     race:    363 msgs  (   4.0 Hz, max gap    254 ms)
+heartbeat:    899 msgs  (  10.0 Hz, max gap    103 ms)
+ actuator:   8387 msgs  (  93.2 Hz, max gap     14 ms)
+vision decode: ok=20156 failed=0 pending_partials=43
+timesync: synced=True  offset=1783590046477.91 ms  std=0.25 ms
+heartbeat sources (system, component, armed): (1, 200, False), (1, 200, True)
+imu liveness: gyro_z mean=-0.000 std=0.000008 -> FROZEN
+race status: active_gate_index=0 started=True finished=False
+recording: recordings\phase1-20260713T200814.aigprec (923060 datagrams)
+
+=== acceptance ===
+  [PASS] telemetry window >= 90s
+  [PASS] IMU flowing
+  [FAIL] IMU values alive (not frozen)
+  [PASS] frames decoded
+  [PASS] race status received
+  [PASS] timesync offset std < 5.0ms
+  [PASS] recording non-empty
+
+PHASE-1 CHECK FAILED
+PHASE1_EXIT=1
+--- click starter stdout ---
+sim window: AI-GP   23:08:30
+event r1 clicked (400,225) 23:08:39
+RACE clicked 23:08:41
+--- click starter stderr ---
