@@ -1,0 +1,119 @@
+===== Phase 1e preflight 2026-07-13T23:24:14.1637312+03:00 =====
+--- sim processes ---
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- port owners ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- stray python ---
+
+--- phase1d recording present? ---
+
+Name                                MB
+----                                --
+phase1-20260713T200814.aigprec 1230.40
+
+
+
+
+===== Phase 1e FLIGHT TEST: fly_once --max-duration 45 during a real race 2026-07-13T23:25:13.4761693+03:00 =====
+race/screenshot helper launched (clicks event r1 + RACE ~6-10s in, screenshots ~34s)...
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [0. 0. 0.]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 45.00086550001288, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260713T202513-ea4b5f0c', 'log_dir': 'logs\\20260713T202513-ea4b5f0c'}
+FLY_EXIT=0
+--- race/screenshot helper stdout ---
+sim window: AI-GP   23:25:20
+event r1 clicked (400,225) 23:25:28
+RACE clicked 23:25:31
+shot 0 23:25:31
+shot 1 23:25:34
+shot 2 23:25:37
+shot 3 23:25:40
+shot 4 23:25:43
+shot 5 23:25:46
+shot 6 23:25:49
+shot 7 23:25:52
+shot 8 23:25:55
+shot 9 23:25:58
+shot 10 23:26:02
+--- helper stderr ---
+
+
+===== Phase 1e mavlink_census --duration 60 during a race (race clicked ~15s in) 2026-07-13T23:30:22.9896897+03:00 =====
+race starter launched...
+waiting for heartbeat on 127.0.0.1:14550...
+census for 60s � start the race while this runs...
+  ...  10s  2233 msgs, 4 (type,src) pairs
+  ...  20s  4464 msgs, 4 (type,src) pairs
+  ...  30s  6707 msgs, 4 (type,src) pairs
+  ...  40s  8940 msgs, 4 (type,src) pairs
+  ...  50s  11172 msgs, 4 (type,src) pairs
+  ...  60s  13402 msgs, 4 (type,src) pairs
+
+=== census over 60.0s ===
+Traceback (most recent call last):
+  File "C:\Users\tsion\AppData\Local\Python\pythoncore-3.14-64\Lib\statistics.py", line 646, in pstdev
+    mss_numerator = mss.numerator
+                    ^^^^^^^^^^^^^
+AttributeError: 'float' object has no attribute 'numerator'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\tsion\Projects\eni_dcim_phase1\scripts\mavlink_census.py", line 98, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\tsion\Projects\eni_dcim_phase1\scripts\mavlink_census.py", line 84, in main
+    (live_fields if statistics.pstdev(vals) > 1e-5 else frozen_fields).append(name)
+                    ~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\tsion\AppData\Local\Python\pythoncore-3.14-64\Lib\statistics.py", line 649, in pstdev
+    raise ValueError('inf or nan encountered in data')
+ValueError: inf or nan encountered in data
+CENSUS_EXIT=1
+--- race starter stdout ---
+sim window: AI-GP   23:30:38
+event r1 clicked (400,225) 23:30:47
+RACE clicked 23:30:49
+
+
+===== Phase 1e nan-safe census (ad-hoc; repo mavlink_census.py crashed on nan/inf) during a race 2026-07-13T23:32:37.0117791+03:00 =====
+race starter launched...
+waiting for heartbeat...
+nan-safe census 45s -- start race while running
+  ...  10s 2232 msgs 4 pairs
+  ...  20s 4463 msgs 4 pairs
+  ...  30s 6706 msgs 4 pairs
+  ...  40s 8936 msgs 4 pairs
+
+=== nan-safe census over 45.0s ===
+HIGHRES_IMU                  src=(1,200)   5194  115.4Hz
+    LIVE:   time_usec, xacc, xgyro, yacc, ygyro, zacc
+    frozen: fields_updated, id, zgyro
+    nan/inf:abs_pressure(5000nan/inf), diff_pressure(5000nan/inf), pressure_alt(5000nan/inf), temperature(5000nan/inf), xmag(5000nan/inf), ymag(5000nan/inf), zmag(5000nan/inf)
+ACTUATOR_OUTPUT_STATUS       src=(1,200)   4223   93.8Hz
+    LIVE:   time_usec
+    frozen: active
+HEARTBEAT                    src=(1,200)    451   10.0Hz
+    LIVE:   base_mode, system_status
+    frozen: autopilot, custom_mode, mavlink_version, type
+ENCAPSULATED_DATA            src=(1,200)    184    4.1Hz
+    frozen: seqnr
+
+ENCAPSULATED_DATA payload type ids: {1: 184}
+SAFE_CENSUS_EXIT=0
+--- race starter stdout ---
+sim window: AI-GP   23:32:52
+event r1 clicked (400,225) 23:33:01
+RACE clicked 23:33:03
+
+
+===== Phase 1e slice_recording 2026-07-13T23:34:40.9969804+03:00 =====
+kept 28885/252186 datagrams, 40.0 MB -> fixtures_slice.aigprec
+SLICE_EXIT=0
