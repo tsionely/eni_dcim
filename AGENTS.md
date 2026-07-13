@@ -62,7 +62,39 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 1d — clean single-instance race validation
+## CURRENT TASK: Phase 1e — in-flight IMU verdict + real-vision fixtures
+
+Phase-1d analysis (cloud side): vision on 5600 WORKS during an active race
+(20k frames @224Hz, clean decode). The "frozen" IMU now reads mean≈0 with a
+single clean instance — exactly what a PARKED drone with a noise-free sim IMU
+looks like. The earlier absurd constants came from the orphan/menu states.
+Remaining question: does the IMU respond to actual MOTION? Nobody has flown
+the drone during a race yet.
+
+Run this cycle:
+
+1. `git pull`. Verify a single engine process (as in 1d).
+2. **The flight test**: start
+   `python scripts/fly_once.py --max-duration 45 2>&1 | Tee-Object -FilePath phase1e_report.txt`
+   and START A REAL RACE (your RACE automation) right as it connects. The
+   pilot will arm and try to climb. Note in notes.md what the drone VISIBLY
+   does on screen (climbs? sits still? drifts?) — that observation is as
+   valuable as the logs.
+3. `python scripts/mavlink_census.py --duration 60` (new) during another race
+   window — it inventories EVERY message type with per-field value liveness,
+   in case live telemetry hides somewhere we don't parse. Append output to
+   the report.
+4. Slice the big Phase-1d recording into a committable fixture (new tool):
+   `python scripts/slice_recording.py recordings/phase1-20260713T200814.aigprec fixtures_slice.aigprec --start-s 10 --max-mb 40`
+   and place `fixtures_slice.aigprec` in your fixture folder. (The full
+   1.29 GB file still goes to Drive — human step, flagged for the user.)
+5. Collect with `--label phase1e`, notes.md (include the visual observation!),
+   commit `[sim-run] phase1e in-flight IMU + vision fixtures`, push.
+
+Note: phase1_check now caps its recording at 200 MB by default
+(--record-cap-mb) — race-rate vision is ~20 MB/s.
+
+## PREVIOUS: Phase 1d — clean single-instance race validation
 
 Phase-1c analysis (cloud side) reframed everything:
 

@@ -40,6 +40,9 @@ def main() -> int:
     parser.add_argument("--config", default="config/sim.json")
     parser.add_argument("--duration", type=float, default=60.0)
     parser.add_argument("--out", default=None, help="recording path (.aigprec)")
+    parser.add_argument("--record-cap-mb", type=float, default=200.0,
+                        help="stop recording after this many MB (race vision "
+                             "is ~20 MB/s); 0 = unlimited")
     args = parser.parse_args()
 
     cfg = SimConfig.load(args.config)
@@ -48,7 +51,8 @@ def main() -> int:
 
     bus = Bus()
     clock = SimClock()
-    recorder = DatagramRecorder(out_path)
+    cap = int(args.record_cap_mb * 1e6) if args.record_cap_mb > 0 else None
+    recorder = DatagramRecorder(out_path, max_bytes=cap)
     mavlink = MavlinkIO(bus, clock, cfg.mavlink_ip, cfg.mavlink_port)
     vision = VisionRX(bus, cfg.vision_ip, cfg.vision_port,
                       raw_sink=recorder.sink_for(STREAM_VISION))
@@ -153,7 +157,9 @@ def main() -> int:
     if race is not None:
         print(f"race status: active_gate_index={race.active_gate_index} "
               f"started={race.started} finished={race.finished}", flush=True)
-    print(f"recording: {out_path} ({recorder.count} datagrams)", flush=True)
+    print(f"recording: {out_path} ({recorder.count} datagrams"
+          + (f", {recorder.skipped} skipped past the {args.record_cap_mb:.0f}MB cap"
+             if recorder.skipped else "") + ")", flush=True)
 
     checks = {
         f"telemetry window >= {args.duration:.0f}s": elapsed >= args.duration - 1.0,

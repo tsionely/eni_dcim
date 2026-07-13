@@ -25,19 +25,28 @@ STREAM_VISION = 1
 
 
 class DatagramRecorder:
-    def __init__(self, path: str | Path) -> None:
+    def __init__(self, path: str | Path, max_bytes: int | None = None) -> None:
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         self._f: BinaryIO = open(path, "wb")
         self._f.write(MAGIC)
         self._lock = threading.Lock()
         self.count = 0
+        # Cap the file size (a 60s race at 224Hz vision is ~1.3 GB); once
+        # exceeded, further datagrams are counted in `skipped` not written.
+        self.max_bytes = max_bytes
+        self._written = 0
+        self.skipped = 0
 
     def write(self, stream_id: int, data: bytes, mono_ns: int | None = None) -> None:
         if mono_ns is None:
             mono_ns = time.monotonic_ns()
         with self._lock:
+            if self.max_bytes is not None and self._written + len(data) > self.max_bytes:
+                self.skipped += 1
+                return
             self._f.write(struct.pack(RECORD_HEADER, mono_ns, stream_id, len(data)))
             self._f.write(data)
+            self._written += len(data)
             self.count += 1
 
     def sink_for(self, stream_id: int):
