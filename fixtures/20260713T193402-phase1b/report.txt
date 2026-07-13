@@ -1,0 +1,263 @@
+===== Phase 1b vision_probe passive 2026-07-13T22:27:55.3336923+03:00 =====
+port 5601: could not bind ([WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted)
+listening on udp 5595-5615 for 30s (passive)...
+
+=== results ===
+NO datagrams on any port in range.
+Next: check netstat, sim config files, firewall (see module docstring).
+EXITCODE=1
+
+
+===== Phase 1b vision_probe armed 2026-07-13T22:28:37.8820162+03:00 =====
+port 5601: could not bind ([WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted)
+listening on udp 5595-5615 for 30s (armed flight)...
+[arm] waiting for heartbeat...
+[arm] armed; holding gentle climb then hover
+[arm] disarmed
+
+=== results ===
+NO datagrams on any port in range.
+Next: check netstat, sim config files, firewall (see module docstring).
+EXITCODE=1
+
+
+===== Phase 1b diagnostics 2026-07-13T22:29:32.8902856+03:00 =====
+--- netstat -ano | findstr 5600 ---
+--- UDP endpoints 5595-5615 (with owning process) ---
+
+LocalAddress LocalPort   PID Proc                  Path
+------------ ---------   --- ----                  ----
+0.0.0.0           5601 49312 DCGame-Win64-Shipping C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binarie…
+
+
+--- who owns 5600 / 5601 specifically ---
+port 5601 <- PID 49312 DCGame-Win64-Shipping C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\Win64\DCGame-Win64-Shipping.exe
+
+--- sim config search (C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385) for 5600/5601/video/stream ---
+
+--- config-ish files present in sim dir ---
+
+FullName
+--------
+C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\pgos_res\pgos_config.ini
+
+
+
+--- pgos_config.ini ---
+
+[PGOS environment]
+title_id =
+
+account_channel = 0
+
+log_level = 0
+log_to_console_enable = 0
+
+socket_base_url = wss://{lc}.ws.pgos.intlgame.{com}
+http_base_url = https://{lc}.client.pgos.intlgame.{com}
+
+chat_msg_cache_max_bytes = 104857600
+title_data_cache_max_bytes = 104857600
+
+group_event_msg_filter =
+
+
+
+--- broad recursive grep for 560x across ALL files in sim dir ---
+
+
+--- UE Saved config dirs under LocalAppData ---
+
+FullName
+--------
+C:\Users\tsion\AppData\Local\FlightSim
+C:\Users\tsion\AppData\Local\FlightSim
+
+
+
+--- LocalAppData FlightSim tree (config files) ---
+
+FullName
+--------
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-1CE8D98142AF0A6E3667388F019138D7\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-3063D90A47E7F70C258C2B9FA4536948\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-60D762EB4A3E453F72FF619F4B7A229D\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-68CD2C5D42E1163F41E5DB89535130E5\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-6C94B9DA4E3CDBDDC15A748EFD7714AD\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-6D32D7BD41F92FEAD3EAEBBEE0767EB3\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-97BA2A1742CC4E809DDAA999C3A5FB18\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-D89E1CA44AEA80EFA4C01B8FA8418489\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-E91077C84AACEF1BDFF715910B880D15\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-E9B753884D84FE11D274CDAAC88C3CEA\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-F054D00A478EE1471EE3458839DC7AFD\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\CrashReportClient\UE4CC-Windows-F47327A144542F455AEB2888E714BD04\Cr…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Compat.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\DeviceProfiles.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Engine.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Game.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\GameUserSettings.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Hardware.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Input.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\LiveLink.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\MotoSynth.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Niagara.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Paper2D.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\PhysXVehicles.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\RuntimeOptions.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Scalability.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\Synthesis.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Config\WindowsNoEditor\VariantManagerContent.ini
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashReportCli…
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashReportCli…
+
+
+
+--- grep 560x / video / stream / port in LocalAppData FlightSim ---
+
+Path
+----                                                                                                                    
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-2ED9C3084065D5A1629626B587C1AB1C_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\CrashContext.ru
+ntime-xml
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Crashes\UE4CC-Windows-7F6AB6AF4ADCD29596999889B6386466_0000\UE4Minidump.dmp
+C:\Users\tsion\AppData\Local\FlightSim\Saved\Ghosts\Event\event-ai-gp-r1-qualifier-anduril.1-20260618T032037Z-20d00ce34d
+a4420db3c65891959c7b25-88112198.ghost.enc
+
+
+
+--- Windows Firewall inbound rules referencing python / FlightSim / DCGame ---
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3364\aigp_3364\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3364\aigp_3364\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[python.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\appdata\local\python\pythoncore-3.14-64\python.exe
+[python.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\appdata\local\python\pythoncore-3.14-64\python.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3379\aigp_3379\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3379\aigp_3379\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\documents\codex\2026-06-30\standalone-installer-macos-linux-no-node\ai-gp simulator v1.0.3379\aigp_3379\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\documents\codex\2026-06-30\standalone-installer-macos-linux-no-node\ai-gp simulator v1.0.3379\aigp_3379\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\onedrive\desktop\aigp_3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\onedrive\desktop\aigp_3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3385 (1)\aigp_3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3385 (1)\aigp_3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=TCP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+[dcgame-win64-shipping.exe] dir=Inbound action=Allow enabled=True proto=UDP prog=C:\users\tsion\downloads\ai-gp simulator v1.0.3385\flightsim\binaries\win64\dcgame-win64-shipping.exe
+
+--- firewall profile state ---
+
+Name    Enabled DefaultInboundAction
+----    ------- --------------------
+Domain     True        NotConfigured
+Private    True        NotConfigured
+Public     True        NotConfigured
+
+
+
+--- all UDP/TCP endpoints owned by DCGame (PID 49312) ---
+DCGame PIDs: 49312, 56604
+
+LocalAddress LocalPort
+------------ ---------
+0.0.0.0           5601
+0.0.0.0          14560
+
+
+
+LocalAddress  LocalPort RemoteAddress RemotePort     State
+------------  --------- ------------- ----------     -----
+0.0.0.0           53903 0.0.0.0                0     Bound
+192.168.1.219     53903 54.200.77.168        443 CloseWait
+192.168.1.219     53907 216.239.32.21         80 CloseWait
+0.0.0.0           53907 0.0.0.0                0     Bound
+0.0.0.0           53908 0.0.0.0                0     Bound
+192.168.1.219     53908 216.239.32.21         80 CloseWait
+0.0.0.0           53909 0.0.0.0                0     Bound
+192.168.1.219     53909 216.239.32.21         80 CloseWait
+0.0.0.0           53910 0.0.0.0                0     Bound
+192.168.1.219     53910 216.239.32.21         80 CloseWait
+0.0.0.0           53911 0.0.0.0                0     Bound
+192.168.1.219     53911 216.239.32.21         80 CloseWait
+0.0.0.0           53912 0.0.0.0                0     Bound
+192.168.1.219     53912 216.239.32.21         80 CloseWait
+0.0.0.0           63344 0.0.0.0                0     Bound
+192.168.1.219     63344 35.164.67.246        443 CloseWait
+0.0.0.0           63349 0.0.0.0                0     Bound
+192.168.1.219     63349 216.239.36.21         80 CloseWait
+0.0.0.0           63350 0.0.0.0                0     Bound
+192.168.1.219     63350 216.239.36.21         80 CloseWait
+0.0.0.0           63351 0.0.0.0                0     Bound
+192.168.1.219     63351 216.239.36.21         80 CloseWait
+0.0.0.0           63352 0.0.0.0                0     Bound
+192.168.1.219     63352 216.239.36.21         80 CloseWait
+0.0.0.0           63353 0.0.0.0                0     Bound
+192.168.1.219     63353 216.239.36.21         80 CloseWait
+192.168.1.219     63354 216.239.36.21         80 CloseWait
+0.0.0.0           63354 0.0.0.0                0     Bound
+
+
+--- note: venv python.exe has NO explicit firewall rule, but loopback is exempt; MAVLink(14550) reaches this same interpreter, so firewall is not blocking loopback vision ---
+
+
+===== Phase 1b frame_probe (rewritten) 2026-07-13T22:32:44.8922051+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+Arming...
+phase arm (1.0s)...
+phase takeoff (2.0s)...
+phase settle1 (2.0s)...
+phase yaw (2.0s)...
+phase settle2 (2.0s)...
+phase step (3.0s)...
+phase stop (1.0s)...
+Saved 1835 samples to logs\frame_probe\probe.json
+
+=== per-phase summary (mean gyro_z / mean accel xy) ===
+  arm      gyro_z=-0.630 rad/s   accel_x=-2.76 accel_y=-7.59
+  takeoff  gyro_z=-0.534 rad/s   accel_x=-2.80 accel_y=-6.44
+  settle1  gyro_z=-0.453 rad/s   accel_x=-2.83 accel_y=-5.46
+  yaw      gyro_z=-0.508 rad/s   accel_x=-2.81 accel_y=-6.12
+  settle2  gyro_z=-0.524 rad/s   accel_x=-2.80 accel_y=-6.32
+  step     gyro_z=-0.453 rad/s   accel_x=-2.83 accel_y=-5.46
+  stop     gyro_z=-0.491 rad/s   accel_x=-2.82 accel_y=-5.92
+
+=== verdicts ===
+yaw_rate honored: commanded +0.79, measured -0.508 -> YES (SIGN FLIPPED!)
+WARNING: drone was spinning during step (gyro_z=-0.45) � frame verdict unreliable, investigate the spin first.
+integrated yaw at step start: -268.8 deg (commanded ~+90)
+step accel direction in body frame: -117.4 deg (BODY hypothesis expects ~0)
+IF the sim used LOCAL_NED: world yaw at step = +117.4 deg -> spawn-heading offset psi0 = +386.2 deg
+   -> set control.velocity.frame='ned' and world_yaw_offset_rad=6.741
+IF |-117deg| is small the sim honored BODY frame -> set control.velocity.frame='body'.
+EXITCODE=0

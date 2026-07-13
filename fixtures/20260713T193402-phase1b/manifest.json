@@ -1,0 +1,43 @@
+{
+  "label": "phase1b",
+  "created_utc": "20260713T193402",
+  "code_commit": "4c74187ff273af1d323c469c40cc336951ee8909",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase1b_report.txt",
+      "file": "report.txt",
+      "bytes": 15364
+    },
+    {
+      "kind": "frame_probe",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\frame_probe\\probe.json",
+      "file": "probe.json",
+      "bytes": 238473
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\flight.jsonl",
+      "file": "20260713T190311-db4c58dd-flight.jsonl",
+      "bytes": 1317179
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\result.json",
+      "file": "20260713T190311-db4c58dd-result.json",
+      "bytes": 433
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\params.json",
+      "file": "20260713T190311-db4c58dd-params.json",
+      "bytes": 1716
+    },
+    {
+      "kind": "recording",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\vision.aigprec",
+      "file": "recording.zip",
+      "bytes": 136
+    }
+  ]
+}
