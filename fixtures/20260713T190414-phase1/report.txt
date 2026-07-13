@@ -1,0 +1,48 @@
+Waiting for sim heartbeat on udp:127.0.0.1:14550 (timeout 30.0s)...
+Heartbeat received. Listening (passive � not arming)...
+  ...  10s  imu=1139  frames=0  race=80
+  ...  20s  imu=2277  frames=0  race=160
+  ...  30s  imu=3416  frames=0  race=240
+  ...  40s  imu=4555  frames=0  race=320
+  ...  50s  imu=5693  frames=0  race=400
+
+=== Phase-1 report ===
+window: 60.0s
+      imu:   6832 msgs  ( 113.9 Hz, max gap     11 ms)
+    frame:      0 msgs  (   0.0 Hz, max gap      0 ms)
+     race:    480 msgs  (   8.0 Hz, max gap    253 ms)
+heartbeat:   1192 msgs  (  19.9 Hz, max gap    103 ms)
+ actuator:   5529 msgs  (  92.1 Hz, max gap     14 ms)
+vision decode: ok=0 failed=0 pending_partials=0
+timesync: synced=True  offset=1783590046477.98 ms  std=0.24 ms
+race status: active_gate_index=0 started=False finished=False
+recording: recordings\phase1-20260713T190142.aigprec (0 datagrams)
+
+=== acceptance ===
+  [PASS] telemetry window >= 60s
+  [PASS] IMU flowing
+  [FAIL] frames decoded
+  [PASS] race status received
+  [PASS] timesync offset std < 5.0ms
+  [FAIL] recording non-empty
+
+PHASE-1 CHECK FAILED
+
+
+===== fly_once.py --max-duration 20 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 20.00046030001249, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5000, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260713T190311-db4c58dd', 'log_dir': 'logs\\20260713T190311-db4c58dd'}
+
+
+===== frame_probe.py =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+Arming...
+Takeoff (2s climb)...
+Yawing 90 degrees...
+BODY +x step (3s) � recording IMU...
+step-phase mean specific force: body_x=-2.62 body_y=-12.36
+If |body_x| >> |body_y|: sim honors BODY frame -> keep control.velocity.frame='body'.
+If |body_y| is dominant: sim used LOCAL_NED -> set frame='ned' (and see docs/02 for yaw compensation).
+Saved 341 samples to logs\frame_probe\probe.json
