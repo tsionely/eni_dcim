@@ -88,12 +88,20 @@ class VisionRX(Agent):
     name = "vision_rx"
 
     def __init__(self, bus: Bus, listen_ip: str, listen_port: int,
-                 raw_sink=None) -> None:
+                 raw_sink=None, mode: str = "listen",
+                 remote: tuple[str, int] | None = None,
+                 hello_interval_s: float = 1.0) -> None:
         super().__init__()
         self.bus = bus
         self.listen_ip = listen_ip
         self.listen_port = listen_port
         self.raw_sink = raw_sink        # optional callable(bytes) for recording
+        # "listen": sim pushes to our port. "subscribe": sim binds `remote`;
+        # we poke it from our socket and it streams back to the source
+        # address (v1.0.3385-style topology).
+        self.mode = mode
+        self.remote = remote
+        self.hello_interval_s = hello_interval_s
         self.assembler = ChunkAssembler()
         self.frames_decoded = 0
         self.frames_failed = 0
@@ -102,12 +110,25 @@ class VisionRX(Agent):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(0.2)
         sock.bind((self.listen_ip, self.listen_port))
+        next_hello = 0.0
+        got_stream = False
         try:
             while self.should_run():
+                if self.mode == "subscribe" and self.remote is not None:
+                    now = time.monotonic()
+                    # Poke fast until the stream starts, then keep alive.
+                    interval = 5.0 if got_stream else self.hello_interval_s
+                    if now >= next_hello:
+                        try:
+                            sock.sendto(b"\x01", self.remote)
+                        except OSError:
+                            pass
+                        next_hello = now + interval
                 try:
                     packet, _ = sock.recvfrom(65536)
                 except socket.timeout:
                     continue
+                got_stream = True
                 if self.raw_sink is not None:
                     self.raw_sink(packet)
                 done = self.assembler.feed(packet)

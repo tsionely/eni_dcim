@@ -45,6 +45,7 @@
     }
   },
   "estimation": {
+    "gyro_bias_calib_s": 1.0,
     "mahony_kp": 2.0,
     "vel_leak": 0.2,
     "vision_blend": 0.6,

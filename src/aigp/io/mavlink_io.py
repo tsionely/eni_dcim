@@ -59,11 +59,17 @@ VELOCITY_YAWRATE_MASK = (
 class MavlinkIO(Agent):
     name = "mavlink_io"
 
-    def __init__(self, bus: Bus, clock: SimClock, listen_ip: str, listen_port: int) -> None:
+    def __init__(self, bus: Bus, clock: SimClock, listen_ip: str, listen_port: int,
+                 mode: str = "listen") -> None:
         super().__init__()
         self.bus = bus
         self.clock = clock
-        self.endpoint = f"udpin:{listen_ip}:{listen_port}"
+        # "listen": classic template topology — we bind the port, the sim
+        # sends to us. "connect": v1.0.3385-style — the sim binds the port,
+        # we send to it and it streams back to our source address.
+        self.mode = mode
+        prefix = "udpin" if mode == "listen" else "udpout"
+        self.endpoint = f"{prefix}:{listen_ip}:{listen_port}"
         self.conn = None
         self._boot_mono_ms = int(time.monotonic() * 1000)
         self._pending_timesync: dict[int, int] = {}   # our tc1 stamp -> send mono ns
@@ -82,11 +88,30 @@ class MavlinkIO(Agent):
     # ------------------------------------------------------------------ setup
 
     def connect(self, timeout_s: float = 30.0) -> None:
-        """Open the UDP endpoint and wait for the sim's heartbeat."""
-        self.conn = mavutil.mavlink_connection(self.endpoint)
-        msg = self.conn.wait_heartbeat(timeout=timeout_s)
-        if msg is None:
-            raise TimeoutError(f"no heartbeat on {self.endpoint} within {timeout_s}s")
+        """Open the UDP endpoint and wait for the sim's heartbeat.
+
+        In connect mode we announce ourselves with client heartbeats while
+        waiting — the sim only learns our address from our first packet.
+        """
+        self.conn = mavutil.mavlink_connection(self.endpoint,
+                                               source_system=245, source_component=190)
+        deadline = time.monotonic() + timeout_s
+        while True:
+            if self.mode == "connect":
+                self.send_client_heartbeat()
+            msg = self.conn.wait_heartbeat(timeout=1.0)
+            if msg is not None:
+                return
+            if time.monotonic() > deadline:
+                raise TimeoutError(f"no heartbeat on {self.endpoint} within {timeout_s}s")
+
+    def send_client_heartbeat(self) -> None:
+        """Announce ourselves (GCS-style heartbeat)."""
+        self.conn.mav.heartbeat_send(
+            mavutil.mavlink.MAV_TYPE_GCS,
+            mavutil.mavlink.MAV_AUTOPILOT_INVALID,
+            0, 0, 0,
+        )
 
     # --------------------------------------------------------------- RX loop
 

@@ -78,6 +78,9 @@ def main() -> int:
     # The real sim was observed emitting heartbeats from multiple sources
     # with different armed flags — track the distinct sources.
     heartbeat_sources: set[tuple[int, int, bool]] = set()
+    # v1.0.3385 lesson: the 14550 channel streams at full rate with FROZEN
+    # values. Counting messages is not enough — sample values for liveness.
+    gyro_z_samples: list[float] = []
 
     t_start = time.monotonic()
     t_end = t_start + args.duration
@@ -95,6 +98,8 @@ def main() -> int:
                 last_change[name] = now
                 if name == "heartbeat":
                     heartbeat_sources.add((msg.src_system, msg.src_component, msg.armed))
+                elif name == "imu" and len(gyro_z_samples) < 20000:
+                    gyro_z_samples.append(float(msg.gyro[2]))
         if now >= next_progress:
             next_progress += 10.0
             print(f"  ...{now - t_start:4.0f}s  imu={counts['imu']}  "
@@ -122,6 +127,13 @@ def main() -> int:
           f"std={offset_std_ms:.2f} ms", flush=True)
     print("heartbeat sources (system, component, armed): "
           + (", ".join(str(s) for s in sorted(heartbeat_sources)) or "none"), flush=True)
+    import statistics
+    imu_alive = False
+    if len(gyro_z_samples) >= 10:
+        gz_std = statistics.pstdev(gyro_z_samples)
+        imu_alive = gz_std > 1e-5
+        print(f"imu liveness: gyro_z mean={statistics.mean(gyro_z_samples):+.3f} "
+              f"std={gz_std:.6f} -> {'ALIVE' if imu_alive else 'FROZEN'}", flush=True)
     if race is not None:
         print(f"race status: active_gate_index={race.active_gate_index} "
               f"started={race.started} finished={race.finished}", flush=True)
@@ -130,6 +142,7 @@ def main() -> int:
     checks = {
         f"telemetry window >= {args.duration:.0f}s": elapsed >= args.duration - 1.0,
         "IMU flowing": counts["imu"] > 0 and max_gap["imu"] < 1.0,
+        "IMU values alive (not frozen)": imu_alive,
         "frames decoded": vision.frames_decoded > 0,
         "race status received": counts["race"] > 0,
         f"timesync offset std < {OFFSET_STD_LIMIT_MS}ms":

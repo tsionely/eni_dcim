@@ -30,12 +30,17 @@ class StateEstimator:
 
         self.v_world = np.zeros(3)
         self._omega = np.zeros(3)
+        self._gyro_bias = np.zeros(3)
         self._last_imu_ts_ns: int | None = None
         self._gate_rel: RelPose | None = None
         self._gate_rel_ts_ns: int | None = None
         self._gate_center_px: tuple[float, float] | None = None
         self._image_size: tuple[int, int] | None = None
         self._now_ns = 0
+
+    def set_gyro_bias(self, bias: np.ndarray) -> None:
+        """Gyro bias measured while stationary on the ground (pre-arm)."""
+        self._gyro_bias = np.asarray(bias, dtype=np.float64)
 
     def reset(self) -> None:
         self.attitude.reset()
@@ -58,8 +63,9 @@ class StateEstimator:
         if dt <= 0 or dt > 0.5:
             return
 
-        q = self.attitude.update(imu.gyro, imu.accel, dt)
-        self._omega = imu.gyro
+        gyro = imu.gyro - self._gyro_bias
+        q = self.attitude.update(gyro, imu.accel, dt)
+        self._omega = gyro
 
         # Specific force f = a - g  =>  a_world = R*f + g_world.
         a_world = quat_rotate(q, imu.accel) + np.array([0.0, 0.0, 9.80665])

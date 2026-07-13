@@ -148,7 +148,8 @@
 | # | סיכון | השפעה | מיתיגציה | סטטוס |
 |---|---|---|---|---|
 | R1 | סמנטיקת frame של velocity לא ידועה (BODY_NED מול LOCAL_NED, ואין לנו yaw גלובלי) | חוסם בקרה אופקית שימושית | ‏`scripts/frame_probe.py` ב-Phase 1; ‏fallback: ‏yaw יחסי מה-estimator + סיבוב הפקודה לעולם | ‏probe ראשון (v1.0.3385) הצביע על LOCAL_NED אך המדידה לא אמינה (סחרור לא-מצווה); ‏VelocityBackend תומך כעת בשני המצבים + ‏world_yaw_offset; ‏re-probe מתוזמן |
-| R7 | זרם הווידאו שותק ב-v1.0.3385 ‏(0 דטגרמות על udp:5600 גם במרוץ פעיל) | חוסם את כל שרשרת הראייה | ‏`scripts/vision_probe.py`: סריקת פורטים 5595-5615 פסיבית+חמושה, בדיקת netstat/config/firewall | פתוח — באבחון Phase 1b |
+| R7 | טופולוגיית הרשת השתנתה ב-v1.0.3385: וידאו שותק על 5600, טלמטריית 14550 זורמת אך **קפואה** (ערכים קבועים, std=0), הסים עצמו קושר udp:5601 ו-14560 | חוסם ראייה ושערוך מצב כאחד | השערת עבודה: מודל connect — הלקוח פונה אל הסים (MAVLink→14560, וידאו→5601) והסים משיב לכתובת הפונה; ‏`scripts/topology_probe.py` בודק; הקוד תומך כבר בשני המצבים (`mavlink.mode`, ‏`vision.mode` ב-sim.json); ‏phase1_check בודק כעת חיות-ערכים ולא רק ספירת הודעות | באימות Phase 1c |
+| R8 | הטיית ג'ירו / טלמטריה לא-מכוילת | סחיפת yaw הורסת פיצוי NED וניווט | כיול bias אוטומטי לפני כל טיסה (חלון נייח על הקרקע, `estimation.gyro_bias_calib_s`) | ממומש |
 | R2 | ‏intrinsics של המצלמה לא מפורסמים | שגיאת סקאלה במרחק מ-PnP ← ‏commit שגוי | כיול FOV אמפירי (מסמך 03 סעיף 4); ‏FOV כרשומת `ParamSet` | מתוכנן — Phase 3 |
 | R3 | ‏jitter ב-250Hz תחת Python/GIL | ‏overruns ← בקרה לא יציבה, במיוחד ב-attrate | ‏RateLoop עם מטריקות; נתיב חם רזה ללא הקצאות; ‏fallback decimation ל-125Hz ‏(velocity בלבד); הכרעה על attrate לפי מדידות | מנוהל שוטף |
 | R4 | אובדן פקטות UDP (פריימים חלקיים, טלמטריה חסרה) | חורי ראייה, ‏estimator מזדקן | ‏partial-frame GC ב-`vision_rx`; ‏watchdogs על staleness; ‏dead-reckoning קצוב לגישור | ממומש בתכנון |

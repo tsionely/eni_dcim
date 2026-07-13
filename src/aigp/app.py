@@ -16,6 +16,8 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from aigp.core.bus import Bus
 from aigp.core.clock import SimClock
 from aigp.core.messages import LoopStats, Topic
@@ -40,9 +42,13 @@ from aigp.telemetry.logger import TelemetryLogger
 class SimConfig:
     mavlink_ip: str = "127.0.0.1"
     mavlink_port: int = 14550
+    mavlink_mode: str = "listen"        # "listen" | "connect" (see MavlinkIO)
     heartbeat_timeout_s: float = 30.0
     vision_ip: str = "0.0.0.0"
     vision_port: int = 5600
+    vision_mode: str = "listen"         # "listen" | "subscribe" (see VisionRX)
+    vision_remote_ip: str = "127.0.0.1"
+    vision_remote_port: int = 5601
     control_hz: int = 250
     planner_div: int = 5
     timesync_hz: float = 10.0
@@ -57,9 +63,13 @@ class SimConfig:
         return cls(
             mavlink_ip=raw["mavlink"]["listen_ip"],
             mavlink_port=raw["mavlink"]["listen_port"],
+            mavlink_mode=raw["mavlink"].get("mode", "listen"),
             heartbeat_timeout_s=raw["mavlink"].get("heartbeat_timeout_s", 30.0),
             vision_ip=raw["vision"]["listen_ip"],
             vision_port=raw["vision"]["listen_port"],
+            vision_mode=raw["vision"].get("mode", "listen"),
+            vision_remote_ip=raw["vision"].get("remote_ip", "127.0.0.1"),
+            vision_remote_port=raw["vision"].get("remote_port", 5601),
             control_hz=raw["rates"].get("control_hz", 250),
             planner_div=raw["rates"].get("planner_div", 5),
             timesync_hz=raw["rates"].get("timesync_hz", 10.0),
@@ -80,8 +90,11 @@ class App:
         self.cfg = cfg
         self.bus = Bus()
         self.clock = SimClock()
-        self.mavlink = MavlinkIO(self.bus, self.clock, cfg.mavlink_ip, cfg.mavlink_port)
-        self.vision = VisionRX(self.bus, cfg.vision_ip, cfg.vision_port)
+        self.mavlink = MavlinkIO(self.bus, self.clock, cfg.mavlink_ip, cfg.mavlink_port,
+                                 mode=cfg.mavlink_mode)
+        self.vision = VisionRX(self.bus, cfg.vision_ip, cfg.vision_port,
+                               mode=cfg.vision_mode,
+                               remote=(cfg.vision_remote_ip, cfg.vision_remote_port))
         self.timesync = TimeSyncTX(self.mavlink, cfg.timesync_hz)
         self._connected = False
 
@@ -130,6 +143,10 @@ class App:
         backend = BACKENDS[params.get("control.backend")](self.mavlink, params)
         supervisor = RaceManager(self.mavlink, self.bus, params, self.clock)
 
+        # Pre-flight gyro-bias calibration: the drone sits on the start point
+        # before arming, so a short stationary window measures the bias.
+        self._calibrate_gyro_bias(estimator, params)
+
         perception.start()
         try:
             result = self._hot_loop(supervisor, estimator, planner, backend,
@@ -153,6 +170,27 @@ class App:
         self.mavlink.sim_reset()
         time.sleep(settle_s)
         return self.fly(params, max_duration_s=max_duration_s)
+
+    def _calibrate_gyro_bias(self, estimator: StateEstimator, params: ParamSet) -> None:
+        calib_s = float(params.get("estimation.gyro_bias_calib_s", default=0.0))
+        if calib_s <= 0:
+            return
+        imu_cell = self.bus.cell(Topic.IMU)
+        last_seq = 0
+        gyros = []
+        t_end = time.monotonic() + calib_s
+        while time.monotonic() < t_end:
+            fresh = imu_cell.get_if_newer(last_seq)
+            if fresh is not None:
+                imu, last_seq = fresh
+                gyros.append(imu.gyro)
+            time.sleep(0.002)
+        if len(gyros) >= 10:
+            bias = np.mean(gyros, axis=0)
+            estimator.set_gyro_bias(bias)
+            print(f"gyro bias calibrated over {len(gyros)} samples: {bias}", flush=True)
+        else:
+            print("gyro bias calibration skipped: too few IMU samples", flush=True)
 
     # ---------------------------------------------------------------- hot loop
 

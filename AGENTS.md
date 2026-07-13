@@ -62,31 +62,32 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 1b — vision diagnosis + frame re-probe
+## CURRENT TASK: Phase 1c — port-topology probe
 
-Your Phase-1 fixtures (`fixtures/20260713T190414-phase1/`) were analyzed.
-Findings: MAVLink healthy; the race DID start during the armed flight yet
-zero vision datagrams reached udp:5600; the frame_probe verdict was
-unreliable (the drone was spinning at -1 rad/s during the step). New
-diagnostic tools were pushed — run this cycle:
+Phase-1b analysis (cloud side) concluded:
+
+- The IMU stream on udp:14550 is **frozen** — full rate, but constant values
+  (std 0.000 over 20s; the "spin" and "yaw sign flip" you measured were
+  artifacts of reading static garbage). Message counts lie; value liveness is
+  now checked by phase1_check.
+- The sim engine binds udp:5601 and udp:14560 itself → working hypothesis:
+  v1.0.3385 moved the LIVE vehicle channel to a connect-style topology
+  (client sends TO the sim; sim streams back to the sender): MAVLink on
+  14560, vision on 5601. Port 14550 is a legacy/lobby channel (accepts arm,
+  streams frozen telemetry).
+
+Run this cycle:
 
 1. `git pull`, launch the sim, enter the qualifier as usual.
-2. Vision diagnosis (capture all output with Tee-Object):
-   - `python scripts/vision_probe.py --duration 30` (passive port scan 5595-5615)
-   - `python scripts/vision_probe.py --duration 30 --arm` (same, during an armed flight)
-   - If both report no traffic: run `netstat -ano | findstr 5600`; search the
-     sim install dir:
-     `Get-ChildItem <simdir> -Recurse -Include *.ini,*.json,*.cfg | Select-String -Pattern '5600|[Vv]ideo|[Ss]tream'`
-     and check Windows Defender Firewall inbound rules for python.exe (UDP).
-     Record everything you find in notes.md.
-   - Note: during your own R1 run you captured 4 frames with your external
-     capture tooling — state clearly in notes.md HOW those were captured
-     (UDP stream? screen capture?) and under what sim state (race running?).
-3. Frame re-probe with the rewritten `scripts/frame_probe.py` (now records
-   all phases, checks for uncommanded spin, and prints a world_yaw_offset
-   estimate). If it warns the verdict is unreliable, note the spin behavior.
-4. `python scripts/collect_artifacts.py --label phase1b --report <report>`,
-   add notes.md, commit `[sim-run] phase1b vision+frame diagnosis`, push.
+2. `python scripts/topology_probe.py 2>&1 | Tee-Object -FilePath topology_report.txt`
+   — it tests all three channels (legacy 14550 liveness, connect to 14560,
+   vision poke to 5601) and prints per-channel verdicts + recommended config.
+3. If 14560/5601 respond — also rerun
+   `python scripts/phase1_check.py --duration 30` (it now checks IMU value
+   liveness) and append its output to the report.
+4. `python scripts/collect_artifacts.py --label phase1c --report topology_report.txt`,
+   add notes.md (include: does the drone need to be IN a race for 14560/5601
+   to answer?), commit `[sim-run] phase1c topology probe`, push.
 
 ## Phase tasks (general roadmap)
 
