@@ -11,6 +11,20 @@ Unpushed work does not exist for the team (three agents have now lost cycles
 to this). If push is rejected: `git pull --rebase origin main` then push
 again. The remote default branch is `main` — never `master`.
 
+## SIM LOCK — one operator at a time
+
+Exactly ONE agent may touch the real simulator at any moment (a duplicate
+sim instance cost us all of Phase 1's measurements). Before starting any
+real-sim cycle, whoever holds the operator role MUST:
+
+1. Check the machine-level lock: if `C:\Temp\eni_dcim_sim.lock` exists and
+   its owner process is alive — do NOT proceed; report instead.
+2. Take it: `Set-Content C:\Temp\eni_dcim_sim.lock "<role> <PID> <timestamp>"`.
+3. Release it when the cycle ends (delete the file), even on failure.
+
+Agents in non-operator roles never launch, reset, click, or command the real
+sim — regardless of the lock.
+
 Three local roles are defined. State clearly in your commit messages which
 role you act as. All coordinate with the cloud agent through git on `main`.
 
