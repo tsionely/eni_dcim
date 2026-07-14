@@ -1,0 +1,90 @@
+===== Phase 2a preflight 2026-07-14T07:43:00.1737424+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+
+--- att_rate config (hover_thrust etc.) ---
+"backend": "att_rate",
+"att_rate": {
+"vel_p": 0.3,
+"tilt_max_rad": 0.35,
+"rate_p": 8.0,
+"hover_thrust": 0.5
+
+
+===== Phase 2a MODE H (hover-thrust ladder) 2026-07-14T07:49:19.4966090+03:00 =====
+sim window: AI-GP   07:49:20
+event r1 clicked (400,225) 07:49:27
+RACE clicked 07:49:30
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode H: hover-thrust ladder ===
+resetting sim + arming...
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  thrust=0.40              accel_std=4.939  motor_span=0.350  collisions=0  motors=(0.4000000059604645, 0.4000000059604645, 0.4000000059604645, 0.4000000059604645)  -> RESPONSE
+  thrust=0.45              accel_std=2.775  motor_span=0.050  collisions=0  motors=(0.44999998807907104, 0.44999998807907104, 0.44999998807907104, 0.44999998807907104)  -> RESPONSE
+  thrust=0.50              accel_std=1.730  motor_span=0.050  collisions=0  motors=(0.4999999403953552, 0.4999999403953552, 0.4999999403953552, 0.4999999403953552)  -> RESPONSE
+  thrust=0.55              accel_std=1.954  motor_span=0.050  collisions=0  motors=(0.5499998927116394, 0.5499998927116394, 0.5499998927116394, 0.5499998927116394)  -> RESPONSE
+  thrust=0.60              accel_std=1.488  motor_span=0.050  collisions=0  motors=(0.5999999046325684, 0.5999999046325684, 0.5999999046325684, 0.5999999046325684)  -> RESPONSE
+  thrust=0.65              accel_std=1.155  motor_span=0.050  collisions=0  motors=(0.6499998569488525, 0.6499998569488525, 0.6499998569488525, 0.6499998569488525)  -> RESPONSE
+  [OPERATOR] note at which thrust step the drone lifted / held altitude � that brackets control.att_rate.hover_thrust.
+  [OPERATOR] did the drone visibly move in mode H? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_H_EXIT=0
+H screenshots: 14
+
+
+===== Phase 2a MODE D (rate response) 2026-07-14T07:51:31.3566696+03:00 =====
+sim window: AI-GP   07:51:31
+event r1 clicked (400,225) 07:51:39
+RACE clicked 07:51:41
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode D: rate response ===
+resetting sim + arming...
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  lift (thrust 0.6)        accel_std=12.358  motor_span=0.550  collisions=0  motors=(0.5999996662139893, 0.5999996662139893, 0.6000003218650818, 0.6000003814697266)  -> RESPONSE
+  pitch-rate pulse: commanded q=+0.40, measured p=+0.000 q=-0.974 r=+0.000
+  [OPERATOR] did the drone visibly move in mode D? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_D_EXIT=0
+D screenshots: 9
+
+
+===== Phase 2a MAIN EVENT fly_once --max-duration 60 2026-07-14T07:56:34.3201689+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [ 5.04644571e-38  6.25858906e-38 -1.64289196e-37]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 46.09218270005658, 'loop_overrun_frac': 8.678295582747549e-05, 'loop_stats': {'ticks': 11523, 'overruns': 1, 'overrun_frac': 8.678295582747549e-05, 'max_late_us': 2217}, 'flight_id': '20260714T045635-b9a568ab', 'log_dir': 'logs\\20260714T045635-b9a568ab'}
+FLY_ONCE_2A_EXIT=0
+--- fly_once helper stdout ---
+sim window: AI-GP   07:56:41
+event r1 clicked (400,225) 07:56:48
+RACE clicked 07:56:51
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_00_075651.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_01_075653.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_02_075656.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_03_075658.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_04_075700.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_05_075703.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_06_075705.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_07_075708.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_08_075710.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_09_075712.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_10_075715.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_11_075717.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_12_075719.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_13_075721.png
+C:\Users\tsion\AppData\Local\Temp\phase2a_shots\fly_once\fly2a_14_075724.png
+--- fly_once helper stderr ---
