@@ -1,0 +1,71 @@
+===== Phase 2d preflight 2026-07-14T12:07:00.1552379+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- stray python ---
+
+
+
+===== Phase 2d RUN 1: control_probe --modes E 2026-07-14T12:09:00.6497930+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode E: open-loop sign verdict ===
+resetting sim + arming...
+  waiting for race GO (start the race now; timeout 30s)...
+  GO!
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+
+  === open-loop verdict ===
+  commanded: RAW pitch rate +0.30 for 0.5s (expected +0.15 rad nose-up)
+  gyro-integrated pitch: -0.399 rad
+  accel f_x after settle: -1.35 m/s^2 -> physical pitch NOSE-DOWN
+  interpretation:
+    physical NOSE-UP  + gyro negative -> COMMANDS standard, GYRO inverted
+    physical NOSE-DOWN + gyro negative -> COMMANDS inverted, gyro fine
+    |gyro_pitch|/0.15 = scale factor 2.66
+  [OPERATOR] did the drone visibly move in mode E? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_E1_EXIT=0
+--- race starter stdout E1 ---
+sim window: AI-GP   12:09:05
+event r1 clicked (400,225) 12:09:14
+RACE clicked 12:09:16
+--- race starter stderr E1 ---
+
+
+===== Phase 2d RUN 2: control_probe --modes E 2026-07-14T12:15:02.4495050+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode E: open-loop sign verdict ===
+resetting sim + arming...
+  waiting for race GO (start the race now; timeout 30s)...
+  GO!
+  throttle-down handshake  accel_std=1.323  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> RESPONSE
+
+  === open-loop verdict ===
+  commanded: RAW pitch rate +0.30 for 0.5s (expected +0.15 rad nose-up)
+  gyro-integrated pitch: -0.182 rad
+  accel f_x after settle: -0.92 m/s^2 -> physical pitch NOSE-DOWN
+  interpretation:
+    physical NOSE-UP  + gyro negative -> COMMANDS standard, GYRO inverted
+    physical NOSE-DOWN + gyro negative -> COMMANDS inverted, gyro fine
+    |gyro_pitch|/0.15 = scale factor 1.21
+  [OPERATOR] did the drone visibly move in mode E? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_E2_EXIT=0
+--- race starter stdout E2 ---
+sim window: AI-GP   12:15:07
+event r1 clicked (400,225) 12:15:14
+RACE clicked 12:15:17
+--- race starter stderr E2 ---
