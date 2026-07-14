@@ -1,0 +1,118 @@
+===== Phase 3a R2-TRAINING preflight 2026-07-14T23:11:31.4094862+03:00 =====
+--- git/doc confirmation ---
+d86504b Sensor-truth breakthrough: gyro reports inverted, commands were straight
+255764e [sim-run] phase2l gate attempt world-frame velocity
+4d683cc Gate world-frame vision velocity behind a param (mock regression)
+docs/07 exists: True
+--- Phase 3a task lines ---
+1. **R2 gate appearance study (top priority)**: from the R2-TRAINING vision
+## CURRENT TASK: Phase 3a — THE SENSOR-TRUTH FLIGHT + R2-TRAINING recon
+gate. Your job: prove it on the real sim, then bring back R2-TRAINING data.
+2. **Flight A — validation on the familiar R1 qualifier track**, DEFAULT
+3. **Flights B+ — R2-TRAINING** (the competition-deciding track): switch the
+   sim to R2-TRAINING, then repeat `fly_once.py --max-duration 120` 2-3
+4. If Flight A is visibly WORSE than phase2k (immediate tumble): abort the
+6. Collect with `--label phase3a-r1` / `--label phase3a-r2training`
+--- sim process/ports before launch ---
+
+Updating d86504b..0d57506
+Fast-forward
+ AGENTS.md | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- sim process/ports after launch ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+61400 DCGame-Win64-Shipping 14/07/2026 23:12:30 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+44652 FlightSim             14/07/2026 23:12:26 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 61400 DCGame-Win64-Shipping
+udp 5601 <- PID 61400 DCGame-Win64-Shipping
+
+
+===== Phase 3a R2-TRAINING Flight 1/3 DEFAULT 2026-07-14T23:17:43.8874478+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 120.00039270002162, 'loop_overrun_frac': 0.004433333333333333, 'loop_stats': {'ticks': 30000, 'overruns': 133, 'overrun_frac': 0.004433333333333333, 'max_late_us': 9533}, 'flight_id': '20260714T201758-58cd98ad', 'log_dir': 'logs\\20260714T201758-58cd98ad'}
+R2_F1_EXIT=0
+--- helper stdout R2 F1 ---
+sim window: AI-GP   23:17:55
+event r2-training clicked (400,381) 23:18:04
+RACE clicked 23:18:07
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_00_231807.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_01_231811.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_02_231816.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_03_231820.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_04_231824.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_05_231829.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_06_231833.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_07_231837.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_08_231842.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_09_231846.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_10_231851.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_11_231855.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_12_231859.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_13_231903.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_14_231907.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_15_231912.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_16_231916.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_17_231920.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_18_231924.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_19_231929.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_20_231933.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_21_231937.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_22_231941.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_23_231946.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_24_231950.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_25_231954.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_26_231958.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f1\r2_f1_27_232003.png
+--- helper stderr R2 F1 ---
+
+
+===== Phase 3a R2-TRAINING Flight 2/3 DEFAULT 2026-07-14T23:24:46.5664412+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=4.1)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 24.884194300044328, 'loop_overrun_frac': 0.006912072014145636, 'loop_stats': {'ticks': 6221, 'overruns': 43, 'overrun_frac': 0.006912072014145636, 'max_late_us': 3864}, 'flight_id': '20260714T202447-58cd98ad', 'log_dir': 'logs\\20260714T202447-58cd98ad'}
+R2_F2_EXIT=0
+--- helper stdout R2 F2 ---
+sim window: AI-GP   23:24:54
+event r2-training clicked (400,381) 23:25:02
+RACE clicked 23:25:05
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f2\r2_f2_00_232505.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f2\r2_f2_01_232510.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f2\r2_f2_02_232515.png
+--- helper stderr R2 F2 ---
+
+
+===== Phase 3a R2-TRAINING Flight 3/3 DEFAULT 2026-07-14T23:27:43.2691388+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [ 0.000439    0.00052216 -0.00016306]; level ref roll=+0.004 pitch=-0.028
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 1, 'env_hits': 7, 'duration_s': 22.328890599950682, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5582, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T202743-58cd98ad', 'log_dir': 'logs\\20260714T202743-58cd98ad'}
+R2_F3_EXIT=0
+--- helper stdout R2 F3 ---
+sim window: AI-GP   23:27:50
+event r2-training clicked (400,381) 23:27:58
+RACE clicked 23:28:00
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f3\r2_f3_00_232801.png
+C:\Users\tsion\AppData\Local\Temp\phase3a_r2_shots\r2_f3\r2_f3_01_232805.png
+--- helper stderr R2 F3 ---
+
+
+===== Phase 3a R2 recording slices 2026-07-14T23:31:57.7506046+03:00 =====
+kept 28635/28636 datagrams, 40.0 MB -> r2_f2_slice_start.aigprec
+kept 28681/28682 datagrams, 40.0 MB -> r2_f3_slice_start.aigprec
+
+Name                         MB
+----                         --
+r2_f2_slice_start.aigprec 38.50
+r2_f3_slice_start.aigprec 38.50
+
+
