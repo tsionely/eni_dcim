@@ -220,8 +220,11 @@ class App:
         # In-countdown calibration: pre-arm telemetry is a frozen idle
         # placeholder (phase2g), so bias + level reference are measured from
         # LIVE data while holding still in THROTTLE_DOWN, applied at TAKEOFF.
-        calib_gyros: list = []
-        calib_accels: list = []
+        from collections import deque
+        calib_gyros: deque = deque(maxlen=180)   # last ~1.5s before GO only —
+        calib_accels: deque = deque(maxlen=180)  # the long GO wait mixes stale
+        # pre-race values into a full-window average (phase2h: +0.14 instead
+        # of the true -0.31).
         prev_fsm_state = supervisor.state
 
         supervisor.start_flight()
