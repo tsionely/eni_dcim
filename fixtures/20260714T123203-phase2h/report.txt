@@ -1,0 +1,41 @@
+===== Phase 2h preflight 2026-07-14T15:20:58.8500104+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- exact command to run ---
+python scripts/fly_once.py --max-duration 45 --patch planner.force_hover=true --patch control.att_rate.rate_p=1.2 --patch control.att_rate.rate_max_rps=1.5 --patch control.att_rate.tilt_max_rad=0.2 --patch control.att_rate.hover_thrust=0.30 --patch planner.takeoff.climb_mps=0.5
+
+
+===== Phase 2h exact config B hover rerun 2026-07-14T15:22:43.3444645+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [-0.00529973 -0.00074947 -0.00440466]; level ref roll=+0.091 pitch=+0.333
+live calibration (2072 samples): bias=[-0.00369183 -0.00052488 -0.00306136] level roll=+0.063 pitch=+0.140
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 45.00186439999379, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T122243-73ed53b1', 'log_dir': 'logs\\20260714T122243-73ed53b1'}
+PHASE2H_EXIT=0
+--- race/screenshot helper stdout ---
+sim window: AI-GP   15:22:50
+event r1 clicked (400,225) 15:22:58
+RACE clicked 15:23:01
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_00_152301.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_01_152303.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_02_152306.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_03_152308.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_04_152311.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_05_152313.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_06_152316.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_07_152319.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_08_152321.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_09_152324.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_10_152326.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_11_152329.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2h_B\phase2h_B_12_152331.png
+--- race/screenshot helper stderr ---
