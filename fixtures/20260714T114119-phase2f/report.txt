@@ -1,0 +1,85 @@
+===== Phase 2f preflight 2026-07-14T12:45:32.8165362+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- stale python ---
+
+--- defaults relevant ---
+"max_climb_mps": 2.0,
+"yaw_rate_max_rps": 1.5
+"rate_sign_roll": -1.0,
+"rate_sign_pitch": -1.0,
+"rate_sign_yaw": -1.0,
+"tilt_max_rad": 0.35,
+"rate_p": 8.0,
+"hover_thrust": 0.5
+"takeoff": { "climb_mps": 1.0, "duration_s": 1.5 },
+"search": { "yaw_rate_rps": 0.6, "climb_mps": 0.0 },
+
+
+===== Phase 2f attempt A: force_hover rate_p=2.5 hover=0.30 2026-07-14T14:00:31.4590587+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 2.5, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 15.232281199947465, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 3808, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T110032-62997d9b', 'log_dir': 'logs\\20260714T110032-62997d9b'}
+ATTEMPT_A_EXIT=0
+--- helper stdout A ---
+sim window: AI-GP   14:00:40
+event r1 clicked (400,225) 14:00:47
+RACE clicked 14:00:50
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\A2f\A2f_00_140050.png
+--- helper stderr A ---
+
+
+===== Phase 2f attempt B: force_hover rate_p=1.2 hover=0.30 2026-07-14T14:06:42.6227009+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 45.000587599992286, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T110643-02cf6940', 'log_dir': 'logs\\20260714T110643-02cf6940'}
+ATTEMPT_B_EXIT=0
+--- helper stdout B ---
+sim window: AI-GP   14:06:50
+event r1 clicked (400,225) 14:06:57
+RACE clicked 14:07:00
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_00_140700.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_01_140702.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_02_140705.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_03_140708.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_04_140710.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_05_140713.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_06_140715.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_07_140718.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_08_140720.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_09_140723.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_10_140725.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_11_140728.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\B2f\B2f_12_140730.png
+--- helper stderr B ---
+
+
+===== Phase 2f attempt C: force_hover rate_p=2.5 hover=0.22 2026-07-14T14:34:57.3062397+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 2.5, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.22, 'planner.takeoff.climb_mps': 0.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [-2.15243269e-03  9.84613821e-02  4.83123586e-08]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=8.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 25.544577400025446, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6386, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T113457-36aa6178', 'log_dir': 'logs\\20260714T113457-36aa6178'}
+ATTEMPT_C_EXIT=0
+--- helper stdout C ---
+sim window: AI-GP   14:35:04
+event r1 clicked (400,225) 14:35:12
+RACE clicked 14:35:15
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\C2f\C2f_00_143515.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\C2f\C2f_01_143517.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\C2f\C2f_02_143520.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\C2f\C2f_03_143522.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\C2f\C2f_04_143525.png
+--- helper stderr C ---
