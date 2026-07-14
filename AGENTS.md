@@ -216,32 +216,35 @@ encode the corrected model (gyro_sign=-1, rate_sign=+1, cmd-fed yaw, gate
 dead-reckoning, aim-up). On the faithful mock this flies 9/10 through the
 gate. Your job: prove it on the real sim, then bring back R2-TRAINING data.
 
+ALL flights this cycle are on **R2-TRAINING** — the competition-deciding
+track. It validates the corrected sensor model AND brings back the R2 data
+in one cycle.
+
 1. `git pull` (verify you see commit with docs/07). Single engine instance,
-   SIM LOCK as usual.
-2. **Flight A — validation on the familiar R1 qualifier track**, DEFAULT
-   params, no patches:
-   `python scripts/fly_once.py --max-duration 90`
-   Expected: stable takeoff, approach WITH the nose turning TOWARD the gate
-   (this was backwards until today), a committed pass attempt. Any gate pass
-   = history. Note attitude quality, yaw behavior during search, altitude.
-3. **Flights B+ — R2-TRAINING** (the competition-deciding track): switch the
-   sim to R2-TRAINING, then repeat `fly_once.py --max-duration 120` 2-3
-   times, DEFAULT params first.
-   - EXPECTED RISK: R2 gates are photorealistic, probably NOT red rings —
+   SIM LOCK as usual. Load the sim on R2-TRAINING.
+2. **Flight A — DEFAULT params, no patches**:
+   `python scripts/fly_once.py --max-duration 120`
+   Watch for: stable takeoff, the nose turning TOWARD the gate during
+   approach (this was backwards until today), a committed pass attempt.
+   Any gate pass = history. Note attitude quality, yaw behavior during
+   search, altitude over time.
+   - EXPECTED RISK: R2 gates are photorealistic, possibly NOT red rings —
      the detector may see nothing and the drone will hover/search. That is
      still a SUCCESSFUL recon: the vision recording is the deliverable.
    - Keep `record_vision` on (default). Every R2 frame is gold for the
      detector work.
-4. If Flight A is visibly WORSE than phase2k (immediate tumble): abort the
-   cycle, collect, and report — do NOT improvise sign patches; the analyst
-   verifies the sensor model from your recording.
+3. **Flights B-C — repeat** `fly_once.py --max-duration 120`, default
+   params, 2 more times (consistency check; note run-to-run differences).
+4. If Flight A shows an immediate tumble (visibly worse than the phase2k
+   hover): abort the cycle, collect, and report — do NOT improvise sign
+   patches; the analyst verifies the sensor model from your recording.
 5. Optional A/B if time remains (one flight each):
    `--patch estimation.vision_yaw=true` and
    `--patch planner.approach.aim_up_m=0.5`.
-6. Collect with `--label phase3a-r1` / `--label phase3a-r2training`
-   (INCLUDE the R2 vision recordings as slices; full files >50MB go to
-   Drive per ground rule 5), add notes.md per flight (track, what the drone
-   did, gates passed y/n, anomalies), push, VERIFY on origin.
+6. Collect with `--label phase3a-r2training` (INCLUDE vision-recording
+   slices around any gate sighting; full files >50MB go to Drive per ground
+   rule 5), add notes.md per flight (what the drone did, gates detected
+   y/n, gates passed y/n, anomalies), push, VERIFY on origin.
 
 ## PREVIOUS: Phase 2f — hover-only stabilization ladder (superseded by
 ## docs/07: the E verdict below was WRONG — the gyro, not the command
