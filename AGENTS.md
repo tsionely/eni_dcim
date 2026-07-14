@@ -121,7 +121,25 @@ Standing tasks (in priority order, redone as new recordings appear):
 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
    failures) — document with data in your report; do NOT fix code, flag it.
 
-### CURRENT TASK (after Sakana's phase3a push): R2 recon + sensor-model audit
+### CURRENT TASK: R2 deep-dive on the phase3a slices (already in fixtures/)
+
+The committed slices (r2_f2/f3_slice_start.aigprec) show the R2 world:
+red AI-GP gates, a glowing CYAN racing line through the whole track, red
+"E" station signs and pink orb lights (false-positive candidates).
+
+1. **Cyan racing-line study (highest value)**: measure the line's HSV
+   bands across frames/lighting; how reliably can a cheap mask segment it?
+   Does it always pass through the NEXT gate's opening? Deliverable:
+   analysis report + recommended hue/sat/val bands + 10-20 annotated
+   frames. This can unlock line-following navigation between gates.
+2. **Detector false-positive audit**: run the repo detector over both
+   slices; count detections that are NOT the active gate (other gates vs
+   signs/lights). Does the ring test reject the "E" signs and orbs?
+3. **Sensor-model audit on phase3a logs** (as before): repeat the docs/07
+   correlations on the new flight.jsonl files; estimate per-axis
+   gyro_scale.
+
+### PREVIOUS (done by cloud in docs/08): R2 recon + sensor-model audit
 
 Read docs/07 (the gyro-inversion finding came from correlation analysis of
 the kind you do best — pixel motion vs IMU on phase2k). Then, on the new
@@ -205,7 +223,31 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3a — THE SENSOR-TRUTH FLIGHT + R2-TRAINING recon
+## CURRENT TASK: Phase 3b — R2-TRAINING with target lock + velocity resets
+
+phase3a was a breakthrough recon: the corrected sensor model HELD on the
+real sim (nose pointed at the gate, reached 1.4m from it in 3s), R2 gates
+are red and detectable (1649 detections, conf 1.0), and docs/08 lists the
+three failures that prevented a pass — all fixed in this commit: phantom
+ground velocity (zeroed at takeoff), mid-commit target switching between
+gates (gate lock), and post-collision velocity spikes (zeroed on impact).
+
+1. `git pull` (verify docs/08-sikum-r2-recon.md exists). Single engine
+   instance, SIM LOCK as usual. Load R2-TRAINING.
+2. Fly `python scripts/fly_once.py --max-duration 120` with DEFAULT params,
+   3 times. What to watch per flight:
+   - Takeoff should now be GENTLE (no more -38deg charge off the pad).
+   - Approach speed moderate (~2-3 m/s), nose on the gate, no target jumps.
+   - Any gate pass: note WHICH gate and the race timer.
+   - If the vision stream is dead again (phase3a flight 1): restart the
+     race from the menu once; if still dead, note it and move on.
+3. Optional 4th flight if all 3 look stable:
+   `--patch planner.approach.speed_far_mps=4.0` (a faster attempt).
+4. Collect with `--label phase3b-r2training` (slices around every gate
+   approach; full recordings >50MB to Drive), notes.md per flight, push,
+   VERIFY on origin.
+
+## PREVIOUS: Phase 3a — THE SENSOR-TRUTH FLIGHT + R2-TRAINING recon
 
 **Read docs/07 first. Everything you knew about the signs is superseded:**
 the camera-vs-gyro correlation on YOUR phase2k recordings proved the GYRO

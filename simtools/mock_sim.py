@@ -449,15 +449,21 @@ class MockSim:
     def _send_frame(self, sock: socket.socket) -> None:
         img = np.full((self.image_h, self.image_w, 3), 40, dtype=np.uint8)
 
-        if self.active_gate < len(self.gates):
-            gate = self.gates[self.active_gate]
+        # Render ALL gates, far-to-near (R2-TRAINING shows several gates per
+        # frame — phase3a — and target-lock logic must survive that; nearer
+        # gates overdraw farther ones like real occlusion).
+        order = sorted(range(len(self.gates)),
+                       key=lambda i: -float(np.linalg.norm(
+                           self.gates[i].pos - self.drone.pos)))
+        for gi in order:
+            gate = self.gates[gi]
             outer = [self._project(p) for p in
                      self._gate_corners(gate, grow=gate.frame_thickness)]
             inner = [self._project(p) for p in self._gate_corners(gate)]
             if all(p is not None for p in outer) and all(p is not None for p in inner):
                 outer_px = np.array(outer, dtype=np.int32)
                 inner_px = np.array(inner, dtype=np.int32)
-                # Red ring, matching the real Round-1 gates (phase1e frames).
+                # Red ring, matching the real gates (R1 phase1e, R2 phase3a).
                 cv2.fillPoly(img, [outer_px], (30, 30, 230))
                 cv2.fillPoly(img, [inner_px], (40, 40, 40))
 

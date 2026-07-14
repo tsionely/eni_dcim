@@ -61,6 +61,21 @@ class StateEstimator:
         # km/h into the blend (phase2l diverged to 454 km/h estimated).
         self.vision_vel_max = float(params.get("estimation.vision_vel_max_mps",
                                                default=15.0))
+        # PnP noise grows ~quadratically with range: fixes beyond this range
+        # still update gate_rel (search needs far gates) but are too noisy to
+        # differentiate into velocity.
+        self.vision_vel_max_range = float(params.get(
+            "estimation.vision_vel_max_range_m", default=12.0))
+        # GATE LOCK (phase3a, R2): several gates are visible at once and the
+        # "largest ring" heuristic switched targets mid-commit (1.8m -> 46m).
+        # A fix is accepted only if it lands near the dead-reckoned prediction
+        # of the LOCKED gate; anything else is another gate and is ignored.
+        # After gate_relock_s without an accepted fix, the next fix re-locks.
+        self.lock_tol_frac = float(params.get("estimation.gate_lock_tol_frac",
+                                              default=0.35))
+        self.lock_tol_min = float(params.get("estimation.gate_lock_tol_min_m",
+                                             default=1.5))
+        self.relock_s = float(params.get("estimation.gate_relock_s", default=1.2))
         self.max_age_s = float(params.get("estimation.gate_rel_max_age_s"))
         self._cam_fov_deg = float(params.get("perception.camera.fov_deg",
                                              default=90.0))
@@ -113,6 +128,21 @@ class StateEstimator:
         """Commanded yaw rate — the yaw prediction input when gyro z is dead.
         Assumes the backend forwards it unsigned (rate_sign_yaw=+1)."""
         self._cmd_yaw_rate = float(yaw_rate)
+
+    def zero_velocity(self) -> None:
+        """Hard-reset the velocity estimate to zero.
+
+        Called at the takeoff handoff (the drone is KNOWN stationary on the
+        pad, yet real-PnP jitter random-walks v_world up to ~6.7 m/s while
+        grounded — phase3a — and that phantom became a full-tilt charge) and
+        after collisions (the impulse's accel spike integrates into tens of
+        m/s of garbage; vision re-measures within one baseline window).
+        """
+        self.v_world = np.zeros(3)
+        self._fix_history.clear()
+
+    def on_collision(self) -> None:
+        self.zero_velocity()
 
     def reset(self) -> None:
         self.attitude.reset()
@@ -171,7 +201,14 @@ class StateEstimator:
         # in camera coordinates:  dt/dt = -(omega x t) - v,  dn/dt = -(omega x n).
         # (cam and body differ by a fixed permutation, so body kinematics
         # hold with vectors expressed in camera axes.)
-        if self._gate_rel is not None:
+        if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
+            if (imu.ts_ns - self._gate_rel_ts_ns) / 1e9 > 2.0 * self.max_age_s:
+                # Long past useful: stop propagating a ghost (it would also
+                # keep vetoing re-lock candidates through the lock test).
+                self._gate_rel = None
+                self._gate_rel_ts_ns = None
+                self._gate_center_px = None
+                return
             omega_cam = body_to_cam(gyro)
             v_cam = body_to_cam(quat_rotate_inv(q, self.v_world))
             t = self._gate_rel.t - (np.cross(omega_cam, self._gate_rel.t) + v_cam) * dt
@@ -217,9 +254,44 @@ class StateEstimator:
             return self.attitude.q.copy()
         return best[1]
 
+    def _lock_accepts(self, t_body: np.ndarray) -> bool:
+        """Gate-lock continuity test: does this fix belong to OUR gate?
+
+        Compares against the dead-reckoned prediction of the locked gate.
+        After relock_s without an accepted fix the lock expires and the next
+        fix wins (new target), clearing the cross-gate fix history.
+        """
+        if self._gate_rel is None or self._gate_rel_ts_ns is None:
+            return True                       # nothing locked: lock on
+        age = (self._now_ns - self._gate_rel_ts_ns) / 1e9
+        t_pred = cam_to_body(self._gate_rel.t)
+        err = float(np.linalg.norm(t_body - t_pred))
+        tol = max(self.lock_tol_min,
+                  self.lock_tol_frac * float(np.linalg.norm(t_pred)))
+        if err <= tol:
+            return True                       # consistent with the lock
+        if age > self.relock_s:
+            # Sustained loss: our gate is gone — re-lock on what we see,
+            # replacing (not blending with) the stale target.
+            self._fix_history.clear()
+            self._gate_rel = None
+            self._gate_rel_ts_ns = None
+            return True
+        return False                          # a DIFFERENT gate: ignore
+
     def update_vision(self, det: GateDetection) -> None:
-        self._gate_center_px = det.center_px
         self._image_size = det.image_size
+        if det.rel_pose is None:
+            # Center-only detection (PnP degenerate): only trust it for yaw
+            # steering if it is plausibly OUR gate (near the predicted
+            # center) — with several gates in frame this otherwise drags the
+            # yaw servo to a neighbor.
+            if self._gate_center_px is None or det.center_px is None:
+                return
+            w = det.image_size[0]
+            if abs(det.center_px[0] - self._gate_center_px[0]) < 0.25 * w:
+                self._gate_center_px = det.center_px
+            return
         if det.rel_pose is not None:
             # Vision velocity: the gate is static, so the derivative of its
             # relative position IS our velocity. This is the only strong
@@ -233,6 +305,9 @@ class StateEstimator:
             # phase2l flight), then differentiate in the body frame.
             t_body = cam_to_body(det.rel_pose.t)
             n_body = cam_to_body(det.rel_pose.normal)
+            if not self._lock_accepts(t_body):
+                return
+            self._gate_center_px = det.center_px
             q_now = self._attitude_at(self._rebase_det_ts(det.ts_ns))
             baseline = None
             for ts, t_old, n_old, q_old in self._fix_history:
@@ -242,8 +317,10 @@ class StateEstimator:
             # Skip the velocity update while rotating fast: transport error
             # (attitude error x gate lever arm) dominates the measurement in
             # exactly those samples, and blending them in is what kicked off
-            # the takeoff vy/roll oscillation.
-            if float(np.hypot(self._omega[0], self._omega[1])) > 1.0:
+            # the takeoff vy/roll oscillation. Also beyond ~12m: PnP noise
+            # grows ~quadratically with range and the derivative is garbage.
+            if (float(np.hypot(self._omega[0], self._omega[1])) > 1.0
+                    or float(np.linalg.norm(t_body)) > self.vision_vel_max_range):
                 baseline = None
             if baseline is not None:
                 ts_old, t_old, n_old, q_old = baseline

@@ -168,3 +168,31 @@ def test_campaign_loop_against_mock(sim_and_app, tmp_path):
     assert db.best_flight("test-camp") is not None
     assert len(optimizer.history) == 3
     db.close()
+
+
+def test_first_gate_pass_with_second_gate_visible(sim_and_app):
+    """Multi-gate regression (R2 phase3a): with TWO gates rendered — the
+    mock now draws all gates like the real R2 — the target lock must keep
+    the pilot on the first gate instead of switching mid-approach (real
+    flight 3 jumped 1.8m -> 46m mid-commit and clipped the frame)."""
+    gates = [
+        Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+             width=1.6, height=1.6),
+        Gate(pos=np.array([14.0, 3.0, -1.5]), travel_yaw=math.radians(25.0),
+             width=1.6, height=1.6),
+    ]
+    sim, app = sim_and_app(gates, image_size=(320, 180), video_hz=20.0)
+
+    params = base_params().patch({
+        "planner.takeoff.duration_s": 1.6,
+        "planner.approach.speed_far_mps": 2.0,
+        "safety.flight_timeout_s": 40.0,
+    })
+    result = app.fly(params, max_duration_s=40.0)
+    if result["gates_passed"] < 1:            # one retry, like the single-gate test
+        app.mavlink.sim_reset()
+        import time
+        time.sleep(1.0)
+        result = app.fly(params, max_duration_s=40.0)
+
+    assert result["gates_passed"] >= 1, f"lost the first gate: {result}"

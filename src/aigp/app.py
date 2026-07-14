@@ -242,6 +242,7 @@ class App:
                 planner.on_gate_passed()
             if supervisor.collision_flag:
                 planner.on_collision(now_ns)
+                estimator.on_collision()
 
             fresh = imu_cell.get_if_newer(imu_seq)
             if fresh is not None:
@@ -260,6 +261,9 @@ class App:
                 lp = float(np.arctan2(ax, np.sqrt(ay * ay + az * az)))
                 estimator.set_level_reference(lr, lp)
                 estimator.attitude.set_attitude_euler(lr, lp)
+                # The drone is stationary on the pad until this instant —
+                # discard whatever phantom velocity vision jitter integrated.
+                estimator.zero_velocity()
                 print(f"live calibration ({len(calib_gyros)} samples): "
                       f"bias={bias} level roll={lr:+.3f} pitch={lp:+.3f}", flush=True)
             prev_fsm_state = supervisor.state
