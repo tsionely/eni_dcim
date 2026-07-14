@@ -42,6 +42,8 @@ def main() -> int:
     parser.add_argument("--modes", default="ABC")
     parser.add_argument("--thrust", type=float, default=0.65)
     parser.add_argument("--motor", type=float, default=0.7)
+    parser.add_argument("--no-wait-go", action="store_true",
+                        help="skip waiting for the race GO before each mode")
     args = parser.parse_args()
 
     cfg = SimConfig.load(args.config)
@@ -101,14 +103,12 @@ def main() -> int:
         "H": ("hover-thrust ladder", None),
     }
 
-    def run_mode_d() -> None:
-        report(sample_phase("lift (thrust 0.6)", 1.2,
-                            lambda: io.send_attitude_rates(0.0, 0.0, 0.0, 0.6)))
+    def rate_pulse(axis: str, rates: tuple[float, float, float]) -> None:
         last = 0
         gyros = []
-        t_end = time.monotonic() + 0.8
+        t_end = time.monotonic() + 0.6
         while time.monotonic() < t_end:
-            io.send_attitude_rates(0.0, 0.4, 0.0, 0.55)   # pitch-rate pulse
+            io.send_attitude_rates(rates[0], rates[1], rates[2], 0.55)
             fresh = imu_cell.get_if_newer(last)
             if fresh is not None:
                 imu, last = fresh
@@ -116,10 +116,20 @@ def main() -> int:
             time.sleep(1.0 / SEND_HZ)
         if gyros:
             mean = [statistics.mean(g[i] for g in gyros) for i in range(3)]
-            print(f"  pitch-rate pulse: commanded q=+0.40, measured "
+            print(f"  {axis}-rate pulse: commanded {rates}, measured "
                   f"p={mean[0]:+.3f} q={mean[1]:+.3f} r={mean[2]:+.3f}", flush=True)
-        io.send_attitude_rates(0.0, -0.4, 0.0, 0.55)      # counter-pulse
-        time.sleep(0.6)
+        # Counter-pulse to roughly undo the rotation.
+        io.send_attitude_rates(-rates[0], -rates[1], -rates[2], 0.55)
+        time.sleep(0.5)
+
+    def run_mode_d() -> None:
+        # All three axes, one at a time — determines the sign convention of
+        # each rate command (phase2a saw pitch inverted).
+        report(sample_phase("lift (thrust 0.6)", 1.2,
+                            lambda: io.send_attitude_rates(0.0, 0.0, 0.0, 0.6)))
+        rate_pulse("roll", (0.4, 0.0, 0.0))
+        rate_pulse("pitch", (0.0, 0.4, 0.0))
+        rate_pulse("yaw", (0.0, 0.0, 0.4))
         io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
 
     def run_mode_h() -> None:
@@ -130,6 +140,26 @@ def main() -> int:
         print("  [OPERATOR] note at which thrust step the drone lifted / held "
               "altitude — that brackets control.att_rate.hover_thrust.", flush=True)
 
+    race_cell = app.bus.cell(Topic.RACE)
+
+    def wait_for_go(timeout_s: float = 30.0) -> None:
+        """Hold zero thrust until the race actually starts (early-start DSQ
+        protection). Baseline = current race_start; GO = it changes."""
+        race, _ = race_cell.get()
+        baseline = race.race_start_boot_time_ms if race else None
+        print(f"  waiting for race GO (start the race now; timeout {timeout_s:.0f}s)...",
+              flush=True)
+        t_end = time.monotonic() + timeout_s
+        while time.monotonic() < t_end:
+            io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
+            race, _ = race_cell.get()
+            if race is not None and race.race_start_boot_time_ms >= 0 \
+                    and race.race_start_boot_time_ms != baseline:
+                print("  GO!", flush=True)
+                return
+            time.sleep(0.02)
+        print("  no GO seen — proceeding anyway", flush=True)
+
     for mode_key in args.modes:
         title, send = modes[mode_key]
         print(f"\n=== mode {mode_key}: {title} ===", flush=True)
@@ -138,6 +168,8 @@ def main() -> int:
         time.sleep(2.0)
         io.arm()
         time.sleep(0.5)
+        if not args.no_wait_go:
+            wait_for_go()
         report(sample_phase("throttle-down handshake", HANDSHAKE_S,
                             lambda: io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)))
         if mode_key == "D":

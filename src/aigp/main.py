@@ -1,5 +1,9 @@
 """Entry point.
 
+Use --patch KEY=VALUE (repeatable) to override ParamSet values per run
+without editing config files — the sim-operator agent is not allowed to edit
+config, but runtime experiments are fine.
+
     aigp --mode fly       one flight against the real sim (Windows machine)
     aigp --mode mock      one flight against the in-process mock sim
     aigp --mode campaign  N-flight tuning campaign (--sim mock|real)
@@ -8,6 +12,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -48,7 +53,29 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="campaign: which sim to fly against")
     parser.add_argument("--recording", default=None,
                         help="replay: path to an .aigprec recording")
+    parser.add_argument("--patch", action="append", default=[],
+                        metavar="KEY=VALUE",
+                        help="override a ParamSet value for this run, e.g. "
+                             "--patch control.att_rate.rate_sign_pitch=-1 "
+                             "(repeatable; numbers parsed automatically)")
     return parser.parse_args(argv)
+
+
+def apply_patches(params: ParamSet, patches: list[str]) -> ParamSet:
+    overrides = {}
+    for item in patches:
+        key, _, raw = item.partition("=")
+        if not _:
+            raise SystemExit(f"--patch needs KEY=VALUE, got: {item}")
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            value = raw
+        overrides[key.strip()] = value
+    if overrides:
+        print(f"param overrides: {overrides}", flush=True)
+        return params.patch(overrides)
+    return params
 
 
 def run_flight(cfg: SimConfig, params: ParamSet, max_duration: float | None) -> dict:
@@ -138,7 +165,7 @@ def run_replay(params: ParamSet, recording: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     cfg = SimConfig.load(args.config)
-    params = ParamSet.load(args.params)
+    params = apply_patches(ParamSet.load(args.params), args.patch)
 
     if args.mode == "fly":
         run_flight(cfg, params, args.max_duration)

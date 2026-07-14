@@ -31,6 +31,12 @@ class AttitudeRateBackend(ControlBackend):
         self.tilt_max = float(params.get("control.att_rate.tilt_max_rad"))
         self.rate_p = float(params.get("control.att_rate.rate_p"))
         self.rate_max = float(params.get("control.att_rate.rate_max_rps", default=3.0))
+        # Per-axis rate-command sign: phase2a measured an INVERTED pitch-rate
+        # response on the real sim (commanded +0.40, measured -0.97). Standard
+        # MAVLink convention is +1; flip per axis once the D probe confirms.
+        self.sign_roll = float(params.get("control.att_rate.rate_sign_roll", default=1.0))
+        self.sign_pitch = float(params.get("control.att_rate.rate_sign_pitch", default=1.0))
+        self.sign_yaw = float(params.get("control.att_rate.rate_sign_yaw", default=1.0))
         self.hover_thrust = float(params.get("control.att_rate.hover_thrust"))
         self.pid_vx = PID(kp, ki, kd, out_limit=self.tilt_max)
         self.pid_vy = PID(kp, ki, kd, out_limit=self.tilt_max)
@@ -67,5 +73,6 @@ class AttitudeRateBackend(ControlBackend):
         pitch_rate = np.clip(self.rate_p * (pitch_des - pitch),
                              -self.rate_max, self.rate_max)
 
-        self.io.send_attitude_rates(float(roll_rate), float(pitch_rate),
-                                    float(sp.yaw_rate), thrust)
+        self.io.send_attitude_rates(self.sign_roll * float(roll_rate),
+                                    self.sign_pitch * float(pitch_rate),
+                                    self.sign_yaw * float(sp.yaw_rate), thrust)

@@ -62,7 +62,39 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2a — first real controlled flight (att_rate pilot)
+## CURRENT TASK: Phase 2b — race-legal takeoff + rate-sign calibration
+
+Phase-2a analysis (cloud side): the pilot MOVES now, and the three failure
+modes are all addressed:
+
+- Early-start DSQ: the FSM now holds zero thrust in THROTTLE_DOWN until the
+  race actually starts (a CHANGE in race_start_boot_time_ms; the flag itself
+  is sticky). control_probe also waits for GO before each mode now.
+- Inverted pitch-rate: per-axis sign params exist
+  (control.att_rate.rate_sign_roll/pitch/yaw, default +1). Mode D now pulses
+  ALL THREE axes to pin the convention down.
+- hover_thrust: probe H data was contaminated by the tumble; re-measure.
+- NEW: `--patch KEY=VALUE` on fly_once/aigp lets you override params per run
+  WITHOUT editing config (allowed under the ground rules).
+
+Run this cycle:
+
+1. `git pull`. Single engine instance.
+2. `python scripts/control_probe.py --modes D` — it resets, arms, WAITS FOR
+   GO (start the race when prompted), lifts, then pulses roll/pitch/yaw one
+   at a time. Record the measured sign per axis.
+3. `python scripts/control_probe.py --modes H` — same GO flow; note the
+   thrust step where it lifts/holds cleanly now that it starts race-legal.
+4. Main event — fly_once with the signs measured in (2), e.g. if pitch (and
+   only pitch) is inverted:
+   `python scripts/fly_once.py --max-duration 60 --patch control.att_rate.rate_sign_pitch=-1 --patch control.att_rate.hover_thrust=<H result>`
+   Start the race when the pilot reaches THROTTLE_DOWN (it waits for GO).
+   Describe per stage: countdown hold? clean climb? stable search spin?
+   approach toward gate 1?
+5. Collect with `--label phase2b`, notes.md with the sign table + visual
+   account, commit `[sim-run] phase2b race-legal flight`, push.
+
+## PREVIOUS: Phase 2a — first real controlled flight (att_rate pilot)
 
 Phase-1f verdicts (cloud side): velocity setpoints are DEAD on the real sim;
 attitude-thrust and motor commands work. The pilot was rebuilt around the

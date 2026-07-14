@@ -31,6 +31,7 @@ def params():
     return ParamSet.load("config/params_default.json").patch({
         "planner.takeoff.duration_s": 0.05,
         "control.throttle_down_s": 0.05,
+        "control.go_timeout_s": 2.0,
         "safety.flight_timeout_s": 10.0,
     })
 
@@ -55,11 +56,18 @@ def test_happy_path(manager):
     assert manager.state == FlightState.ARMING
     assert manager.io.arm_calls == 1
 
-    manager.tick(hb(True), race(active=0, start=100), [])
+    # Race not started yet (countdown): baseline start = -1.
+    manager.tick(hb(True), race(active=0, start=-1), [])
     assert manager.state == FlightState.THROTTLE_DOWN
     assert manager.io.throttle_down_sends >= 1
 
+    # Handshake elapsed but race still counting down -> stay put (early-start
+    # protection).
     time.sleep(0.06)
+    manager.tick(hb(True), race(active=0, start=-1), [])
+    assert manager.state == FlightState.THROTTLE_DOWN
+
+    # GO: race_start changes.
     manager.tick(hb(True), race(active=0, start=100), [])
     assert manager.state == FlightState.TAKEOFF
     assert manager.planner_mode() == "takeoff"
@@ -86,9 +94,9 @@ def test_happy_path(manager):
 
 
 def to_flying(manager):
-    manager.tick(hb(True), race(start=1), [])          # ARMING -> THROTTLE_DOWN
+    manager.tick(hb(True), race(start=-1), [])         # ARMING -> THROTTLE_DOWN
     time.sleep(0.06)
-    manager.tick(hb(True), race(start=1), [])          # -> TAKEOFF
+    manager.tick(hb(True), race(start=1), [])          # GO -> TAKEOFF
 
 
 def test_env_collision_aborts(manager):

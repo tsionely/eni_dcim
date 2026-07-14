@@ -80,6 +80,10 @@ class RaceManager:
         # handshake (phase1e finding): hold zero thrust after arming before
         # commanding anything else.
         self.throttle_down_s = float(params.get("control.throttle_down_s", default=1.5))
+        # Early-start protection (phase2a: "Disqualified - Early Start"): stay
+        # at zero thrust until the race actually STARTS — detected as a CHANGE
+        # in race_start_boot_time_ms (the flag itself is sticky across races).
+        self.go_timeout_s = float(params.get("control.go_timeout_s", default=45.0))
 
         self.watchdog = Watchdog()
         self.watchdog.register("imu", float(params.get("safety.imu_stale_s")))
@@ -91,6 +95,7 @@ class RaceManager:
         self._t_flight_start = time.monotonic()
         self._t_last_arm = 0.0
         self._last_gate_index: int | None = None
+        self._initial_race_start_ms: int | None = None
         self.gate_passed_flag = False    # consumed by the app each tick
         self.collision_flag = False      # consumed by the app each tick
 
@@ -101,6 +106,7 @@ class RaceManager:
         self.result = FlightResult()
         self.collision_policy.reset()
         self._last_gate_index = None
+        self._initial_race_start_ms = None
         self._t_flight_start = time.monotonic()
         self._transition(FlightState.ARMING, "flight start")
         self.io.arm()
@@ -133,6 +139,10 @@ class RaceManager:
         now = time.monotonic()
         self.gate_passed_flag = False
         self.collision_flag = False
+
+        # Baseline for GO detection: the first race status seen this flight.
+        if race is not None and self._initial_race_start_ms is None:
+            self._initial_race_start_ms = race.race_start_boot_time_ms
 
         # Track race progress regardless of state.
         if race is not None:
@@ -176,7 +186,14 @@ class RaceManager:
         elif self.state == FlightState.THROTTLE_DOWN:
             self.io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
             if now - self._t_state >= self.throttle_down_s:
-                self._transition(FlightState.TAKEOFF, "throttle-down handshake done")
+                if race is not None and self._initial_race_start_ms is not None \
+                        and race.race_start_boot_time_ms >= 0 \
+                        and race.race_start_boot_time_ms != self._initial_race_start_ms:
+                    self._transition(FlightState.TAKEOFF, "race GO")
+                elif now - self._t_state >= self.go_timeout_s:
+                    # No fresh race start observed (e.g. free-flight testing):
+                    # proceed anyway rather than deadlock.
+                    self._transition(FlightState.TAKEOFF, "GO timeout — proceeding")
 
         elif self.state == FlightState.TAKEOFF:
             if now - self._t_state >= self.takeoff_duration_s:
