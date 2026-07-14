@@ -1,4 +1,41 @@
-# Agent Runbook — Local Sim Operator
+# Agent Runbook — Local Agents
+
+Two local roles are defined. State clearly in your commit messages which
+role you act as. Both coordinate with the cloud agent through git on `main`.
+
+- **SIM OPERATOR** (Sakana/Codex): operates the simulator, runs probes and
+  flights, collects fixtures. The rest of this document is your runbook.
+- **DATA ANALYST** (Cursor): works ONLY on recorded data — see the next
+  section. Never runs the simulator while the operator is mid-cycle; never
+  edits code, config, docs, or the operator's fixtures.
+
+## DATA ANALYST role (Cursor)
+
+Mission: exploit the large local recordings that never reach the cloud agent
+(logs/*/vision.aigprec and recordings/*.aigprec, 0.6-1.3 GB each — the repo
+only carries small slices).
+
+Ground rules: write ONLY under `analysis/` (create it; it is committed) and
+`fixtures/` (via `scripts/collect_artifacts.py` conventions). Commit prefix
+`[analysis]`. Read-only everywhere else. Keep every committed file < 50 MB.
+
+Standing tasks (in priority order, redone as new recordings appear):
+1. **Detector evaluation at scale**: run the repo detector
+   (`aigp.perception.gate_detector_hsv` via `aigp.main --mode replay` or your
+   own harness reusing `ChunkAssembler`) over EVERY local recording; report
+   per-recording: frames, detection rate, PnP-solve rate, distance/center
+   stability, and — most valuable — save the N *hardest* frames (missed or
+   low-confidence) as downscaled JPEGs under `analysis/hard_frames/`.
+2. **Interesting-moment slices**: extract 20-40 MB slices around events
+   (race GO, gate approaches, DSQ moments) with `scripts/slice_recording.py`
+   into `fixtures/` with a manifest note of what each slice shows.
+3. **Flight kinematics reports**: from `flight.jsonl` logs, plot/report IMU,
+   setpoints vs estimates, FSM timelines (reuse `aigp.telemetry.plots`);
+   write findings to `analysis/<date>-<topic>.md`.
+4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
+   failures) — document with data in your report; do NOT fix code, flag it.
+
+# SIM OPERATOR Runbook
 
 Instructions for an AI agent (Sakana, Claude Code, or any other) running on the
 **Windows machine where FlightSim.exe is installed**. You are the *sim
