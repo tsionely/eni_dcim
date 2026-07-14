@@ -27,8 +27,14 @@
     }
   },
   "planner": {
-    "takeoff": { "climb_mps": 1.0, "duration_s": 1.5 },
-    "search": { "yaw_rate_rps": 0.6, "climb_mps": 0.0 },
+    "takeoff": {
+      "climb_mps": 1.0,
+      "duration_s": 1.5
+    },
+    "search": {
+      "yaw_rate_rps": 0.6,
+      "climb_mps": 0.0
+    },
     "approach": {
       "speed_far_mps": 3.0,
       "speed_near_mps": 1.5,
@@ -36,19 +42,30 @@
       "center_gain": 1.2,
       "yaw_center_gain": 1.5
     },
-    "commit": { "distance_m": 2.0, "duration_s": 1.2, "speed_mps": 2.5 },
-    "recover": { "brake_s": 0.8 }
+    "commit": {
+      "distance_m": 2.0,
+      "duration_s": 1.2,
+      "speed_mps": 2.5
+    },
+    "recover": {
+      "brake_s": 0.8
+    }
   },
   "perception": {
-    "camera": { "fov_deg": 90.0 },
-    "gate": { "width_m": 1.6, "height_m": 1.6 },
+    "camera": {
+      "fov_deg": 90.0
+    },
+    "gate": {
+      "width_m": 1.6,
+      "height_m": 1.6
+    },
     "detector": {
       "mode": "red_hsv",
       "threshold": 180,
       "red_hue_low_max": 12,
       "red_hue_high_min": 168,
-      "red_sat_min": 90,
-      "red_val_min": 70,
+      "red_sat_min": 60,
+      "red_val_min": 50,
       "min_area_frac": 0.0008,
       "max_area_frac": 0.7,
       "approx_eps_frac": 0.04,
