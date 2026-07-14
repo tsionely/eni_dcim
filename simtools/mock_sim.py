@@ -58,7 +58,22 @@ class DroneState:
     vel: np.ndarray = field(default_factory=lambda: np.zeros(3))
     yaw: float = 0.0
     yaw_rate: float = 0.0
+    roll: float = 0.0
+    pitch: float = 0.0
+    rates: np.ndarray = field(default_factory=lambda: np.zeros(3))   # p, q, r
     armed: bool = False
+
+
+def euler_matrix(roll: float, pitch: float, yaw: float) -> np.ndarray:
+    """Body-to-world rotation, ZYX (yaw-pitch-roll) convention, NED."""
+    cr, sr = math.cos(roll), math.sin(roll)
+    cp, sp = math.cos(pitch), math.sin(pitch)
+    cy, sy = math.cos(yaw), math.sin(yaw)
+    return np.array([
+        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+        [-sp, cp * sr, cp * cr],
+    ])
 
 
 class MockSim:
@@ -69,6 +84,8 @@ class MockSim:
                  video_hz: float = 30.0, race_status_hz: float = 10.0,
                  heartbeat_hz: float = 2.0,
                  vel_tau_s: float = 0.25, imu_noise: float = 0.05,
+                 rate_tau_s: float = 0.06, hover_thrust: float = 0.5,
+                 drag: float = 0.35, honor_velocity: bool = True,
                  image_size: tuple[int, int] = (640, 360), fov_deg: float = 90.0,
                  seed: int = 0) -> None:
         self.mav_addr = mav_addr
@@ -83,14 +100,24 @@ class MockSim:
         }
         self.vel_tau_s = vel_tau_s
         self.imu_noise = imu_noise
+        # Attitude-rate dynamics (the interface the REAL sim honors).
+        self.rate_tau_s = rate_tau_s
+        self.hover_thrust = hover_thrust
+        self.drag = drag
+        # The real v1.0.3385 sim ignores velocity setpoints (phase1f mode B);
+        # set False to mirror that behavior in tests.
+        self.honor_velocity = honor_velocity
         self.image_w, self.image_h = image_size
         self.fx = (self.image_w / 2.0) / math.tan(math.radians(fov_deg) / 2.0)
         self.rng = np.random.default_rng(seed)
 
         self.drone = DroneState()
+        self.ctrl_mode = "velocity"          # last-command-wins: velocity | att_rate
         self.v_cmd = np.zeros(3)
         self.v_cmd_body_frame = True
         self.yaw_rate_cmd = 0.0
+        self.rate_cmd = np.zeros(3)          # p, q, r [rad/s]
+        self.thrust_cmd = 0.0                # 0..1
         self.active_gate = 0
         self.race_start_ms = -1
         self.race_finish_ns = -1
@@ -180,16 +207,20 @@ class MockSim:
                 elif msg.command == MAVLINK_CMD_SIM_RESET:
                     self._reset()
             elif mtype == "SET_POSITION_TARGET_LOCAL_NED":
-                self.v_cmd = np.array([msg.vx, msg.vy, msg.vz])
-                self.v_cmd_body_frame = msg.coordinate_frame in (
-                    mavutil.mavlink.MAV_FRAME_BODY_NED,
-                    mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
-                )
-                ignore_yaw_rate = msg.type_mask & mavutil.mavlink.POSITION_TARGET_TYPEMASK_YAW_RATE_IGNORE
-                self.yaw_rate_cmd = 0.0 if ignore_yaw_rate else msg.yaw_rate
+                if self.honor_velocity:
+                    self.ctrl_mode = "velocity"
+                    self.v_cmd = np.array([msg.vx, msg.vy, msg.vz])
+                    self.v_cmd_body_frame = msg.coordinate_frame in (
+                        mavutil.mavlink.MAV_FRAME_BODY_NED,
+                        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+                    )
+                    ignore_yaw_rate = msg.type_mask & mavutil.mavlink.POSITION_TARGET_TYPEMASK_YAW_RATE_IGNORE
+                    self.yaw_rate_cmd = 0.0 if ignore_yaw_rate else msg.yaw_rate
             elif mtype == "SET_ATTITUDE_TARGET":
-                # Attitude-rate flight is not simulated yet; yaw rate only.
-                self.yaw_rate_cmd = msg.body_yaw_rate
+                self.ctrl_mode = "att_rate"
+                self.rate_cmd = np.array([msg.body_roll_rate, msg.body_pitch_rate,
+                                          msg.body_yaw_rate])
+                self.thrust_cmd = float(np.clip(msg.thrust, 0.0, 1.0))
             elif mtype == "TIMESYNC" and msg.ts1 == 0:
                 # Echo protocol: reply with our time in tc1, requester stamp in ts1.
                 conn.mav.timesync_send(self._sim_now_ns(), msg.tc1)
@@ -203,17 +234,16 @@ class MockSim:
         )
 
     def _send_imu(self, conn) -> None:
-        # Specific force f = a - g rotated into the (yaw-only) body frame.
+        # Specific force f = a - g rotated into the (full-attitude) body frame.
         a_world = (self._track_accel if self._track_accel is not None else np.zeros(3))
         f_world = a_world - np.array([0.0, 0.0, GRAVITY])
-        c, s = math.cos(self.drone.yaw), math.sin(self.drone.yaw)
-        f_body = np.array([
-            c * f_world[0] + s * f_world[1],
-            -s * f_world[0] + c * f_world[1],
-            f_world[2],
-        ])
+        rot = euler_matrix(self.drone.roll, self.drone.pitch, self.drone.yaw)
+        f_body = rot.T @ f_world
         f_body += self.rng.normal(0.0, self.imu_noise, 3)
-        gyro = np.array([0.0, 0.0, self.drone.yaw_rate])
+        if self.ctrl_mode == "att_rate":
+            gyro = self.drone.rates.copy()
+        else:
+            gyro = np.array([0.0, 0.0, self.drone.yaw_rate])
         gyro += self.rng.normal(0.0, self.imu_noise * 0.2, 3)
         conn.mav.highres_imu_send(
             self._sim_now_ns() // 1000,
@@ -257,8 +287,11 @@ class MockSim:
 
     def _reset(self) -> None:
         self.drone = DroneState()
+        self.ctrl_mode = "velocity"
         self.v_cmd = np.zeros(3)
         self.yaw_rate_cmd = 0.0
+        self.rate_cmd = np.zeros(3)
+        self.thrust_cmd = 0.0
         self.active_gate = 0
         self.race_start_ms = -1
         self.race_finish_ns = -1
@@ -271,34 +304,57 @@ class MockSim:
             self._track_accel = np.zeros(3)
             return
 
-        # Command in world frame.
-        v_cmd = self.v_cmd
-        if self.v_cmd_body_frame:
-            c, s = math.cos(drone.yaw), math.sin(drone.yaw)
-            v_cmd = np.array([
-                c * v_cmd[0] - s * v_cmd[1],
-                s * v_cmd[0] + c * v_cmd[1],
-                v_cmd[2],
-            ])
-
-        # First-order response.
-        accel = (v_cmd - drone.vel) / self.vel_tau_s
-        drone.vel = drone.vel + accel * dt
         prev_pos = drone.pos.copy()
+        prev_vel = drone.vel.copy()
+
+        if self.ctrl_mode == "velocity":
+            # Legacy kinematic mode (the real v1.0.3385 sim ignores this;
+            # kept for tests with honor_velocity=True).
+            v_cmd = self.v_cmd
+            if self.v_cmd_body_frame:
+                c, s = math.cos(drone.yaw), math.sin(drone.yaw)
+                v_cmd = np.array([
+                    c * v_cmd[0] - s * v_cmd[1],
+                    s * v_cmd[0] + c * v_cmd[1],
+                    v_cmd[2],
+                ])
+            accel = (v_cmd - drone.vel) / self.vel_tau_s
+            drone.vel = drone.vel + accel * dt
+            drone.yaw_rate = self.yaw_rate_cmd
+            drone.yaw += drone.yaw_rate * dt
+        else:
+            # Attitude-rate + thrust dynamics (the interface the real sim
+            # honors): first-order body rates, Euler integration, thrust
+            # along body -z with hover at `hover_thrust`, linear drag.
+            drone.rates = drone.rates + (self.rate_cmd - drone.rates) * (dt / self.rate_tau_s)
+            drone.roll += drone.rates[0] * dt
+            drone.pitch += drone.rates[1] * dt
+            drone.yaw += drone.rates[2] * dt
+            drone.yaw_rate = drone.rates[2]
+            rot = euler_matrix(drone.roll, drone.pitch, drone.yaw)
+            thrust_acc = GRAVITY * self.thrust_cmd / self.hover_thrust
+            accel = rot @ np.array([0.0, 0.0, -thrust_acc]) \
+                + np.array([0.0, 0.0, GRAVITY]) - self.drag * drone.vel
+            drone.vel = drone.vel + accel * dt
+
         drone.pos = drone.pos + drone.vel * dt
-        drone.yaw_rate = self.yaw_rate_cmd
-        drone.yaw += drone.yaw_rate * dt
-        self._track_accel = accel
 
         # Ground contact (NED: ground at z=0, airborne is z<0).
         if drone.pos[2] < -0.3:
             self._was_airborne = True
-        if drone.pos[2] >= 0.0 and self._was_airborne:
-            impact = abs(drone.vel[2])
+        if drone.pos[2] >= 0.0:
+            if self._was_airborne:
+                impact = abs(drone.vel[2])
+                self._was_airborne = False
+                self._emit_collision(1002, 2 if impact > 1.0 else 1, impact * 1.2)
+            # Sitting on the pad: no sinking, ground friction.
             drone.pos[2] = 0.0
-            drone.vel[:] = 0.0
-            self._was_airborne = False
-            self._emit_collision(1002, 2 if impact > 1.0 else 1, impact * 1.2)
+            if drone.vel[2] > 0.0:
+                drone.vel[2] = 0.0
+            drone.vel[:2] *= max(0.0, 1.0 - 5.0 * dt)
+
+        # The IMU reports the ACHIEVED acceleration (post ground clamp).
+        self._track_accel = (drone.vel - prev_vel) / dt if dt > 0 else np.zeros(3)
 
         # Gate crossing.
         if self.active_gate < len(self.gates):

@@ -23,12 +23,18 @@ class AttitudeRateBackend(ControlBackend):
         kp = float(params.get("control.att_rate.vel_p"))
         ki = float(params.get("control.att_rate.vel_i"))
         kd = float(params.get("control.att_rate.vel_d"))
+        # Vertical axis gets its own, stiffer gains: with no altitude sensor,
+        # vz comes from leaky accel integration, and a soft vertical loop
+        # lets the drone sink slowly into the ground.
+        vz_p = float(params.get("control.att_rate.vz_p", default=0.8))
+        vz_i = float(params.get("control.att_rate.vz_i", default=0.4))
         self.tilt_max = float(params.get("control.att_rate.tilt_max_rad"))
         self.rate_p = float(params.get("control.att_rate.rate_p"))
+        self.rate_max = float(params.get("control.att_rate.rate_max_rps", default=3.0))
         self.hover_thrust = float(params.get("control.att_rate.hover_thrust"))
         self.pid_vx = PID(kp, ki, kd, out_limit=self.tilt_max)
         self.pid_vy = PID(kp, ki, kd, out_limit=self.tilt_max)
-        self.pid_vz = PID(kp, ki, kd, out_limit=0.4)
+        self.pid_vz = PID(vz_p, vz_i, 0.0, i_limit=0.5, out_limit=0.45)
 
     def reset(self) -> None:
         self.pid_vx.reset()
@@ -43,16 +49,23 @@ class AttitudeRateBackend(ControlBackend):
         # Desired tilt: pitch forward for +x error, roll right for +y error.
         pitch_des = -self.pid_vx.update(float(err[0]), dt)
         roll_des = self.pid_vy.update(float(err[1]), dt)
-        thrust = self.hover_thrust - self.pid_vz.update(float(err[2]), dt)
-        thrust = float(np.clip(thrust, 0.05, 0.95))
 
-        # Rate P-loop on the tilt error (small-angle roll/pitch from quaternion).
+        # Current attitude (small-angle roll/pitch from quaternion).
         q = state.q_att
         roll = np.arctan2(2 * (q[0] * q[1] + q[2] * q[3]),
                           1 - 2 * (q[1] ** 2 + q[2] ** 2))
         pitch = np.arcsin(np.clip(2 * (q[0] * q[2] - q[3] * q[1]), -1.0, 1.0))
-        roll_rate = self.rate_p * (roll_des - roll)
-        pitch_rate = self.rate_p * (pitch_des - pitch)
+
+        # Thrust: hover + vertical-velocity correction, compensated for the
+        # cosine loss when tilted (otherwise the drone sags in fast forward
+        # flight and dives into gate frames).
+        tilt_cos = max(0.35, float(np.cos(roll) * np.cos(pitch)))
+        thrust = (self.hover_thrust - self.pid_vz.update(float(err[2]), dt)) / tilt_cos
+        thrust = float(np.clip(thrust, 0.05, 0.95))
+        roll_rate = np.clip(self.rate_p * (roll_des - roll),
+                            -self.rate_max, self.rate_max)
+        pitch_rate = np.clip(self.rate_p * (pitch_des - pitch),
+                             -self.rate_max, self.rate_max)
 
         self.io.send_attitude_rates(float(roll_rate), float(pitch_rate),
                                     float(sp.yaw_rate), thrust)

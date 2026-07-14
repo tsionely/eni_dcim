@@ -17,6 +17,7 @@ from aigp.core.params import ParamSet
 
 
 # Default tuning surface for campaigns: dot-key -> (low, high).
+# Matches the att_rate backend (the interface the real sim honors).
 DEFAULT_TUNE_BOUNDS = {
     "planner.approach.speed_far_mps": (1.5, 6.0),
     "planner.approach.speed_near_mps": (0.8, 3.0),
@@ -24,7 +25,10 @@ DEFAULT_TUNE_BOUNDS = {
     "planner.commit.distance_m": (1.0, 3.5),
     "planner.commit.duration_s": (0.6, 2.0),
     "planner.commit.speed_mps": (1.5, 5.0),
-    "control.velocity.slew_mps2": (3.0, 12.0),
+    "control.att_rate.vel_p": (0.15, 0.6),
+    "control.att_rate.vz_p": (0.4, 1.5),
+    "control.att_rate.tilt_max_rad": (0.2, 0.6),
+    "control.att_rate.hover_thrust": (0.35, 0.65),
 }
 
 

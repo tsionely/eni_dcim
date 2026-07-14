@@ -93,7 +93,42 @@ def main() -> int:
               lambda: io.send_velocity(0.0, 0.0, -1.5, 0.0, body_frame=False)),
         "C": ("motor command",
               lambda: io.send_motor_rpms((args.motor,) * 4)),
+        # D: rate response — lift gently, then a pitch-rate pulse; the live
+        #    xgyro/ygyro tell whether (and how fast) rates are honored.
+        "D": ("rate response", None),
+        # H: hover ladder — step the thrust and watch accel_z per step; the
+        #    step where the drone stops climbing brackets hover_thrust.
+        "H": ("hover-thrust ladder", None),
     }
+
+    def run_mode_d() -> None:
+        report(sample_phase("lift (thrust 0.6)", 1.2,
+                            lambda: io.send_attitude_rates(0.0, 0.0, 0.0, 0.6)))
+        last = 0
+        gyros = []
+        t_end = time.monotonic() + 0.8
+        while time.monotonic() < t_end:
+            io.send_attitude_rates(0.0, 0.4, 0.0, 0.55)   # pitch-rate pulse
+            fresh = imu_cell.get_if_newer(last)
+            if fresh is not None:
+                imu, last = fresh
+                gyros.append(imu.gyro.tolist())
+            time.sleep(1.0 / SEND_HZ)
+        if gyros:
+            mean = [statistics.mean(g[i] for g in gyros) for i in range(3)]
+            print(f"  pitch-rate pulse: commanded q=+0.40, measured "
+                  f"p={mean[0]:+.3f} q={mean[1]:+.3f} r={mean[2]:+.3f}", flush=True)
+        io.send_attitude_rates(0.0, -0.4, 0.0, 0.55)      # counter-pulse
+        time.sleep(0.6)
+        io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
+
+    def run_mode_h() -> None:
+        for thrust in (0.40, 0.45, 0.50, 0.55, 0.60, 0.65):
+            r = sample_phase(f"thrust={thrust:.2f}", 1.5,
+                             lambda t=thrust: io.send_attitude_rates(0.0, 0.0, 0.0, t))
+            report(r)
+        print("  [OPERATOR] note at which thrust step the drone lifted / held "
+              "altitude — that brackets control.att_rate.hover_thrust.", flush=True)
 
     for mode_key in args.modes:
         title, send = modes[mode_key]
@@ -105,7 +140,12 @@ def main() -> int:
         time.sleep(0.5)
         report(sample_phase("throttle-down handshake", HANDSHAKE_S,
                             lambda: io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)))
-        report(sample_phase(title, MODE_S, send))
+        if mode_key == "D":
+            run_mode_d()
+        elif mode_key == "H":
+            run_mode_h()
+        else:
+            report(sample_phase(title, MODE_S, send))
         print(f"  [OPERATOR] did the drone visibly move in mode {mode_key}? "
               f"did the THROTTLE DOWN overlay clear? note it.", flush=True)
         io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)

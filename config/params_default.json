@@ -1,7 +1,7 @@
 {
   "control": {
-    "backend": "velocity",
-    "throttle_down_s": 1.5,
+    "backend": "att_rate",
+    "throttle_down_s": 3.0,
     "velocity": {
       "frame": "ned",
       "world_yaw_offset_rad": 0.0,
@@ -11,10 +11,12 @@
       "yaw_rate_max_rps": 1.5
     },
     "att_rate": {
-      "vel_p": 0.35,
+      "vel_p": 0.3,
       "vel_i": 0.05,
       "vel_d": 0.0,
-      "tilt_max_rad": 0.6,
+      "vz_p": 0.8,
+      "vz_i": 0.4,
+      "tilt_max_rad": 0.35,
       "rate_p": 8.0,
       "rate_i": 0.0,
       "rate_d": 0.05,
@@ -52,9 +54,10 @@
   },
   "estimation": {
     "gyro_bias_calib_s": 1.0,
-    "mahony_kp": 2.0,
-    "vel_leak": 0.2,
+    "mahony_kp": 0.5,
+    "vel_leak": 0.05,
     "vision_blend": 0.6,
+    "vision_vel_blend": 0.35,
     "gate_rel_max_age_s": 1.5
   },
   "safety": {

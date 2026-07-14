@@ -62,7 +62,36 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 1f — control-authority probe (which interface moves the drone?)
+## CURRENT TASK: Phase 2a — first real controlled flight (att_rate pilot)
+
+Phase-1f verdicts (cloud side): velocity setpoints are DEAD on the real sim;
+attitude-thrust and motor commands work. The pilot was rebuilt around the
+attitude-rate cascade as the primary backend:
+
+- control.backend default is now "att_rate"; throttle-down handshake extended
+  to 3s (the 1.5s handshake didn't clear the overlay in your fly_once)
+- the estimator now measures VELOCITY FROM VISION (derivative of the static
+  gate's relative pose) — the key feedback that made the cascade fly cleanly
+  in the mock (full simulated gate pass end-to-end)
+- control_probe gained mode D (rate-response pulse) and H (hover-thrust
+  ladder) to calibrate the cascade against the real sim
+
+Run this cycle:
+
+1. `git pull`. Single engine instance.
+2. During a real race: `python scripts/control_probe.py --modes H` — note at
+   which thrust step the drone lifts/holds (brackets hover_thrust), then
+   `--modes D` — does the pitch-rate pulse register on ygyro?
+3. The main event: `python scripts/fly_once.py --max-duration 60` during a
+   real race. Expected: handshake clears the overlay, drone climbs ~1.5s,
+   then searches/approaches the first gate. Describe (screenshots) what it
+   does — even a wobbly hover or a crash into the first gate is a milestone;
+   note against WHICH behavior phase (takeoff/search/approach) things break.
+4. Collect with `--label phase2a` (include probe outputs in the report),
+   notes.md with visual account per stage, commit `[sim-run] phase2a first
+   controlled flight`, push.
+
+## PREVIOUS: Phase 1f — control-authority probe (which interface moves the drone?)
 
 Phase-1e analysis (cloud side):
 

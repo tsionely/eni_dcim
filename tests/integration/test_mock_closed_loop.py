@@ -72,8 +72,8 @@ def test_hover_flight_clean(sim_and_app, tmp_path):
 
     params = base_params().patch({
         "planner.search.yaw_rate_rps": 0.4,
-        # Keep the searcher from approaching: kill detections via threshold.
-        "perception.detector.threshold": 256,
+        # Keep the searcher from approaching: make the red mask unsatisfiable.
+        "perception.detector.red_sat_min": 256,
     })
     result = app.fly(params, max_duration_s=6.0)
 

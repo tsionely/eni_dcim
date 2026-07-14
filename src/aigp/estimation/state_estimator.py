@@ -19,6 +19,7 @@ import numpy as np
 from aigp.core.messages import GateDetection, ImuSample, RelPose, StateEstimate
 from aigp.core.params import ParamSet
 from aigp.estimation.attitude_filter import MahonyFilter, quat_rotate
+from aigp.perception.camera import cam_to_body
 
 
 class StateEstimator:
@@ -26,6 +27,7 @@ class StateEstimator:
         self.attitude = MahonyFilter(kp=float(params.get("estimation.mahony_kp")))
         self.vel_leak = float(params.get("estimation.vel_leak"))
         self.vision_blend = float(params.get("estimation.vision_blend"))
+        self.vision_vel_blend = float(params.get("estimation.vision_vel_blend", default=0.35))
         self.max_age_s = float(params.get("estimation.gate_rel_max_age_s"))
 
         self.v_world = np.zeros(3)
@@ -36,6 +38,9 @@ class StateEstimator:
         self._gate_rel_ts_ns: int | None = None
         self._gate_center_px: tuple[float, float] | None = None
         self._image_size: tuple[int, int] | None = None
+        # Raw (unblended) previous fix, for the vision-velocity derivative.
+        self._raw_rel_t: np.ndarray | None = None
+        self._raw_rel_ts_ns: int | None = None
         self._now_ns = 0
 
     def set_gyro_bias(self, bias: np.ndarray) -> None:
@@ -79,6 +84,22 @@ class StateEstimator:
         self._gate_center_px = det.center_px
         self._image_size = det.image_size
         if det.rel_pose is not None:
+            # Vision velocity: the gate is static, so the derivative of its
+            # relative position IS our velocity. This is the only strong
+            # velocity reference we have (accel integration drifts, and the
+            # attitude filter is unreliable during coordinated acceleration).
+            if (self._raw_rel_t is not None and self._raw_rel_ts_ns is not None
+                    and det.ts_ns > self._raw_rel_ts_ns):
+                dt = (det.ts_ns - self._raw_rel_ts_ns) / 1e9
+                if 1e-3 < dt < 0.5:
+                    v_cam = -(det.rel_pose.t - self._raw_rel_t) / dt
+                    v_body = cam_to_body(v_cam)
+                    v_world_meas = quat_rotate(self.attitude.q, v_body)
+                    k = self.vision_vel_blend
+                    self.v_world = (1.0 - k) * self.v_world + k * v_world_meas
+            self._raw_rel_t = det.rel_pose.t.copy()
+            self._raw_rel_ts_ns = det.ts_ns
+        if det.rel_pose is not None:
             if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
                 # Blend positions to smooth detector jitter.
                 b = self.vision_blend
@@ -97,6 +118,8 @@ class StateEstimator:
         self._gate_rel = None
         self._gate_rel_ts_ns = None
         self._gate_center_px = None
+        self._raw_rel_t = None
+        self._raw_rel_ts_ns = None
 
     # ---------------------------------------------------------------- state
 

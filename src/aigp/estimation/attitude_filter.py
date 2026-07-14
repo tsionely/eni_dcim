@@ -63,10 +63,14 @@ class MahonyFilter:
         """gyro [rad/s] and accel (specific force) [m/s^2] in body frame."""
         omega = gyro.astype(np.float64).copy()
 
-        # Accelerometer correction: when specific force is close to 1g the
-        # drone is quasi-static and -accel points along gravity in body frame.
+        # Accelerometer correction: ONLY when quasi-static. During coordinated
+        # acceleration the specific force aligns with the thrust axis, and a
+        # loose gate here pulls the estimate toward "level" while the true
+        # tilt runs away (observed in the mock at approach speeds). Tight
+        # bands: near-1g magnitude and low rotation.
         a_norm = np.linalg.norm(accel)
-        if 0.5 * GRAVITY < a_norm < 1.5 * GRAVITY:
+        if (0.85 * GRAVITY < a_norm < 1.15 * GRAVITY
+                and np.linalg.norm(gyro) < 1.0):
             # Measured "down" in body frame (gravity direction).
             down_meas = -accel / a_norm
             # Predicted "down": world +z (NED) rotated into body.
