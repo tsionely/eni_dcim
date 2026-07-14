@@ -1,13 +1,45 @@
 # Agent Runbook — Local Agents
 
-Two local roles are defined. State clearly in your commit messages which
-role you act as. Both coordinate with the cloud agent through git on `main`.
+Three local roles are defined. State clearly in your commit messages which
+role you act as. All coordinate with the cloud agent through git on `main`.
 
-- **SIM OPERATOR** (Sakana/Codex): operates the simulator, runs probes and
-  flights, collects fixtures. The rest of this document is your runbook.
-- **DATA ANALYST** (Cursor): works ONLY on recorded data — see the next
-  section. Never runs the simulator while the operator is mid-cycle; never
-  edits code, config, docs, or the operator's fixtures.
+- **SIM OPERATOR** (Sakana): operates the simulator, runs probes and
+  flights, collects fixtures. The operator runbook is the last section.
+- **DATA ANALYST** (Cursor): works ONLY on recorded data — see below. Never
+  runs the simulator while the operator is mid-cycle; never edits code,
+  config, docs, or the operator's fixtures.
+- **QA & MOCK-TUNER** (Codex): tests and tunes against the MOCK sim only —
+  see below. Never touches the real simulator or the operator's cycle.
+
+## QA & MOCK-TUNER role (Codex)
+
+Mission: use spare CPU between real-sim cycles to (a) verify the pilot on
+Windows and (b) pre-tune the att_rate cascade with mock campaigns — dozens of
+flights per hour vs. one real race at a time.
+
+Ground rules: write ONLY under `tuning/` (create it) and never modify
+`src/`, `config/`, `simtools/`, `tests/`, `docs/`, or `fixtures/`. Runtime
+parameter experiments go through `--patch` / campaign bounds, never config
+edits. Commit prefix `[tuning]`. Suggested code/test changes are written as
+unified diffs into `tuning/proposals/*.diff` + rationale — the cloud agent
+reviews and applies.
+
+Standing tasks:
+1. **Windows verification**: `python -m pytest tests -q` after every `git
+   pull` of a cloud commit; report failures with full output in
+   `tuning/windows-ci.md` (append per commit hash). The suite has only ever
+   run on Linux — you are our Windows CI.
+2. **Mock tuning campaigns**:
+   `python scripts/run_campaign.py --flights 40 --optimizer cem --sim mock`
+   (repeat with different seeds/optimizers). Copy `logs/results.sqlite` and a
+   summary (best params per campaign, score progression) into
+   `tuning/campaigns/<date>/`. Focus bounds: the att_rate gains + approach
+   params in `DEFAULT_TUNE_BOUNDS` (src/aigp/main.py).
+3. **Robustness hunts**: long mock runs hunting flakes — hover 10x
+   (`aigp --mode mock` repeatedly), report any abort that is not
+   "max duration" with its flight log attached.
+4. **Review reports** (optional, read-only): findings on the pilot code go in
+   `tuning/review-<date>.md` — flag, don't fix.
 
 ## DATA ANALYST role (Cursor)
 
