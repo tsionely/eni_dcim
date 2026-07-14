@@ -1,0 +1,141 @@
+===== Phase 2k preflight 2026-07-14T16:57:40.5308406+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 14550 <- PID 49496
+udp 5601 <- PID 49312
+udp 5600 <- PID 49496
+--- exact variant-1 command to run ---
+python scripts/fly_once.py --max-duration 45 --patch planner.force_hover=true --patch control.att_rate.rate_p=1.2 --patch control.att_rate.rate_max_rps=1.5 --patch control.att_rate.tilt_max_rad=0.2 --patch control.att_rate.hover_thrust=0.30 --patch planner.takeoff.climb_mps=0.5 --patch estimation.mahony_kp=0
+--- inspecting existing Python owner of 14550/5600 ---
+--- inspecting existing Python owner of 14550/5600 (retry) ---
+
+ProcessId       : 45720
+ParentProcessId : 36468
+Name            : python.exe
+CommandLine     : "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" scripts\run_campaign.py --flights 40 --optimizer random --sim mock --low-load --config tuning\campaign-configs\low-load-default-random.json
+
+
+--- port owners after attempted stop/recheck ---
+udp 14560 <- PID 49312 DCGame-Win64-Shipping
+udp 14550 <- PID 45720 python
+udp 5601 <- PID 49312 DCGame-Win64-Shipping
+udp 5600 <- PID 45720 python
+--- python procs ---
+
+ProcessId CommandLine
+--------- -----------
+    50412 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+    49036 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+    45720 "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" scripts\run_campai
+          gn.py --flights 40 --optimizer random --sim mock --low-load --config tuning\campaign-configs\low-load-default-
+          random.json
+
+
+--- port owners after graceful taskkill/recheck ---
+udp 14560 <- PID 49312 DCGame-Win64-Shipping
+udp 14550 <- PID 15792 python
+udp 5601 <- PID 49312 DCGame-Win64-Shipping
+udp 5600 <- PID 15792 python
+--- python procs now ---
+
+ProcessId CommandLine
+--------- -----------
+    15792 "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" tuning\run_trim_ca
+          mpaign.py
+    38512 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+    58588 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+
+
+--- port owners after 60s wait ---
+udp 14560 <- PID 49312 DCGame-Win64-Shipping
+udp 5601 <- PID 49312 DCGame-Win64-Shipping
+--- python procs now ---
+
+ProcessId CommandLine
+--------- -----------
+    38512 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+    58588 "C:\Users\tsion\Projects\eni_dcim\.venv\Scripts\python.exe" -u analysis\2026-07-14-detector-eval-v2\run_classi
+          fied_eval.py
+    56208 "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" -m pytest tests -q
+           --basetemp=C:\Temp\pytest-eni
+
+
+
+
+===== Phase 2k exact Variant 1: config-B + mahony_kp=0 2026-07-14T17:14:15.5112443+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5, 'estimation.mahony_kp': 0}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [2.07837526e-04 1.20679397e-06 4.24006430e-07]; level ref roll=+0.018 pitch=-0.414
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 45.002061400038656, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T141416-1429a43c', 'log_dir': 'logs\\20260714T141416-1429a43c'}
+PHASE2K_V1_EXIT=0
+--- race/screenshot helper stdout V1 ---
+sim window: AI-GP   17:14:24
+event r1 clicked (400,225) 17:14:31
+RACE clicked 17:14:34
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_00_171434.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_01_171437.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_02_171439.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_03_171442.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_04_171445.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_05_171448.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_06_171450.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_07_171453.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_08_171456.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_09_171459.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_10_171501.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_v1\phase2k_v1_11_171504.png
+--- race/screenshot helper stderr V1 ---
+
+
+===== Phase 2k follow-up WITHOUT force_hover (mahony_kp=0, same other patches) 2026-07-14T17:25:15.9646373+03:00 =====
+param overrides: {'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5, 'estimation.mahony_kp': 0}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [-8.20692629e-03  3.74402910e-01 -1.26659870e-07]; level ref roll=-3.074 pitch=+0.452
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=9.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 40.096327500010375, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 10024, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T142516-d195adf3', 'log_dir': 'logs\\20260714T142516-d195adf3'}
+PHASE2K_SEARCH_EXIT=0
+--- race/screenshot helper stdout SEARCH ---
+sim window: AI-GP   17:25:23
+event r1 clicked (400,225) 17:25:31
+RACE clicked 17:25:33
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_00_172533.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_01_172536.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_02_172539.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_03_172541.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_04_172544.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_05_172546.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_06_172549.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_07_172551.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_08_172554.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_09_172556.png
+C:\Users\tsion\AppData\Local\Temp\phase2f_shots\phase2k_search\phase2k_search_10_172559.png
+--- race/screenshot helper stderr SEARCH ---
+--- speed estimates for 20260714T141416-1429a43c ---
+phases {'hover': 2176, 'takeoff': 75}
+go 448429.7280185 state_samples 2251 max_rel 26.336310199985746
+t+3s nearest=3.00s speed_est=28.7 km/h v=[7.789067314958512, 0.30377027851855043, 1.7014457172131654]
+t+10s nearest=10.00s speed_est=71.3 km/h v=[-11.716983676781648, 5.992407937325395, -14.799640459176755]
+t+20s nearest=20.00s speed_est=5.4 km/h v=[-0.93312608334089, 0.4143633975927012, -1.106668078632919]
+t+40s nearest=26.34s speed_est=1.3 km/h v=[-0.11172365488536931, 0.05076842250281938, 0.33162416796901484]
+--- speed estimates for 20260714T142516-d195adf3 ---
+phases {'hover': 913, 'takeoff': 76, 'approach': 1016}
+go 449089.269893 state_samples 2005 max_rel 21.819634899962693
+t+3s nearest=3.00s speed_est=207.4 km/h v=[12.07441380753123, 51.28763321877303, -23.27700311185332]
+t+10s nearest=10.00s speed_est=91.6 km/h v=[5.928084007874662, 23.210273262068906, 8.594649730132632]
+t+20s nearest=20.00s speed_est=69.8 km/h v=[-3.8138094163716105, 0.20319964436172586, 18.997793448572814]
+t+40s nearest=21.82s speed_est=54.3 km/h v=[-3.661692327535727, -2.083247070849124, 14.47381082990757]

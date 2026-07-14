@@ -1,0 +1,36 @@
+{
+  "label": "phase2k",
+  "created_utc": "20260714T143643",
+  "code_commit": "2cc8df981f2a804ed8893ad3d1ca3ab5d13e87f9",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase2k_report.txt",
+      "file": "report.txt",
+      "bytes": 9025
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T142516-d195adf3\\flight.jsonl",
+      "file": "20260714T142516-d195adf3-flight.jsonl",
+      "bytes": 4998241
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T142516-d195adf3\\result.json",
+      "file": "20260714T142516-d195adf3-result.json",
+      "bytes": 458
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T142516-d195adf3\\params.json",
+      "file": "20260714T142516-d195adf3-params.json",
+      "bytes": 2141
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T142516-d195adf3\\vision.aigprec",
+      "reason": "543 MB > limit; upload to Drive"
+    }
+  ]
+}
