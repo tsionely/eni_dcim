@@ -1,0 +1,123 @@
+{
+  "results": [
+    {
+      "label": "phase2j-V1",
+      "session": "20260714T132005-1429a43c",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T132005-1429a43c\\flight.jsonl",
+      "n_fixes": 2725,
+      "n_states": 2251,
+      "n_baseline_vel": 2637,
+      "pnp_noise": {
+        "n_windows": 29,
+        "std_xyz_m": [
+          0.44407415598792255,
+          0.7564981428570541,
+          1.6765334825355596
+        ],
+        "std_norm_m": 1.8921563926444793,
+        "std_xyz_mean_m": [
+          0.46141499839179484,
+          0.7265698882638,
+          2.7527301981930212
+        ]
+      },
+      "vel_noise_compare": {
+        "framepair_v_std_mps": [
+          22.05366875644729,
+          28.053919163383245,
+          110.43604746151998
+        ],
+        "framepair_speed_std_mps": 105.11971928758312,
+        "framepair_n": 313,
+        "baseline_v_std_mps": [
+          3.348280534602015,
+          9.730816441520815,
+          20.884718253023106
+        ],
+        "baseline_speed_std_mps": 18.059486876525614,
+        "baseline_n": 2637,
+        "baseline_dt_mean_s": null
+      },
+      "baseline_vs_logged": {
+        "rmse_mps": 21.646123953494648,
+        "rmse_xyz_mps": [
+          34.50630728317833,
+          5.585494455337661,
+          13.556587181087556
+        ],
+        "corr_xyz": [
+          0.3902241521319985,
+          0.45015677596034226,
+          0.6585894210009655
+        ],
+        "logged_speed_mean_mps": 22.151436515231367,
+        "baseline_speed_mean_mps": 15.055380736227743,
+        "framepair_speed_std_mps": 105.11971928758312,
+        "baseline_speed_std_mps": 18.059486876525614
+      },
+      "plot": "analysis/2026-07-14-vision-velocity-baseline/phase2j-V1_velocity_baseline.png",
+      "hist_plot": "analysis/2026-07-14-vision-velocity-baseline/phase2j-V1_vcam_hist.png"
+    },
+    {
+      "label": "phase2j-V2",
+      "session": "20260714T132354-80030858",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T132354-80030858\\flight.jsonl",
+      "n_fixes": 1687,
+      "n_states": 2251,
+      "n_baseline_vel": 1655,
+      "pnp_noise": {
+        "n_windows": 16,
+        "std_xyz_m": [
+          0.17811840074819546,
+          0.8762364375731566,
+          2.2415168602377884
+        ],
+        "std_norm_m": 2.4132787435243084,
+        "std_xyz_mean_m": [
+          0.23171889521008368,
+          0.6557767696277764,
+          2.511651506588367
+        ]
+      },
+      "vel_noise_compare": {
+        "framepair_v_std_mps": [
+          13.497984988345342,
+          32.363277412551575,
+          145.82662762595731
+        ],
+        "framepair_speed_std_mps": 139.51455133593683,
+        "framepair_n": 205,
+        "baseline_v_std_mps": [
+          2.661752013875873,
+          7.141639686018353,
+          22.918421103199535
+        ],
+        "baseline_speed_std_mps": 19.095108794570816,
+        "baseline_n": 1655,
+        "baseline_dt_mean_s": null
+      },
+      "baseline_vs_logged": {
+        "rmse_mps": 26.841447008162405,
+        "rmse_xyz_mps": [
+          41.23566929949254,
+          4.476425289662171,
+          20.999310144024513
+        ],
+        "corr_xyz": [
+          0.49468144868030817,
+          0.2563927615764999,
+          0.4262810897778232
+        ],
+        "logged_speed_mean_mps": 27.19967497437474,
+        "baseline_speed_mean_mps": 14.894358474825241,
+        "framepair_speed_std_mps": 139.51455133593683,
+        "baseline_speed_std_mps": 19.095108794570816
+      },
+      "plot": "analysis/2026-07-14-vision-velocity-baseline/phase2j-V2_velocity_baseline.png",
+      "hist_plot": "analysis/2026-07-14-vision-velocity-baseline/phase2j-V2_vcam_hist.png"
+    }
+  ],
+  "blockers": [
+    "phase2k logs/fixtures not found locally \u2014 validation uses phase2j only."
+  ]
+}
