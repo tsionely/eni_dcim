@@ -103,6 +103,10 @@ class StateEstimator:
             # relative position IS our velocity. This is the only strong
             # velocity reference we have (accel integration drifts, and the
             # attitude filter is unreliable during coordinated acceleration).
+            # Differentiate in the WORLD frame so the drone's own rotation
+            # drops out — a yawing search otherwise turns gate pixel sweep
+            # into huge fake translation (phase2k run 2: 207 km/h estimate).
+            t_world = quat_rotate(self.attitude.q, cam_to_body(det.rel_pose.t))
             baseline = None
             for ts, t_vec in self._fix_history:
                 if 0.15e9 <= det.ts_ns - ts <= 0.45e9:
@@ -110,12 +114,10 @@ class StateEstimator:
                     break   # oldest fix inside the window
             if baseline is not None:
                 dt = (det.ts_ns - baseline[0]) / 1e9
-                v_cam = -(det.rel_pose.t - baseline[1]) / dt
-                v_body = cam_to_body(v_cam)
-                v_world_meas = quat_rotate(self.attitude.q, v_body)
+                v_world_meas = -(t_world - baseline[1]) / dt
                 k = self.vision_vel_blend
                 self.v_world = (1.0 - k) * self.v_world + k * v_world_meas
-            self._fix_history.append((det.ts_ns, det.rel_pose.t.copy()))
+            self._fix_history.append((det.ts_ns, t_world))
         if det.rel_pose is not None:
             if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
                 # Blend positions to smooth detector jitter.
