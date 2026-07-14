@@ -1,0 +1,70 @@
+===== Phase 2c preflight 2026-07-14T11:09:17.3256111+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- defaults ---
+"backend": "att_rate",
+"throttle_down_s": 3.0,
+"rate_sign_roll": -1.0,
+"rate_sign_pitch": -1.0,
+"rate_sign_yaw": -1.0,
+"hover_thrust": 0.5
+
+
+===== Phase 2c MODE H (0.25-0.50 ladder) 2026-07-14T11:09:19.4171748+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode H: hover-thrust ladder ===
+resetting sim + arming...
+  waiting for race GO (start the race now; timeout 30s)...
+  GO!
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  thrust=0.25              accel_std=1.507  motor_span=0.207  collisions=83  motors=(0.25000208616256714, 0.25000226497650146, 0.24999772012233734, 0.24999792873859406)  -> RESPONSE
+  thrust=0.30              accel_std=1.259  motor_span=0.050  collisions=0  motors=(0.30000001192092896, 0.30000001192092896, 0.30000001192092896, 0.30000001192092896)  -> RESPONSE
+  thrust=0.35              accel_std=2.015  motor_span=0.050  collisions=0  motors=(0.34999993443489075, 0.34999993443489075, 0.34999993443489075, 0.34999993443489075)  -> RESPONSE
+  thrust=0.40              accel_std=2.975  motor_span=0.050  collisions=0  motors=(0.3999999463558197, 0.3999999463558197, 0.3999999463558197, 0.3999999463558197)  -> RESPONSE
+  thrust=0.45              accel_std=2.045  motor_span=0.050  collisions=0  motors=(0.44999992847442627, 0.44999992847442627, 0.44999992847442627, 0.44999992847442627)  -> RESPONSE
+  thrust=0.50              accel_std=1.604  motor_span=0.050  collisions=0  motors=(0.4999999403953552, 0.4999999403953552, 0.4999999403953552, 0.4999999403953552)  -> RESPONSE
+  [OPERATOR] note at which thrust step the drone lifted / held altitude � that brackets control.att_rate.hover_thrust.
+  [OPERATOR] did the drone visibly move in mode H? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_H_EXIT=0
+--- race starter stdout ---
+sim window: AI-GP   11:09:24
+event r1 clicked (400,225) 11:09:31
+RACE clicked 11:09:34
+
+
+===== Phase 2c MAIN EVENT fly_once --max-duration 60 --patch hover_thrust=0.30 2026-07-14T11:19:44.8155774+03:00 =====
+param overrides: {'control.att_rate.hover_thrust': 0.3}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [ 1.62756132e-05  2.09941136e-05 -9.61988371e-06]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 42.08015770005295, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 10520, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T081945-bb5494d6', 'log_dir': 'logs\\20260714T081945-bb5494d6'}
+FLY_ONCE_2C_EXIT=0
+--- fly_once helper stdout ---
+sim window: AI-GP   11:19:52
+event r1 clicked (400,225) 11:20:01
+RACE clicked 11:20:03
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_00_112003.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_01_112006.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_02_112008.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_03_112011.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_04_112013.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_05_112016.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_06_112018.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_07_112021.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_08_112023.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_09_112026.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_10_112028.png
+C:\Users\tsion\AppData\Local\Temp\phase2c_shots\fly_once\p2c_11_112030.png
+--- fly_once helper stderr ---
