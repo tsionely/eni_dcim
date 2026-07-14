@@ -1,5 +1,16 @@
 # Agent Runbook — Local Agents
 
+## DEFINITION OF DONE — ALL ROLES
+
+A task is done ONLY when your commit exists on **origin/main**. Verify after
+every push:
+
+    git log origin/main --oneline -1     # must show YOUR hash
+
+Unpushed work does not exist for the team (three agents have now lost cycles
+to this). If push is rejected: `git pull --rebase origin main` then push
+again. The remote default branch is `main` — never `master`.
+
 Three local roles are defined. State clearly in your commit messages which
 role you act as. All coordinate with the cloud agent through git on `main`.
 
@@ -139,7 +150,35 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2d — the decisive sign experiment
+## CURRENT TASK: Phase 2e — the breakthrough cycle (E verdict + gyro-fix flight)
+
+Cloud analysis of ALL evidence: both sign choices (+1 and -1 on commands)
+tumble — which is only consistent if the GYRO is the inverted party: a
+poisoned estimator destabilizes the cascade regardless of command sign. The
+gyro-side fix is now pre-wired as params, so ONE cycle can both verify and
+fly the fix:
+
+1. `git pull`. Single engine instance.
+2. `python scripts/control_probe.py --modes E` (twice) — paste the verdict
+   blocks verbatim. Expected under the gyro hypothesis: physical NOSE-UP
+   with negative gyro reading.
+3. THE BREAKTHROUGH FLIGHT — gyro-corrected configuration:
+   python scripts/fly_once.py --max-duration 90 ^
+     --patch estimation.gyro_sign=-1 ^
+     --patch estimation.gyro_scale=0.42 ^
+     --patch control.att_rate.rate_sign_roll=1 ^
+     --patch control.att_rate.rate_sign_pitch=1 ^
+     --patch control.att_rate.rate_sign_yaw=1 ^
+     --patch control.att_rate.hover_thrust=0.35
+   (If E surprisingly says NOSE-DOWN / commands-inverted instead: fly with
+   defaults plus only the hover patch.)
+   Watch for: stable climb, level-ish hover, search spin — describe/shoot
+   every stage. If it holds attitude at all, this is the breakthrough; gates
+   come right after.
+4. Collect with `--label phase2e`, push, VERIFY on origin (see DEFINITION OF
+   DONE above).
+
+## PREVIOUS: Phase 2d — the decisive sign experiment
 
 Phase-2c: countdown hold WORKED (no DSQ — milestone!), but the drone still
 tumbles right after liftoff even with the -1 command signs. That is strong

@@ -25,6 +25,12 @@ from aigp.perception.camera import cam_to_body
 class StateEstimator:
     def __init__(self, params: ParamSet) -> None:
         self.attitude = MahonyFilter(kp=float(params.get("estimation.mahony_kp")))
+        # Gyro convention correction: the real sim is suspected of reporting
+        # angular velocity with INVERTED sign (and ~2.4x scale) relative to
+        # the MAVLink convention — probe E settles it; these params apply the
+        # fix without code changes (--patch estimation.gyro_sign=-1 ...).
+        self.gyro_sign = float(params.get("estimation.gyro_sign", default=1.0))
+        self.gyro_scale = float(params.get("estimation.gyro_scale", default=1.0))
         self.vel_leak = float(params.get("estimation.vel_leak"))
         self.vision_blend = float(params.get("estimation.vision_blend"))
         self.vision_vel_blend = float(params.get("estimation.vision_vel_blend", default=0.35))
@@ -68,7 +74,7 @@ class StateEstimator:
         if dt <= 0 or dt > 0.5:
             return
 
-        gyro = imu.gyro - self._gyro_bias
+        gyro = (imu.gyro - self._gyro_bias) * (self.gyro_sign * self.gyro_scale)
         q = self.attitude.update(gyro, imu.accel, dt)
         self._omega = gyro
 
