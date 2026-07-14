@@ -1,0 +1,73 @@
+===== Phase 2l preflight 2026-07-14T18:31:55.3679669+03:00 =====
+--- before launch process check ---
+
+--- ports before launch ---
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- after launch process check ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+53876 DCGame-Win64-Shipping 14/07/2026 18:32:45 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+34952 FlightSim             14/07/2026 18:32:45 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+--- ports after launch ---
+udp 14560 <- PID 53876 DCGame-Win64-Shipping
+udp 5601 <- PID 53876 DCGame-Win64-Shipping
+
+
+===== Phase 2l Flight 1: exact 2k force_hover 2026-07-14T18:37:14.2011331+03:00 =====
+param overrides: {'planner.force_hover': True, 'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5, 'estimation.mahony_kp': 0}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 15, 'duration_s': 45.00164099998074, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T153715-1429a43c', 'log_dir': 'logs\\20260714T153715-1429a43c'}
+PHASE2L_F1_EXIT=0
+--- helper stdout F1 ---
+sim window: AI-GP   18:37:22
+event r1 clicked (400,225) 18:37:29
+RACE clicked 18:37:32
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_00_183732.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_01_183735.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_02_183737.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_03_183740.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_04_183742.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_05_183745.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_06_183747.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_07_183750.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_08_183752.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_09_183755.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_10_183757.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_11_183800.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight1_hover\flight1_hover_12_183802.png
+--- helper stderr F1 ---
+
+
+===== Phase 2l Flight 2: gate attempt (drop force_hover, add vision_vel_world_frame=true) 2026-07-14T18:43:40.4459939+03:00 =====
+param overrides: {'control.att_rate.rate_p': 1.2, 'control.att_rate.rate_max_rps': 1.5, 'control.att_rate.tilt_max_rad': 0.2, 'control.att_rate.hover_thrust': 0.3, 'planner.takeoff.climb_mps': 0.5, 'estimation.mahony_kp': 0, 'estimation.vision_vel_world_frame': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [-1.70576895e-04  1.22514291e-04 -4.36557457e-11]; level ref roll=+0.016 pitch=-0.606
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 45.001511999988, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 11250, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T154340-77aba731', 'log_dir': 'logs\\20260714T154340-77aba731'}
+PHASE2L_F2_EXIT=0
+--- helper stdout F2 ---
+sim window: AI-GP   18:43:48
+event r1 clicked (400,225) 18:43:55
+RACE clicked 18:43:58
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_00_184358.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_01_184400.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_02_184403.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_03_184405.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_04_184408.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_05_184410.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_06_184413.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_07_184415.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_08_184417.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_09_184420.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_10_184422.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_11_184425.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_12_184427.png
+C:\Users\tsion\AppData\Local\Temp\phase2l_shots\flight2_gate\flight2_gate_13_184429.png
+--- helper stderr F2 ---
