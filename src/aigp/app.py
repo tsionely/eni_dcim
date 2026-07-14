@@ -259,6 +259,7 @@ class App:
                 lr = float(np.arctan2(-ay, -az))
                 lp = float(np.arctan2(ax, np.sqrt(ay * ay + az * az)))
                 estimator.set_level_reference(lr, lp)
+                estimator.attitude.set_attitude_euler(lr, lp)
                 print(f"live calibration ({len(calib_gyros)} samples): "
                       f"bias={bias} level roll={lr:+.3f} pitch={lp:+.3f}", flush=True)
             prev_fsm_state = supervisor.state

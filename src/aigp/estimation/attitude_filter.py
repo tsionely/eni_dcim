@@ -59,6 +59,19 @@ class MahonyFilter:
     def reset(self) -> None:
         self.q = np.array([1.0, 0.0, 0.0, 0.0])
 
+    def set_attitude_euler(self, roll: float, pitch: float, yaw: float = 0.0) -> None:
+        """Anchor the attitude (used with kp=0: gyro-only integration from a
+        known resting attitude, immune to thrust-direction aliasing)."""
+        cr, sr = np.cos(roll / 2), np.sin(roll / 2)
+        cp, sp = np.cos(pitch / 2), np.sin(pitch / 2)
+        cy, sy = np.cos(yaw / 2), np.sin(yaw / 2)
+        self.q = quat_normalize(np.array([
+            cy * cp * cr + sy * sp * sr,
+            cy * cp * sr - sy * sp * cr,
+            cy * sp * cr + sy * cp * sr,
+            sy * cp * cr - cy * sp * sr,
+        ]))
+
     def update(self, gyro: np.ndarray, accel: np.ndarray, dt: float) -> np.ndarray:
         """gyro [rad/s] and accel (specific force) [m/s^2] in body frame."""
         omega = gyro.astype(np.float64).copy()

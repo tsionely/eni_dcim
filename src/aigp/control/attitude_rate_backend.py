@@ -37,6 +37,10 @@ class AttitudeRateBackend(ControlBackend):
         self.sign_roll = float(params.get("control.att_rate.rate_sign_roll", default=1.0))
         self.sign_pitch = float(params.get("control.att_rate.rate_sign_pitch", default=1.0))
         self.sign_yaw = float(params.get("control.att_rate.rate_sign_yaw", default=1.0))
+        # False -> hold world-level (pitch 0) instead of the resting attitude,
+        # for the case where the launch pad itself is tilted (thrust along
+        # body -z means hover needs IMU-level, not rest-attitude).
+        self.use_level_ref = bool(params.get("control.att_rate.use_level_ref", default=True))
         self.hover_thrust = float(params.get("control.att_rate.hover_thrust"))
         self.pid_vx = PID(kp, ki, kd, out_limit=self.tilt_max)
         self.pid_vy = PID(kp, ki, kd, out_limit=self.tilt_max)
@@ -53,8 +57,10 @@ class AttitudeRateBackend(ControlBackend):
         err = sp.v_body - v_body
 
         # Desired tilt: pitch forward for +x error, roll right for +y error.
-        pitch_des = state.level_pitch - self.pid_vx.update(float(err[0]), dt)
-        roll_des = state.level_roll + self.pid_vy.update(float(err[1]), dt)
+        ref_pitch = state.level_pitch if self.use_level_ref else 0.0
+        ref_roll = state.level_roll if self.use_level_ref else 0.0
+        pitch_des = ref_pitch - self.pid_vx.update(float(err[0]), dt)
+        roll_des = ref_roll + self.pid_vy.update(float(err[1]), dt)
 
         # Current attitude (small-angle roll/pitch from quaternion).
         q = state.q_att
