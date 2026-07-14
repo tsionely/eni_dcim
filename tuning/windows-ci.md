@@ -981,3 +981,177 @@ ERROR tests/unit/test_udp_tap.py::test_truncated_file_stops_cleanly - Permiss...
 61 passed, 8 errors in 8.29s
 
 ``
+
+## 2026-07-14 12:14:50 +03:00 - commit `1d27315005dd57c21703908c7a8ef3795d9a2a47`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive, per updated QA instructions).
+
+Command requested by runbook, executed with the bundled Python runtime because `python` and `py` still fail on this machine with a logon-session error:
+
+``powershell
+& "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+``
+
+Result: FAIL.
+
+Summary:
+
+- `66 passed, 3 failed, 2 warnings`.
+- The previous `tmp_path` setup errors from OneDrive are gone in the elevated requested-basetemp run.
+- A non-elevated rerun could not clean `C:\Temp\pytest-eni` because that directory was created by the elevated runner; a persistent ACL change to `C:\Temp` was not made.
+- Failures:
+  - `tests/integration/test_mock_closed_loop.py::test_hover_flight_clean`: `overrun_frac` was `0.7435`, expected `< 0.5`.
+  - `tests/integration/test_mock_closed_loop.py::test_single_gate_pass`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+  - `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+
+Full pytest output:
+
+``text
+FFF..................................................................    [100%]
+================================== FAILURES ===================================
+___________________________ test_hover_flight_clean ___________________________
+
+sim_and_app = <function sim_and_app.<locals>.factory at 0x0000027BE3A4D760>
+tmp_path = WindowsPath('C:/Temp/pytest-eni/test_hover_flight_clean0')
+
+    def test_hover_flight_clean(sim_and_app, tmp_path):
+        """Phase-0 acceptance: connect -> arm -> takeoff -> hover -> reset,
+        no watchdog trips, no crashes, telemetry written."""
+        # Far-away gate the drone won't reach while hovering/searching.
+        sim, app = sim_and_app([Gate(pos=np.array([50.0, 0.0, -1.5]), travel_yaw=0.0)])
+    
+        params = base_params().patch({
+            "planner.search.yaw_rate_rps": 0.4,
+            # Keep the searcher from approaching: make the red mask unsatisfiable.
+            "perception.detector.red_sat_min": 256,
+        })
+        result = app.fly(params, max_duration_s=6.0)
+    
+        assert result["aborted"]
+        assert result["abort_reason"] == "max duration"      # NOT a watchdog/collision
+        assert result["gates_passed"] == 0
+        assert result["env_hits"] == 0
+        assert result["gate_clips"] == 0
+        assert result["loop_stats"]["ticks"] > 500
+>       assert result["loop_stats"]["overrun_frac"] < 0.5    # generous for CI
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 0.7435043304463691 < 0.5
+
+tests\integration\test_mock_closed_loop.py:86: AssertionError
+---------------------------- Captured stdout call -----------------------------
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 63 samples: [-0.00268941 -0.00274085  0.00105994]
+____________________________ test_single_gate_pass ____________________________
+
+sim_and_app = <function sim_and_app.<locals>.factory at 0x0000027BE4A58A40>
+
+    def test_single_gate_pass(sim_and_app):
+        """Full chain: detect the gate, approach, commit, pass -> race finished."""
+        gate = Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+                    width=1.6, height=1.6)
+>       sim, app = sim_and_app([gate])
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_mock_closed_loop.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_mock_closed_loop.py:57: in factory
+    app.connect()
+src\aigp\app.py:105: in connect
+    self.mavlink.connect(timeout_s=self.cfg.heartbeat_timeout_s)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <aigp.io.mavlink_io.MavlinkIO object at 0x0000027BE3A251F0>
+timeout_s = 10.0
+
+    def connect(self, timeout_s: float = 30.0) -> None:
+        """Open the UDP endpoint and wait for the sim's heartbeat.
+    
+        In connect mode we announce ourselves with client heartbeats while
+        waiting � the sim only learns our address from our first packet.
+        """
+        self.conn = mavutil.mavlink_connection(self.endpoint,
+                                               source_system=245, source_component=190)
+        deadline = time.monotonic() + timeout_s
+        while True:
+            if self.mode == "connect":
+                self.send_client_heartbeat()
+            msg = self.conn.wait_heartbeat(timeout=1.0)
+            if msg is not None:
+                return
+            if time.monotonic() > deadline:
+>               raise TimeoutError(f"no heartbeat on {self.endpoint} within {timeout_s}s")
+E               TimeoutError: no heartbeat on udpin:127.0.0.1:24550 within 10.0s
+
+src\aigp\io\mavlink_io.py:106: TimeoutError
+---------------------------- Captured stdout call -----------------------------
+Waiting for sim heartbeat...
+_______________________ test_campaign_loop_against_mock _______________________
+
+sim_and_app = <function sim_and_app.<locals>.factory at 0x0000027BE4AE89A0>
+tmp_path = WindowsPath('C:/Temp/pytest-eni/test_campaign_loop_against_moc0')
+
+    def test_campaign_loop_against_mock(sim_and_app, tmp_path):
+        """The flight-to-flight tuning loop end to end: 3 flights, sim reset
+        between, results recorded and scored."""
+        from aigp.learning.campaign import Campaign
+        from aigp.learning.optimizers import RandomSearch
+        from aigp.learning.results_db import ResultsDB
+    
+        gate = Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+                    width=1.6, height=1.6)
+>       sim, app = sim_and_app([gate])
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_mock_closed_loop.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_mock_closed_loop.py:57: in factory
+    app.connect()
+src\aigp\app.py:105: in connect
+    self.mavlink.connect(timeout_s=self.cfg.heartbeat_timeout_s)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <aigp.io.mavlink_io.MavlinkIO object at 0x0000027BE4AC3500>
+timeout_s = 10.0
+
+    def connect(self, timeout_s: float = 30.0) -> None:
+        """Open the UDP endpoint and wait for the sim's heartbeat.
+    
+        In connect mode we announce ourselves with client heartbeats while
+        waiting � the sim only learns our address from our first packet.
+        """
+        self.conn = mavutil.mavlink_connection(self.endpoint,
+                                               source_system=245, source_component=190)
+        deadline = time.monotonic() + timeout_s
+        while True:
+            if self.mode == "connect":
+                self.send_client_heartbeat()
+            msg = self.conn.wait_heartbeat(timeout=1.0)
+            if msg is not None:
+                return
+            if time.monotonic() > deadline:
+>               raise TimeoutError(f"no heartbeat on {self.endpoint} within {timeout_s}s")
+E               TimeoutError: no heartbeat on udpin:127.0.0.1:24550 within 10.0s
+
+src\aigp\io\mavlink_io.py:106: TimeoutError
+---------------------------- Captured stdout call -----------------------------
+Waiting for sim heartbeat...
+============================== warnings summary ===============================
+..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path C:\Users\tsion\Projects\eni_dcim_qa\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Users\\tsion\\Projects\\eni_dcim_qa\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path C:\Users\tsion\Projects\eni_dcim_qa\.pytest_cache\v\cache\lastfailed: [WinError 5] Access is denied: 'C:\\Users\\tsion\\Projects\\eni_dcim_qa\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_mock_closed_loop.py::test_hover_flight_clean - ...
+FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - Ti...
+FAILED tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock
+3 failed, 66 passed, 2 warnings in 34.72s
+
+``
