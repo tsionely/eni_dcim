@@ -1,0 +1,125 @@
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 161 samples: [-0.00057134 -0.00025841 -0.00017977]; level ref roll=+0.011 pitch=-0.264
+live calibration (180 samples): bias=[ 7.32753068e-05  5.30816474e-04 -7.12816513e-04] level roll=+0.010 pitch=-0.233
+[campaign trim-camp-20260714T140605] flight 1/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16880111547653753, 'control.att_rate.vz_i': 0.4268816489240222, 'estimation.vision_vel_blend': 0.4300528313054102, 'estimation.vel_leak': 0.08840925380747379}
+gyro bias calibrated over 166 samples: [ 0.00040958 -0.00051581 -0.00011472]; level ref roll=+0.011 pitch=-0.270
+live calibration (180 samples): bias=[2.06567569e-04 2.85266858e-04 7.34717535e-05] level roll=+0.010 pitch=-0.223
+[campaign trim-camp-20260714T140605] flight 2/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.12250314387872224, 'control.att_rate.vz_i': 0.5132791346091599, 'estimation.vision_vel_blend': 0.5130000056412671, 'estimation.vel_leak': 0.11578013130170037}
+gyro bias calibrated over 159 samples: [ 0.00058018 -0.00026744  0.00029469]; level ref roll=+0.012 pitch=-0.272
+live calibration (180 samples): bias=[0.00017853 0.00033314 0.00031843] level roll=+0.010 pitch=-0.228
+[campaign trim-camp-20260714T140605] flight 3/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.11073853349351052, 'control.att_rate.vz_i': 0.2285512425669408, 'estimation.vision_vel_blend': 0.27209069218283094, 'estimation.vel_leak': 0.08634309432878541}
+gyro bias calibrated over 161 samples: [ 1.14149534e-05  9.81055647e-05 -4.22482860e-04]; level ref roll=+0.012 pitch=-0.273
+live calibration (180 samples): bias=[-0.00017748 -0.00047604  0.00038464] level roll=+0.010 pitch=-0.235
+[campaign trim-camp-20260714T140605] flight 4/40 score=-240.8 gates=0 aborted=True params={'control.att_rate.vel_i': 0.02, 'control.att_rate.vz_i': 0.4117114588118045, 'estimation.vision_vel_blend': 0.19426113159336683, 'estimation.vel_leak': 0.06120131097213781}
+gyro bias calibrated over 159 samples: [-0.00029767  0.0003664   0.00029142]; level ref roll=+0.011 pitch=-0.272
+live calibration (180 samples): bias=[ 0.00082367 -0.00023319  0.00048178] level roll=+0.010 pitch=-0.228
+[campaign trim-camp-20260714T140605] flight 5/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.12190187119998831, 'control.att_rate.vz_i': 0.39464747263539796, 'estimation.vision_vel_blend': 0.4014538170467666, 'estimation.vel_leak': 0.11888168450688702}
+gyro bias calibrated over 164 samples: [ 1.51928978e-04  3.02409575e-04 -8.88541891e-05]; level ref roll=+0.012 pitch=-0.273
+live calibration (180 samples): bias=[-0.0004767   0.0005156   0.00099027] level roll=+0.010 pitch=-0.223
+[campaign trim-camp-20260714T140605] flight 6/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1510025735939176, 'control.att_rate.vz_i': 0.6891311073461951, 'estimation.vision_vel_blend': 0.26685066581417327, 'estimation.vel_leak': 0.09642407727802313}
+gyro bias calibrated over 161 samples: [-0.00073214  0.00036476 -0.00036048]; level ref roll=+0.012 pitch=-0.284
+live calibration (180 samples): bias=[ 0.00039861 -0.00021527 -0.00054669] level roll=+0.009 pitch=-0.211
+[campaign trim-camp-20260714T140605] flight 7/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.2232429127156266, 'control.att_rate.vz_i': 0.46645215210815305, 'estimation.vision_vel_blend': 0.2570625938307739, 'estimation.vel_leak': 0.05504392527160136}
+gyro bias calibrated over 159 samples: [ 0.00089118 -0.00063896  0.00048786]; level ref roll=+0.012 pitch=-0.269
+live calibration (180 samples): bias=[0.00069033 0.00034735 0.00053381] level roll=+0.010 pitch=-0.230
+[campaign trim-camp-20260714T140605] flight 8/40 score=-220.7 gates=0 aborted=True params={'control.att_rate.vel_i': 0.12795919220328628, 'control.att_rate.vz_i': 0.4885341466072587, 'estimation.vision_vel_blend': 0.223797727057658, 'estimation.vel_leak': 0.07820179381666932}
+gyro bias calibrated over 156 samples: [0.00136141 0.00037713 0.00050803]; level ref roll=+0.012 pitch=-0.277
+live calibration (180 samples): bias=[ 0.00026208  0.00018857 -0.00040421] level roll=+0.010 pitch=-0.244
+[campaign trim-camp-20260714T140605] flight 9/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.13448394774684044, 'control.att_rate.vz_i': 0.6487595024842346, 'estimation.vision_vel_blend': 0.4163444363741197, 'estimation.vel_leak': 0.10954141096722038}
+gyro bias calibrated over 155 samples: [-0.00025901 -0.00039913 -0.00048145]; level ref roll=+0.012 pitch=-0.287
+live calibration (180 samples): bias=[0.00064321 0.00012443 0.000403  ] level roll=+0.009 pitch=-0.223
+[campaign trim-camp-20260714T140605] flight 10/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.12743598748636897, 'control.att_rate.vz_i': 0.589808714388433, 'estimation.vision_vel_blend': 0.4864128579258361, 'estimation.vel_leak': 0.12055557125362935}
+gyro bias calibrated over 157 samples: [-1.62472236e-04  2.96111522e-04 -1.28397698e-05]; level ref roll=+0.012 pitch=-0.267
+live calibration (180 samples): bias=[5.44141780e-05 6.33304516e-04 9.71449583e-04] level roll=+0.010 pitch=-0.226
+[campaign trim-camp-20260714T140605] flight 11/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.11881153391680671, 'control.att_rate.vz_i': 0.734318362158359, 'estimation.vision_vel_blend': 0.5555685092544824, 'estimation.vel_leak': 0.11366365713049795}
+gyro bias calibrated over 161 samples: [0.00041411 0.00062257 0.0008934 ]; level ref roll=+0.011 pitch=-0.268
+live calibration (180 samples): bias=[ 4.24275773e-04 -7.42216305e-05 -2.27989621e-04] level roll=+0.010 pitch=-0.240
+[campaign trim-camp-20260714T140605] flight 12/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14052127606099876, 'control.att_rate.vz_i': 0.5736031478659808, 'estimation.vision_vel_blend': 0.5693707500811555, 'estimation.vel_leak': 0.1250735372266458}
+gyro bias calibrated over 158 samples: [0.00022563 0.00012659 0.00014347]; level ref roll=+0.012 pitch=-0.276
+live calibration (180 samples): bias=[ 0.00101181 -0.00028887 -0.00041861] level roll=+0.010 pitch=-0.230
+[campaign trim-camp-20260714T140605] flight 13/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16242564190941733, 'control.att_rate.vz_i': 0.7168369166688978, 'estimation.vision_vel_blend': 0.43390981180313903, 'estimation.vel_leak': 0.09440796392772699}
+gyro bias calibrated over 158 samples: [-6.13131495e-04  5.41531277e-05 -4.19656302e-04]; level ref roll=+0.012 pitch=-0.279
+live calibration (180 samples): bias=[ 7.83101363e-04 -7.43733610e-05 -3.41862174e-04] level roll=+0.010 pitch=-0.239
+[campaign trim-camp-20260714T140605] flight 14/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.13668938860942095, 'control.att_rate.vz_i': 0.6589263271704728, 'estimation.vision_vel_blend': 0.23136067384740963, 'estimation.vel_leak': 0.10992610626127655}
+gyro bias calibrated over 158 samples: [ 0.00033514  0.00056952 -0.00016456]; level ref roll=+0.012 pitch=-0.278
+live calibration (180 samples): bias=[ 4.41380843e-05  7.95887182e-05 -5.45846561e-04] level roll=+0.011 pitch=-0.256
+[campaign trim-camp-20260714T140605] flight 15/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1428782938151701, 'control.att_rate.vz_i': 0.6624053640367424, 'estimation.vision_vel_blend': 0.24419040783037882, 'estimation.vel_leak': 0.09969812892386488}
+gyro bias calibrated over 160 samples: [-6.36660328e-04  5.94184489e-06  4.31530985e-04]; level ref roll=+0.012 pitch=-0.275
+live calibration (180 samples): bias=[-0.00021065  0.00058043 -0.00060345] level roll=+0.010 pitch=-0.226
+[campaign trim-camp-20260714T140605] flight 16/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.13053378091072385, 'control.att_rate.vz_i': 0.49834913438097467, 'estimation.vision_vel_blend': 0.6, 'estimation.vel_leak': 0.10130266686453804}
+gyro bias calibrated over 160 samples: [ 0.00035368  0.00021288 -0.00037931]; level ref roll=+0.012 pitch=-0.275
+live calibration (180 samples): bias=[-0.00052704  0.00017501 -0.00102481] level roll=+0.010 pitch=-0.223
+[campaign trim-camp-20260714T140605] flight 17/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15725754267473654, 'control.att_rate.vz_i': 0.6805711012612328, 'estimation.vision_vel_blend': 0.48925787520344366, 'estimation.vel_leak': 0.10563539284182788}
+gyro bias calibrated over 157 samples: [-2.34732796e-04 -4.98966434e-04  8.08649390e-05]; level ref roll=+0.012 pitch=-0.280
+live calibration (180 samples): bias=[-5.75914210e-04 -1.22890443e-04 -1.39271559e-05] level roll=+0.009 pitch=-0.228
+[campaign trim-camp-20260714T140605] flight 18/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1615189045818425, 'control.att_rate.vz_i': 0.6124982945301873, 'estimation.vision_vel_blend': 0.3439855628097088, 'estimation.vel_leak': 0.10149700666584341}
+gyro bias calibrated over 165 samples: [ 8.38271057e-05 -2.33744752e-04 -1.62861781e-06]; level ref roll=+0.012 pitch=-0.277
+live calibration (180 samples): bias=[ 1.10923413e-05  9.00824382e-04 -5.55851619e-04] level roll=+0.010 pitch=-0.240
+[campaign trim-camp-20260714T140605] flight 19/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16670742992408408, 'control.att_rate.vz_i': 0.667994393788054, 'estimation.vision_vel_blend': 0.5118855647578818, 'estimation.vel_leak': 0.08847024512070953}
+gyro bias calibrated over 160 samples: [0.0001317  0.00081146 0.00011504]; level ref roll=+0.012 pitch=-0.275
+live calibration (180 samples): bias=[-0.00042911 -0.00044681 -0.00089117] level roll=+0.010 pitch=-0.240
+[campaign trim-camp-20260714T140605] flight 20/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14339057555688065, 'control.att_rate.vz_i': 0.7223478899368109, 'estimation.vision_vel_blend': 0.34370341586528497, 'estimation.vel_leak': 0.11006859821949008}
+gyro bias calibrated over 156 samples: [0.00019805 0.00139104 0.00073453]; level ref roll=+0.012 pitch=-0.269
+live calibration (180 samples): bias=[-0.00058077 -0.00072897  0.00017764] level roll=+0.009 pitch=-0.224
+[campaign trim-camp-20260714T140605] flight 21/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15529123655746824, 'control.att_rate.vz_i': 0.6674593471960921, 'estimation.vision_vel_blend': 0.3032345482294417, 'estimation.vel_leak': 0.08996059666127115}
+gyro bias calibrated over 159 samples: [-0.00017004  0.00018655  0.00023042]; level ref roll=+0.012 pitch=-0.279
+live calibration (180 samples): bias=[ 9.48356012e-06 -8.71751014e-04 -1.35929005e-04] level roll=+0.009 pitch=-0.209
+[campaign trim-camp-20260714T140605] flight 22/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1347644455328812, 'control.att_rate.vz_i': 0.7116855425297082, 'estimation.vision_vel_blend': 0.39417932558691016, 'estimation.vel_leak': 0.10546767875216319}
+gyro bias calibrated over 161 samples: [ 0.00048716  0.00011307 -0.00071273]; level ref roll=+0.012 pitch=-0.281
+live calibration (180 samples): bias=[ 5.02906060e-04 -4.15462369e-05  1.08449181e-03] level roll=+0.010 pitch=-0.228
+[campaign trim-camp-20260714T140605] flight 23/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14208748678465466, 'control.att_rate.vz_i': 0.7487399011883487, 'estimation.vision_vel_blend': 0.31178859749947996, 'estimation.vel_leak': 0.10728670023828575}
+gyro bias calibrated over 162 samples: [-0.00062589 -0.00100933 -0.00022903]; level ref roll=+0.012 pitch=-0.279
+live calibration (180 samples): bias=[-8.07321278e-04  5.21677225e-05 -9.97728141e-04] level roll=+0.009 pitch=-0.219
+[campaign trim-camp-20260714T140605] flight 24/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14659296600173735, 'control.att_rate.vz_i': 0.6638792251208404, 'estimation.vision_vel_blend': 0.36274467572337127, 'estimation.vel_leak': 0.1037574914774475}
+gyro bias calibrated over 157 samples: [ 9.76754585e-04 -8.57335155e-05 -1.30540192e-04]; level ref roll=+0.012 pitch=-0.270
+live calibration (180 samples): bias=[ 0.00041114 -0.00014471 -0.00028156] level roll=+0.010 pitch=-0.244
+[campaign trim-camp-20260714T140605] flight 25/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15405732975726338, 'control.att_rate.vz_i': 0.6407324039876543, 'estimation.vision_vel_blend': 0.29435658730267766, 'estimation.vel_leak': 0.0952819720551013}
+gyro bias calibrated over 164 samples: [ 0.00036382 -0.00028991 -0.00026204]; level ref roll=+0.012 pitch=-0.273
+live calibration (180 samples): bias=[-6.30131319e-05  3.28149720e-05 -7.50575816e-04] level roll=+0.010 pitch=-0.244
+[campaign trim-camp-20260714T140605] flight 26/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15884075558149668, 'control.att_rate.vz_i': 0.7480391447519582, 'estimation.vision_vel_blend': 0.3237797153389621, 'estimation.vel_leak': 0.09740848187357976}
+gyro bias calibrated over 161 samples: [-0.00076319  0.00035722 -0.00102989]; level ref roll=+0.012 pitch=-0.274
+live calibration (180 samples): bias=[0.0009506  0.00055504 0.00032599] level roll=+0.010 pitch=-0.235
+[campaign trim-camp-20260714T140605] flight 27/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16402578581995247, 'control.att_rate.vz_i': 0.5933976337676208, 'estimation.vision_vel_blend': 0.3100603777781126, 'estimation.vel_leak': 0.10842846950007523}
+gyro bias calibrated over 157 samples: [-0.00080242 -0.00049248 -0.00045092]; level ref roll=+0.011 pitch=-0.262
+live calibration (180 samples): bias=[ 5.51917114e-06 -8.36816989e-04  2.68005850e-05] level roll=+0.010 pitch=-0.223
+[campaign trim-camp-20260714T140605] flight 28/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.12030121925320429, 'control.att_rate.vz_i': 0.7069389052274183, 'estimation.vision_vel_blend': 0.3133460592443568, 'estimation.vel_leak': 0.10510217148567037}
+gyro bias calibrated over 155 samples: [-0.00028077 -0.00016666  0.00022651]; level ref roll=+0.012 pitch=-0.273
+live calibration (180 samples): bias=[-5.27302565e-05 -2.30975031e-04 -1.32069892e-04] level roll=+0.010 pitch=-0.233
+[campaign trim-camp-20260714T140605] flight 29/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15074337431615706, 'control.att_rate.vz_i': 0.6943872928140337, 'estimation.vision_vel_blend': 0.3452413785722696, 'estimation.vel_leak': 0.09946245007122492}
+gyro bias calibrated over 161 samples: [-0.0006601  -0.00028814 -0.00064821]; level ref roll=+0.011 pitch=-0.269
+live calibration (180 samples): bias=[ 1.69611967e-05 -6.16432576e-04 -1.04875188e-05] level roll=+0.009 pitch=-0.226
+[campaign trim-camp-20260714T140605] flight 30/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1716969439956154, 'control.att_rate.vz_i': 0.7300811900546457, 'estimation.vision_vel_blend': 0.34898039671217607, 'estimation.vel_leak': 0.11196346932928627}
+gyro bias calibrated over 163 samples: [-2.72538125e-04 -4.75816029e-04  3.93869358e-05]; level ref roll=+0.012 pitch=-0.278
+live calibration (180 samples): bias=[-0.00022129 -0.00020163  0.00063999] level roll=+0.009 pitch=-0.209
+[campaign trim-camp-20260714T140605] flight 31/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16282943078713075, 'control.att_rate.vz_i': 0.7381184156532321, 'estimation.vision_vel_blend': 0.32977692042316653, 'estimation.vel_leak': 0.09511782342063133}
+gyro bias calibrated over 158 samples: [ 0.00083295 -0.0002104   0.00111455]; level ref roll=+0.012 pitch=-0.281
+live calibration (180 samples): bias=[-1.06931327e-04  2.44835377e-04 -5.54558301e-05] level roll=+0.009 pitch=-0.218
+[campaign trim-camp-20260714T140605] flight 32/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14991256428273037, 'control.att_rate.vz_i': 0.6281991423969424, 'estimation.vision_vel_blend': 0.29231853594170903, 'estimation.vel_leak': 0.10607179659299901}
+gyro bias calibrated over 152 samples: [-4.24554113e-04 -3.51415394e-05 -6.01826993e-04]; level ref roll=+0.012 pitch=-0.279
+live calibration (180 samples): bias=[ 0.0010757   0.00042999 -0.00062293] level roll=+0.010 pitch=-0.237
+[campaign trim-camp-20260714T140605] flight 33/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.15287540082624673, 'control.att_rate.vz_i': 0.7070356248721938, 'estimation.vision_vel_blend': 0.30070329087927516, 'estimation.vel_leak': 0.09800786366521348}
+gyro bias calibrated over 156 samples: [-0.00018775 -0.00020196 -0.00060695]; level ref roll=+0.012 pitch=-0.280
+live calibration (180 samples): bias=[ 0.00022309 -0.00033102 -0.00013873] level roll=+0.011 pitch=-0.251
+[campaign trim-camp-20260714T140605] flight 34/40 score=-220.6 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16585650047269854, 'control.att_rate.vz_i': 0.7893647916444343, 'estimation.vision_vel_blend': 0.326430451167962, 'estimation.vel_leak': 0.10303511108198889}
+gyro bias calibrated over 164 samples: [-0.00059554  0.00039961  0.00026322]; level ref roll=+0.012 pitch=-0.281
+live calibration (180 samples): bias=[-0.00019149  0.00056245  0.00076836] level roll=+0.010 pitch=-0.239
+[campaign trim-camp-20260714T140605] flight 35/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.18046680075912902, 'control.att_rate.vz_i': 0.7833345774678343, 'estimation.vision_vel_blend': 0.26764572022413996, 'estimation.vel_leak': 0.10424959682192778}
+gyro bias calibrated over 161 samples: [ 0.00042196 -0.00011851 -0.00013421]; level ref roll=+0.012 pitch=-0.282
+live calibration (180 samples): bias=[ 0.00041958 -0.00067662 -0.00131198] level roll=+0.010 pitch=-0.240
+[campaign trim-camp-20260714T140605] flight 36/40 score=-220.7 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1655897732997947, 'control.att_rate.vz_i': 0.7579107775524623, 'estimation.vision_vel_blend': 0.3360590033244708, 'estimation.vel_leak': 0.09875107418886549}
+gyro bias calibrated over 162 samples: [ 3.13290969e-04 -1.38641859e-04  8.68074638e-05]; level ref roll=+0.012 pitch=-0.277
+live calibration (180 samples): bias=[0.00077507 0.00021813 0.00039178] level roll=+0.010 pitch=-0.226
+[campaign trim-camp-20260714T140605] flight 37/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.16530689226784706, 'control.att_rate.vz_i': 0.7305168144037434, 'estimation.vision_vel_blend': 0.27923743542166446, 'estimation.vel_leak': 0.09555520691570729}
+gyro bias calibrated over 158 samples: [ 0.0006811   0.00066387 -0.00023029]; level ref roll=+0.012 pitch=-0.273
+live calibration (180 samples): bias=[-0.00036899 -0.0007886  -0.00059287] level roll=+0.010 pitch=-0.230
+[campaign trim-camp-20260714T140605] flight 38/40 score=-220.7 gates=0 aborted=True params={'control.att_rate.vel_i': 0.14958284730502425, 'control.att_rate.vz_i': 0.780884499641421, 'estimation.vision_vel_blend': 0.3195591552311799, 'estimation.vel_leak': 0.09680574246180111}
+gyro bias calibrated over 164 samples: [-1.43474671e-04  2.58878615e-04  2.09304393e-05]; level ref roll=+0.012 pitch=-0.278
+live calibration (180 samples): bias=[ 0.00093262 -0.00079149 -0.0003348 ] level roll=+0.010 pitch=-0.244
+[campaign trim-camp-20260714T140605] flight 39/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1489406098057717, 'control.att_rate.vz_i': 0.7252069938261607, 'estimation.vision_vel_blend': 0.32648999133889967, 'estimation.vel_leak': 0.0866082139493925}
+gyro bias calibrated over 159 samples: [ 0.00124645 -0.00031341  0.00020128]; level ref roll=+0.012 pitch=-0.277
+live calibration (180 samples): bias=[-0.00070004 -0.00051973  0.00027876] level roll=+0.009 pitch=-0.221
+[campaign trim-camp-20260714T140605] flight 40/40 score=-220.5 gates=0 aborted=True params={'control.att_rate.vel_i': 0.1650446847844382, 'control.att_rate.vz_i': 0.7393662513319238, 'estimation.vision_vel_blend': 0.29713532275593346, 'estimation.vel_leak': 0.08067463902202003}
+[campaign trim-camp-20260714T140605] best score=-220.5 params={'control.att_rate.vel_i': 0.16282943078713075, 'control.att_rate.vz_i': 0.7381184156532321, 'estimation.vision_vel_blend': 0.32977692042316653, 'estimation.vel_leak': 0.09511782342063133}
+[trim] best score=-220.471900 params={'control.att_rate.vel_i': 0.16282943078713075, 'control.att_rate.vz_i': 0.7381184156532321, 'estimation.vision_vel_blend': 0.32977692042316653, 'estimation.vel_leak': 0.09511782342063133}
+[trim] sakana_patch --patch control.att_rate.vel_i=0.16282943078713075 --patch control.att_rate.vz_i=0.7381184156532321 --patch estimation.vision_vel_blend=0.32977692042316653 --patch estimation.vel_leak=0.09511782342063133

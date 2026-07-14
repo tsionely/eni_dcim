@@ -1,0 +1,21 @@
+{
+    "mavlink":  {
+                    "listen_ip":  "127.0.0.1",
+                    "listen_port":  14550,
+                    "heartbeat_timeout_s":  30
+                },
+    "vision":  {
+                   "listen_ip":  "0.0.0.0",
+                   "listen_port":  5600
+               },
+    "rates":  {
+                  "control_hz":  250,
+                  "planner_div":  5,
+                  "timesync_hz":  10
+              },
+    "logging":  {
+                    "dir":  "tuning/runtime-logs/2026-07-14-low-load-default-cem",
+                    "save_frames_every_n":  0,
+                    "record_vision":  false
+                }
+}

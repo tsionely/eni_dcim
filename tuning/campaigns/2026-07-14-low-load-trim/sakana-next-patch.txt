@@ -1,0 +1,1 @@
+--patch control.att_rate.vel_i=0.16282943078713075 --patch control.att_rate.vz_i=0.7381184156532321 --patch estimation.vision_vel_blend=0.32977692042316653 --patch estimation.vel_leak=0.09511782342063133

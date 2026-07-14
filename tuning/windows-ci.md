@@ -1155,3 +1155,25 @@ FAILED tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mo
 3 failed, 66 passed, 2 warnings in 34.72s
 
 ``
+## 2026-07-14 17:14:47 +03:00 - commit `2cc8df981f2a804ed8893ad3d1ca3ab5d13e87f9`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Command:
+
+```powershell
+& "C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- Captured full output in `tuning/pytest-windows-2cc8df9-basetemp-full.txt`.
+- `66 passed, 3 failed, 2 warnings`.
+- `test_hover_flight_clean`: `overrun_frac` was `0.7435`, expected `< 0.5`.
+- `test_single_gate_pass`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+- `test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+- Ran elevated only to use the required `C:\Temp\pytest-eni` basetemp without changing persistent ACLs.
