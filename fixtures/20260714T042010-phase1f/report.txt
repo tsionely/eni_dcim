@@ -1,0 +1,148 @@
+===== Phase 1f preflight 2026-07-14T07:00:22.3430823+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+--- ports ---
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+--- stray python ---
+
+--- control_probe interfaces present in mavlink_io? ---
+def send_velocity(self, vx: float, vy: float, vz: float, yaw_rate: float,
+def send_attitude_rates(self, roll_rate: float, pitch_rate: float, yaw_rate: float,
+def send_motor_rpms(self, rpms: tuple[float, float, float, float]) -> None:
+def arm(self) -> None:
+def disarm(self) -> None:
+def sim_reset(self) -> None:
+
+
+===== Phase 1f MODE A (attitude thrust) 2026-07-14T07:03:13.2300851+03:00 =====
+--- starting real R1 race for mode A ---
+sim window: AI-GP   07:03:16
+event r1 clicked (400,225) 07:03:24
+RACE clicked 07:03:26
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode A: attitude thrust step ===
+resetting sim + arming...
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  attitude thrust step     accel_std=11.350  motor_span=0.600  collisions=0  motors=(0.6499999761581421, 0.6499999761581421, 0.6499999761581421, 0.6499999761581421)  -> RESPONSE
+  [OPERATOR] did the drone visibly move in mode A? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_A_EXIT=0
+--- screenshot files A ---
+
+Name             Length
+----             ------
+A_00_070327.png 1607773
+A_01_070329.png  618162
+A_02_070330.png 1592961
+A_03_070331.png 1606466
+A_04_070333.png 1633448
+A_05_070334.png 1474793
+A_06_070335.png 1421436
+A_07_070336.png 1391601
+A_08_070338.png 1415162
+A_09_070339.png 1426534
+
+
+
+
+===== Phase 1f MODE B (velocity climb) 2026-07-14T07:09:07.7161128+03:00 =====
+--- starting real R1 race for mode B ---
+sim window: AI-GP   07:09:08
+event r1 clicked (400,225) 07:09:15
+RACE clicked 07:09:18
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode B: velocity climb ===
+resetting sim + arming...
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  velocity climb           accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  [OPERATOR] did the drone visibly move in mode B? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_B_EXIT=0
+--- screenshot files B ---
+
+Name             Length
+----             ------
+B_00_070920.png 1079434
+B_01_070921.png  797935
+B_02_070922.png 1710018
+B_03_070924.png 1582071
+B_04_070925.png 1564067
+B_05_070926.png 1641031
+B_06_070927.png 1603615
+B_07_070929.png 1566406
+B_08_070930.png 1566418
+B_09_070931.png 1684973
+
+
+
+
+===== Phase 1f MODE C (motor command) 2026-07-14T07:11:45.0864784+03:00 =====
+--- starting real R1 race for mode C ---
+sim window: AI-GP   07:11:45
+event r1 clicked (400,225) 07:11:53
+RACE clicked 07:11:56
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode C: motor command ===
+resetting sim + arming...
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  motor command            accel_std=15.361  motor_span=0.650  collisions=0  motors=(0.6999998688697815, 0.6999998688697815, 0.6999998688697815, 0.6999998688697815)  -> RESPONSE
+  [OPERATOR] did the drone visibly move in mode C? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_C_EXIT=0
+--- screenshot files C ---
+
+Name             Length
+----             ------
+C_00_071157.png   26663
+C_01_071158.png  999977
+C_02_071159.png 1608113
+C_03_071200.png 1581881
+C_04_071202.png 1675628
+C_05_071203.png 1461287
+C_06_071204.png 1403115
+C_07_071206.png 1397194
+C_08_071207.png 1427694
+C_09_071208.png 1461931
+
+
+
+
+===== Phase 1f REQUIRED fly_once --max-duration 45 after Mode A/C moved 2026-07-14T07:15:36.4090215+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [ 1.81011274e-05 -5.98467523e-06  7.26210856e-05]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 43.800316700013354, 'loop_overrun_frac': 0.000273972602739726, 'loop_stats': {'ticks': 10950, 'overruns': 3, 'overrun_frac': 0.000273972602739726, 'max_late_us': 3314}, 'flight_id': '20260714T041536-88e6e576', 'log_dir': 'logs\\20260714T041536-88e6e576'}
+FLY_ONCE_EXIT=0
+--- fly_once helper stdout ---
+sim window: AI-GP   07:15:42
+event r1 clicked (400,225) 07:15:50
+RACE clicked 07:15:53
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_00_071553.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_01_071555.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_02_071558.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_03_071600.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_04_071603.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_05_071605.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_06_071607.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_07_071610.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_08_071612.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_09_071615.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_10_071617.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_11_071620.png
+C:\Users\tsion\AppData\Local\Temp\phase1f_shots\fly_once\fly_12_071622.png
+--- fly_once helper stderr ---
