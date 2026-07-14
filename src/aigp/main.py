@@ -53,6 +53,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="campaign: which sim to fly against")
     parser.add_argument("--recording", default=None,
                         help="replay: path to an .aigprec recording")
+    parser.add_argument("--low-load", action="store_true",
+                        help="campaign: reduced-fidelity mock (125Hz loop, "
+                             "12Hz/320x180 video) for busy machines")
     parser.add_argument("--patch", action="append", default=[],
                         metavar="KEY=VALUE",
                         help="override a ParamSet value for this run, e.g. "
@@ -110,8 +113,15 @@ def run_campaign(cfg: SimConfig, params: ParamSet, args: argparse.Namespace) -> 
     sim = None
     if args.sim == "mock":
         from simtools.mock_sim import MockSim
+        mock_opts = {}
+        if args.low_load:
+            # Shared machines (e.g. the real sim running in the background)
+            # starve a full-rate mock — campaigns then die on frame staleness.
+            cfg.control_hz = 125
+            mock_opts = {"video_hz": 12.0, "imu_hz": 100.0,
+                         "physics_hz": 125.0, "image_size": (320, 180)}
         sim = MockSim(mav_addr=("127.0.0.1", cfg.mavlink_port),
-                      video_addr=("127.0.0.1", cfg.vision_port))
+                      video_addr=("127.0.0.1", cfg.vision_port), **mock_opts)
         sim.start()
 
     # Campaigns produce dozens of flights — raw vision recordings of the mock
