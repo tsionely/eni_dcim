@@ -178,17 +178,24 @@ class App:
         imu_cell = self.bus.cell(Topic.IMU)
         last_seq = 0
         gyros = []
+        accels = []
         t_end = time.monotonic() + calib_s
         while time.monotonic() < t_end:
             fresh = imu_cell.get_if_newer(last_seq)
             if fresh is not None:
                 imu, last_seq = fresh
                 gyros.append(imu.gyro)
+                accels.append(imu.accel)
             time.sleep(0.002)
         if len(gyros) >= 10:
             bias = np.mean(gyros, axis=0)
             estimator.set_gyro_bias(bias)
-            print(f"gyro bias calibrated over {len(gyros)} samples: {bias}", flush=True)
+            ax, ay, az = np.mean(accels, axis=0)
+            level_roll = float(np.arctan2(-ay, -az))
+            level_pitch = float(np.arctan2(ax, np.sqrt(ay * ay + az * az)))
+            estimator.set_level_reference(level_roll, level_pitch)
+            print(f"gyro bias calibrated over {len(gyros)} samples: {bias}; "
+                  f"level ref roll={level_roll:+.3f} pitch={level_pitch:+.3f}", flush=True)
         else:
             print("gyro bias calibration skipped: too few IMU samples", flush=True)
 

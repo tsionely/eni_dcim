@@ -138,6 +138,10 @@ class StateEstimate:
     gate_center_px: tuple[float, float] | None
     image_size: tuple[int, int] | None
     healthy: bool
+    # Resting attitude measured pre-arm (the sim's IMU is mount-tilted ~18
+    # deg nose-down at rest): the cascade holds THIS, not IMU-zero.
+    level_roll: float = 0.0
+    level_pitch: float = 0.0
 
 
 # ---------------------------------------------------------------------------

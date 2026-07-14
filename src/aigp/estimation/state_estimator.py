@@ -39,6 +39,8 @@ class StateEstimator:
         self.v_world = np.zeros(3)
         self._omega = np.zeros(3)
         self._gyro_bias = np.zeros(3)
+        self._level_roll = 0.0
+        self._level_pitch = 0.0
         self._last_imu_ts_ns: int | None = None
         self._gate_rel: RelPose | None = None
         self._gate_rel_ts_ns: int | None = None
@@ -48,6 +50,11 @@ class StateEstimator:
         self._raw_rel_t: np.ndarray | None = None
         self._raw_rel_ts_ns: int | None = None
         self._now_ns = 0
+
+    def set_level_reference(self, roll: float, pitch: float) -> None:
+        """Resting attitude from the pre-arm accel (IMU mount tilt)."""
+        self._level_roll = roll
+        self._level_pitch = pitch
 
     def set_gyro_bias(self, bias: np.ndarray) -> None:
         """Gyro bias measured while stationary on the ground (pre-arm)."""
@@ -149,4 +156,6 @@ class StateEstimator:
             gate_center_px=gate_center,
             image_size=self._image_size,
             healthy=self._last_imu_ts_ns is not None,
+            level_roll=self._level_roll,
+            level_pitch=self._level_pitch,
         )

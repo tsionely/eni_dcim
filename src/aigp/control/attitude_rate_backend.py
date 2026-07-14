@@ -53,8 +53,8 @@ class AttitudeRateBackend(ControlBackend):
         err = sp.v_body - v_body
 
         # Desired tilt: pitch forward for +x error, roll right for +y error.
-        pitch_des = -self.pid_vx.update(float(err[0]), dt)
-        roll_des = self.pid_vy.update(float(err[1]), dt)
+        pitch_des = state.level_pitch - self.pid_vx.update(float(err[0]), dt)
+        roll_des = state.level_roll + self.pid_vy.update(float(err[1]), dt)
 
         # Current attitude (small-angle roll/pitch from quaternion).
         q = state.q_att
