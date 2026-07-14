@@ -150,7 +150,30 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2e — the breakthrough cycle (E verdict + gyro-fix flight)
+## CURRENT TASK: Phase 2f — hover-only stabilization ladder
+
+Probe E verdict (both runs, decisive): physical NOSE-DOWN on a +pitch
+command with a truthful gyro => COMMANDS are the inverted side. The current
+-1 sign defaults are CORRECT; do NOT use the gyro_sign patches from the
+(superseded) 2e plan. The 2c tumble therefore comes from loop tuning, not
+sign errors — E measured the sim's rate response at 1.2-2.7x commanded, so
+our rate loop (rate_p=8) is likely running hot.
+
+This cycle isolates pure stabilization with the new hover-only mode
+(planner.force_hover — no search spin, no approach):
+
+1. `git pull`. Single engine instance.
+2. Fly the ladder below IN ORDER during real races (each waits for GO); stop
+   at the first one that visibly HOLDS a hover for ~5s+ and note it:
+   a) python scripts/fly_once.py --max-duration 45 --patch planner.force_hover=true --patch control.att_rate.rate_p=2.5 --patch control.att_rate.rate_max_rps=1.5 --patch control.att_rate.tilt_max_rad=0.2 --patch control.att_rate.hover_thrust=0.30 --patch planner.takeoff.climb_mps=0.5
+   b) same but --patch control.att_rate.rate_p=1.2
+   c) same as (a) but --patch control.att_rate.hover_thrust=0.22
+3. For each attempt note: climb behavior, attitude (level/oscillating/
+   diverging), approximate altitude over time, when/if it destabilizes.
+   Oscillation frequency, if visible, is gold for tuning.
+4. Collect with `--label phase2f`, push, VERIFY on origin.
+
+## PREVIOUS: Phase 2e — the breakthrough cycle (E verdict + gyro-fix flight)
 
 Cloud analysis of ALL evidence: both sign choices (+1 and -1 on commands)
 tumble — which is only consistent if the GYRO is the inverted party: a

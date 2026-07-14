@@ -39,6 +39,7 @@ class RacePlanner:
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
         self.recover_brake_s = float(p.get("planner.recover.brake_s"))
+        self.force_hover = bool(p.get("planner.force_hover", default=False))
 
         self._commit_until_ns: int | None = None
         self._commit_v_body: np.ndarray | None = None
@@ -68,7 +69,9 @@ class RacePlanner:
             return Setpoint(phase="takeoff",
                             v_body=np.array([0.0, 0.0, -self.takeoff_climb]),
                             yaw_rate=0.0)
-        if mode != "race":
+        if mode != "race" or self.force_hover:
+            # force_hover (planner.force_hover, via --patch) isolates pure
+            # stabilization: no search spin, no approach — hold still.
             return Setpoint(phase="hover", v_body=np.zeros(3), yaw_rate=0.0)
 
         # -- recover: brake after a collision
