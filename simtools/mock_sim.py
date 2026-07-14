@@ -92,9 +92,11 @@ class MockSim:
         self.video_addr = video_addr
         self.gates = gates if gates is not None else default_track()
         self.physics_hz = physics_hz
+        # Video runs on its own thread — JPEG encode must never block IMU
+        # pacing (it tripped the pilot's 50ms imu watchdog under load).
+        self.video_period = 1.0 / video_hz
         self.periods = {
             "imu": 1.0 / imu_hz,
-            "video": 1.0 / video_hz,
             "race": 1.0 / race_status_hz,
             "heartbeat": 1.0 / heartbeat_hz,
         }
@@ -160,7 +162,9 @@ class MockSim:
             f"udpout:{self.mav_addr[0]}:{self.mav_addr[1]}",
             source_system=1, source_component=1,
         )
-        video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        video_thread = threading.Thread(target=self._video_loop, name="mock_video",
+                                        daemon=True)
+        video_thread.start()
 
         dt = 1.0 / self.physics_hz
         next_tick = time.monotonic()
@@ -182,15 +186,25 @@ class MockSim:
                         last_sent[kind] = now
                         if kind == "imu":
                             self._send_imu(conn)
-                        elif kind == "video":
-                            self._send_frame(video_sock)
                         elif kind == "race":
                             self._send_race_status(conn)
                         elif kind == "heartbeat":
                             self._send_heartbeat(conn)
         finally:
-            video_sock.close()
+            video_thread.join(timeout=1.0)
             conn.close()
+
+    def _video_loop(self) -> None:
+        video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            while self._running:
+                t0 = time.monotonic()
+                self._send_frame(video_sock)
+                remaining = self.video_period - (time.monotonic() - t0)
+                if remaining > 0:
+                    time.sleep(remaining)
+        finally:
+            video_sock.close()
 
     # ---------------------------------------------------------------- mavlink
 

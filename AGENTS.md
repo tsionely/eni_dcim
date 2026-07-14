@@ -24,11 +24,19 @@ edits. Commit prefix `[tuning]`. Suggested code/test changes are written as
 unified diffs into `tuning/proposals/*.diff` + rationale — the cloud agent
 reviews and applies.
 
+Environment notes (from your first CI run):
+- Your checkout lives under OneDrive — the `WinError 5` temp failures are
+  OneDrive/AV file locking, not code bugs. **Re-clone OUTSIDE OneDrive**
+  (e.g. `C:\dev\eni_dcim`) and run pytest with an explicit temp dir:
+  `python -m pytest tests -q --basetemp=C:\Temp\pytest-eni`.
+- Your commit af88a69 never reached origin — remember `git push` after
+  committing (rebase if rejected, per the operator's flow).
+
 Standing tasks:
-1. **Windows verification**: `python -m pytest tests -q` after every `git
-   pull` of a cloud commit; report failures with full output in
-   `tuning/windows-ci.md` (append per commit hash). The suite has only ever
-   run on Linux — you are our Windows CI.
+1. **Windows verification**: `python -m pytest tests -q --basetemp=C:\Temp\pytest-eni`
+   after every `git pull` of a cloud commit; report failures with full output
+   in `tuning/windows-ci.md` (append per commit hash). The suite has only
+   ever run on Linux — you are our Windows CI.
 2. **Mock tuning campaigns**:
    `python scripts/run_campaign.py --flights 40 --optimizer cem --sim mock`
    (repeat with different seeds/optimizers). Copy `logs/results.sqlite` and a

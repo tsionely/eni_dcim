@@ -114,6 +114,9 @@ def run_campaign(cfg: SimConfig, params: ParamSet, args: argparse.Namespace) -> 
                       video_addr=("127.0.0.1", cfg.vision_port))
         sim.start()
 
+    # Campaigns produce dozens of flights — raw vision recordings of the mock
+    # are worthless bulk.
+    cfg.record_vision = False
     app = App(cfg)
     app.connect()
     db = ResultsDB(Path(cfg.log_dir) / "results.sqlite")
