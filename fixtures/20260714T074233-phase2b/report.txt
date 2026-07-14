@@ -1,0 +1,89 @@
+===== Phase 2b preflight 2026-07-14T08:35:04.9505195+03:00 =====
+
+   Id Name                  StartTime
+   -- ----                  ---------
+49312 DCGame-Win64-Shipping 13/07/2026 19:58:03
+56276 FlightSim             13/07/2026 19:57:55
+
+
+udp 14560 <- PID 49312
+udp 5601 <- PID 49312
+
+--- rate_sign params present? ---
+"backend": "att_rate",
+"hover_thrust": 0.5
+
+
+===== Phase 2b MODE D (3-axis sign calibration, wait-for-GO) 2026-07-14T08:39:19.7682952+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode D: rate response ===
+resetting sim + arming...
+  waiting for race GO (start the race now; timeout 30s)...
+  GO!
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  lift (thrust 0.6)        accel_std=10.549  motor_span=0.550  collisions=0  motors=(0.6000000238418579, 0.6000000238418579, 0.6000000238418579, 0.6000000238418579)  -> RESPONSE
+  roll-rate pulse: commanded (0.4, 0.0, 0.0), measured p=-0.970 q=-0.000 r=-0.000
+  pitch-rate pulse: commanded (0.0, 0.4, 0.0), measured p=+0.054 q=-0.962 r=+0.000
+  yaw-rate pulse: commanded (0.0, 0.0, 0.4), measured p=+0.000 q=+0.067 r=-0.850
+  [OPERATOR] did the drone visibly move in mode D? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_D_EXIT=0
+--- race starter stdout ---
+sim window: AI-GP   08:39:24
+event r1 clicked (400,225) 08:39:32
+RACE clicked 08:39:35
+
+
+===== Phase 2b MODE H (clean hover ladder, wait-for-GO) 2026-07-14T08:58:22.8480540+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+
+=== mode H: hover-thrust ladder ===
+resetting sim + arming...
+  waiting for race GO (start the race now; timeout 30s)...
+  GO!
+  throttle-down handshake  accel_std=0.000  motor_span=0.000  collisions=0  motors=(0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806)  -> no response
+  thrust=0.40              accel_std=4.841  motor_span=0.350  collisions=0  motors=(0.4000000059604645, 0.4000000059604645, 0.4000000059604645, 0.4000000059604645)  -> RESPONSE
+  thrust=0.45              accel_std=3.240  motor_span=0.050  collisions=0  motors=(0.44999992847442627, 0.44999992847442627, 0.44999992847442627, 0.44999992847442627)  -> RESPONSE
+  thrust=0.50              accel_std=1.719  motor_span=0.050  collisions=0  motors=(0.4999999403953552, 0.4999999403953552, 0.4999999403953552, 0.4999999403953552)  -> RESPONSE
+  thrust=0.55              accel_std=1.790  motor_span=0.050  collisions=0  motors=(0.5499998927116394, 0.5499998927116394, 0.5499998927116394, 0.5499998927116394)  -> RESPONSE
+  thrust=0.60              accel_std=1.416  motor_span=0.050  collisions=0  motors=(0.5999999046325684, 0.5999999046325684, 0.5999999046325684, 0.5999999046325684)  -> RESPONSE
+  thrust=0.65              accel_std=1.397  motor_span=0.050  collisions=0  motors=(0.6499998569488525, 0.6499998569488525, 0.6499998569488525, 0.6499998569488525)  -> RESPONSE
+  [OPERATOR] note at which thrust step the drone lifted / held altitude � that brackets control.att_rate.hover_thrust.
+  [OPERATOR] did the drone visibly move in mode H? did the THROTTLE DOWN overlay clear? note it.
+
+done � record per-mode observations in notes.md
+MODE_H_EXIT=0
+--- race starter stdout ---
+sim window: AI-GP   08:58:28
+event r1 clicked (400,225) 08:58:35
+RACE clicked 08:58:38
+
+
+===== Phase 2b MAIN EVENT fly_once --max-duration 60 with measured signs/hover 2026-07-14T10:27:30.8002401+03:00 =====
+param overrides: {'control.att_rate.rate_sign_roll': -1, 'control.att_rate.rate_sign_pitch': -1, 'control.att_rate.rate_sign_yaw': -1, 'control.att_rate.hover_thrust': 0.4}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [ 0.00567612 -0.00470496 -0.00177042]
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 41.580346299975645, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 10395, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T072732-8ff375f3', 'log_dir': 'logs\\20260714T072732-8ff375f3'}
+FLY_ONCE_2B_EXIT=0
+--- fly_once helper stdout ---
+sim window: AI-GP   10:27:39
+event r1 clicked (400,225) 10:27:46
+RACE clicked 10:27:49
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_00_102749.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_01_102751.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_02_102754.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_03_102756.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_04_102759.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_05_102801.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_06_102803.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_07_102806.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_08_102808.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_09_102811.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_10_102813.png
+C:\Users\tsion\AppData\Local\Temp\phase2b_shots\fly_once_patched\p2b_11_102815.png
+--- fly_once helper stderr ---
