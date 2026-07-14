@@ -62,7 +62,32 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2b — race-legal takeoff + rate-sign calibration
+## CURRENT TASK: Phase 2c — the first legal takeoff
+
+Phase-2b analysis (cloud side) — both blockers decoded from your data:
+
+- The DSQ mystery is SOLVED: race_start_boot_time_ms updates at COUNTDOWN
+  start with a *future* timestamp (your log: start=9,367,936 while the clock
+  read 9,365,155 — exactly the 2,688ms of the DSQ). The pilot launched on the
+  change instead of waiting for the scheduled moment. Fixed: GO now requires
+  the sim clock to REACH the scheduled start.
+- Your 3-axis sign table (all -1) is now the CONFIG DEFAULT, and the mock
+  mirrors the inverted convention — no --patch needed for signs anymore.
+- Probe H ladder extended down to 0.25-0.50 (you saw lift already at 0.40).
+
+Run this cycle:
+
+1. `git pull`. Single engine instance.
+2. `python scripts/control_probe.py --modes H` — find the lowest thrust step
+   that lifts and the highest that doesn't; note both.
+3. Main event: `python scripts/fly_once.py --max-duration 60 --patch control.att_rate.hover_thrust=<your bracket>`
+   (no sign patches needed). Start the race when prompted-by-waiting; the
+   pilot should now HOLD through the countdown and lift at the actual GO.
+   Describe per stage: countdown hold (no DSQ?), climb, search spin,
+   approach. Screenshots downscaled as before.
+4. Collect with `--label phase2c`, notes.md, commit, push.
+
+## PREVIOUS: Phase 2b — race-legal takeoff + rate-sign calibration
 
 Phase-2a analysis (cloud side): the pilot MOVES now, and the three failure
 modes are all addressed:

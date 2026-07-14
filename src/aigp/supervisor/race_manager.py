@@ -186,9 +186,15 @@ class RaceManager:
         elif self.state == FlightState.THROTTLE_DOWN:
             self.io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
             if now - self._t_state >= self.throttle_down_s:
+                # GO has two conditions (phase2b lesson: race_start updates at
+                # COUNTDOWN start with a *future* timestamp — launching on the
+                # change alone earned a 2688ms early-start DSQ):
+                #   1. race_start changed since flight start (fresh race), and
+                #   2. the sim clock has actually reached it.
                 if race is not None and self._initial_race_start_ms is not None \
                         and race.race_start_boot_time_ms >= 0 \
-                        and race.race_start_boot_time_ms != self._initial_race_start_ms:
+                        and race.race_start_boot_time_ms != self._initial_race_start_ms \
+                        and race.sim_boot_time_ms >= race.race_start_boot_time_ms:
                     self._transition(FlightState.TAKEOFF, "race GO")
                 elif now - self._t_state >= self.go_timeout_s:
                     # No fresh race start observed (e.g. free-flight testing):

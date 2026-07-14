@@ -133,7 +133,8 @@ def main() -> int:
         io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
 
     def run_mode_h() -> None:
-        for thrust in (0.40, 0.45, 0.50, 0.55, 0.60, 0.65):
+        # Extended downward: phase2b saw lift already at 0.40.
+        for thrust in (0.25, 0.30, 0.35, 0.40, 0.45, 0.50):
             r = sample_phase(f"thrust={thrust:.2f}", 1.5,
                              lambda t=thrust: io.send_attitude_rates(0.0, 0.0, 0.0, t))
             report(r)

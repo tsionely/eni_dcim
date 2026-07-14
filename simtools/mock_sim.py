@@ -107,6 +107,8 @@ class MockSim:
         # The real v1.0.3385 sim ignores velocity setpoints (phase1f mode B);
         # set False to mirror that behavior in tests.
         self.honor_velocity = honor_velocity
+        # Mirror the real sim's inverted rate-command convention (phase2b).
+        self.rate_cmd_sign = -1.0
         self.image_w, self.image_h = image_size
         self.fx = (self.image_w / 2.0) / math.tan(math.radians(fov_deg) / 2.0)
         self.rng = np.random.default_rng(seed)
@@ -218,8 +220,12 @@ class MockSim:
                     self.yaw_rate_cmd = 0.0 if ignore_yaw_rate else msg.yaw_rate
             elif mtype == "SET_ATTITUDE_TARGET":
                 self.ctrl_mode = "att_rate"
-                self.rate_cmd = np.array([msg.body_roll_rate, msg.body_pitch_rate,
-                                          msg.body_yaw_rate])
+                # The real v1.0.3385 sim applies rate commands with the sign
+                # INVERTED vs the MAVLink convention (phase2b probe D, all
+                # three axes); the mock mirrors that so the same config flies
+                # both.
+                self.rate_cmd = self.rate_cmd_sign * np.array([
+                    msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate])
                 self.thrust_cmd = float(np.clip(msg.thrust, 0.0, 1.0))
             elif mtype == "TIMESYNC" and msg.ts1 == 0:
                 # Echo protocol: reply with our time in tc1, requester stamp in ts1.

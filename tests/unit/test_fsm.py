@@ -45,8 +45,8 @@ def hb(armed: bool) -> Heartbeat:
     return Heartbeat(ts_ns=0, armed=armed)
 
 
-def race(active=0, start=-1, finish=-1) -> RaceStatus:
-    return RaceStatus(ts_ns=0, sim_boot_time_ms=0, race_start_boot_time_ms=start,
+def race(active=0, start=-1, finish=-1, boot=10_000) -> RaceStatus:
+    return RaceStatus(ts_ns=0, sim_boot_time_ms=boot, race_start_boot_time_ms=start,
                       race_finish_time_ns=finish, active_gate_index=active,
                       last_gate_race_time=-1)
 
@@ -67,8 +67,13 @@ def test_happy_path(manager):
     manager.tick(hb(True), race(active=0, start=-1), [])
     assert manager.state == FlightState.THROTTLE_DOWN
 
-    # GO: race_start changes.
-    manager.tick(hb(True), race(active=0, start=100), [])
+    # Countdown: race_start changes to a FUTURE timestamp -> still hold
+    # (phase2b: launching here earned an early-start DSQ).
+    manager.tick(hb(True), race(active=0, start=5000, boot=3000), [])
+    assert manager.state == FlightState.THROTTLE_DOWN
+
+    # GO: the sim clock reaches the scheduled start.
+    manager.tick(hb(True), race(active=0, start=5000, boot=5001), [])
     assert manager.state == FlightState.TAKEOFF
     assert manager.planner_mode() == "takeoff"
 
