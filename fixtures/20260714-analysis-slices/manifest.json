@@ -1,0 +1,70 @@
+{
+  "slices": [
+    {
+      "flight_id": "20260714T072732-8ff375f3",
+      "label": "phase2b_countdown_future_start",
+      "start_s": 15.671,
+      "duration_s": 5.0,
+      "max_mb": 35.0,
+      "note": "Countdown where race_start is ~2781ms in the future; early-start DSQ window.",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase2b_countdown_future_start.aigprec",
+      "size_mb": 35.33
+    },
+    {
+      "flight_id": "20260714T072732-8ff375f3",
+      "label": "phase2b_closest_gate_3p97m",
+      "start_s": 23.222,
+      "duration_s": 4.0,
+      "max_mb": 35.0,
+      "note": "Closest logged gate approach in phase2b tumble (~3.97m).",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase2b_closest_gate_3p97m.aigprec",
+      "size_mb": 35.33
+    },
+    {
+      "flight_id": "20260714T045635-b9a568ab",
+      "label": "phase2a_countdown_future_start",
+      "start_s": 14.576,
+      "duration_s": 5.0,
+      "max_mb": 35.0,
+      "note": "Phase2a early-start DSQ countdown (~2891ms future start).",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase2a_countdown_future_start.aigprec",
+      "size_mb": 35.33
+    },
+    {
+      "flight_id": "20260714T081945-bb5494d6",
+      "label": "phase2c_countdown_future_start",
+      "start_s": 16.877,
+      "duration_s": 5.0,
+      "max_mb": 35.0,
+      "note": "Phase2c countdown; race_start ~2751ms ahead of boot.",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T081945-bb5494d6\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase2c_countdown_future_start.aigprec",
+      "size_mb": 35.33
+    },
+    {
+      "flight_id": "20260714T081945-bb5494d6",
+      "label": "phase2c_closest_gate_6p98m",
+      "start_s": 20.041,
+      "duration_s": 4.0,
+      "max_mb": 35.0,
+      "note": "Phase2c closest gate (~6.98m) near THROTTLE_DOWN->TAKEOFF.",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T081945-bb5494d6\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase2c_closest_gate_6p98m.aigprec",
+      "size_mb": 35.33
+    },
+    {
+      "flight_id": "20260713T202513-ea4b5f0c",
+      "label": "phase1e_countdown_and_gate",
+      "start_s": 15.678,
+      "duration_s": 5.0,
+      "max_mb": 35.0,
+      "note": "Parked/race vision with future race_start (~2834ms); high detection regime.",
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T202513-ea4b5f0c\\vision.aigprec",
+      "dst": "fixtures/20260714-analysis-slices/phase1e_countdown_and_gate.aigprec",
+      "size_mb": 35.33
+    }
+  ]
+}

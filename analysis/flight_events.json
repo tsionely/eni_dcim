@@ -1,0 +1,1899 @@
+[
+  {
+    "flight_id": "20260713T190311-db4c58dd",
+    "span_s": 20.0,
+    "topics": {
+      "fsm": 5,
+      "imu": 2295,
+      "state": 1001,
+      "setpoint": 1001,
+      "actuator": 1884,
+      "race": 160,
+      "heartbeat": 396,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 1.604,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 20.0,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 20.0,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.092,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7503489
+      },
+      {
+        "t_s": 0.101,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 167969
+      },
+      {
+        "t_s": 0.343,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7503739
+      },
+      {
+        "t_s": 0.351,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 168219
+      },
+      {
+        "t_s": 0.593,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7503990
+      },
+      {
+        "t_s": 0.602,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 168469
+      },
+      {
+        "t_s": 0.844,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7504240
+      },
+      {
+        "t_s": 0.852,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 168720
+      },
+      {
+        "t_s": 1.095,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7504491
+      },
+      {
+        "t_s": 1.103,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 168971
+      },
+      {
+        "t_s": 1.345,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7504742
+      },
+      {
+        "t_s": 1.354,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 169222
+      },
+      {
+        "t_s": 1.596,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7504992
+      },
+      {
+        "t_s": 1.605,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 169472
+      },
+      {
+        "t_s": 1.847,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7505244
+      },
+      {
+        "t_s": 1.856,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 169723
+      },
+      {
+        "t_s": 2.098,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7505494
+      },
+      {
+        "t_s": 2.106,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 169973
+      },
+      {
+        "t_s": 2.348,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7505745
+      },
+      {
+        "t_s": 2.356,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 170224
+      },
+      {
+        "t_s": 2.599,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7505996
+      },
+      {
+        "t_s": 2.607,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 170474
+      },
+      {
+        "t_s": 2.85,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7506246
+      },
+      {
+        "t_s": 2.857,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 170724
+      },
+      {
+        "t_s": 3.1,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7506496
+      },
+      {
+        "t_s": 3.108,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 170975
+      },
+      {
+        "t_s": 3.351,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7506748
+      },
+      {
+        "t_s": 3.358,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 171226
+      },
+      {
+        "t_s": 3.602,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7506998
+      },
+      {
+        "t_s": 3.608,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 171476
+      },
+      {
+        "t_s": 3.852,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7507249
+      },
+      {
+        "t_s": 3.858,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 171726
+      },
+      {
+        "t_s": 4.103,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7507499
+      },
+      {
+        "t_s": 4.109,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 171976
+      },
+      {
+        "t_s": 4.353,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7507750
+      },
+      {
+        "t_s": 4.359,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 172227
+      },
+      {
+        "t_s": 4.604,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7508001
+      },
+      {
+        "t_s": 4.61,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 172478
+      },
+      {
+        "t_s": 4.855,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7508251
+      },
+      {
+        "t_s": 4.861,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 172728
+      },
+      {
+        "t_s": 5.106,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7508502
+      },
+      {
+        "t_s": 5.113,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 172980
+      },
+      {
+        "t_s": 5.357,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7508753
+      },
+      {
+        "t_s": 5.363,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 173230
+      },
+      {
+        "t_s": 5.606,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7509003
+      },
+      {
+        "t_s": 5.614,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 173481
+      },
+      {
+        "t_s": 5.857,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7509253
+      },
+      {
+        "t_s": 5.864,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 173732
+      },
+      {
+        "t_s": 6.107,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7509504
+      },
+      {
+        "t_s": 6.115,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 173983
+      },
+      {
+        "t_s": 6.358,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7509754
+      },
+      {
+        "t_s": 6.366,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 174233
+      },
+      {
+        "t_s": 6.608,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7510004
+      },
+      {
+        "t_s": 6.616,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 174484
+      },
+      {
+        "t_s": 6.859,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7510255
+      },
+      {
+        "t_s": 6.866,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 174734
+      },
+      {
+        "t_s": 7.109,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7510506
+      },
+      {
+        "t_s": 7.117,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 174985
+      },
+      {
+        "t_s": 7.361,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7510757
+      },
+      {
+        "t_s": 7.368,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 175235
+      },
+      {
+        "t_s": 7.611,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7511007
+      },
+      {
+        "t_s": 7.618,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 175486
+      },
+      {
+        "t_s": 7.861,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7511258
+      },
+      {
+        "t_s": 7.869,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 175737
+      },
+      {
+        "t_s": 8.113,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7511509
+      },
+      {
+        "t_s": 8.121,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 175988
+      },
+      {
+        "t_s": 8.363,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7511759
+      },
+      {
+        "t_s": 8.371,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 176239
+      },
+      {
+        "t_s": 8.614,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7512010
+      },
+      {
+        "t_s": 8.622,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 176490
+      },
+      {
+        "t_s": 8.864,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7512261
+      },
+      {
+        "t_s": 8.873,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 176741
+      },
+      {
+        "t_s": 9.115,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7512511
+      },
+      {
+        "t_s": 9.125,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 176992
+      },
+      {
+        "t_s": 9.365,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7512762
+      },
+      {
+        "t_s": 9.374,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 177242
+      },
+      {
+        "t_s": 9.617,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7513013
+      },
+      {
+        "t_s": 9.626,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 177494
+      },
+      {
+        "t_s": 9.867,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7513263
+      },
+      {
+        "t_s": 9.877,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 177745
+      },
+      {
+        "t_s": 10.118,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7513514
+      },
+      {
+        "t_s": 10.128,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 177995
+      },
+      {
+        "t_s": 10.368,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7513765
+      },
+      {
+        "t_s": 10.379,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 178246
+      },
+      {
+        "t_s": 10.618,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7514015
+      },
+      {
+        "t_s": 10.629,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 178497
+      },
+      {
+        "t_s": 10.869,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7514265
+      },
+      {
+        "t_s": 10.88,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 178748
+      },
+      {
+        "t_s": 11.12,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7514516
+      },
+      {
+        "t_s": 11.131,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 178999
+      },
+      {
+        "t_s": 11.37,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7514766
+      },
+      {
+        "t_s": 11.382,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 179249
+      },
+      {
+        "t_s": 11.621,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7515017
+      },
+      {
+        "t_s": 11.632,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 179500
+      },
+      {
+        "t_s": 11.871,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7515267
+      },
+      {
+        "t_s": 11.883,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 179751
+      },
+      {
+        "t_s": 12.122,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7515518
+      },
+      {
+        "t_s": 12.134,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 180002
+      },
+      {
+        "t_s": 12.372,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7515768
+      },
+      {
+        "t_s": 12.384,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 180252
+      },
+      {
+        "t_s": 12.623,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7516019
+      },
+      {
+        "t_s": 12.635,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 180503
+      },
+      {
+        "t_s": 12.873,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7516269
+      },
+      {
+        "t_s": 12.885,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 180753
+      },
+      {
+        "t_s": 13.124,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7516521
+      },
+      {
+        "t_s": 13.135,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 181003
+      },
+      {
+        "t_s": 13.375,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7516771
+      },
+      {
+        "t_s": 13.386,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 181254
+      },
+      {
+        "t_s": 13.625,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7517022
+      },
+      {
+        "t_s": 13.637,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 181504
+      },
+      {
+        "t_s": 13.876,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7517273
+      },
+      {
+        "t_s": 13.887,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 181754
+      },
+      {
+        "t_s": 14.127,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7517524
+      },
+      {
+        "t_s": 14.137,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 182005
+      },
+      {
+        "t_s": 14.378,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7517774
+      },
+      {
+        "t_s": 14.388,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 182255
+      },
+      {
+        "t_s": 14.628,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7518024
+      },
+      {
+        "t_s": 14.639,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 182507
+      },
+      {
+        "t_s": 14.879,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7518275
+      },
+      {
+        "t_s": 14.89,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 182757
+      },
+      {
+        "t_s": 15.129,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7518525
+      },
+      {
+        "t_s": 15.14,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 183008
+      },
+      {
+        "t_s": 15.38,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7518776
+      },
+      {
+        "t_s": 15.391,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 183259
+      },
+      {
+        "t_s": 15.63,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7519027
+      },
+      {
+        "t_s": 15.642,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 183510
+      },
+      {
+        "t_s": 15.881,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7519277
+      },
+      {
+        "t_s": 15.893,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 183760
+      },
+      {
+        "t_s": 16.131,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7519528
+      },
+      {
+        "t_s": 16.143,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 184010
+      },
+      {
+        "t_s": 16.382,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7519779
+      },
+      {
+        "t_s": 16.393,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 184261
+      },
+      {
+        "t_s": 16.633,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7520029
+      },
+      {
+        "t_s": 16.644,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 184512
+      },
+      {
+        "t_s": 16.884,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7520281
+      },
+      {
+        "t_s": 16.895,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 184762
+      },
+      {
+        "t_s": 17.135,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7520531
+      },
+      {
+        "t_s": 17.146,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 185013
+      },
+      {
+        "t_s": 17.385,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7520781
+      },
+      {
+        "t_s": 17.397,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 185264
+      },
+      {
+        "t_s": 17.635,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7521031
+      },
+      {
+        "t_s": 17.647,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 185514
+      },
+      {
+        "t_s": 17.886,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7521282
+      },
+      {
+        "t_s": 17.897,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 185765
+      },
+      {
+        "t_s": 18.136,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7521532
+      },
+      {
+        "t_s": 18.147,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 186015
+      },
+      {
+        "t_s": 18.386,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7521783
+      },
+      {
+        "t_s": 18.399,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 186266
+      },
+      {
+        "t_s": 18.637,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7522034
+      },
+      {
+        "t_s": 18.649,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 186516
+      },
+      {
+        "t_s": 18.888,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7522284
+      },
+      {
+        "t_s": 18.899,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 186767
+      },
+      {
+        "t_s": 19.138,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7522535
+      },
+      {
+        "t_s": 19.15,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 187017
+      },
+      {
+        "t_s": 19.389,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7522785
+      },
+      {
+        "t_s": 19.4,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 187268
+      },
+      {
+        "t_s": 19.641,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7523037
+      },
+      {
+        "t_s": 19.651,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 187519
+      },
+      {
+        "t_s": 19.892,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4750352,
+        "sim_boot_time_ms": 7523288
+      },
+      {
+        "t_s": 19.902,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 187770
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 20.00046030001249,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 5000,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260713T190311-db4c58dd",
+      "log_dir": "logs\\20260713T190311-db4c58dd"
+    },
+    "min_gate_distance_m": null,
+    "detection_count": 0,
+    "proposed_slices": [],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\vision.aigprec"
+  },
+  {
+    "flight_id": "20260713T202513-ea4b5f0c",
+    "span_s": 45.998,
+    "topics": {
+      "imu": 5300,
+      "actuator": 4341,
+      "heartbeat": 461,
+      "race": 187,
+      "fsm": 5,
+      "state": 2251,
+      "setpoint": 2251,
+      "frame": 11025,
+      "detection": 529,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 0.996,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.096,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 2.596,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 45.997,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 45.997,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.137,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 11435767,
+        "sim_boot_time_ms": 12426287
+      },
+      {
+        "t_s": 13.144,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 12439293
+      },
+      {
+        "t_s": 16.178,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 12445162,
+        "sim_boot_time_ms": 12442328
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 45.00086550001288,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 11250,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260713T202513-ea4b5f0c",
+      "log_dir": "logs\\20260713T202513-ea4b5f0c"
+    },
+    "min_gate_distance_m": 11.973,
+    "detection_count": 529,
+    "proposed_slices": [
+      {
+        "label": "closest_gate",
+        "start_s": 11.7780712,
+        "duration_s": 4.0,
+        "note": "min gate distance 11.97m at t=13.28s"
+      },
+      {
+        "label": "countdown_future_start",
+        "start_s": 15.678,
+        "duration_s": 5.0,
+        "note": "race_start=12445162 > boot=12442328 (delta 2834 ms) at t=16.178s"
+      }
+    ],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T202513-ea4b5f0c\\vision.aigprec"
+  },
+  {
+    "flight_id": "20260714T041536-88e6e576",
+    "span_s": 44.809,
+    "topics": {
+      "actuator": 4218,
+      "imu": 5145,
+      "heartbeat": 449,
+      "race": 183,
+      "fsm": 6,
+      "state": 2191,
+      "setpoint": 2191,
+      "frame": 8535,
+      "detection": 7890,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 1.008,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.105,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 2.608,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 4.109,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 44.809,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 44.809,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.183,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 3321,
+        "sim_boot_time_ms": 219835
+      },
+      {
+        "t_s": 12.365,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 232017
+      },
+      {
+        "t_s": 15.215,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 237696,
+        "sim_boot_time_ms": 234867
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 43.800316700013354,
+      "loop_overrun_frac": 0.000273972602739726,
+      "loop_stats": {
+        "ticks": 10950,
+        "overruns": 3,
+        "overrun_frac": 0.000273972602739726,
+        "max_late_us": 3314
+      },
+      "flight_id": "20260714T041536-88e6e576",
+      "log_dir": "logs\\20260714T041536-88e6e576"
+    },
+    "min_gate_distance_m": 13.461,
+    "detection_count": 7890,
+    "proposed_slices": [
+      {
+        "label": "closest_gate",
+        "start_s": 28.6819459,
+        "duration_s": 4.0,
+        "note": "min gate distance 13.46m at t=30.18s"
+      },
+      {
+        "label": "countdown_future_start",
+        "start_s": 14.715,
+        "duration_s": 5.0,
+        "note": "race_start=237696 > boot=234867 (delta 2829 ms) at t=15.215s"
+      }
+    ],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T041536-88e6e576\\vision.aigprec"
+  },
+  {
+    "flight_id": "20260714T045635-b9a568ab",
+    "span_s": 47.093,
+    "topics": {
+      "actuator": 4451,
+      "imu": 5429,
+      "race": 192,
+      "heartbeat": 472,
+      "fsm": 6,
+      "state": 2305,
+      "setpoint": 2305,
+      "frame": 12512,
+      "detection": 691,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 0.999,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.099,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 4.103,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 5.604,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 47.091,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 47.092,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.038,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 3295,
+        "sim_boot_time_ms": 292005
+      },
+      {
+        "t_s": 12.276,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 304243
+      },
+      {
+        "t_s": 15.076,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 309934,
+        "sim_boot_time_ms": 307043
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 46.09218270005658,
+      "loop_overrun_frac": 8.678295582747549e-05,
+      "loop_stats": {
+        "ticks": 11523,
+        "overruns": 1,
+        "overrun_frac": 8.678295582747549e-05,
+        "max_late_us": 2217
+      },
+      "flight_id": "20260714T045635-b9a568ab",
+      "log_dir": "logs\\20260714T045635-b9a568ab"
+    },
+    "min_gate_distance_m": 13.621,
+    "detection_count": 691,
+    "proposed_slices": [
+      {
+        "label": "closest_gate",
+        "start_s": 13.5308514,
+        "duration_s": 4.0,
+        "note": "min gate distance 13.62m at t=15.03s"
+      },
+      {
+        "label": "countdown_future_start",
+        "start_s": 14.576,
+        "duration_s": 5.0,
+        "note": "race_start=309934 > boot=307043 (delta 2891 ms) at t=15.076s"
+      }
+    ],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec"
+  },
+  {
+    "flight_id": "20260714T072732-8ff375f3",
+    "span_s": 42.588,
+    "topics": {
+      "actuator": 4002,
+      "imu": 4883,
+      "heartbeat": 427,
+      "race": 174,
+      "fsm": 6,
+      "state": 2080,
+      "setpoint": 2080,
+      "frame": 9920,
+      "detection": 1201,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 1.007,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.1,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 16.172,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 17.676,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 42.588,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 42.588,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.133,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 4017263,
+        "sim_boot_time_ms": 9349116
+      },
+      {
+        "t_s": 13.433,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 9362417
+      },
+      {
+        "t_s": 16.171,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 9367936,
+        "sim_boot_time_ms": 9365155
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 41.580346299975645,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 10395,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260714T072732-8ff375f3",
+      "log_dir": "logs\\20260714T072732-8ff375f3"
+    },
+    "min_gate_distance_m": 3.973,
+    "detection_count": 1201,
+    "proposed_slices": [
+      {
+        "label": "closest_gate",
+        "start_s": 23.2218697,
+        "duration_s": 4.0,
+        "note": "min gate distance 3.97m at t=24.72s"
+      },
+      {
+        "label": "countdown_future_start",
+        "start_s": 15.671,
+        "duration_s": 5.0,
+        "note": "race_start=9367936 > boot=9365155 (delta 2781 ms) at t=16.171s"
+      }
+    ],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\vision.aigprec"
+  },
+  {
+    "flight_id": "20260714T081945-bb5494d6",
+    "span_s": 43.082,
+    "topics": {
+      "actuator": 4060,
+      "imu": 4960,
+      "race": 176,
+      "heartbeat": 432,
+      "fsm": 6,
+      "state": 2105,
+      "setpoint": 2105,
+      "frame": 7499,
+      "detection": 1321,
+      "loop_stats": 1
+    },
+    "fsm": [
+      {
+        "t_s": 1.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.1,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 20.136,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 21.64,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 43.08,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 43.08,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "race_changes": [
+      {
+        "t_s": 0.083,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 11873367,
+        "sim_boot_time_ms": 12482444
+      },
+      {
+        "t_s": 14.469,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": -1,
+        "sim_boot_time_ms": 12496831
+      },
+      {
+        "t_s": 17.377,
+        "started": null,
+        "finished": null,
+        "active_gate_index": 0,
+        "race_start_boot_time_ms": 12502490,
+        "sim_boot_time_ms": 12499739
+      }
+    ],
+    "collisions": [],
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 42.08015770005295,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 10520,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260714T081945-bb5494d6",
+      "log_dir": "logs\\20260714T081945-bb5494d6"
+    },
+    "min_gate_distance_m": 6.98,
+    "detection_count": 1321,
+    "proposed_slices": [
+      {
+        "label": "closest_gate",
+        "start_s": 20.0413919,
+        "duration_s": 4.0,
+        "note": "min gate distance 6.98m at t=21.54s"
+      },
+      {
+        "label": "countdown_future_start",
+        "start_s": 16.877,
+        "duration_s": 5.0,
+        "note": "race_start=12502490 > boot=12499739 (delta 2751 ms) at t=17.377s"
+      }
+    ],
+    "vision_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T081945-bb5494d6\\vision.aigprec"
+  }
+]

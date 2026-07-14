@@ -1,0 +1,70 @@
+{
+  "label": "analysis-slices",
+  "role": "DATA ANALYST",
+  "slices": [
+    {
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "dst": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T111500-analysis-slices\\phase1d-race-vision.aigprec",
+      "start_s": 10.0,
+      "duration_s": 2.5,
+      "max_mb": 38.0,
+      "kept_datagrams": 27427,
+      "total_scanned": 250728,
+      "written_mb": 38.0,
+      "vision_datagrams": 27427,
+      "mavlink_datagrams": 0,
+      "id": "phase1d-race-vision",
+      "shows": "Phase-1d first real race vision window (early race after idle preamble).",
+      "final_size_mb": 38.36,
+      "committed": true
+    },
+    {
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T202513-ea4b5f0c\\vision.aigprec",
+      "dst": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T111500-analysis-slices\\phase1e-inflight.aigprec",
+      "start_s": 5.0,
+      "duration_s": 2.0,
+      "max_mb": 38.0,
+      "kept_datagrams": 27414,
+      "total_scanned": 116358,
+      "written_mb": 38.0,
+      "vision_datagrams": 27414,
+      "mavlink_datagrams": 0,
+      "id": "phase1e-inflight",
+      "shows": "Phase-1e in-flight attempt vision; pair with flight.jsonl IMU motion check.",
+      "final_size_mb": 38.36,
+      "committed": true
+    },
+    {
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "dst": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T111500-analysis-slices\\phase2a-controlled-flight.aigprec",
+      "start_s": 8.0,
+      "duration_s": 2.0,
+      "max_mb": 38.0,
+      "kept_datagrams": 27602,
+      "total_scanned": 148523,
+      "written_mb": 38.0,
+      "vision_datagrams": 27602,
+      "mavlink_datagrams": 0,
+      "id": "phase2a-controlled-flight",
+      "shows": "Phase-2a first controlled att_rate flight vision window.",
+      "final_size_mb": 38.36,
+      "committed": true
+    },
+    {
+      "src": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\vision.aigprec",
+      "dst": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T111500-analysis-slices\\phase2b-race-legal.aigprec",
+      "start_s": 8.0,
+      "duration_s": 2.0,
+      "max_mb": 38.0,
+      "kept_datagrams": 27484,
+      "total_scanned": 156782,
+      "written_mb": 38.0,
+      "vision_datagrams": 27484,
+      "mavlink_datagrams": 0,
+      "id": "phase2b-race-legal",
+      "shows": "Phase-2b race-legal takeoff attempt vision window (countdown/GO era).",
+      "final_size_mb": 38.36,
+      "committed": true
+    }
+  ]
+}

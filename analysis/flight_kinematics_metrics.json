@@ -1,0 +1,897 @@
+[
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T190311-db4c58dd\\flight.jsonl",
+    "size_mb": 1.32,
+    "topics": {
+      "fsm": 5,
+      "imu": 2295,
+      "state": 1001,
+      "setpoint": 1001,
+      "actuator": 1884,
+      "race": 160,
+      "heartbeat": 396,
+      "loop_stats": 1
+    },
+    "duration_s": 20.0004565,
+    "detections": 0,
+    "setpoint_phases": {
+      "hover": 5,
+      "takeoff": 76,
+      "search": 920
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1002535,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 1.6039799,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 20.0004245,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 20.0004356,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 5,
+    "imu_gyro_mean": [
+      8.366657257080078,
+      11.721335411071777,
+      -1.025029182434082
+    ],
+    "imu_gyro_std": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "imu_gyro_max_abs": [
+      8.366657257080078,
+      11.721335411071777,
+      1.025029182434082
+    ],
+    "imu_accel_mean": [
+      -2.616089105606079,
+      -12.3596830368042,
+      -23.46482276916504
+    ],
+    "imu_accel_std": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "approx_race_go_t_s": 0.3426697,
+    "race_samples": 160
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T202513-ea4b5f0c\\flight.jsonl",
+    "size_mb": 4.71,
+    "topics": {
+      "imu": 5300,
+      "actuator": 4341,
+      "heartbeat": 461,
+      "race": 187,
+      "fsm": 5,
+      "state": 2251,
+      "setpoint": 2251,
+      "frame": 11025,
+      "detection": 529,
+      "loop_stats": 1
+    },
+    "duration_s": 45.9981498,
+    "detections": 529,
+    "setpoint_phases": {
+      "hover": 5,
+      "takeoff": 75,
+      "search": 535,
+      "approach": 1636
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.9963518,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0963649,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 2.5963978,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 45.9971877,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 45.9972041,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 5,
+    "imu_gyro_mean": [
+      -7.481807167422167e-07,
+      -9.827784543751546e-07,
+      4.1635485447257895e-08
+    ],
+    "imu_gyro_std": [
+      0.0001479578827434562,
+      8.225625157676812e-05,
+      1.4097035933106595e-05
+    ],
+    "imu_gyro_max_abs": [
+      0.008323955349624157,
+      0.004661559127271175,
+      0.0006606846582144499
+    ],
+    "imu_accel_mean": [
+      -2.9985853534374596,
+      -0.002667169846234105,
+      -9.3404880179999
+    ],
+    "imu_accel_std": [
+      0.0022175888845100767,
+      0.0038444339007338473,
+      0.0020523098041243144
+    ],
+    "approx_race_go_t_s": 16.1781255,
+    "race_samples": 187
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T041536-88e6e576\\flight.jsonl",
+    "size_mb": 7.47,
+    "topics": {
+      "actuator": 4218,
+      "imu": 5145,
+      "heartbeat": 449,
+      "race": 183,
+      "fsm": 6,
+      "state": 2191,
+      "setpoint": 2191,
+      "frame": 8535,
+      "detection": 7890,
+      "loop_stats": 1
+    },
+    "duration_s": 44.8087445,
+    "detections": 7890,
+    "setpoint_phases": {
+      "hover": 81,
+      "takeoff": 75,
+      "search": 440,
+      "approach": 1595
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 1.0083904,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.1047307,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 2.6084886,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 4.1087526,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 44.808683,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 44.8086951,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      5.783613793148258e-06,
+      -2.978994524134893e-06,
+      2.0621692257708406e-05
+    ],
+    "imu_gyro_std": [
+      7.768212001809927e-05,
+      7.736992730752182e-05,
+      3.704833954934819e-05
+    ],
+    "imu_gyro_max_abs": [
+      0.004288180731236935,
+      0.004411816131323576,
+      0.000962246092967689
+    ],
+    "imu_accel_mean": [
+      -2.1600276432601975,
+      -0.007924467276970054,
+      -9.476603161929532
+    ],
+    "imu_accel_std": [
+      1.3420973549501143,
+      0.008936116551880945,
+      0.21802190617145376
+    ],
+    "approx_race_go_t_s": 15.2150957,
+    "race_samples": 183
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\flight.jsonl",
+    "size_mb": 5.52,
+    "topics": {
+      "actuator": 4451,
+      "imu": 5429,
+      "race": 192,
+      "heartbeat": 472,
+      "fsm": 6,
+      "state": 2305,
+      "setpoint": 2305,
+      "frame": 12512,
+      "detection": 691,
+      "loop_stats": 1
+    },
+    "duration_s": 47.0926326,
+    "detections": 691,
+    "setpoint_phases": {
+      "hover": 156,
+      "takeoff": 75,
+      "search": 365,
+      "approach": 1709
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.9993297,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0993846,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 4.1034626,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 5.6035208,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 47.0914867,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 47.0915003,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      -0.08204255576873688,
+      0.026995436865437754,
+      -0.0557144549330492
+    ],
+    "imu_gyro_std": [
+      5.200611216154128,
+      2.976192469752726,
+      0.09665091604894191
+    ],
+    "imu_gyro_max_abs": [
+      11.230080604553223,
+      10.173754692077637,
+      0.2832757532596588
+    ],
+    "imu_accel_mean": [
+      -0.8133718864537665,
+      0.3264527252524264,
+      0.274625796560513
+    ],
+    "imu_accel_std": [
+      3.613358423296988,
+      6.250915481621311,
+      11.183612457111623
+    ],
+    "approx_race_go_t_s": 15.0759875,
+    "race_samples": 192
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\flight.jsonl",
+    "size_mb": 4.98,
+    "topics": {
+      "actuator": 4002,
+      "imu": 4883,
+      "heartbeat": 427,
+      "race": 174,
+      "fsm": 6,
+      "state": 2080,
+      "setpoint": 2080,
+      "frame": 9920,
+      "detection": 1201,
+      "loop_stats": 1
+    },
+    "duration_s": 42.5882056,
+    "detections": 1201,
+    "setpoint_phases": {
+      "hover": 760,
+      "takeoff": 75,
+      "approach": 1245
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 1.0074517,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0995322,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 16.171619,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 17.6755215,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 42.5877712,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 42.5877842,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      -0.14631554793437176,
+      0.0928036987127058,
+      -1.205883183678071
+    ],
+    "imu_gyro_std": [
+      2.0350813138348953,
+      1.9696129083221083,
+      1.7776451504625137
+    ],
+    "imu_gyro_max_abs": [
+      11.514354705810547,
+      10.968746185302734,
+      4.1573991775512695
+    ],
+    "imu_accel_mean": [
+      0.5895800397054471,
+      -0.30256357196315636,
+      -10.30302102802298
+    ],
+    "imu_accel_std": [
+      4.945113753976641,
+      4.733235119320169,
+      19.991682624240717
+    ],
+    "approx_race_go_t_s": 16.1711874,
+    "race_samples": 174
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260713T201500-phase1d\\20260713T190311-db4c58dd-flight.jsonl",
+    "size_mb": 1.32,
+    "topics": {
+      "fsm": 5,
+      "imu": 2295,
+      "state": 1001,
+      "setpoint": 1001,
+      "actuator": 1884,
+      "race": 160,
+      "heartbeat": 396,
+      "loop_stats": 1
+    },
+    "duration_s": 20.0004565,
+    "detections": 0,
+    "setpoint_phases": {
+      "hover": 5,
+      "takeoff": 76,
+      "search": 920
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1002535,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 1.6039799,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 20.0004245,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 20.0004356,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 5,
+    "imu_gyro_mean": [
+      8.366657257080078,
+      11.721335411071777,
+      -1.025029182434082
+    ],
+    "imu_gyro_std": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "imu_gyro_max_abs": [
+      8.366657257080078,
+      11.721335411071777,
+      1.025029182434082
+    ],
+    "imu_accel_mean": [
+      -2.616089105606079,
+      -12.3596830368042,
+      -23.46482276916504
+    ],
+    "imu_accel_std": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "approx_race_go_t_s": 0.3426697,
+    "race_samples": 160
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260713T203515-phase1e\\20260713T202513-ea4b5f0c-flight.jsonl",
+    "size_mb": 4.71,
+    "topics": {
+      "imu": 5300,
+      "actuator": 4341,
+      "heartbeat": 461,
+      "race": 187,
+      "fsm": 5,
+      "state": 2251,
+      "setpoint": 2251,
+      "frame": 11025,
+      "detection": 529,
+      "loop_stats": 1
+    },
+    "duration_s": 45.9981498,
+    "detections": 529,
+    "setpoint_phases": {
+      "hover": 5,
+      "takeoff": 75,
+      "search": 535,
+      "approach": 1636
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.9963518,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0963649,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 2.5963978,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 45.9971877,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 45.9972041,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 5,
+    "imu_gyro_mean": [
+      -7.481807167422167e-07,
+      -9.827784543751546e-07,
+      4.1635485447257895e-08
+    ],
+    "imu_gyro_std": [
+      0.0001479578827434562,
+      8.225625157676812e-05,
+      1.4097035933106595e-05
+    ],
+    "imu_gyro_max_abs": [
+      0.008323955349624157,
+      0.004661559127271175,
+      0.0006606846582144499
+    ],
+    "imu_accel_mean": [
+      -2.9985853534374596,
+      -0.002667169846234105,
+      -9.3404880179999
+    ],
+    "imu_accel_std": [
+      0.0022175888845100767,
+      0.0038444339007338473,
+      0.0020523098041243144
+    ],
+    "approx_race_go_t_s": 16.1781255,
+    "race_samples": 187
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T042010-phase1f\\20260714T041536-88e6e576-flight.jsonl",
+    "size_mb": 7.47,
+    "topics": {
+      "actuator": 4218,
+      "imu": 5145,
+      "heartbeat": 449,
+      "race": 183,
+      "fsm": 6,
+      "state": 2191,
+      "setpoint": 2191,
+      "frame": 8535,
+      "detection": 7890,
+      "loop_stats": 1
+    },
+    "duration_s": 44.8087445,
+    "detections": 7890,
+    "setpoint_phases": {
+      "hover": 81,
+      "takeoff": 75,
+      "search": 440,
+      "approach": 1595
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 1.0083904,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.1047307,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 2.6084886,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 4.1087526,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 44.808683,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 44.8086951,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      5.783613793148258e-06,
+      -2.978994524134893e-06,
+      2.0621692257708406e-05
+    ],
+    "imu_gyro_std": [
+      7.768212001809927e-05,
+      7.736992730752182e-05,
+      3.704833954934819e-05
+    ],
+    "imu_gyro_max_abs": [
+      0.004288180731236935,
+      0.004411816131323576,
+      0.000962246092967689
+    ],
+    "imu_accel_mean": [
+      -2.1600276432601975,
+      -0.007924467276970054,
+      -9.476603161929532
+    ],
+    "imu_accel_std": [
+      1.3420973549501143,
+      0.008936116551880945,
+      0.21802190617145376
+    ],
+    "approx_race_go_t_s": 15.2150957,
+    "race_samples": 183
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T050328-phase2a\\20260714T045635-b9a568ab-flight.jsonl",
+    "size_mb": 5.52,
+    "topics": {
+      "actuator": 4451,
+      "imu": 5429,
+      "race": 192,
+      "heartbeat": 472,
+      "fsm": 6,
+      "state": 2305,
+      "setpoint": 2305,
+      "frame": 12512,
+      "detection": 691,
+      "loop_stats": 1
+    },
+    "duration_s": 47.0926326,
+    "detections": 691,
+    "setpoint_phases": {
+      "hover": 156,
+      "takeoff": 75,
+      "search": 365,
+      "approach": 1709
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.9993297,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0993846,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 4.1034626,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 5.6035208,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 47.0914867,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 47.0915003,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      -0.08204255576873688,
+      0.026995436865437754,
+      -0.0557144549330492
+    ],
+    "imu_gyro_std": [
+      5.200611216154128,
+      2.976192469752726,
+      0.09665091604894191
+    ],
+    "imu_gyro_max_abs": [
+      11.230080604553223,
+      10.173754692077637,
+      0.2832757532596588
+    ],
+    "imu_accel_mean": [
+      -0.8133718864537665,
+      0.3264527252524264,
+      0.274625796560513
+    ],
+    "imu_accel_std": [
+      3.613358423296988,
+      6.250915481621311,
+      11.183612457111623
+    ],
+    "approx_race_go_t_s": 15.0759875,
+    "race_samples": 192
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T074233-phase2b\\20260714T072732-8ff375f3-flight.jsonl",
+    "size_mb": 4.98,
+    "topics": {
+      "actuator": 4002,
+      "imu": 4883,
+      "heartbeat": 427,
+      "race": 174,
+      "fsm": 6,
+      "state": 2080,
+      "setpoint": 2080,
+      "frame": 9920,
+      "detection": 1201,
+      "loop_stats": 1
+    },
+    "duration_s": 42.5882056,
+    "detections": 1201,
+    "setpoint_phases": {
+      "hover": 760,
+      "takeoff": 75,
+      "approach": 1245
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 1.0074517,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0995322,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 16.171619,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 17.6755215,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 42.5877712,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 42.5877842,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      -0.14631554793437176,
+      0.0928036987127058,
+      -1.205883183678071
+    ],
+    "imu_gyro_std": [
+      2.0350813138348953,
+      1.9696129083221083,
+      1.7776451504625137
+    ],
+    "imu_gyro_max_abs": [
+      11.514354705810547,
+      10.968746185302734,
+      4.1573991775512695
+    ],
+    "imu_accel_mean": [
+      0.5895800397054471,
+      -0.30256357196315636,
+      -10.30302102802298
+    ],
+    "imu_accel_std": [
+      4.945113753976641,
+      4.733235119320169,
+      19.991682624240717
+    ],
+    "approx_race_go_t_s": 16.1711874,
+    "race_samples": 174
+  },
+  {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T081945-bb5494d6\\flight.jsonl",
+    "size_mb": 4.76,
+    "topics": {
+      "actuator": 4060,
+      "imu": 4960,
+      "race": 176,
+      "heartbeat": 432,
+      "fsm": 6,
+      "state": 2105,
+      "setpoint": 2105,
+      "frame": 7499,
+      "detection": 1321,
+      "loop_stats": 1
+    },
+    "duration_s": 43.0815627,
+    "detections": 1321,
+    "setpoint_phases": {
+      "hover": 958,
+      "takeoff": 75,
+      "approach": 1072
+    },
+    "fsm_transitions": [
+      {
+        "t_s": 0.9996891,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 1.0999725,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 20.136094,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 21.6400114,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 43.0798078,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 43.0798394,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "fsm_transition_count": 6,
+    "imu_gyro_mean": [
+      0.06524229731440763,
+      -0.006029652071533893,
+      1.3200656331702794
+    ],
+    "imu_gyro_std": [
+      2.206611653168558,
+      2.312829680907025,
+      1.8257592187891005
+    ],
+    "imu_gyro_max_abs": [
+      10.196596145629883,
+      10.881348609924316,
+      4.290460109710693
+    ],
+    "imu_accel_mean": [
+      -0.30454577603831895,
+      -0.26637784502053685,
+      -7.438660221925426
+    ],
+    "imu_accel_std": [
+      6.086954226277921,
+      5.54553218361306,
+      11.91772205460866
+    ],
+    "approx_race_go_t_s": 17.3774039,
+    "race_samples": 176
+  }
+]

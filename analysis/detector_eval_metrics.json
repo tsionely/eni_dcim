@@ -1,0 +1,405 @@
+{
+  "stride": 1,
+  "recordings": [
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "size_mb": 1290.1,
+      "frames": 20156,
+      "decode_failures": 0,
+      "detections": 19271,
+      "detection_rate_pct": 95.61,
+      "pnp_ok": 19259,
+      "pnp_rate_of_detections_pct": 99.94,
+      "pnp_rate_of_frames_pct": 95.55,
+      "stability": {
+        "distance_mean_m": 16.376694302851156,
+        "distance_std_m": 5.4794733061339995,
+        "distance_median_m": 13.952051101568605,
+        "distance_step_std_m": 0.7498801572188798,
+        "distance_step_p95_abs_m": 0.0,
+        "center_std_px": [
+          4.4891871856200325,
+          16.62143143088091
+        ],
+        "center_jump_mean_px": 0.14452957796663604,
+        "center_jump_p95_px": 0.0,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 30.742319999999996,
+        "frame_gap_max_ms": 42.6356,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 42.5015443
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260713T202513-ea4b5f0c\\vision.aigprec",
+      "size_mb": 825.8,
+      "frames": 11133,
+      "decode_failures": 0,
+      "detections": 10794,
+      "detection_rate_pct": 96.95,
+      "pnp_ok": 10794,
+      "pnp_rate_of_detections_pct": 100.0,
+      "pnp_rate_of_frames_pct": 96.95,
+      "stability": {
+        "distance_mean_m": 16.435252068765916,
+        "distance_std_m": 5.545497003184534,
+        "distance_median_m": 13.942651359151098,
+        "distance_step_std_m": 0.8482337755569722,
+        "distance_step_p95_abs_m": 0.032941450748343364,
+        "center_std_px": [
+          4.550398886752471,
+          16.541787192425108
+        ],
+        "center_jump_mean_px": 0.18515723062831554,
+        "center_jump_p95_px": 0.25,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 34.567945,
+        "frame_gap_max_ms": 44.8873,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 32.9373036
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "size_mb": 722.5,
+      "frames": 12512,
+      "decode_failures": 0,
+      "detections": 735,
+      "detection_rate_pct": 5.87,
+      "pnp_ok": 735,
+      "pnp_rate_of_detections_pct": 100.0,
+      "pnp_rate_of_frames_pct": 5.87,
+      "stability": {
+        "distance_mean_m": 17.655688615031117,
+        "distance_std_m": 6.6015870076220375,
+        "distance_median_m": 14.205726436144984,
+        "distance_step_std_m": 1.6277513647734088,
+        "distance_step_p95_abs_m": 0.18733756028719387,
+        "center_std_px": [
+          5.281262560326595,
+          25.69811775757331
+        ],
+        "center_jump_mean_px": 0.5592908376550613,
+        "center_jump_p95_px": 0.28624368670764816,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 34.202799999999996,
+        "frame_gap_max_ms": 47.3365,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 34.0694834
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T041536-88e6e576\\vision.aigprec",
+      "size_mb": 716.0,
+      "frames": 8535,
+      "decode_failures": 0,
+      "detections": 8194,
+      "detection_rate_pct": 96.0,
+      "pnp_ok": 8194,
+      "pnp_rate_of_detections_pct": 100.0,
+      "pnp_rate_of_frames_pct": 96.0,
+      "stability": {
+        "distance_mean_m": 15.996757776400504,
+        "distance_std_m": 5.084478307751845,
+        "distance_median_m": 13.98012848627227,
+        "distance_step_std_m": 0.9640708859916746,
+        "distance_step_p95_abs_m": 0.07864301957676645,
+        "center_std_px": [
+          4.200474368403917,
+          15.388564631286313
+        ],
+        "center_jump_mean_px": 0.22927430840305268,
+        "center_jump_p95_px": 0.25,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 34.648035,
+        "frame_gap_max_ms": 46.7103,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 31.7360796
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T072732-8ff375f3\\vision.aigprec",
+      "size_mb": 606.2,
+      "frames": 9920,
+      "decode_failures": 0,
+      "detections": 1271,
+      "detection_rate_pct": 12.81,
+      "pnp_ok": 1215,
+      "pnp_rate_of_detections_pct": 95.59,
+      "pnp_rate_of_frames_pct": 12.25,
+      "stability": {
+        "distance_mean_m": 20.74504818016859,
+        "distance_std_m": 11.829571445906497,
+        "distance_median_m": 14.384816702957046,
+        "distance_step_std_m": 2.76102921904218,
+        "distance_step_p95_abs_m": 0.226841164508335,
+        "center_std_px": [
+          115.20547324877187,
+          80.30328850232047
+        ],
+        "center_jump_mean_px": 5.4908631211365035,
+        "center_jump_p95_px": 18.986830782137687,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 34.453500000000005,
+        "frame_gap_max_ms": 49.9379,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 28.4048623
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T081945-bb5494d6\\vision.aigprec",
+      "size_mb": 519.2,
+      "frames": 7499,
+      "decode_failures": 0,
+      "detections": 1337,
+      "detection_rate_pct": 17.83,
+      "pnp_ok": 1330,
+      "pnp_rate_of_detections_pct": 99.48,
+      "pnp_rate_of_frames_pct": 17.74,
+      "stability": {
+        "distance_mean_m": 18.432520064759355,
+        "distance_std_m": 8.216996131970008,
+        "distance_median_m": 14.028954061850703,
+        "distance_step_std_m": 2.007879755215297,
+        "distance_step_p95_abs_m": 0.18674627760768323,
+        "center_std_px": [
+          63.54650860786459,
+          48.39747235058589
+        ],
+        "center_jump_mean_px": 2.46125401437234,
+        "center_jump_p95_px": 0.5,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 33.72359499999999,
+        "frame_gap_max_ms": 52.2224,
+        "large_gaps_gt_50ms": 1,
+        "span_s": 27.8704146
+      }
+    },
+    {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\fixtures\\20260713T203515-phase1e\\fixtures_slice.aigprec",
+      "size_mb": 40.4,
+      "frames": 658,
+      "decode_failures": 0,
+      "detections": 658,
+      "detection_rate_pct": 100.0,
+      "pnp_ok": 658,
+      "pnp_rate_of_detections_pct": 100.0,
+      "pnp_rate_of_frames_pct": 100.0,
+      "stability": {
+        "distance_mean_m": 13.766705420853482,
+        "distance_std_m": 0.17658373846770842,
+        "distance_median_m": 13.654850840173474,
+        "distance_step_std_m": 0.027957906985432813,
+        "distance_step_p95_abs_m": 0.0,
+        "center_std_px": [
+          0.20765129038237376,
+          0.2729360159285299
+        ],
+        "center_jump_mean_px": 0.013503217573023134,
+        "center_jump_p95_px": 0.0,
+        "frame_gap_median_ms": 0.0,
+        "frame_gap_p95_ms": 27.82524,
+        "frame_gap_max_ms": 37.1905,
+        "large_gaps_gt_50ms": 0,
+        "span_s": 1.2302225
+      }
+    }
+  ],
+  "hard_frames": [
+    {
+      "file": "analysis\\hard_frames\\00_s095_miss_f910.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 910,
+      "ts_ns": 1784005037342678100,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 37480
+    },
+    {
+      "file": "analysis\\hard_frames\\01_s095_miss_f912.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 912,
+      "ts_ns": 1784005037412181100,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 35035
+    },
+    {
+      "file": "analysis\\hard_frames\\02_s095_miss_f914.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 914,
+      "ts_ns": 1784005037475042700,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 38479
+    },
+    {
+      "file": "analysis\\hard_frames\\03_s095_miss_f916.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 916,
+      "ts_ns": 1784005037543970300,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 39054
+    },
+    {
+      "file": "analysis\\hard_frames\\04_s095_miss_f918.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 918,
+      "ts_ns": 1784005037613399800,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 33724
+    },
+    {
+      "file": "analysis\\hard_frames\\05_s095_miss_f920.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 920,
+      "ts_ns": 1784005037675951000,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 34986
+    },
+    {
+      "file": "analysis\\hard_frames\\06_s095_miss_f922.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 922,
+      "ts_ns": 1784005037745212100,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 34247
+    },
+    {
+      "file": "analysis\\hard_frames\\07_s095_miss_f924.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 924,
+      "ts_ns": 1784005037808555100,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 35367
+    },
+    {
+      "file": "analysis\\hard_frames\\08_s095_miss_f926.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 926,
+      "ts_ns": 1784005037877167900,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 35612
+    },
+    {
+      "file": "analysis\\hard_frames\\09_s095_miss_f928.jpg",
+      "score": 95.0,
+      "reason": "miss",
+      "frame_id": 928,
+      "ts_ns": 1784005037946621200,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260714T045635-b9a568ab\\vision.aigprec",
+      "distance_m": null,
+      "center_px": null,
+      "bytes": 30431
+    },
+    {
+      "file": "analysis\\hard_frames\\10_s056_distance_jump_16.4m_f1176.jpg",
+      "score": 56.38486251043919,
+      "reason": "distance_jump_16.4m",
+      "frame_id": 1176,
+      "ts_ns": 1783973356571174700,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 30.3399171845343,
+      "center_px": [
+        336.5,
+        219.0
+      ],
+      "bytes": 39559
+    },
+    {
+      "file": "analysis\\hard_frames\\11_s055_distance_jump_15.5m_f1146.jpg",
+      "score": 55.54196477531614,
+      "reason": "distance_jump_15.5m",
+      "frame_id": 1146,
+      "ts_ns": 1783973355571377600,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 29.380086547182522,
+      "center_px": [
+        337.25,
+        219.0
+      ],
+      "bytes": 38581
+    },
+    {
+      "file": "analysis\\hard_frames\\12_s054_distance_jump_14.5m_f1182.jpg",
+      "score": 54.49854502728458,
+      "reason": "distance_jump_14.5m",
+      "frame_id": 1182,
+      "ts_ns": 1783973356772550200,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 14.166189556241578,
+      "center_px": [
+        326.75,
+        176.25
+      ],
+      "bytes": 40267
+    },
+    {
+      "file": "analysis\\hard_frames\\13_s053_distance_jump_14.0m_f1158.jpg",
+      "score": 53.97660802175533,
+      "reason": "distance_jump_14.0m",
+      "frame_id": 1158,
+      "ts_ns": 1783973355974051700,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 28.007639224855115,
+      "center_px": [
+        337.0,
+        219.25
+      ],
+      "bytes": 39681
+    },
+    {
+      "file": "analysis\\hard_frames\\14_s053_distance_jump_13.7m_f1164.jpg",
+      "score": 53.74187405023681,
+      "reason": "distance_jump_13.7m",
+      "frame_id": 1164,
+      "ts_ns": 1783973356175407400,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 13.981487949827232,
+      "center_px": [
+        324.5,
+        176.25
+      ],
+      "bytes": 40014
+    },
+    {
+      "file": "analysis\\hard_frames\\15_s051_distance_jump_11.1m_f1161.jpg",
+      "score": 51.062362891389746,
+      "reason": "distance_jump_11.1m",
+      "frame_id": 1161,
+      "ts_ns": 1783973356071260000,
+      "recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\recordings\\phase1-20260713T200814.aigprec",
+      "distance_m": 25.073014375265437,
+      "center_px": [
+        318.0,
+        247.0
+      ],
+      "bytes": 39875
+    }
+  ],
+  "hard_frame_policy": "diversified_per_recording_cap10_midrace_miss_prefer"
+}

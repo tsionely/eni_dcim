@@ -1,0 +1,622 @@
+[
+  {
+    "flight_id": "20260713T190311-db4c58dd",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 20.00046030001249,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 5000,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260713T190311-db4c58dd",
+      "log_dir": "logs\\20260713T190311-db4c58dd"
+    },
+    "imu": {
+      "accel_mean": [
+        -2.616089105606079,
+        -12.3596830368042,
+        -23.46482276916504
+      ],
+      "accel_std": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "accel_norm_mean": 26.64964529908536,
+      "accel_norm_std": 3.552713678800501e-15,
+      "gyro_mean": [
+        8.366657257080078,
+        11.721335411071777,
+        -1.025029182434082
+      ],
+      "gyro_std": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gyro_norm_p95": 14.437497785320605
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1002535,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 1.6039799,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 20.0004245,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 20.0004356,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 0.096,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 1.616,
+        "phase": "search"
+      }
+    ],
+    "n_detections": 0,
+    "n_states": 1001,
+    "min_gate_m": null,
+    "median_gate_m": null,
+    "plots": [
+      "analysis/kinematics/20260713T190311-db4c58dd/flight.png",
+      "analysis/kinematics/20260713T190311-db4c58dd/imu.png"
+    ]
+  },
+  {
+    "flight_id": "20260713T202513-ea4b5f0c",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 45.00086550001288,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 11250,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260713T202513-ea4b5f0c",
+      "log_dir": "logs\\20260713T202513-ea4b5f0c"
+    },
+    "imu": {
+      "accel_mean": [
+        -2.9985853534374596,
+        -0.002667169846234105,
+        -9.3404880179999
+      ],
+      "accel_std": [
+        0.0022175888845100767,
+        0.0038444339007338473,
+        0.0020523098041243144
+      ],
+      "accel_norm_mean": 9.810008117072517,
+      "accel_norm_std": 0.0015173541885687993,
+      "gyro_mean": [
+        -7.481807167422167e-07,
+        -9.827784543751546e-07,
+        4.1635485447257895e-08
+      ],
+      "gyro_std": [
+        0.0001479578827434562,
+        8.225625157676812e-05,
+        1.4097035933106595e-05
+      ],
+      "gyro_norm_p95": 0.0
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1000131,
+        "src": "ARMING",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 1.600046,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 45.0008359,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 45.0008523,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 0.096,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 1.596,
+        "phase": "search"
+      },
+      {
+        "t_s": 12.296,
+        "phase": "approach"
+      }
+    ],
+    "n_detections": 529,
+    "n_states": 2251,
+    "min_gate_m": 11.973139123336507,
+    "median_gate_m": 15.08627123840411,
+    "plots": [
+      "analysis/kinematics/20260713T202513-ea4b5f0c/flight.png",
+      "analysis/kinematics/20260713T202513-ea4b5f0c/imu.png"
+    ]
+  },
+  {
+    "flight_id": "20260714T041536-88e6e576",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 43.800316700013354,
+      "loop_overrun_frac": 0.000273972602739726,
+      "loop_stats": {
+        "ticks": 10950,
+        "overruns": 3,
+        "overrun_frac": 0.000273972602739726,
+        "max_late_us": 3314
+      },
+      "flight_id": "20260714T041536-88e6e576",
+      "log_dir": "logs\\20260714T041536-88e6e576"
+    },
+    "imu": {
+      "accel_mean": [
+        -2.1600276432601975,
+        -0.007924467276970054,
+        -9.476603161929532
+      ],
+      "accel_std": [
+        1.3420973549501143,
+        0.008936116551880945,
+        0.21802190617145376
+      ],
+      "accel_norm_mean": 9.814304784843575,
+      "accel_norm_std": 0.00707189033771651,
+      "gyro_mean": [
+        5.783613793148258e-06,
+        -2.978994524134893e-06,
+        2.0621692257708406e-05
+      ],
+      "gyro_std": [
+        7.768212001809927e-05,
+        7.736992730752182e-05,
+        3.704833954934819e-05
+      ],
+      "gyro_norm_p95": 7.508188341792107e-05
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.0963403,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 1.6000982,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 3.1003622,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 43.8002926,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 43.8003047,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 1.596,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 3.096,
+        "phase": "search"
+      },
+      {
+        "t_s": 11.896,
+        "phase": "approach"
+      },
+      {
+        "t_s": 43.796,
+        "phase": "hover"
+      }
+    ],
+    "n_detections": 7890,
+    "n_states": 2191,
+    "min_gate_m": 13.461472867628872,
+    "median_gate_m": 13.949836541934394,
+    "plots": [
+      "analysis/kinematics/20260714T041536-88e6e576/flight.png",
+      "analysis/kinematics/20260714T041536-88e6e576/imu.png"
+    ]
+  },
+  {
+    "flight_id": "20260714T045635-b9a568ab",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 46.09218270005658,
+      "loop_overrun_frac": 8.678295582747549e-05,
+      "loop_stats": {
+        "ticks": 11523,
+        "overruns": 1,
+        "overrun_frac": 8.678295582747549e-05,
+        "max_late_us": 2217
+      },
+      "flight_id": "20260714T045635-b9a568ab",
+      "log_dir": "logs\\20260714T045635-b9a568ab"
+    },
+    "imu": {
+      "accel_mean": [
+        -0.8133718864537665,
+        0.3264527252524264,
+        0.274625796560513
+      ],
+      "accel_std": [
+        3.613358423296988,
+        6.250915481621311,
+        11.183612457111623
+      ],
+      "accel_norm_mean": 11.730739776572262,
+      "accel_norm_std": 6.3589936211972224,
+      "gyro_mean": [
+        -0.08204255576873688,
+        0.026995436865437754,
+        -0.0557144549330492
+      ],
+      "gyro_std": [
+        5.200611216154128,
+        2.976192469752726,
+        0.09665091604894191
+      ],
+      "gyro_norm_p95": 9.803999562576442
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1000549,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 3.1041329,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 4.6041911,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 46.092157,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 46.0921706,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 3.116,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 4.616,
+        "phase": "search"
+      },
+      {
+        "t_s": 11.916,
+        "phase": "approach"
+      }
+    ],
+    "n_detections": 691,
+    "n_states": 2305,
+    "min_gate_m": 13.62055641267596,
+    "median_gate_m": 14.181094549936661,
+    "plots": [
+      "analysis/kinematics/20260714T045635-b9a568ab/flight.png",
+      "analysis/kinematics/20260714T045635-b9a568ab/imu.png"
+    ]
+  },
+  {
+    "flight_id": "20260714T072732-8ff375f3",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 41.580346299975645,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 10395,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260714T072732-8ff375f3",
+      "log_dir": "logs\\20260714T072732-8ff375f3"
+    },
+    "imu": {
+      "accel_mean": [
+        0.5895800397054471,
+        -0.30256357196315636,
+        -10.30302102802298
+      ],
+      "accel_std": [
+        4.945113753976641,
+        4.733235119320169,
+        19.991682624240717
+      ],
+      "accel_norm_mean": 17.264736159888496,
+      "accel_norm_std": 15.97013825408296,
+      "gyro_mean": [
+        -0.14631554793437176,
+        0.0928036987127058,
+        -1.205883183678071
+      ],
+      "gyro_std": [
+        2.0350813138348953,
+        1.9696129083221083,
+        1.7776451504625137
+      ],
+      "gyro_norm_p95": 8.187525376557385
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.0920805,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 15.1641673,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 16.6680698,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 41.5803195,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 41.5803325,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 15.176,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 16.676,
+        "phase": "approach"
+      },
+      {
+        "t_s": 41.576,
+        "phase": "hover"
+      }
+    ],
+    "n_detections": 1201,
+    "n_states": 2080,
+    "min_gate_m": 3.9727935977084057,
+    "median_gate_m": 14.384816702957046,
+    "plots": [
+      "analysis/kinematics/20260714T072732-8ff375f3/flight.png",
+      "analysis/kinematics/20260714T072732-8ff375f3/imu.png"
+    ]
+  },
+  {
+    "flight_id": "20260714T081945-bb5494d6",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "stale channels: frame",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 0,
+      "duration_s": 42.08015770005295,
+      "loop_overrun_frac": 0.0,
+      "loop_stats": {
+        "ticks": 10520,
+        "overruns": 0,
+        "overrun_frac": 0.0,
+        "max_late_us": 0
+      },
+      "flight_id": "20260714T081945-bb5494d6",
+      "log_dir": "logs\\20260714T081945-bb5494d6"
+    },
+    "imu": {
+      "accel_mean": [
+        -0.30454577603831895,
+        -0.26637784502053685,
+        -7.438660221925426
+      ],
+      "accel_std": [
+        6.086954226277921,
+        5.54553218361306,
+        11.91772205460866
+      ],
+      "accel_norm_mean": 13.39995061180658,
+      "accel_norm_std": 9.26146493313112,
+      "gyro_mean": [
+        0.06524229731440763,
+        -0.006029652071533893,
+        1.3200656331702794
+      ],
+      "gyro_std": [
+        2.206611653168558,
+        2.312829680907025,
+        1.8257592187891005
+      ],
+      "gyro_norm_p95": 8.848211437852822
+    },
+    "fsm": [
+      {
+        "t_s": 0.0,
+        "src": "IDLE",
+        "dst": "ARMING"
+      },
+      {
+        "t_s": 0.1002834,
+        "src": "ARMING",
+        "dst": "THROTTLE_DOWN"
+      },
+      {
+        "t_s": 19.1364049,
+        "src": "THROTTLE_DOWN",
+        "dst": "TAKEOFF"
+      },
+      {
+        "t_s": 20.6403223,
+        "src": "TAKEOFF",
+        "dst": "RACING"
+      },
+      {
+        "t_s": 42.0801187,
+        "src": "RACING",
+        "dst": "ABORTED"
+      },
+      {
+        "t_s": 42.0801503,
+        "src": "ABORTED",
+        "dst": "DONE"
+      }
+    ],
+    "setpoint_phases": [
+      {
+        "t_s": 0.0,
+        "phase": "hover"
+      },
+      {
+        "t_s": 19.136,
+        "phase": "takeoff"
+      },
+      {
+        "t_s": 20.636,
+        "phase": "approach"
+      },
+      {
+        "t_s": 42.076,
+        "phase": "hover"
+      }
+    ],
+    "n_detections": 1321,
+    "n_states": 2105,
+    "min_gate_m": 6.979653886100852,
+    "median_gate_m": 14.028954061850703,
+    "plots": [
+      "analysis/kinematics/20260714T081945-bb5494d6/flight.png",
+      "analysis/kinematics/20260714T081945-bb5494d6/imu.png"
+    ]
+  }
+]
