@@ -107,6 +107,14 @@ class RaceManager:
         self.collision_policy.reset()
         self._last_gate_index = None
         self._initial_race_start_ms = None
+        # Capture the GO baseline BEFORE sending the arm command: the sim can
+        # stamp race_start within the same tick as the arm-ack, and a baseline
+        # taken from the first post-arm status then equals the fresh value —
+        # the "changed since flight start" test never fires and the flight
+        # hangs in THROTTLE_DOWN until timeout (seen on the mock, 1ms window).
+        cached = self.bus.cell(Topic.RACE).get()[0]
+        if cached is not None:
+            self._initial_race_start_ms = cached.race_start_boot_time_ms
         self._t_flight_start = time.monotonic()
         self._transition(FlightState.ARMING, "flight start")
         self.io.arm()

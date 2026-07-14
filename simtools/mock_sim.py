@@ -109,8 +109,15 @@ class MockSim:
         # The real v1.0.3385 sim ignores velocity setpoints (phase1f mode B);
         # set False to mirror that behavior in tests.
         self.honor_velocity = honor_velocity
-        # Mirror the real sim's inverted rate-command convention (phase2b).
-        self.rate_cmd_sign = -1.0
+        # Real-sim sensor quirks (phase2k camera-vs-gyro correlation): the
+        # COMMAND channel is honest (+1) but the reported GYRO is
+        # sign-inverted, and its z axis is frozen (risk R10). The phase2a/2b
+        # "inverted rate response" was the gyro lying about the reply, not
+        # the command being flipped.
+        self.rate_cmd_sign = 1.0
+        self.gyro_report_sign = -1.0
+        self.gyro_z_frozen = True
+        self.frame_ts_epoch = True
         self.image_w, self.image_h = image_size
         self.fx = (self.image_w / 2.0) / math.tan(math.radians(fov_deg) / 2.0)
         self.rng = np.random.default_rng(seed)
@@ -264,7 +271,10 @@ class MockSim:
             gyro = self.drone.rates.copy()
         else:
             gyro = np.array([0.0, 0.0, self.drone.yaw_rate])
+        gyro = gyro * self.gyro_report_sign
         gyro += self.rng.normal(0.0, self.imu_noise * 0.2, 3)
+        if self.gyro_z_frozen:
+            gyro[2] = 0.013          # hard-pinned at a constant (R10)
         conn.mav.highres_imu_send(
             self._sim_now_ns() // 1000,
             f_body[0], f_body[1], f_body[2],
@@ -410,12 +420,12 @@ class MockSim:
     # ----------------------------------------------------------------- vision
 
     def _project(self, point: np.ndarray) -> tuple[float, float] | None:
+        # BODY-FIXED camera: full attitude rotation, like the real sim
+        # (phase2k: gate pixel motion tracks pitch/roll at ~fx px/rad — the
+        # camera is bolted to the frame, not gimbal-stabilized).
         rel = point - self.drone.pos
-        c, s = math.cos(self.drone.yaw), math.sin(self.drone.yaw)
-        # World -> body (yaw only): x fwd, y right, z down.
-        bx = c * rel[0] + s * rel[1]
-        by = -s * rel[0] + c * rel[1]
-        bz = rel[2]
+        rot = euler_matrix(self.drone.roll, self.drone.pitch, self.drone.yaw)
+        bx, by, bz = rot.T @ rel     # world -> body: x fwd, y right, z down
         if bx < 0.2:
             return None
         u = self.image_w / 2.0 + self.fx * (by / bx)
@@ -457,7 +467,10 @@ class MockSim:
         data = jpeg.tobytes()
         self._frame_id += 1
         total_chunks = max(1, math.ceil(len(data) / VISION_CHUNK_PAYLOAD))
-        sim_time_ns = self._sim_now_ns()
+        # Real sim stamps frame headers with UNIX-EPOCH ns while MAVLink IMU
+        # time is sim-boot (phase2k logs) — mirror the clock-domain split so
+        # the pilot's timestamp rebase is exercised by every mock test.
+        sim_time_ns = time.time_ns() if self.frame_ts_epoch else self._sim_now_ns()
         for chunk_id in range(total_chunks):
             payload = data[chunk_id * VISION_CHUNK_PAYLOAD:(chunk_id + 1) * VISION_CHUNK_PAYLOAD]
             header = struct.pack(VISION_HEADER, self._frame_id, chunk_id, total_chunks,

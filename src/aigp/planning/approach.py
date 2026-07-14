@@ -12,13 +12,23 @@ from aigp.core.messages import RelPose
 from aigp.perception.camera import cam_to_body
 
 
-def gate_direction_body(rel: RelPose) -> tuple[np.ndarray, float]:
-    """Unit vector toward the gate center in body axes, and the distance."""
+def gate_direction_body(rel: RelPose, aim_up_m: float = 0.0) -> tuple[np.ndarray, float]:
+    """Unit vector toward the gate center in body axes, and the distance.
+
+    aim_up_m raises the aim point above the gate center (NED: -z is up):
+    with no altitude sensor the approach systematically sags, and flights
+    that reached the gate plane were passing UNDER the ring. The distance
+    returned is to the true center (commit trigger stays geometric).
+    """
     d_body = cam_to_body(rel.t)
     dist = float(np.linalg.norm(d_body))
     if dist < 1e-6:
         return np.array([1.0, 0.0, 0.0]), 0.0
-    return d_body / dist, dist
+    aim = d_body - np.array([0.0, 0.0, aim_up_m])
+    norm = float(np.linalg.norm(aim))
+    if norm < 1e-6:
+        return np.array([1.0, 0.0, 0.0]), dist
+    return aim / norm, dist
 
 
 def approach_speed(dist: float, speed_far: float, speed_near: float,

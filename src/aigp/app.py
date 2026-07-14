@@ -282,6 +282,11 @@ class App:
 
             if supervisor.commands_active():
                 backend.update(setpoint, state, dt)
+                # Control-input yaw prediction: with the sim's z-gyro pinned
+                # (R10), the estimator propagates yaw from what we commanded.
+                estimator.set_cmd_yaw_rate(setpoint.yaw_rate)
+            else:
+                estimator.set_cmd_yaw_rate(0.0)
 
             if max_duration_s is not None and time.monotonic() - t_start > max_duration_s:
                 supervisor.stop_flight("max duration")

@@ -35,6 +35,7 @@ class RacePlanner:
         self.speed_near = float(p.get("planner.approach.speed_near_mps"))
         self.near_distance = float(p.get("planner.approach.near_distance_m"))
         self.yaw_center_gain = float(p.get("planner.approach.yaw_center_gain"))
+        self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
@@ -44,11 +45,13 @@ class RacePlanner:
         self._commit_until_ns: int | None = None
         self._commit_v_body: np.ndarray | None = None
         self._recover_until_ns: int | None = None
+        self._last_seen_side = 1.0   # search toward the last known bearing
 
     def reset(self) -> None:
         self._commit_until_ns = None
         self._commit_v_body = None
         self._recover_until_ns = None
+        self._last_seen_side = 1.0
 
     # -- external events ------------------------------------------------------
 
@@ -89,15 +92,17 @@ class RacePlanner:
 
         gate = state.gate_rel
         if gate is None:
-            # -- search
+            # -- search: spin toward the side the gate was last seen on.
             return Setpoint(
                 phase="search",
                 v_body=np.array([0.0, 0.0, -self.search_climb]),
-                yaw_rate=self.search_yaw_rate,
+                yaw_rate=self.search_yaw_rate * self._last_seen_side,
             )
 
         # -- approach
-        direction, dist = ap.gate_direction_body(gate)
+        direction, dist = ap.gate_direction_body(gate, self.aim_up_m)
+        if abs(direction[1]) > 0.05:
+            self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:
             # Enter the blind window: lock the through-gate vector.
             v = direction * self.commit_speed

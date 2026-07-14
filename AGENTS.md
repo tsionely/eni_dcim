@@ -74,6 +74,27 @@ Standing tasks:
 4. **Review reports** (optional, read-only): findings on the pilot code go in
    `tuning/review-<date>.md` — flag, don't fix.
 
+### CURRENT TASK (starts NOW, in parallel with Sakana's phase3a): re-baseline
+
+docs/07 flipped the sensor model; the mock is now FAITHFUL to the real sim
+(inverted gyro reporting, frozen z-gyro, straight commands, body-fixed
+camera, epoch frame timestamps) and defaults changed. Your old campaign
+results are obsolete — re-baseline everything:
+
+1. **Windows CI first**: pull, `python -m pytest tests -q
+   --basetemp=C:\Temp\pytest-eni` — the suite is 70/70 x3 on Linux; you are
+   the Windows verdict. Report in `tuning/windows-ci.md`. Note
+   test_single_gate_pass has a one-retry policy by design (~90% per-flight).
+2. **Mock campaign, new defaults**: 40+ flights, CEM, bounds around the NEW
+   defaults — most valuable axes now: `planner.approach.aim_up_m` (0.1-0.6),
+   `planner.commit.distance_m` (1.5-3.5), `planner.commit.duration_s`
+   (1.0-2.0), `estimation.vision_vel_blend` (0.1-0.3),
+   `control.att_rate.vz_p`/`vz_i`. Score per docs/04. Report best-vs-default
+   gate-pass rate over >=20 verification flights each.
+3. **Flake hunt on the gate flight**: `--sim mock` single-gate flights x30,
+   log every failure signature (timeout-in-THROTTLE_DOWN should be GONE —
+   if you see one, that's a P0 report).
+
 ## DATA ANALYST role (Cursor)
 
 Mission: exploit the large local recordings that never reach the cloud agent
@@ -99,6 +120,26 @@ Standing tasks (in priority order, redone as new recordings appear):
    write findings to `analysis/<date>-<topic>.md`.
 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
    failures) — document with data in your report; do NOT fix code, flag it.
+
+### CURRENT TASK (after Sakana's phase3a push): R2 recon + sensor-model audit
+
+Read docs/07 (the gyro-inversion finding came from correlation analysis of
+the kind you do best — pixel motion vs IMU on phase2k). Then, on the new
+phase3a recordings:
+
+1. **R2 gate appearance study (top priority)**: from the R2-TRAINING vision
+   recordings — what do R2 gates LOOK like? Color histograms, shapes, sizes,
+   backgrounds, lighting. Save 30-50 representative frames (with and without
+   gates visible) under `analysis/r2_frames/`. Recommend a detection
+   strategy (HSV bands? edges? something else?) with measured evidence.
+   This determines whether we can fly R2 at all.
+2. **Sensor-model audit on phase3a-r1**: repeat the docs/07 correlations
+   (Δpitch_gyro vs Δv_pixel, Δroll_gyro vs frame-edge angle, yaw-cmd vs Δu)
+   on the NEW recording — confirm gyro_sign=-1 and yaw-cmd gain ~1.0 hold
+   in flight, and estimate gyro_scale per axis (docs/07 saw ~1.0-1.1).
+3. **Estimator truth-check**: from flight.jsonl, compare v_world/attitude
+   estimates against pixel-derived motion around approach/commit; flag any
+   phantom-velocity episodes (see docs/07 for the failure signatures).
 
 # SIM OPERATOR Runbook
 
@@ -164,28 +205,47 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2f — hover-only stabilization ladder
+## CURRENT TASK: Phase 3a — THE SENSOR-TRUTH FLIGHT + R2-TRAINING recon
 
-Probe E verdict (both runs, decisive): physical NOSE-DOWN on a +pitch
-command with a truthful gyro => COMMANDS are the inverted side. The current
--1 sign defaults are CORRECT; do NOT use the gyro_sign patches from the
-(superseded) 2e plan. The 2c tumble therefore comes from loop tuning, not
-sign errors — E measured the sim's rate response at 1.2-2.7x commanded, so
-our rate loop (rate_p=8) is likely running hot.
+**Read docs/07 first. Everything you knew about the signs is superseded:**
+the camera-vs-gyro correlation on YOUR phase2k recordings proved the GYRO
+reports inverted (z frozen) while the COMMAND channel was always straight.
+The old rate_sign=-1 "fix" was two wrongs canceling in hover — and in
+approach the yaw centering was steering AWAY from the gate. Defaults now
+encode the corrected model (gyro_sign=-1, rate_sign=+1, cmd-fed yaw, gate
+dead-reckoning, aim-up). On the faithful mock this flies 9/10 through the
+gate. Your job: prove it on the real sim, then bring back R2-TRAINING data.
 
-This cycle isolates pure stabilization with the new hover-only mode
-(planner.force_hover — no search spin, no approach):
+1. `git pull` (verify you see commit with docs/07). Single engine instance,
+   SIM LOCK as usual.
+2. **Flight A — validation on the familiar R1 qualifier track**, DEFAULT
+   params, no patches:
+   `python scripts/fly_once.py --max-duration 90`
+   Expected: stable takeoff, approach WITH the nose turning TOWARD the gate
+   (this was backwards until today), a committed pass attempt. Any gate pass
+   = history. Note attitude quality, yaw behavior during search, altitude.
+3. **Flights B+ — R2-TRAINING** (the competition-deciding track): switch the
+   sim to R2-TRAINING, then repeat `fly_once.py --max-duration 120` 2-3
+   times, DEFAULT params first.
+   - EXPECTED RISK: R2 gates are photorealistic, probably NOT red rings —
+     the detector may see nothing and the drone will hover/search. That is
+     still a SUCCESSFUL recon: the vision recording is the deliverable.
+   - Keep `record_vision` on (default). Every R2 frame is gold for the
+     detector work.
+4. If Flight A is visibly WORSE than phase2k (immediate tumble): abort the
+   cycle, collect, and report — do NOT improvise sign patches; the analyst
+   verifies the sensor model from your recording.
+5. Optional A/B if time remains (one flight each):
+   `--patch estimation.vision_yaw=true` and
+   `--patch planner.approach.aim_up_m=0.5`.
+6. Collect with `--label phase3a-r1` / `--label phase3a-r2training`
+   (INCLUDE the R2 vision recordings as slices; full files >50MB go to
+   Drive per ground rule 5), add notes.md per flight (track, what the drone
+   did, gates passed y/n, anomalies), push, VERIFY on origin.
 
-1. `git pull`. Single engine instance.
-2. Fly the ladder below IN ORDER during real races (each waits for GO); stop
-   at the first one that visibly HOLDS a hover for ~5s+ and note it:
-   a) python scripts/fly_once.py --max-duration 45 --patch planner.force_hover=true --patch control.att_rate.rate_p=2.5 --patch control.att_rate.rate_max_rps=1.5 --patch control.att_rate.tilt_max_rad=0.2 --patch control.att_rate.hover_thrust=0.30 --patch planner.takeoff.climb_mps=0.5
-   b) same but --patch control.att_rate.rate_p=1.2
-   c) same as (a) but --patch control.att_rate.hover_thrust=0.22
-3. For each attempt note: climb behavior, attitude (level/oscillating/
-   diverging), approximate altitude over time, when/if it destabilizes.
-   Oscillation frequency, if visible, is gold for tuning.
-4. Collect with `--label phase2f`, push, VERIFY on origin.
+## PREVIOUS: Phase 2f — hover-only stabilization ladder (superseded by
+## docs/07: the E verdict below was WRONG — the gyro, not the command
+## channel, is the inverted side)
 
 ## PREVIOUS: Phase 2e — the breakthrough cycle (E verdict + gyro-fix flight)
 
