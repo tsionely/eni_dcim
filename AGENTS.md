@@ -131,7 +131,31 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 2c — the first legal takeoff
+## CURRENT TASK: Phase 2d — the decisive sign experiment
+
+Phase-2c: countdown hold WORKED (no DSQ — milestone!), but the drone still
+tumbles right after liftoff even with the -1 command signs. That is strong
+evidence the -1-on-commands theory is wrong: if commands were the inverted
+side, flipping them should have stabilized the loop. New hypothesis: the GYRO
+is the inverted party (probe D measured the *gyro*, which would read inverted
+even for correctly-executed commands), and flipping commands re-created
+positive feedback.
+
+Probe mode E settles it without screenshots or estimators: open-loop RAW
+pitch pulse, then a quiet hover window where the ACCELEROMETER (gravity
+direction) reveals the true physical rotation. It prints the verdict.
+
+Run this cycle:
+
+1. `git pull`. Single engine instance.
+2. `python scripts/control_probe.py --modes E` (it waits for GO — start a
+   race). Copy the printed "open-loop verdict" block verbatim into the
+   report. Run it TWICE for confidence.
+3. Nothing else — no fly_once this cycle; the cloud agent flips the correct
+   sign (command vs gyro parsing) based on E and only then flying continues.
+4. Collect with `--label phase2d`, push.
+
+## PREVIOUS: Phase 2c — the first legal takeoff
 
 Phase-2b analysis (cloud side) — both blockers decoded from your data:
 

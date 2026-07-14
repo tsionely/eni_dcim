@@ -101,7 +101,53 @@ def main() -> int:
         # H: hover ladder — step the thrust and watch accel_z per step; the
         #    step where the drone stops climbing brackets hover_thrust.
         "H": ("hover-thrust ladder", None),
+        # E: DECISIVE sign experiment — open-loop pitch pulse with the
+        #    ACCELEROMETER as ground truth (no estimator, no screenshots).
+        "E": ("open-loop sign verdict", None),
     }
+
+    def run_mode_e() -> None:
+        def collect(duration_s: float, roll_r=0.0, pitch_r=0.0, yaw_r=0.0,
+                    thrust=0.45) -> list:
+            last = 0
+            out = []
+            t_end = time.monotonic() + duration_s
+            while time.monotonic() < t_end:
+                io.send_attitude_rates(roll_r, pitch_r, yaw_r, thrust)
+                fresh = imu_cell.get_if_newer(last)
+                if fresh is not None:
+                    imu, last = fresh
+                    out.append((imu.ts_ns, imu.accel.tolist(), imu.gyro.tolist()))
+                time.sleep(1.0 / SEND_HZ)
+            return out
+
+        collect(1.2, thrust=0.55)                    # gentle lift
+        pulse = collect(0.5, pitch_r=0.3)            # RAW +pitch-rate pulse
+        settle = collect(1.5, thrust=0.45)           # quasi-static observe
+        io.send_attitude_rates(0.0, 0.0, 0.0, 0.0)
+
+        # Gyro-integrated pitch over pulse+settle.
+        gyro_pitch = 0.0
+        prev = None
+        for ts, _, gyro in pulse + settle:
+            if prev is not None and 0 < (ts - prev[0]) / 1e9 < 0.1:
+                gyro_pitch += gyro[1] * (ts - prev[0]) / 1e9
+            prev = (ts,)
+        # Accel-implied pitch late in the settle window (quasi-static:
+        # nose-up pitch theta -> f_x = +G*sin(theta)).
+        tail = settle[-min(40, len(settle)):]
+        fx = statistics.mean(s[1][0] for s in tail) if tail else 0.0
+        print(f"\n  === open-loop verdict ===", flush=True)
+        print(f"  commanded: RAW pitch rate +0.30 for 0.5s (expected +0.15 rad nose-up)",
+              flush=True)
+        print(f"  gyro-integrated pitch: {gyro_pitch:+.3f} rad", flush=True)
+        print(f"  accel f_x after settle: {fx:+.2f} m/s^2 "
+              f"-> physical pitch {'NOSE-UP' if fx > 0.5 else 'NOSE-DOWN' if fx < -0.5 else 'INCONCLUSIVE (level?)'}",
+              flush=True)
+        print(f"  interpretation:", flush=True)
+        print(f"    physical NOSE-UP  + gyro negative -> COMMANDS standard, GYRO inverted", flush=True)
+        print(f"    physical NOSE-DOWN + gyro negative -> COMMANDS inverted, gyro fine", flush=True)
+        print(f"    |gyro_pitch|/0.15 = scale factor {abs(gyro_pitch)/0.15:.2f}", flush=True)
 
     def rate_pulse(axis: str, rates: tuple[float, float, float]) -> None:
         last = 0
@@ -177,6 +223,8 @@ def main() -> int:
             run_mode_d()
         elif mode_key == "H":
             run_mode_h()
+        elif mode_key == "E":
+            run_mode_e()
         else:
             report(sample_phase(title, MODE_S, send))
         print(f"  [OPERATOR] did the drone visibly move in mode {mode_key}? "
