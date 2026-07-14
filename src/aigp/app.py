@@ -217,6 +217,12 @@ class App:
         setpoint = None
         state = estimator.state
         t_start = time.monotonic()
+        # In-countdown calibration: pre-arm telemetry is a frozen idle
+        # placeholder (phase2g), so bias + level reference are measured from
+        # LIVE data while holding still in THROTTLE_DOWN, applied at TAKEOFF.
+        calib_gyros: list = []
+        calib_accels: list = []
+        prev_fsm_state = supervisor.state
 
         supervisor.start_flight()
         while not supervisor.done:
@@ -239,6 +245,20 @@ class App:
                 imu, imu_seq = fresh
                 estimator.predict(imu)
                 supervisor.watchdog.feed("imu")
+                if supervisor.state == "THROTTLE_DOWN":
+                    calib_gyros.append(imu.gyro)
+                    calib_accels.append(imu.accel)
+            if prev_fsm_state == "THROTTLE_DOWN" and supervisor.state == "TAKEOFF" \
+                    and len(calib_gyros) >= 20:
+                bias = np.mean(calib_gyros, axis=0)
+                estimator.set_gyro_bias(bias)
+                ax, ay, az = np.mean(calib_accels, axis=0)
+                lr = float(np.arctan2(-ay, -az))
+                lp = float(np.arctan2(ax, np.sqrt(ay * ay + az * az)))
+                estimator.set_level_reference(lr, lp)
+                print(f"live calibration ({len(calib_gyros)} samples): "
+                      f"bias={bias} level roll={lr:+.3f} pitch={lp:+.3f}", flush=True)
+            prev_fsm_state = supervisor.state
 
             fresh = frame_cell.get_if_newer(frame_seq)
             if fresh is not None:
