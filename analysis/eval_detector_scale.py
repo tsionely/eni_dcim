@@ -244,10 +244,19 @@ def eval_recording(
                     center_px=center,
                 )
             )
-            # Cap memory: keep only top candidates
-            if len(hard_pool) > hard_keep * 4:
-                hard_pool.sort(key=lambda c: c.score, reverse=True)
-                del hard_pool[hard_keep * 3 :]
+            # Cap memory with per-recording diversity so early recordings cannot
+            # monopolize the pool when many frames share the same miss score.
+            if len(hard_pool) > hard_keep * 5:
+                by_rec: dict[str, list[HardCandidate]] = {}
+                for c in hard_pool:
+                    k = f"{Path(c.recording).parent.name}/{Path(c.recording).name}"
+                    by_rec.setdefault(k, []).append(c)
+                rebuilt: list[HardCandidate] = []
+                per_cap = max(hard_keep // max(1, len(by_rec)), 8)
+                for group in by_rec.values():
+                    group.sort(key=lambda c: c.score, reverse=True)
+                    rebuilt.extend(group[:per_cap])
+                hard_pool[:] = rebuilt
 
     return stats
 
