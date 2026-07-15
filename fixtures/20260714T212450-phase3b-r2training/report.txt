@@ -1,0 +1,218 @@
+===== Phase 3b R2-TRAINING preflight 2026-07-15T00:00:32.5574569+03:00 =====
+--- docs/08 exists ---
+docs/08 exists: True
+
+FullName      : C:\Users\tsion\Projects\eni_dcim_phase1\docs\08-sikum-r2-recon.md
+Length        : 3136
+LastWriteTime : 15/07/2026 00:00:32
+
+
+--- docs/08 head ---
+# 08 — סיכום סיור R2-TRAINING (phase3a) והתיקונים בעקבותיו
+
+**תאריך:** 2026-07-14 · **מקור:** fixtures/20260714T203252-phase3a-r2training
+
+## מה גילינו על R2-TRAINING
+
+1. **השערים אדומים וניתנים לגילוי** — מסגרות מרובעות עם באנר "AI-GP".
+   הגלאי הקיים (red_hsv) עבד מצוין: 1649 זיהויים בטיסה 3, ביטחון 1.0,
+   ‎95% פתרון PnP. החשש ששערי R2 בלתי-נראים — הוסר.
+2. **קו מירוץ זוהר בציאן** עובר לאורך כל המסלול ודרך פתחי השערים —
+   מתנה ניווטית: מסמן גם את הנתיב בין שערים וגם איזה שער הוא הבא
+   (זה שהסרט עובר דרכו). מועמד חזק לניצול בשלב תכנון המסלול.
+3. **מספר שערים גלויים בו-זמנית** + שלטים אדומים ("E") וכדורי תאורה
+   ורודים — יורי-סתירה לגלאי "הטבעת הגדולה ביותר".
+4. הסביבה: האנגר/סיפון חשוך עם תאורת תקרה בהירה; מטוסים חונים כמכשולים.
+5. אזהרת תפעול: בטיסה אחת מתוך שלוש זרם הווידאו לא עלה כלל (0 פריימים) —
+   ייתכן מצב-תפריט/אתחול; לנטר בכל סייקל.
+
+## מה קרה בטיסות (אבחון מהטלמטריה)
+
+הרחפן **מצא שער אמיתי, כיוון את האף אליו והגיע ל-1.4מ' ממנו תוך 3 שניות** —
+מודל החיישנים של docs/07 אומת על הסים האמיתי. שלושה כשלים מנעו מעבר:
+
+| # | כשל | ראיה | תיקון (בקומיט הזה) |
+|---|---|---|---|
+| 1 | מהירות-פנטום על הקרקע | ‎\|v\|=עד 6.7 מ'/ש בעמידה; בהמראה תורגם להטיה ‎−38° והסתערות | איפוס v_world ברגע ההמראה + אחרי התנגשות |
+| 2 | קפיצות מטרה בין שערים | 12 קפיצות ‎>5מ'; החלפת מטרה 1.8מ'→46מ' באמצע commit | **נעילת שער**: קבלת פיקס רק ליד החיזוי של השער הנעול; re-lock אחרי 1.2s אובדן |
+| 3 | ספייק מהירות אחרי פגיעה | ‎\|v\|=21.7 מ'/ש אחרי clip → התרסקות שנייה | איפוס מהירות באירוע התנגשות |
+
+וגם: מהירות-ראייה מוגבלת לטווח ≤12מ' (רעש PnP גדל ריבועית עם הטווח),
+וה-mock מרנדר מעכשיו את **כל** השערים (נאמנות ל-R2) — עם בדיקת רגרסיה
+של שני-שערים-בפריים.
+
+## סטטוס אימות
+
+- חבילת בדיקות: 73/73 ירוק (כולל בדיקת multi-gate חדשה).
+- Ground-truth mock: שיעור מעבר נשמר (~9/10 בעומס נמוך).
+- הצעד הבא (phase3b): אותן טיסות R2-TRAINING עם התיקונים — הציפייה:
+  approach נשלט במהירות מתונה, נעילה על השער הראשון, ניסיון מעבר נקי.
+--- Phase 3b task lines ---
+  72:    (`aigp --mode mock` repeatedly), report any abort that is not
+  73:    "max duration" with its flight log attached.
+  74: 4. **Review reports** (optional, read-only): findings on the pilot code go in
+  75:    `tuning/review-<date>.md` — flag, don't fix.
+  76: 
+  77: ### CURRENT TASK (starts NOW, in parallel with Sakana's phase3a): re-baseline
+  78: 
+  79: docs/07 flipped the sensor model; the mock is now FAITHFUL to the real sim
+  80: (inverted gyro reporting, frozen z-gyro, straight commands, body-fixed
+  81: camera, epoch frame timestamps) and defaults changed. Your old campaign
+  82: results are obsolete — re-baseline everything:
+  83: 
+  84: 1. **Windows CI first**: pull, `python -m pytest tests -q
+  85:    --basetemp=C:\Temp\pytest-eni` — the suite is 70/70 x3 on Linux; you are
+  86:    the Windows verdict. Report in `tuning/windows-ci.md`. Note
+  87:    test_single_gate_pass has a one-retry policy by design (~90% per-flight).
+  88: 2. **Mock campaign, new defaults**: 40+ flights, CEM, bounds around the NEW
+  89:    defaults — most valuable axes now: `planner.approach.aim_up_m` (0.1-0.6),
+  90:    `planner.commit.distance_m` (1.5-3.5), `planner.commit.duration_s`
+  91:    (1.0-2.0), `estimation.vision_vel_blend` (0.1-0.3),
+  92:    `control.att_rate.vz_p`/`vz_i`. Score per docs/04. Report best-vs-default
+  93:    gate-pass rate over >=20 verification flights each.
+  94: 3. **Flake hunt on the gate flight**: `--sim mock` single-gate flights x30,
+  95:    log every failure signature (timeout-in-THROTTLE_DOWN should be GONE —
+  96:    if you see one, that's a P0 report).
+  97: 
+  98: ## DATA ANALYST role (Cursor)
+  99: 
+ 100: Mission: exploit the large local recordings that never reach the cloud agent
+ 101: (logs/*/vision.aigprec and recordings/*.aigprec, 0.6-1.3 GB each — the repo
+ 102: only carries small slices).
+ 103: 
+ 104: Ground rules: write ONLY under `analysis/` (create it; it is committed) and
+ 105: `fixtures/` (via `scripts/collect_artifacts.py` conventions). Commit prefix
+ 106: `[analysis]`. Read-only everywhere else. Keep every committed file < 50 MB.
+ 107: 
+ 108: Standing tasks (in priority order, redone as new recordings appear):
+ 109: 1. **Detector evaluation at scale**: run the repo detector
+ 110:    (`aigp.perception.gate_detector_hsv` via `aigp.main --mode replay` or your
+ 111:    own harness reusing `ChunkAssembler`) over EVERY local recording; report
+ 112:    per-recording: frames, detection rate, PnP-solve rate, distance/center
+ 113:    stability, and — most valuable — save the N *hardest* frames (missed or
+ 114:    low-confidence) as downscaled JPEGs under `analysis/hard_frames/`.
+ 115: 2. **Interesting-moment slices**: extract 20-40 MB slices around events
+ 116:    (race GO, gate approaches, DSQ moments) with `scripts/slice_recording.py`
+ 117:    into `fixtures/` with a manifest note of what each slice shows.
+ 118: 3. **Flight kinematics reports**: from `flight.jsonl` logs, plot/report IMU,
+ 119:    setpoints vs estimates, FSM timelines (reuse `aigp.telemetry.plots`);
+ 120:    write findings to `analysis/<date>-<topic>.md`.
+ 121: 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
+ 122:    failures) — document with data in your report; do NOT fix code, flag it.
+ 123: 
+ 124: ### CURRENT TASK: R2 deep-dive on the phase3a slices (already in fixtures/)
+ 125: 
+ 126: The committed slices (r2_f2/f3_slice_start.aigprec) show the R2 world:
+ 127: red AI-GP gates, a glowing CYAN racing line through the whole track, red
+ 128: "E" station signs and pink orb lights (false-positive candidates).
+ 129: 
+ 130: 1. **Cyan racing-line study (highest value)**: measure the line's HSV
+ 131:    bands across frames/lighting; how reliably can a cheap mask segment it?
+ 132:    Does it always pass through the NEXT gate's opening? Deliverable:
+ 133:    analysis report + recommended hue/sat/val bands + 10-20 annotated
+ 134:    frames. This can unlock line-following navigation between gates.
+ 135: 2. **Detector false-positive audit**: run the repo detector over both
+ 136:    slices; count detections that are NOT the active gate (other gates vs
+ 137:    signs/lights). Does the ring test reject the "E" signs and orbs?
+ 138: 3. **Sensor-model audit on phase3a logs** (as before): repeat the docs/07
+ 139:    correlations on the new flight.jsonl files; estimate per-axis
+ 140:    gyro_scale.
+ 141: 
+ 142: ### PREVIOUS (done by cloud in docs/08): R2 recon + sensor-model audit
+ 143: 
+ 144: Read docs/07 (the gyro-inversion finding came from correlation analysis of
+ 145: the kind you do best — pixel motion vs IMU on phase2k). Then, on the new
+ 146: phase3a recordings:
+ 147: 
+ 148: 1. **R2 gate appearance study (top priority)**: from the R2-TRAINING vision
+ 149:    recordings — what do R2 gates LOOK like? Color histograms, shapes, sizes,
+ 150:    backgrounds, lighting. Save 30-50 representative frames (with and without
+ 151:    gates visible) under `analysis/r2_frames/`. Recommend a detection
+ 152:    strategy (HSV bands? edges? something else?) with measured evidence.
+ 153:    This determines whether we can fly R2 at all.
+ 154: 2. **Sensor-model audit on phase3a-r1**: repeat the docs/07 correlations
+ 155:    (Δpitch_gyro vs Δv_pixel, Δroll_gyro vs frame-edge angle, yaw-cmd vs Δu)
+ 156:    on the NEW recording — confirm gyro_sign=-1 and yaw-cmd gain ~1.0 hold
+ 157:    in flight, and estimate gyro_scale per axis (docs/07 saw ~1.0-1.1).
+--- SIM OPERATOR Phase 3b execution note: all flights R2-TRAINING default params x3 per user request ---
+--- sim process/ports before launch ---
+
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- sim process/ports after launch ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+21328 DCGame-Win64-Shipping 15/07/2026 00:02:27 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+45288 FlightSim             15/07/2026 00:02:27 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 21328 DCGame-Win64-Shipping
+udp 5601 <- PID 21328 DCGame-Win64-Shipping
+
+
+===== Phase 3b R2-TRAINING Flight 1/3 DEFAULT 2026-07-15T00:05:17.6731071+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'gate clip budget exceeded (11)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 12, 'env_hits': 0, 'duration_s': 22.088468900008593, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5522, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T210518-58cd98ad', 'log_dir': 'logs\\20260714T210518-58cd98ad'}
+R2B_F1_EXIT=0
+--- helper stdout R2B F1 ---
+sim window: AI-GP   00:05:25
+event r2-training clicked (400,381) 00:05:32
+RACE clicked 00:05:35
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f1\r2b_f1_00_000535.png
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f1\r2b_f1_01_000539.png
+--- helper stderr R2B F1 ---
+
+
+===== Phase 3b R2-TRAINING Flight 2/3 DEFAULT 2026-07-15T00:08:43.9198878+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [-0.00013563 -0.00076372 -0.0002128 ]; level ref roll=+0.000 pitch=-0.001
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 21.07608169998275, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5269, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T210844-58cd98ad', 'log_dir': 'logs\\20260714T210844-58cd98ad'}
+R2B_F2_EXIT=0
+--- helper stdout R2B F2 ---
+sim window: AI-GP   00:08:51
+event r2-training clicked (400,381) 00:08:58
+RACE clicked 00:09:01
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f2\r2b_f2_00_000901.png
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f2\r2b_f2_01_000906.png
+--- helper stderr R2B F2 ---
+
+
+===== Phase 3b R2-TRAINING Flight 3/3 DEFAULT 2026-07-15T00:14:04.3142937+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [1.17616419e-05 4.64715631e-05 2.78227981e-06]; level ref roll=-0.000 pitch=-0.021
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 24.612354999990202, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6153, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260714T211404-58cd98ad', 'log_dir': 'logs\\20260714T211404-58cd98ad'}
+R2B_F3_EXIT=0
+--- helper stdout R2B F3 ---
+sim window: AI-GP   00:14:11
+event r2-training clicked (400,381) 00:14:19
+RACE clicked 00:14:22
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f3\r2b_f3_00_001422.png
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f3\r2b_f3_01_001426.png
+C:\Users\tsion\AppData\Local\Temp\phase3b_r2_shots\r2b_f3\r2b_f3_02_001431.png
+--- helper stderr R2B F3 ---
+
+
+===== Phase 3b R2 recording slices 2026-07-15T00:19:57.0741004+03:00 =====
+kept 25117/25118 datagrams, 35.0 MB -> 20260714T210518-58cd98ad_r2_slice_start.aigprec
+kept 25110/25111 datagrams, 35.0 MB -> 20260714T210844-58cd98ad_r2_slice_start.aigprec
+kept 25122/25123 datagrams, 35.0 MB -> 20260714T211404-58cd98ad_r2_slice_start.aigprec
+
+Name                                               MB
+----                                               --
+20260714T210518-58cd98ad_r2_slice_start.aigprec 33.69
+20260714T210844-58cd98ad_r2_slice_start.aigprec 33.69
+20260714T211404-58cd98ad_r2_slice_start.aigprec 33.69
+
+
+
+--- topic/detection summary all three (corrected) ---
+20260714T210518-58cd98ad frames 2512 detections 2011 collisions 12 phases {'hover': 911, 'takeoff': 75, 'approach': 77, 'commit': 30, 'recover': 12} max_gate 0
+20260714T210844-58cd98ad frames 2198 detections 1665 collisions 1 phases {'hover': 911, 'takeoff': 76, 'approach': 67} max_gate 0
+20260714T211404-58cd98ad frames 2769 detections 2212 collisions 1 phases {'hover': 907, 'takeoff': 75, 'approach': 128, 'commit': 121} max_gate 0
