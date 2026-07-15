@@ -1,0 +1,5 @@
+ts_utc,phase,batch,cpu_total_pct,lock_exists,flightsim_processes
+2026-07-15T19:37:15.681606+00:00,verify,best-start,8.193277310924374,False,
+2026-07-15T19:37:17.230102+00:00,verify,best-before-01,10.370370370370374,False,
+2026-07-15T19:39:51.719265+00:00,verify,best-before-11,7.360406091370564,False,
+2026-07-15T19:42:21.206210+00:00,verify,best-end,8.350730688935283,False,

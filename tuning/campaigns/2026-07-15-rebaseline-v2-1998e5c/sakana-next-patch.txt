@@ -1,0 +1,1 @@
+# NO VALID SAKANA PATCH: all campaign attempts exceeded the stale-IMU contamination guard.

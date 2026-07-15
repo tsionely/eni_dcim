@@ -1204,3 +1204,29 @@ Summary:
 - `test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.
 - `test_first_gate_pass_with_second_gate_visible`: heartbeat timeout on `udpin:127.0.0.1:24550`.
 - A focused rerun of these four tests was not executed because the guard later detected `FlightSim` PID `53212`, start time `2026-07-15 07:20:43 +03:00`, with no lock file.
+
+## 2026-07-15 22:46:55 +03:00 - commit `1998e5cc047a25bf1cdf64976ffb9d13b4daf4e2`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- Pre-run guard was clear: no `FlightSim`/`DCGame`, no `C:\Temp\eni_dcim_sim.lock`.
+- The bare `python` launcher failed before pytest with the Windows logon-session error, so the bundled Codex Python runtime was used for the actual suite verdict.
+- The sandboxed bundled run hit `PermissionError: [WinError 5]` while pytest tried to clean `C:\Temp\pytest-eni`; an elevated rerun was used only for the required basetemp.
+- Captured full elevated output in `tuning/pytest-windows-1998e5c-basetemp-full.txt`.
+- `69 passed, 3 failed, 1 xfailed, 2 warnings in 47.58s`.
+- Expected xfail observed: `test_first_gate_pass_with_second_gate_visible` is now xfailed and is not counted as a CI failure.
+- `test_hover_flight_clean`: `overrun_frac` was `0.7431438127090301`, expected `< 0.5`.
+- `test_single_gate_pass`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+- `test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.
