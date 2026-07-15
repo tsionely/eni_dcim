@@ -238,7 +238,10 @@ with range (a mid-commit quad jump at 1m is now rejected).
    - Where it crosses relative to the opening (high/low/left/right) —
      even on a clip, WHICH bar it touched is the key datapoint.
    - Whether commit visibly corrects vertically in the last meters.
-3. Collect with `--label phase3c-r2training` (slices around every
+3. Optional flight 4, A/B from the analyst's R2 deep-dive (roll gyro
+   under-reports ~0.74x on both phase3a flights):
+   `--patch estimation.gyro_scale_roll=0.75`
+4. Collect with `--label phase3c-r2training` (slices around every
    crossing attempt), notes.md, push, VERIFY on origin.
 
 ## PREVIOUS: Phase 3b — R2-TRAINING with target lock + velocity resets
