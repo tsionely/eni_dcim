@@ -7,14 +7,18 @@ primary mode segments by red hue; the original brightness-threshold mode is
 kept for synthetic/mock scenes and as a fallback.
 
     mode "red_hsv" (default): HSV red mask (both hue bands) -> contours ->
-        convex 4-gon -> largest wins (nearest gate = the active one)
+        convex 4-gon -> cyan-prior scoring (see below), largest wins among
+        equals
     mode "bright": grayscale threshold (legacy)
+
+Cyan prior: the R2 racing line (H 90-98, S/V high — analysis
+2026-07-14-r2-deepdive, measured through-next-gate 100%) threads the NEXT
+gate's opening. Candidates whose opening contains cyan get a score boost,
+so with several gates in frame the pilot locks the one on the racing line.
+Scenes without cyan (mock, some R1 views) fall back to pure largest-area.
 
 All thresholds live in the ParamSet (perception.detector.*) so the tuning
 loop can adjust them.
-
-TODO(phase-3+): use the cyan racing-line spline to disambiguate the active
-gate instead of largest-area.
 """
 from __future__ import annotations
 
@@ -56,6 +60,12 @@ class HsvGateDetector(GateDetector):
         self.camera = PinholeCamera(
             float(params.get("perception.camera.fov_deg")),
             float(params.get("perception.camera.mount_pitch_deg", default=0.0)))
+        self.cyan_prior = bool(params.get("perception.detector.cyan_prior",
+                                          default=True))
+        self.cyan_hue_min = int(params.get("perception.detector.cyan_hue_min", default=90))
+        self.cyan_hue_max = int(params.get("perception.detector.cyan_hue_max", default=100))
+        self.cyan_sv_min = int(params.get("perception.detector.cyan_sv_min", default=110))
+        self.cyan_boost = float(params.get("perception.detector.cyan_boost", default=3.0))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _mask(self, img: np.ndarray) -> np.ndarray:
@@ -78,6 +88,14 @@ class HsvGateDetector(GateDetector):
         mask = cv2.morphologyEx(self._mask(img), cv2.MORPH_CLOSE, self._kernel)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+        cyan = None
+        if self.cyan_prior and self.mode == "red_hsv":
+            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+            cyan = cv2.inRange(hsv, (self.cyan_hue_min, self.cyan_sv_min, self.cyan_sv_min),
+                               (self.cyan_hue_max, 255, 255))
+            if not cyan.any():
+                cyan = None          # no racing line in scene: pure area
+
         best: tuple[float, np.ndarray] | None = None
         for contour in contours:
             area = cv2.contourArea(contour)
@@ -97,10 +115,18 @@ class HsvGateDetector(GateDetector):
             confidence = min(1.0, rectangularity) * min(1.0, frac / self.min_area_frac / 4.0 + 0.5)
             if confidence < self.min_confidence:
                 continue
-            # Several gates are visible along the track; the largest is the
-            # nearest, which is the active one.
-            if best is None or area > best[0]:
-                best = (area, approx)
+            # Several gates are visible along the track. Base score: area
+            # (largest = nearest). Cyan prior: the racing line threads the
+            # NEXT gate's opening, so a candidate with cyan inside its
+            # opening outranks a merely-bigger one.
+            score = area
+            if cyan is not None:
+                cmask = np.zeros(cyan.shape, dtype=np.uint8)
+                cv2.fillPoly(cmask, [approx.reshape(-1, 2)], 255)
+                if cv2.countNonZero(cv2.bitwise_and(cyan, cmask)) >= 12:
+                    score *= self.cyan_boost
+            if best is None or score > best[0]:
+                best = (score, approx)
 
         if best is None:
             return None
