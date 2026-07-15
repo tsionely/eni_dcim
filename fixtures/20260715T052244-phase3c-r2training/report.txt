@@ -1,0 +1,249 @@
+===== Phase 3c R2-TRAINING preflight 2026-07-15T07:14:49.4968164+03:00 =====
+HEAD short=e8098e2 full=e8098e2fe8f7024e716a3b12bf1914ef810ba520
+HEAD >= 8da7453? (manual compare: current after pull)
+e8098e2 Cyan racing-line prior for active-gate selection
+8da7453 Per-axis gyro scale params (analyst measured roll ~0.74x on R2 flights)
+99404a5 Live-steered commit: stop clipping the top bar
+515ab68 [analysis] R2 deep-dive: cyan line, FP audit, phase3a sensor model
+5ec57ee [sim-run] phase3b r2-training default flights
+--- Phase 3c task lines ---
+  69:    `tuning/campaigns/<date>/`. Focus bounds: the att_rate gains + approach
+  70:    params in `DEFAULT_TUNE_BOUNDS` (src/aigp/main.py).
+  71: 3. **Robustness hunts**: long mock runs hunting flakes — hover 10x
+  72:    (`aigp --mode mock` repeatedly), report any abort that is not
+  73:    "max duration" with its flight log attached.
+  74: 4. **Review reports** (optional, read-only): findings on the pilot code go in
+  75:    `tuning/review-<date>.md` — flag, don't fix.
+  76: 
+  77: ### CURRENT TASK (starts NOW, in parallel with Sakana's phase3a): re-baseline
+  78: 
+  79: docs/07 flipped the sensor model; the mock is now FAITHFUL to the real sim
+  80: (inverted gyro reporting, frozen z-gyro, straight commands, body-fixed
+  81: camera, epoch frame timestamps) and defaults changed. Your old campaign
+  82: results are obsolete — re-baseline everything:
+  83: 
+  84: 1. **Windows CI first**: pull, `python -m pytest tests -q
+  85:    --basetemp=C:\Temp\pytest-eni` — the suite is 70/70 x3 on Linux; you are
+  86:    the Windows verdict. Report in `tuning/windows-ci.md`. Note
+  87:    test_single_gate_pass has a one-retry policy by design (~90% per-flight).
+  88: 2. **Mock campaign, new defaults**: 40+ flights, CEM, bounds around the NEW
+  89:    defaults — most valuable axes now: `planner.approach.aim_up_m` (0.1-0.6),
+  90:    `planner.commit.distance_m` (1.5-3.5), `planner.commit.duration_s`
+  91:    (1.0-2.0), `estimation.vision_vel_blend` (0.1-0.3),
+  92:    `control.att_rate.vz_p`/`vz_i`. Score per docs/04. Report best-vs-default
+  93:    gate-pass rate over >=20 verification flights each.
+  94: 3. **Flake hunt on the gate flight**: `--sim mock` single-gate flights x30,
+  95:    log every failure signature (timeout-in-THROTTLE_DOWN should be GONE —
+  96:    if you see one, that's a P0 report).
+  97: 
+  98: ## DATA ANALYST role (Cursor)
+  99: 
+ 100: Mission: exploit the large local recordings that never reach the cloud agent
+ 101: (logs/*/vision.aigprec and recordings/*.aigprec, 0.6-1.3 GB each — the repo
+ 102: only carries small slices).
+ 103: 
+ 104: Ground rules: write ONLY under `analysis/` (create it; it is committed) and
+ 105: `fixtures/` (via `scripts/collect_artifacts.py` conventions). Commit prefix
+ 106: `[analysis]`. Read-only everywhere else. Keep every committed file < 50 MB.
+ 107: 
+ 108: Standing tasks (in priority order, redone as new recordings appear):
+ 109: 1. **Detector evaluation at scale**: run the repo detector
+ 110:    (`aigp.perception.gate_detector_hsv` via `aigp.main --mode replay` or your
+ 111:    own harness reusing `ChunkAssembler`) over EVERY local recording; report
+ 112:    per-recording: frames, detection rate, PnP-solve rate, distance/center
+ 113:    stability, and — most valuable — save the N *hardest* frames (missed or
+ 114:    low-confidence) as downscaled JPEGs under `analysis/hard_frames/`.
+ 115: 2. **Interesting-moment slices**: extract 20-40 MB slices around events
+ 116:    (race GO, gate approaches, DSQ moments) with `scripts/slice_recording.py`
+ 117:    into `fixtures/` with a manifest note of what each slice shows.
+ 118: 3. **Flight kinematics reports**: from `flight.jsonl` logs, plot/report IMU,
+ 119:    setpoints vs estimates, FSM timelines (reuse `aigp.telemetry.plots`);
+ 120:    write findings to `analysis/<date>-<topic>.md`.
+ 121: 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
+ 122:    failures) — document with data in your report; do NOT fix code, flag it.
+ 123: 
+ 124: ### CURRENT TASK: R2 deep-dive on the phase3a slices (already in fixtures/)
+ 125: 
+ 126: The committed slices (r2_f2/f3_slice_start.aigprec) show the R2 world:
+ 127: red AI-GP gates, a glowing CYAN racing line through the whole track, red
+ 128: "E" station signs and pink orb lights (false-positive candidates).
+ 129: 
+ 130: 1. **Cyan racing-line study (highest value)**: measure the line's HSV
+ 131:    bands across frames/lighting; how reliably can a cheap mask segment it?
+ 132:    Does it always pass through the NEXT gate's opening? Deliverable:
+ 133:    analysis report + recommended hue/sat/val bands + 10-20 annotated
+ 134:    frames. This can unlock line-following navigation between gates.
+ 135: 2. **Detector false-positive audit**: run the repo detector over both
+ 136:    slices; count detections that are NOT the active gate (other gates vs
+ 137:    signs/lights). Does the ring test reject the "E" signs and orbs?
+ 138: 3. **Sensor-model audit on phase3a logs** (as before): repeat the docs/07
+ 139:    correlations on the new flight.jsonl files; estimate per-axis
+ 140:    gyro_scale.
+ 141: 
+ 142: ### PREVIOUS (done by cloud in docs/08): R2 recon + sensor-model audit
+ 143: 
+ 144: Read docs/07 (the gyro-inversion finding came from correlation analysis of
+ 145: the kind you do best — pixel motion vs IMU on phase2k). Then, on the new
+ 146: phase3a recordings:
+ 147: 
+ 148: 1. **R2 gate appearance study (top priority)**: from the R2-TRAINING vision
+ 149:    recordings — what do R2 gates LOOK like? Color histograms, shapes, sizes,
+ 150:    backgrounds, lighting. Save 30-50 representative frames (with and without
+ 151:    gates visible) under `analysis/r2_frames/`. Recommend a detection
+ 152:    strategy (HSV bands? edges? something else?) with measured evidence.
+ 153:    This determines whether we can fly R2 at all.
+ 154: 2. **Sensor-model audit on phase3a-r1**: repeat the docs/07 correlations
+ 155:    (Δpitch_gyro vs Δv_pixel, Δroll_gyro vs frame-edge angle, yaw-cmd vs Δu)
+ 156:    on the NEW recording — confirm gyro_sign=-1 and yaw-cmd gain ~1.0 hold
+ 157:    in flight, and estimate gyro_scale per axis (docs/07 saw ~1.0-1.1).
+ 158: 3. **Estimator truth-check**: from flight.jsonl, compare v_world/attitude
+ 159:    estimates against pixel-derived motion around approach/commit; flag any
+ 160:    phantom-velocity episodes (see docs/07 for the failure signatures).
+ 161: 
+ 162: # SIM OPERATOR Runbook
+ 163: 
+ 164: Instructions for an AI agent (Sakana, Claude Code, or any other) running on the
+ 165: **Windows machine where FlightSim.exe is installed**. You are the *sim
+ 166: operator* half of a two-agent team:
+ 167: 
+ 168: - **You (local agent)**: operate the real simulator, run flights, collect
+ 169:   artifacts, commit them to this repo.
+ 170: - **Cloud agent**: analyzes your artifacts, develops/fixes/upgrades the pilot
+ 171:   code in `src/`, pushes code changes. It cannot reach the simulator — your
+ 172:   artifacts are its only window into the real sim.
+ 173: 
+ 174: All coordination happens through git on branch `main`.
+ 175: 
+ 176: ## Ground rules
+ 177: 
+--- SIM OPERATOR Phase 3c execution note: R2-TRAINING default x3 + optional roll-scale x1 ---
+--- sim process/ports before launch ---
+
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- sim process/ports after launch ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+15928 DCGame-Win64-Shipping 15/07/2026 07:20:43 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+53212 FlightSim             15/07/2026 07:20:43 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 15928 DCGame-Win64-Shipping
+udp 5601 <- PID 15928 DCGame-Win64-Shipping
+
+
+===== Phase 3c R2-TRAINING Flight 1/4 DEFAULT 2026-07-15T07:45:43.7035112+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 120.00007980002556, 'loop_overrun_frac': 3.3333333333333335e-05, 'loop_stats': {'ticks': 30000, 'overruns': 1, 'overrun_frac': 3.3333333333333335e-05, 'max_late_us': 453}, 'flight_id': '20260715T044545-411f3135', 'log_dir': 'logs\\20260715T044545-411f3135'}
+R2C_F1_EXIT=0
+--- helper stdout R2C F1 ---
+sim window: AI-GP   07:45:52
+event r2-training clicked (400,381) 07:46:00
+RACE clicked 07:46:02
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_00_074603.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_01_074606.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_02_074609.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_03_074613.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_04_074616.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_05_074619.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_06_074622.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_07_074626.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_08_074629.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_09_074632.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_10_074636.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_11_074639.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_12_074642.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_13_074645.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_14_074649.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_15_074652.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_16_074656.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_17_074659.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_18_074702.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_19_074706.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_20_074709.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_21_074712.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_22_074716.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_23_074719.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_24_074722.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_25_074726.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_26_074729.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_27_074732.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_28_074735.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_29_074739.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_30_074742.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_31_074745.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f1_default\r2c_f1_default_32_074748.png
+--- helper stderr R2C F1 ---
+
+
+===== Phase 3c R2-TRAINING Flight 2/4 DEFAULT 2026-07-15T07:50:58.7216829+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 22.61231349996524, 'loop_overrun_frac': 0.0003537944454272068, 'loop_stats': {'ticks': 5653, 'overruns': 2, 'overrun_frac': 0.0003537944454272068, 'max_late_us': 995}, 'flight_id': '20260715T045100-411f3135', 'log_dir': 'logs\\20260715T045100-411f3135'}
+R2C_F2_EXIT=0
+--- helper stdout R2C F2 ---
+sim window: AI-GP   07:51:07
+event r2-training clicked (400,381) 07:51:14
+RACE clicked 07:51:17
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f2_default\r2c_f2_default_00_075117.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f2_default\r2c_f2_default_01_075121.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f2_default\r2c_f2_default_02_075124.png
+--- helper stderr R2C F2 ---
+
+
+===== Phase 3c R2-TRAINING Flight 3/4 DEFAULT 2026-07-15T07:54:57.7666235+03:00 =====
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [-9.02540050e-03  4.37658001e-03  4.23146412e-06]; level ref roll=-0.007 pitch=-0.312
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 26.828098400030285, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6707, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T045458-411f3135', 'log_dir': 'logs\\20260715T045458-411f3135'}
+R2C_F3_EXIT=0
+--- helper stdout R2C F3 ---
+sim window: AI-GP   07:55:05
+event r2-training clicked (400,381) 07:55:12
+RACE clicked 07:55:15
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f3_default\r2c_f3_default_00_075515.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f3_default\r2c_f3_default_01_075519.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f3_default\r2c_f3_default_02_075522.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f3_default\r2c_f3_default_03_075526.png
+--- helper stderr R2C F3 ---
+
+
+===== Phase 3c R2-TRAINING Flight 4/4 OPTIONAL gyro_scale_roll=0.75 2026-07-15T08:14:57.6909598+03:00 =====
+param overrides: {'estimation.gyro_scale_roll': 0.75}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [-0.00105006 -0.00415612 -0.00069351]; level ref roll=-0.004 pitch=+0.019
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=17.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 23.81210669997381, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5953, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T051458-6092dbc0', 'log_dir': 'logs\\20260715T051458-6092dbc0'}
+R2C_F4_EXIT=0
+--- helper stdout R2C F4 ---
+sim window: AI-GP   08:15:05
+event r2-training clicked (400,381) 08:15:12
+RACE clicked 08:15:15
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f4_roll075\r2c_f4_roll075_00_081515.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f4_roll075\r2c_f4_roll075_01_081519.png
+C:\Users\tsion\AppData\Local\Temp\phase3c_r2_shots\r2c_f4_roll075\r2c_f4_roll075_02_081522.png
+--- helper stderr R2C F4 ---
+
+
+===== Phase 3c recording sizes and slices 2026-07-15T08:20:53.7532929+03:00 =====
+20260715T044545-411f3135 recording 0.00 MB
+20260715T045100-411f3135 recording 213.41 MB
+20260715T045458-411f3135 recording 318.27 MB
+20260715T051458-6092dbc0 recording 257.85 MB
+kept 25131/25132 datagrams, 35.0 MB -> 20260715T045100-411f3135_r2c_slice_start.aigprec
+kept 25124/25125 datagrams, 35.0 MB -> 20260715T045458-411f3135_r2c_slice_start.aigprec
+kept 25133/25134 datagrams, 35.0 MB -> 20260715T051458-6092dbc0_r2c_slice_start.aigprec
+
+Name                                                MB
+----                                                --
+20260715T045100-411f3135_r2c_slice_start.aigprec 33.69
+20260715T045458-411f3135_r2c_slice_start.aigprec 33.69
+20260715T051458-6092dbc0_r2c_slice_start.aigprec 33.69
+
+
