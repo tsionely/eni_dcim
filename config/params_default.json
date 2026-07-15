@@ -39,7 +39,7 @@
       "speed_far_mps": 3.0,
       "speed_near_mps": 1.5,
       "near_distance_m": 4.0,
-      "center_gain": 1.2,
+      "center_gain": 0.6,
       "yaw_center_gain": 1.5,
       "aim_up_m": 0.3
     },

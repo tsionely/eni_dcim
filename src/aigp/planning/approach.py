@@ -12,6 +12,24 @@ from aigp.core.messages import RelPose
 from aigp.perception.camera import cam_to_body
 
 
+def crosstrack_velocity(rel: RelPose, aim_up_m: float, gain: float,
+                        cap_mps: float = 0.6) -> np.ndarray:
+    """Meter-proportional LATERAL nulling toward the aim point.
+
+    The LOS-direction command alone is geometrically weak up close: a
+    constant 0.25m lateral offset at 1.5m range contributes only
+    speed*0.16 of correction, and phase3d flights carried exactly such
+    offsets into the frame. This term adds v = gain * offset (capped) on
+    the body y axis so residual meters get nulled regardless of range.
+    Vertical is deliberately excluded: it is already served by aim_up and
+    its estimate is the weakest axis — an extra vertical P-term measured
+    worse on the mock.
+    """
+    d_body = cam_to_body(rel.t)
+    vy = float(np.clip(gain * d_body[1], -cap_mps, cap_mps))
+    return np.array([0.0, vy, 0.0])
+
+
 def gate_direction_body(rel: RelPose, aim_up_m: float = 0.0) -> tuple[np.ndarray, float]:
     """Unit vector toward the gate center in body axes, and the distance.
 

@@ -35,6 +35,7 @@ class RacePlanner:
         self.speed_near = float(p.get("planner.approach.speed_near_mps"))
         self.near_distance = float(p.get("planner.approach.near_distance_m"))
         self.yaw_center_gain = float(p.get("planner.approach.yaw_center_gain"))
+        self.center_gain = float(p.get("planner.approach.center_gain"))
         self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
@@ -101,9 +102,11 @@ class RacePlanner:
             if now_ns < self._commit_until_ns and self._commit_v_body is not None:
                 gate = state.gate_rel
                 if gate is not None and gate.t[2] > 0.3:
-                    direction, dist = ap.gate_direction_body(
-                        gate, self._aim_up(np.linalg.norm(gate.t)))
-                    self._commit_v_body = direction * self.commit_speed
+                    au = self._aim_up(np.linalg.norm(gate.t))
+                    direction, dist = ap.gate_direction_body(gate, au)
+                    self._commit_v_body = (direction * self.commit_speed
+                                           + ap.crosstrack_velocity(gate, au,
+                                                                    self.center_gain))
                 return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
             self._commit_until_ns = None
             self._commit_v_body = None
@@ -119,12 +122,14 @@ class RacePlanner:
 
         # -- approach
         dist = float(np.linalg.norm(gate.t))
-        direction, dist = ap.gate_direction_body(gate, self._aim_up(dist))
+        au = self._aim_up(dist)
+        direction, dist = ap.gate_direction_body(gate, au)
+        crosstrack = ap.crosstrack_velocity(gate, au, self.center_gain)
         if abs(direction[1]) > 0.05:
             self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:
             # Enter the through-gate window.
-            v = direction * self.commit_speed
+            v = direction * self.commit_speed + crosstrack
             self._commit_v_body = v
             self._commit_until_ns = now_ns + int(self.commit_duration_s * 1e9)
             return Setpoint(phase="commit", v_body=v, yaw_rate=0.0)
@@ -135,4 +140,5 @@ class RacePlanner:
             yaw_rate = ap.yaw_rate_to_center(
                 state.gate_center_px, state.image_size, self.yaw_center_gain
             )
-        return Setpoint(phase="approach", v_body=direction * speed, yaw_rate=yaw_rate)
+        return Setpoint(phase="approach", v_body=direction * speed + crosstrack,
+                        yaw_rate=yaw_rate)
