@@ -301,7 +301,29 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3g — slow set with ABSOLUTE altitude hold
+## CURRENT TASK: Phase 3h — the endgame build (blackout fix + retry)
+
+The analyst's crossing-miss map exposed the last-meter killer: at every
+closest approach the state was 0.75-1.26s STALE — the dead-reckoned
+prediction drifts, the fixed lock tolerance then rejects TRUE fixes as
+"another gate", and the pilot flies its final meter blind on a drifted
+state (phase3d f3 "crossed dead center" per state, collided in reality).
+This build carries three weapons:
+- age-aware lock tolerance (accepts fixes again as prediction ages) —
+  kills the self-inflicted blackout
+- retreat-and-retry: a blown commit backs off 2.5m and re-attempts
+  instead of clipping and flailing (planner.retreat.enabled to A/B)
+- absolute altitude hold (already in 3g; two-gate mock test now passes)
+
+1. `git pull` (HEAD must include "age-aware" / "Retreat-and-retry").
+   SIM LOCK. R2-TRAINING.
+2. 3 flights, slow patch set (same as 3e/3f/3g).
+3. Watch: does it RE-ATTEMPT after a miss (retreat = flying backward
+   briefly)? Count attempts per flight. Any pass = the milestone.
+4. Optional flight 4: default speeds, no patches.
+5. Collect `--label phase3h-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3g — slow set with ABSOLUTE altitude hold
 
 phase3f verdict integrated: no constant lateral bias anymore (cross-track
 did its job) and close-range PnP vertical is actually stable (p90 2cm

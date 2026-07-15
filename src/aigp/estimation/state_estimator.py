@@ -86,6 +86,14 @@ class StateEstimator:
         self.lock_tol_min = float(params.get("estimation.gate_lock_tol_min_m",
                                              default=0.6))
         self.relock_s = float(params.get("estimation.gate_relock_s", default=1.2))
+        # Uncertainty-aware acceptance: the dead-reckoned prediction drifts
+        # with time since the last accepted fix, and a fixed tolerance then
+        # rejects TRUE fixes as "another gate" — the crossing-miss map shows
+        # every attempt's state 0.75-1.26s stale at closest approach (a
+        # self-inflicted vision blackout in the final meter). Tolerance
+        # grows with age at the expected drift rate.
+        self.lock_tol_age = float(params.get("estimation.gate_lock_tol_age_mps",
+                                             default=1.0))
         self.max_age_s = float(params.get("estimation.gate_rel_max_age_s"))
         self._cam_fov_deg = float(params.get("perception.camera.fov_deg",
                                              default=90.0))
@@ -276,8 +284,9 @@ class StateEstimator:
         age = (self._now_ns - self._gate_rel_ts_ns) / 1e9
         t_pred = cam_to_body(self._gate_rel.t)
         err = float(np.linalg.norm(t_body - t_pred))
-        tol = max(self.lock_tol_min,
-                  self.lock_tol_frac * float(np.linalg.norm(t_pred)))
+        tol = (max(self.lock_tol_min,
+                   self.lock_tol_frac * float(np.linalg.norm(t_pred)))
+               + self.lock_tol_age * max(0.0, age))
         if err <= tol:
             return True                       # consistent with the lock
         if age > self.relock_s:
