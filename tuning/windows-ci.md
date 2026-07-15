@@ -1230,3 +1230,31 @@ Summary:
 - `test_hover_flight_clean`: `overrun_frac` was `0.7431438127090301`, expected `< 0.5`.
 - `test_single_gate_pass`: heartbeat timeout on `udpin:127.0.0.1:24550`.
 - `test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+
+## 2026-07-16 01:33:32 +03:00 - commit `f5e88659a26056a7f692412004e30fac498dc276`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- Pre-run guard was clear: no `FlightSim`/`DCGame`, no `C:\Temp\eni_dcim_sim.lock`.
+- The bare `python` launcher still failed before pytest with the Windows logon-session error, so the bundled Codex Python runtime was used for the actual suite verdict.
+- Captured full elevated output in `tuning/pytest-windows-f5e8865-basetemp-full.txt`.
+- `69 passed, 3 failed, 1 xfailed, 2 warnings in 49.60s`.
+- Expected xfail observed: `test_first_gate_pass_with_second_gate_visible` remains xfailed and is not counted as a CI failure.
+- Before timer fix: hover `overrun_frac` was `0.7431438127090301` on commit `1998e5cc047a25bf1cdf64976ffb9d13b4daf4e2`; CI also had 2 heartbeat timeouts.
+- After timer fix on this Windows machine: CI hover `overrun_frac` was `0.7431254191817572`; the standalone matching hover probe recorded `0.7468099395567495`.
+- After timer fix heartbeat timeout count in CI: 2 (`test_single_gate_pass`, `test_campaign_loop_against_mock`).
+- `test_hover_flight_clean`: `overrun_frac` was `0.7431254191817572`, expected `< 0.5`.
+- `test_single_gate_pass`: heartbeat timeout on `udpin:127.0.0.1:24550`.
+- `test_campaign_loop_against_mock`: heartbeat timeout on `udpin:127.0.0.1:24550`.

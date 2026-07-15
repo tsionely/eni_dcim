@@ -1,0 +1,12 @@
+{
+  "abort_reason": "max duration",
+  "aborted": true,
+  "commit": "f5e88659a26056a7f692412004e30fac498dc276",
+  "env_hits": 0,
+  "flight_id": "20260715T212556-1975b97e",
+  "gate_clips": 0,
+  "gates_passed": 0,
+  "log_dir": "C:\\Users\\tsion\\Projects\\eni_dcim_qa\\tuning\\runtime-logs\\2026-07-15-rebaseline-v3-f5e8865\\hover-overrun\\20260715T212556-1975b97e",
+  "overrun_frac": 0.7468099395567495,
+  "ticks": 1489
+}
