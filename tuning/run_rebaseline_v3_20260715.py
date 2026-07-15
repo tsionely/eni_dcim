@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import ctypes
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -24,7 +25,7 @@ from aigp.learning.optimizers import CEM
 from aigp.learning.results_db import ResultsDB
 from simtools.mock_sim import Gate, MockSim
 
-RUN_ID = "2026-07-15-rebaseline-v3-f5e8865"
+RUN_ID = os.environ.get("ENI_REBASELINE_RUN_ID", "2026-07-15-rebaseline-v3-f5e8865")
 OUT_DIR = ROOT / "tuning" / "campaigns" / RUN_ID
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / RUN_ID
 LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
