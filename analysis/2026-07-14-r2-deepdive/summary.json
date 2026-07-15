@@ -1,0 +1,225 @@
+{
+  "cyan": [
+    {
+      "name": "r2_f2",
+      "frames": 111,
+      "cyan_present_pct": 100.0,
+      "h_mean": 98.49378234403983,
+      "h_std": 1.1517348224183475,
+      "s_mean": 196.81321878680595,
+      "v_mean": 138.71128036564642,
+      "gate_frames": 93,
+      "line_through_next_gate_pct": 100.0,
+      "band_sweep": {
+        "best": {
+          "h_lo": 82,
+          "h_hi": 96,
+          "s_min": 60,
+          "v_min": 60,
+          "mean_frac": 0.007512082394894894,
+          "score": 0.6996690837076909
+        },
+        "top5": [
+          {
+            "h_lo": 82,
+            "h_hi": 96,
+            "s_min": 60,
+            "v_min": 60,
+            "mean_frac": 0.007512082394894894,
+            "score": 0.6996690837076909
+          },
+          {
+            "h_lo": 84,
+            "h_hi": 96,
+            "s_min": 60,
+            "v_min": 60,
+            "mean_frac": 0.007486744557057057,
+            "score": 0.6982017564747756
+          },
+          {
+            "h_lo": 86,
+            "h_hi": 96,
+            "s_min": 60,
+            "v_min": 60,
+            "mean_frac": 0.007441112987987989,
+            "score": 0.6955466399835732
+          },
+          {
+            "h_lo": 88,
+            "h_hi": 96,
+            "s_min": 60,
+            "v_min": 60,
+            "mean_frac": 0.007372372372372371,
+            "score": 0.6915160038969861
+          },
+          {
+            "h_lo": 82,
+            "h_hi": 96,
+            "s_min": 80,
+            "v_min": 60,
+            "mean_frac": 0.007287091779279277,
+            "score": 0.6864629803447169
+          }
+        ]
+      }
+    },
+    {
+      "name": "r2_f3",
+      "frames": 416,
+      "cyan_present_pct": 100.0,
+      "h_mean": 98.63125235181934,
+      "h_std": 0.8108495770098237,
+      "s_mean": 195.18633151963576,
+      "v_mean": 134.09751914760605,
+      "gate_frames": 407,
+      "line_through_next_gate_pct": 100.0,
+      "band_sweep": {
+        "best": {
+          "h_lo": 90,
+          "h_hi": 98,
+          "s_min": 120,
+          "v_min": 120,
+          "mean_frac": 0.017157118055555552,
+          "score": 0.941646919463885
+        },
+        "top5": [
+          {
+            "h_lo": 90,
+            "h_hi": 98,
+            "s_min": 120,
+            "v_min": 120,
+            "mean_frac": 0.017157118055555552,
+            "score": 0.941646919463885
+          },
+          {
+            "h_lo": 88,
+            "h_hi": 98,
+            "s_min": 120,
+            "v_min": 120,
+            "mean_frac": 0.017319661458333333,
+            "score": 0.9375518603012967
+          },
+          {
+            "h_lo": 86,
+            "h_hi": 98,
+            "s_min": 120,
+            "v_min": 120,
+            "mean_frac": 0.017331705729166667,
+            "score": 0.9372499524115554
+          },
+          {
+            "h_lo": 84,
+            "h_hi": 98,
+            "s_min": 120,
+            "v_min": 120,
+            "mean_frac": 0.017332031249999998,
+            "score": 0.9372417956509758
+          },
+          {
+            "h_lo": 82,
+            "h_hi": 98,
+            "s_min": 120,
+            "v_min": 120,
+            "mean_frac": 0.01733235677083333,
+            "score": 0.9372336390435907
+          }
+        ]
+      }
+    }
+  ],
+  "recommended_cyan_hsv": {
+    "h_lo": 90,
+    "h_hi": 98,
+    "s_min": 120,
+    "v_min": 120,
+    "mean_frac": 0.017157118055555552,
+    "score": 0.941646919463885
+  },
+  "fp_audit": [
+    {
+      "slice": "r2_f2",
+      "frames": 111,
+      "detections": 93,
+      "detection_pct": 83.78378378378379,
+      "pnp_ok": 93,
+      "pnp_pct": 83.78378378378379,
+      "frames_with_orb_like": 90,
+      "frames_with_sign_like": 111,
+      "frames_multi_quad": 0,
+      "detector_locked_on_orb": 0,
+      "orb_lock_pct_of_dets": 0.0,
+      "dist_mean_m": 6.856309889638646,
+      "dist_std_m": 1.6084397247157374,
+      "examples_saved": 14
+    },
+    {
+      "slice": "r2_f3",
+      "frames": 416,
+      "detections": 407,
+      "detection_pct": 97.83653846153847,
+      "pnp_ok": 407,
+      "pnp_pct": 97.83653846153847,
+      "frames_with_orb_like": 349,
+      "frames_with_sign_like": 416,
+      "frames_multi_quad": 0,
+      "detector_locked_on_orb": 0,
+      "orb_lock_pct_of_dets": 0.0,
+      "dist_mean_m": 6.734395087696152,
+      "dist_std_m": 1.280618950310937,
+      "examples_saved": 14
+    }
+  ],
+  "sensor_audit": [
+    {
+      "label": "f1_novision",
+      "path": "20260714T201758-58cd98ad-flight.jsonl",
+      "n_imu": 0,
+      "n_detections": 0,
+      "n_states": 6001,
+      "status": "insufficient_detections",
+      "note": "Flight has too few detections for pixel\u2194gyro correlation (likely no vision)."
+    },
+    {
+      "label": "f2",
+      "path": "20260714T202447-58cd98ad-flight.jsonl",
+      "n_imu": 1257,
+      "n_detections": 235,
+      "n_states": 1245,
+      "status": "ok",
+      "n_pairs": 225,
+      "corr_dpitch_dv": -0.5955536792404942,
+      "corr_droll_du": 0.21558904847905092,
+      "corr_dyaw_du": 0.34895916986723,
+      "slope_dpitch_dv_px_per_rad": -274.3177025507418,
+      "slope_droll_du_px_per_rad": 234.95343081172152,
+      "expected_fx_px_per_rad": 320.0,
+      "gyro_scale_pitch_est": 0.857242820471068,
+      "gyro_scale_roll_est": 0.7342294712866297,
+      "gyro_sign_pitch_inferred": -1,
+      "gyro_sign_roll_inferred": -1,
+      "note_docs07": "docs/07: truthful gyro pitch\u2192\u0394v should be ~+fx; measured negative => gyro_sign=-1. Roll: truthful corr(\u0394roll, frame-rot) ~-1; we use \u0394u as proxy.",
+      "plot": "plots/f2_pixel_vs_gyro.png"
+    },
+    {
+      "label": "f3",
+      "path": "20260714T202743-58cd98ad-flight.jsonl",
+      "n_imu": 2670,
+      "n_detections": 1649,
+      "n_states": 1117,
+      "status": "ok",
+      "n_pairs": 668,
+      "corr_dpitch_dv": -0.37386181657160805,
+      "corr_droll_du": 0.1621544132662987,
+      "corr_dyaw_du": 0.08841039851325695,
+      "slope_dpitch_dv_px_per_rad": -324.3690848149536,
+      "slope_droll_du_px_per_rad": 239.0251232680407,
+      "expected_fx_px_per_rad": 320.0,
+      "gyro_scale_pitch_est": 1.0136533900467302,
+      "gyro_scale_roll_est": 0.7469535102126271,
+      "gyro_sign_pitch_inferred": -1,
+      "gyro_sign_roll_inferred": -1,
+      "note_docs07": "docs/07: truthful gyro pitch\u2192\u0394v should be ~+fx; measured negative => gyro_sign=-1. Roll: truthful corr(\u0394roll, frame-rot) ~-1; we use \u0394u as proxy.",
+      "plot": "plots/f3_pixel_vs_gyro.png"
+    }
+  ]
+}
