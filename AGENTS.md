@@ -262,7 +262,27 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3e — SLOW approach (phantom starves at low speed)
+## CURRENT TASK: Phase 3f — slow approach WITH cross-track nulling
+
+phase3e flight 3 (slow) got a near-centered dead-reckoned state at 1.45m
+(u -0.04, v -0.03) and lost it in the last meter — precisely the failure
+the new cross-track term fixes (center_gain was defined but wired to
+NOTHING until commit 82ea6c8; approach/commit now null lateral meters
+directly). Your mount A/B verdict (34 over-corrects) is adopted: default
+stays 29. Fly the same slow set on the NEW code:
+
+1. `git pull` (verify HEAD >= 82ea6c8). SIM LOCK. R2-TRAINING.
+2. 3 flights, same slow patch set as phase3e:
+   `python scripts/fly_once.py --max-duration 150
+    --patch planner.approach.speed_far_mps=1.2
+    --patch planner.approach.speed_near_mps=0.8
+    --patch planner.commit.speed_mps=1.2
+    --patch planner.commit.duration_s=2.5`
+3. Optional flight 4 if 1-3 miss laterally by a constant margin:
+   add `--patch planner.approach.center_gain=1.0` (stronger nulling).
+4. Collect `--label phase3f-r2training-slow`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3e — SLOW approach (phantom starves at low speed)
 
 phase3d confirmed the altitude fix (failure signature is no longer
 uniformly high/top) and exposed the LAST blocker: a persistent LATERAL
