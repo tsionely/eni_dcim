@@ -9,7 +9,22 @@ from __future__ import annotations
 import numpy as np
 
 from aigp.core.messages import RelPose
+from aigp.estimation.attitude_filter import quat_rotate
 from aigp.perception.camera import cam_to_body
+
+
+def altitude_hold_velocity(rel: RelPose, q_att: np.ndarray, aim_up_m: float,
+                           gain: float, cap_mps: float = 0.8) -> float:
+    """Vertical velocity command from the ABSOLUTE gate-relative height.
+
+    vz estimation drifts (no altimeter; at slow approach speeds the
+    vision-velocity SNR collapses — phase3e/3f flights sagged into the
+    ground). The gate itself is a drift-free altitude reference: rotate
+    the gate vector to world and hold "gate aim_up_m below me". Returns a
+    body-z (NED, down-positive) velocity addition.
+    """
+    world_dz = float(quat_rotate(q_att, cam_to_body(rel.t))[2])   # +: gate below me
+    return float(np.clip(gain * (world_dz - aim_up_m), -cap_mps, cap_mps))
 
 
 def crosstrack_velocity(rel: RelPose, aim_up_m: float, gain: float,

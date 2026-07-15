@@ -36,6 +36,7 @@ class RacePlanner:
         self.near_distance = float(p.get("planner.approach.near_distance_m"))
         self.yaw_center_gain = float(p.get("planner.approach.yaw_center_gain"))
         self.center_gain = float(p.get("planner.approach.center_gain"))
+        self.alt_gain = float(p.get("planner.approach.alt_gain", default=0.8))
         self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
@@ -104,9 +105,10 @@ class RacePlanner:
                 if gate is not None and gate.t[2] > 0.3:
                     au = self._aim_up(np.linalg.norm(gate.t))
                     direction, dist = ap.gate_direction_body(gate, au)
-                    self._commit_v_body = (direction * self.commit_speed
-                                           + ap.crosstrack_velocity(gate, au,
-                                                                    self.center_gain))
+                    extra = ap.crosstrack_velocity(gate, au, self.center_gain)
+                    extra[2] += ap.altitude_hold_velocity(
+                        gate, state.q_att, au, self.alt_gain)
+                    self._commit_v_body = direction * self.commit_speed + extra
                 return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
             self._commit_until_ns = None
             self._commit_v_body = None
@@ -125,6 +127,8 @@ class RacePlanner:
         au = self._aim_up(dist)
         direction, dist = ap.gate_direction_body(gate, au)
         crosstrack = ap.crosstrack_velocity(gate, au, self.center_gain)
+        crosstrack[2] += ap.altitude_hold_velocity(
+            gate, state.q_att, au, self.alt_gain)
         if abs(direction[1]) > 0.05:
             self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:

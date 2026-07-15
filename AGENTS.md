@@ -280,7 +280,30 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3f — slow approach WITH cross-track nulling
+## CURRENT TASK: Phase 3g — slow set with ABSOLUTE altitude hold
+
+phase3f verdict integrated: no constant lateral bias anymore (cross-track
+did its job) and close-range PnP vertical is actually stable (p90 2cm
+under 2m — the flips your closest-detection analysis saw were mid/far
+outliers the lock already rejects; note your "direct detection" samples
+include lock-REJECTED fixes, the state is what steers). The real slow-
+flight killer: at 1.2 m/s the vision-velocity SNR collapses and vz
+drifts -> ground. New in this commit: the vertical command now holds the
+ABSOLUTE gate-relative height (gate vector rotated to world; drift-free
+reference) in approach AND commit — no more integrating a drifting vz.
+
+1. `git pull` (HEAD must include "altitude hold"). SIM LOCK. R2-TRAINING.
+2. Same slow patch set, 3 flights:
+   `python scripts/fly_once.py --max-duration 150
+    --patch planner.approach.speed_far_mps=1.2
+    --patch planner.approach.speed_near_mps=0.8
+    --patch planner.commit.speed_mps=1.2
+    --patch planner.commit.duration_s=2.5`
+3. Optional flight 4: default speeds (no patches at all) — if altitude
+   hold works, the normal-speed approach may now be the better one.
+4. Collect `--label phase3g-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3f — slow approach WITH cross-track nulling
 
 phase3e flight 3 (slow) got a near-centered dead-reckoned state at 1.45m
 (u -0.04, v -0.03) and lost it in the last meter — precisely the failure
