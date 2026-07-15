@@ -1,0 +1,8 @@
+{
+  "control.att_rate.vz_i": 0.539332995432149,
+  "control.att_rate.vz_p": 0.8955208781183716,
+  "estimation.vision_vel_blend": 0.23775495051989237,
+  "planner.approach.aim_up_m": 0.4370225686600168,
+  "planner.commit.distance_m": 2.985069787076817,
+  "planner.commit.duration_s": 1.6935985469361712
+}

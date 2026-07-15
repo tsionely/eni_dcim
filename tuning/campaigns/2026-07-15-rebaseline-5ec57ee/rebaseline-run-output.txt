@@ -1,0 +1,340 @@
+[rebaseline] commit=5ec57ee2fc476a496639ea3b882e813c96a68919
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00170621 -0.00131327  0.013     ]; level ref roll=-0.000 pitch=-0.002
+live calibration (164 samples): bias=[-0.00035026  0.0010452   0.013     ] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 1/40 score=-220.9 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.41326430282344995, 'planner.commit.distance_m': 2.225602829407238, 'planner.commit.duration_s': 1.320349296864178, 'estimation.vision_vel_blend': 0.21292384662139355, 'control.att_rate.vz_p': 0.5343079759859988, 'control.att_rate.vz_i': 0.46358603856947606}
+gyro bias calibrated over 64 samples: [-0.00053588  0.00052786  0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (180 samples): bias=[-0.00038049 -0.0001131   0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 2/40 score=-221.6 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.3506331213006839, 'planner.commit.distance_m': 2.829471585561312, 'planner.commit.duration_s': 1.4569217570555082, 'estimation.vision_vel_blend': 0.11134505567892984, 'control.att_rate.vz_p': 0.8033383936807674, 'control.att_rate.vz_i': 0.5619137325762338}
+gyro bias calibrated over 64 samples: [0.00089987 0.00077511 0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (178 samples): bias=[-0.00082798 -0.00082772  0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 3/40 score=-244.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.6, 'planner.commit.distance_m': 3.077049631469228, 'planner.commit.duration_s': 1.2087300138396897, 'estimation.vision_vel_blend': 0.16087188940212452, 'control.att_rate.vz_p': 1.0795860174351761, 'control.att_rate.vz_i': 0.4429905296926802}
+gyro bias calibrated over 64 samples: [ 0.0014917  -0.00198612  0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (175 samples): bias=[-0.00077276 -0.00196924  0.013     ] level roll=-0.000 pitch=+0.001
+[campaign rebaseline-cem-20260715T035758] flight 4/40 score=-200.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.33232817883810345, 'planner.commit.distance_m': 3.5, 'planner.commit.duration_s': 1.7551562199902686, 'estimation.vision_vel_blend': 0.2584564718408688, 'control.att_rate.vz_p': 1.1189609286055817, 'control.att_rate.vz_i': 0.5034783512702066}
+gyro bias calibrated over 62 samples: [ 0.00087289 -0.00099152  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (169 samples): bias=[-0.00107999  0.00129836  0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 5/40 score=-224.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.29686025702514474, 'planner.commit.distance_m': 2.468789010854868, 'planner.commit.duration_s': 1.3297025653105758, 'estimation.vision_vel_blend': 0.26569402957564453, 'control.att_rate.vz_p': 0.9215116799013063, 'control.att_rate.vz_i': 0.3344187323688886}
+gyro bias calibrated over 61 samples: [-0.00027332  0.00016891  0.013     ]; level ref roll=+0.002 pitch=-0.000
+live calibration (173 samples): bias=[ 4.38810524e-05 -8.22911177e-05  1.30000003e-02] level roll=+0.001 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 6/40 score=-222.1 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.3908622013064672, 'planner.commit.distance_m': 2.2268954263268417, 'planner.commit.duration_s': 1.390096956883112, 'estimation.vision_vel_blend': 0.18132611283200814, 'control.att_rate.vz_p': 0.5892023532238029, 'control.att_rate.vz_i': 0.3955710571689091}
+gyro bias calibrated over 64 samples: [0.00041153 0.0010702  0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (178 samples): bias=[0.00056641 0.00120875 0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 7/40 score=-221.0 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.5403179359238681, 'planner.commit.distance_m': 2.3989715862104224, 'planner.commit.duration_s': 1.7917833017895406, 'estimation.vision_vel_blend': 0.21690978544981704, 'control.att_rate.vz_p': 1.1431964247618616, 'control.att_rate.vz_i': 0.5030498517246765}
+gyro bias calibrated over 65 samples: [-0.00170727 -0.00154022  0.013     ]; level ref roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 8/40 score=-200.1 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.42607207971239025, 'planner.commit.distance_m': 2.398584178294976, 'planner.commit.duration_s': 1.557657246379462, 'estimation.vision_vel_blend': 0.20298039107206287, 'control.att_rate.vz_p': 0.7100520867588442, 'control.att_rate.vz_i': 0.505997599004166}
+gyro bias calibrated over 64 samples: [-0.00188917 -0.00071677  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (174 samples): bias=[ 0.00075191 -0.00034247  0.013     ] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 9/40 score=-243.1 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.35377958488355143, 'planner.commit.distance_m': 3.206210227425864, 'planner.commit.duration_s': 1.56847482069372, 'estimation.vision_vel_blend': 0.22136862329079623, 'control.att_rate.vz_p': 0.8199704622135922, 'control.att_rate.vz_i': 0.5215915304955587}
+gyro bias calibrated over 64 samples: [0.00168999 0.00071094 0.013     ]; level ref roll=+0.000 pitch=-0.000
+live calibration (178 samples): bias=[ 7.75740546e-04 -4.26569852e-05  1.30000003e-02] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 10/40 score=-222.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.3250435596640131, 'planner.commit.distance_m': 3.437216578479651, 'planner.commit.duration_s': 1.6679725743767642, 'estimation.vision_vel_blend': 0.23131458574690056, 'control.att_rate.vz_p': 1.0440020740604552, 'control.att_rate.vz_i': 0.5293514979164977}
+gyro bias calibrated over 64 samples: [ 0.00043496 -0.0010986   0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (175 samples): bias=[-0.00096909  0.00011715  0.013     ] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 11/40 score=-201.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4250271826317376, 'planner.commit.distance_m': 2.724762273392459, 'planner.commit.duration_s': 1.6294215014788123, 'estimation.vision_vel_blend': 0.26970543345572384, 'control.att_rate.vz_p': 0.5758601344340335, 'control.att_rate.vz_i': 0.532751849815902}
+gyro bias calibrated over 64 samples: [-0.00056406  0.0001513   0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (175 samples): bias=[0.00049915 0.00014661 0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 12/40 score=-221.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.43422781771979263, 'planner.commit.distance_m': 3.4431801195007945, 'planner.commit.duration_s': 1.7627279086759664, 'estimation.vision_vel_blend': 0.19703747234921035, 'control.att_rate.vz_p': 1.0879455319342775, 'control.att_rate.vz_i': 0.5247764058404988}
+gyro bias calibrated over 64 samples: [-0.00103871 -0.00109261  0.013     ]; level ref roll=-0.001 pitch=-0.000
+live calibration (180 samples): bias=[ 1.87434813e-05 -4.04003386e-04  1.30000003e-02] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 13/40 score=-222.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.39815482799526664, 'planner.commit.distance_m': 2.303866380859938, 'planner.commit.duration_s': 1.7649851533911043, 'estimation.vision_vel_blend': 0.2712369700121698, 'control.att_rate.vz_p': 0.6975910224715606, 'control.att_rate.vz_i': 0.497872882687587}
+gyro bias calibrated over 65 samples: [ 0.00027408 -0.00177131  0.013     ]; level ref roll=+0.001 pitch=-0.000
+live calibration (179 samples): bias=[0.00133907 0.00127721 0.013     ] level roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 14/40 score=-241.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4388151064233557, 'planner.commit.distance_m': 2.208627168778513, 'planner.commit.duration_s': 1.6046943319790423, 'estimation.vision_vel_blend': 0.23386811543727326, 'control.att_rate.vz_p': 0.6686625821772753, 'control.att_rate.vz_i': 0.47290157609520417}
+gyro bias calibrated over 64 samples: [0.00261439 0.00019255 0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (175 samples): bias=[9.18517203e-05 5.75977901e-04 1.30000003e-02] level roll=-0.000 pitch=+0.001
+[campaign rebaseline-cem-20260715T035758] flight 15/40 score=-224.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.2614113938686835, 'planner.commit.distance_m': 3.2743287611436775, 'planner.commit.duration_s': 1.4945466182710119, 'estimation.vision_vel_blend': 0.16107925667847273, 'control.att_rate.vz_p': 0.7413499148002385, 'control.att_rate.vz_i': 0.5787297270625829}
+gyro bias calibrated over 64 samples: [-0.00181174 -0.00177935  0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (180 samples): bias=[ 0.0015195  -0.00058511  0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 16/40 score=-223.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4808823580098899, 'planner.commit.distance_m': 3.4180995444904827, 'planner.commit.duration_s': 1.6386301267149848, 'estimation.vision_vel_blend': 0.2034378264706345, 'control.att_rate.vz_p': 0.7881849561448544, 'control.att_rate.vz_i': 0.4437235661635415}
+gyro bias calibrated over 64 samples: [-9.71745648e-05 -4.81623351e-04  1.30000003e-02]; level ref roll=+0.000 pitch=+0.000
+live calibration (171 samples): bias=[0.00217812 0.00010001 0.013     ] level roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 17/40 score=-201.6 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.43459365450790755, 'planner.commit.distance_m': 3.46271290607977, 'planner.commit.duration_s': 1.6450111287930416, 'estimation.vision_vel_blend': 0.236387766266753, 'control.att_rate.vz_p': 0.5, 'control.att_rate.vz_i': 0.5335059634520588}
+gyro bias calibrated over 64 samples: [-0.00020825  0.00020684  0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (177 samples): bias=[0.00036443 0.0003554  0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 18/40 score=-220.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.38413917311920387, 'planner.commit.distance_m': 3.477750267237065, 'planner.commit.duration_s': 1.5853903537931315, 'estimation.vision_vel_blend': 0.24257703894708094, 'control.att_rate.vz_p': 0.5, 'control.att_rate.vz_i': 0.527768709432513}
+gyro bias calibrated over 64 samples: [ 0.00088765 -0.00048313  0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (172 samples): bias=[ 0.00066293 -0.00010382  0.013     ] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 19/40 score=-221.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4540090143095606, 'planner.commit.distance_m': 3.2364777083562095, 'planner.commit.duration_s': 1.769661913056191, 'estimation.vision_vel_blend': 0.26747941321384455, 'control.att_rate.vz_p': 0.6481751252993488, 'control.att_rate.vz_i': 0.5495016578166763}
+gyro bias calibrated over 64 samples: [ 0.00068216 -0.00150647  0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (179 samples): bias=[ 0.00136008 -0.00144188  0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 20/40 score=-200.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4431764255539766, 'planner.commit.distance_m': 2.5547893582289265, 'planner.commit.duration_s': 1.760188899276492, 'estimation.vision_vel_blend': 0.24371194521670858, 'control.att_rate.vz_p': 0.9808217531054889, 'control.att_rate.vz_i': 0.54667535095294}
+gyro bias calibrated over 64 samples: [-0.00147948  0.00025111  0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (172 samples): bias=[ 0.00043103 -0.0009674   0.013     ] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 21/40 score=-204.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.42284610829440306, 'planner.commit.distance_m': 3.162351896301533, 'planner.commit.duration_s': 1.6857766410090484, 'estimation.vision_vel_blend': 0.23361164449823982, 'control.att_rate.vz_p': 0.6312470037618919, 'control.att_rate.vz_i': 0.5388345644935896}
+gyro bias calibrated over 64 samples: [0.0005124  0.00324373 0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (171 samples): bias=[-0.00010041  0.00137828  0.013     ] level roll=-0.001 pitch=-0.001
+[campaign rebaseline-cem-20260715T035758] flight 22/40 score=-220.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.40411341160890807, 'planner.commit.distance_m': 3.2171318967128735, 'planner.commit.duration_s': 1.6799350057643212, 'estimation.vision_vel_blend': 0.26834812111684503, 'control.att_rate.vz_p': 0.8847587166156645, 'control.att_rate.vz_i': 0.45307631690558464}
+gyro bias calibrated over 64 samples: [-0.00142472  0.00063919  0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (180 samples): bias=[ 9.66372245e-05 -4.19183753e-04  1.30000003e-02] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 23/40 score=-221.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4432146598834556, 'planner.commit.distance_m': 3.237559861700421, 'planner.commit.duration_s': 1.6354377130399185, 'estimation.vision_vel_blend': 0.2965743855627991, 'control.att_rate.vz_p': 0.995519775621908, 'control.att_rate.vz_i': 0.5465386278010443}
+gyro bias calibrated over 64 samples: [0.00180618 0.0001613  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[-0.00014383 -0.00042641  0.013     ] level roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 24/40 score=-221.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4147097691464655, 'planner.commit.distance_m': 3.2543239977492857, 'planner.commit.duration_s': 1.7030021370378774, 'estimation.vision_vel_blend': 0.22959371880042098, 'control.att_rate.vz_p': 0.688398762057206, 'control.att_rate.vz_i': 0.5381469301412273}
+gyro bias calibrated over 64 samples: [-0.0009307   0.00172237  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (170 samples): bias=[-0.00069219 -0.00063402  0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 25/40 score=-222.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.39729082617155076, 'planner.commit.distance_m': 3.1029382555433127, 'planner.commit.duration_s': 1.7640611913652826, 'estimation.vision_vel_blend': 0.24305520144266446, 'control.att_rate.vz_p': 0.7176533123344047, 'control.att_rate.vz_i': 0.49771077445783524}
+gyro bias calibrated over 64 samples: [ 0.00216038 -0.00234074  0.013     ]; level ref roll=+0.002 pitch=+0.000
+live calibration (175 samples): bias=[-1.24783954e-05  2.86950637e-04  1.30000003e-02] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 26/40 score=-220.9 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4062929461133761, 'planner.commit.distance_m': 3.5, 'planner.commit.duration_s': 1.7013521498349606, 'estimation.vision_vel_blend': 0.2597210163554493, 'control.att_rate.vz_p': 1.1433838616738918, 'control.att_rate.vz_i': 0.5238570353066458}
+gyro bias calibrated over 64 samples: [ 0.00048176 -0.00066865  0.013     ]; level ref roll=+0.001 pitch=-0.001
+live calibration (163 samples): bias=[-0.00045293 -0.00014942  0.013     ] level roll=+0.000 pitch=+0.001
+[campaign rebaseline-cem-20260715T035758] flight 27/40 score=-202.3 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.430579020308548, 'planner.commit.distance_m': 3.179845029990232, 'planner.commit.duration_s': 1.8088471771234715, 'estimation.vision_vel_blend': 0.25142295793061065, 'control.att_rate.vz_p': 0.8974307403176544, 'control.att_rate.vz_i': 0.5409057521490019}
+gyro bias calibrated over 64 samples: [-0.00036738  0.00014487  0.013     ]; level ref roll=-0.001 pitch=-0.000
+live calibration (180 samples): bias=[ 0.00042198 -0.00042906  0.013     ] level roll=-0.000 pitch=+0.001
+[campaign rebaseline-cem-20260715T035758] flight 28/40 score=-221.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.3957067156911807, 'planner.commit.distance_m': 2.5886759304556217, 'planner.commit.duration_s': 1.6386602462645528, 'estimation.vision_vel_blend': 0.24069451940430198, 'control.att_rate.vz_p': 1.1352464685495134, 'control.att_rate.vz_i': 0.5368090198940146}
+gyro bias calibrated over 65 samples: [ 0.00050497 -0.00082912  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (171 samples): bias=[-4.32496351e-05 -9.25250319e-04  1.30000003e-02] level roll=+0.001 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 29/40 score=-201.9 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.44545814640089354, 'planner.commit.distance_m': 2.9845117187676427, 'planner.commit.duration_s': 1.6810993627430912, 'estimation.vision_vel_blend': 0.2341270130819553, 'control.att_rate.vz_p': 0.8667247164412596, 'control.att_rate.vz_i': 0.548945490624813}
+gyro bias calibrated over 64 samples: [-0.00098197  0.00094858  0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (180 samples): bias=[-0.00065221  0.00029711  0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 30/40 score=-242.6 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.41093780811724706, 'planner.commit.distance_m': 2.468365362504163, 'planner.commit.duration_s': 1.7770008630313643, 'estimation.vision_vel_blend': 0.22955558510315519, 'control.att_rate.vz_p': 0.6546939091854957, 'control.att_rate.vz_i': 0.5596349195646836}
+gyro bias calibrated over 64 samples: [-0.00091959 -0.00049761  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (173 samples): bias=[0.00118841 0.00013424 0.013     ] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 31/40 score=-201.4 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.44547691794275907, 'planner.commit.distance_m': 3.048870359019364, 'planner.commit.duration_s': 1.7701106837622433, 'estimation.vision_vel_blend': 0.23743689080895325, 'control.att_rate.vz_p': 0.950370819387788, 'control.att_rate.vz_i': 0.5606823097254174}
+gyro bias calibrated over 64 samples: [-0.00081738  0.0012015   0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (172 samples): bias=[0.00035803 0.00066484 0.013     ] level roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 32/40 score=-224.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.447447081415269, 'planner.commit.distance_m': 2.579215443077609, 'planner.commit.duration_s': 1.7263028103511706, 'estimation.vision_vel_blend': 0.24794484041028345, 'control.att_rate.vz_p': 0.6122332593001253, 'control.att_rate.vz_i': 0.5607765881791414}
+gyro bias calibrated over 65 samples: [-6.09999270e-05  1.79611260e-03  1.30000003e-02]; level ref roll=+0.000 pitch=+0.001
+live calibration (173 samples): bias=[-0.00047189  0.00072323  0.013     ] level roll=+0.001 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 33/40 score=-201.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.42309388783038415, 'planner.commit.distance_m': 2.8737334029295334, 'planner.commit.duration_s': 1.7241510258180652, 'estimation.vision_vel_blend': 0.22845658368448618, 'control.att_rate.vz_p': 0.8341282285835083, 'control.att_rate.vz_i': 0.48942382203851204}
+gyro bias calibrated over 65 samples: [0.00176406 0.00104275 0.013     ]; level ref roll=+0.000 pitch=-0.000
+live calibration (174 samples): bias=[-0.00036002  0.00011837  0.013     ] level roll=-0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 34/40 score=-121.9 gates=1 aborted=True params={'planner.approach.aim_up_m': 0.4370225686600168, 'planner.commit.distance_m': 2.985069787076817, 'planner.commit.duration_s': 1.6935985469361712, 'estimation.vision_vel_blend': 0.23775495051989237, 'control.att_rate.vz_p': 0.8955208781183716, 'control.att_rate.vz_i': 0.539332995432149}
+gyro bias calibrated over 64 samples: [-0.00172501  0.00034958  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (169 samples): bias=[-8.88339913e-04 -1.54667769e-05  1.30000003e-02] level roll=+0.000 pitch=-0.001
+[campaign rebaseline-cem-20260715T035758] flight 35/40 score=-244.5 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.49041965961012646, 'planner.commit.distance_m': 2.9920935963215647, 'planner.commit.duration_s': 1.723080140641778, 'estimation.vision_vel_blend': 0.24474434770832543, 'control.att_rate.vz_p': 0.8950888671852774, 'control.att_rate.vz_i': 0.5437338103493645}
+gyro bias calibrated over 64 samples: [0.00047668 0.00144915 0.013     ]; level ref roll=-0.001 pitch=-0.001
+live calibration (175 samples): bias=[ 0.00018432 -0.00030086  0.013     ] level roll=+0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 36/40 score=-220.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4453350743735513, 'planner.commit.distance_m': 2.935692181173874, 'planner.commit.duration_s': 1.7210807834934805, 'estimation.vision_vel_blend': 0.2471000772191767, 'control.att_rate.vz_p': 0.9169019609748903, 'control.att_rate.vz_i': 0.55647238214935}
+gyro bias calibrated over 64 samples: [ 0.00117467 -0.00150541  0.013     ]; level ref roll=-0.001 pitch=+0.001
+live calibration (176 samples): bias=[ 3.61534879e-05 -7.58994559e-05  1.30000003e-02] level roll=-0.000 pitch=+0.000
+[campaign rebaseline-cem-20260715T035758] flight 37/40 score=-222.0 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.419444324660862, 'planner.commit.distance_m': 2.8936822286467425, 'planner.commit.duration_s': 1.724243395812777, 'estimation.vision_vel_blend': 0.23204287381117467, 'control.att_rate.vz_p': 0.9076364375614596, 'control.att_rate.vz_i': 0.5437524716500383}
+gyro bias calibrated over 64 samples: [ 0.0004313  -0.00037429  0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (169 samples): bias=[ 1.09375908e-03 -4.76823121e-05  1.30000003e-02] level roll=+0.000 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 38/40 score=-221.7 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.47316923518776705, 'planner.commit.distance_m': 3.0002340418348883, 'planner.commit.duration_s': 1.7554949393219912, 'estimation.vision_vel_blend': 0.20888677291061358, 'control.att_rate.vz_p': 0.8921236316802842, 'control.att_rate.vz_i': 0.5716202466304071}
+gyro bias calibrated over 64 samples: [ 7.62940601e-05 -1.80110245e-04  1.30000003e-02]; level ref roll=+0.000 pitch=-0.000
+live calibration (176 samples): bias=[-0.000132   -0.00078869  0.013     ] level roll=+0.001 pitch=-0.000
+[campaign rebaseline-cem-20260715T035758] flight 39/40 score=-143.4 gates=1 aborted=True params={'planner.approach.aim_up_m': 0.46912477311301226, 'planner.commit.distance_m': 3.090939672768968, 'planner.commit.duration_s': 1.8380052798268336, 'estimation.vision_vel_blend': 0.2286290997545262, 'control.att_rate.vz_p': 0.8947647037341548, 'control.att_rate.vz_i': 0.5654963232283245}
+gyro bias calibrated over 65 samples: [-0.0008866   0.00233474  0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (170 samples): bias=[-1.18471632e-03  1.74618632e-05  1.30000003e-02] level roll=-0.000 pitch=-0.001
+[campaign rebaseline-cem-20260715T035758] flight 40/40 score=-221.8 gates=0 aborted=True params={'planner.approach.aim_up_m': 0.4546414857557934, 'planner.commit.distance_m': 2.980471476605222, 'planner.commit.duration_s': 1.792740364023679, 'estimation.vision_vel_blend': 0.24417057995964536, 'control.att_rate.vz_p': 0.9662394987000373, 'control.att_rate.vz_i': 0.5043844249645058}
+[campaign rebaseline-cem-20260715T035758] best score=-121.9 params={'planner.approach.aim_up_m': 0.4370225686600168, 'planner.commit.distance_m': 2.985069787076817, 'planner.commit.duration_s': 1.6935985469361712, 'estimation.vision_vel_blend': 0.23775495051989237, 'control.att_rate.vz_p': 0.8955208781183716, 'control.att_rate.vz_i': 0.539332995432149}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00170621 -0.00131327  0.013     ]; level ref roll=-0.000 pitch=-0.002
+live calibration (180 samples): bias=[-0.00029073  0.00048351  0.013     ] level roll=+0.000 pitch=-0.000
+[verify default] 1/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00136406 -0.00225268  0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (180 samples): bias=[-0.0009745  -0.00029778  0.013     ] level roll=+0.000 pitch=-0.000
+[verify default] 2/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 9.85758473e-04 -3.69931601e-05  1.30000003e-02]; level ref roll=+0.000 pitch=-0.001
+live calibration (180 samples): bias=[0.0019237 0.0009717 0.013    ] level roll=+0.000 pitch=+0.001
+[verify default] 3/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00138358 -0.00153776  0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (180 samples): bias=[-5.72146517e-06 -1.97961817e-03  1.30000003e-02] level roll=-0.000 pitch=+0.000
+[verify default] 4/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00160435  0.00201264  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (173 samples): bias=[0.00018724 0.0001597  0.013     ] level roll=+0.001 pitch=+0.000
+[verify default] 5/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00087403 -0.00113235  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (176 samples): bias=[-0.00081791  0.0004253   0.013     ] level roll=+0.000 pitch=+0.000
+[verify default] 6/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00167149  0.0004598   0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (180 samples): bias=[0.00037493 0.00013681 0.013     ] level roll=+0.001 pitch=+0.000
+[verify default] 7/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00064046 -0.00021585  0.013     ]; level ref roll=-0.001 pitch=+0.001
+live calibration (180 samples): bias=[-0.00023021 -0.00079487  0.013     ] level roll=+0.000 pitch=-0.000
+[verify default] 8/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 5.05250708e-05 -1.42411965e-03  1.30000003e-02]; level ref roll=+0.000 pitch=-0.001
+live calibration (171 samples): bias=[0.00130209 0.00082228 0.013     ] level roll=+0.000 pitch=-0.001
+[verify default] 9/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00195328  0.00163607  0.013     ]; level ref roll=+0.001 pitch=-0.001
+live calibration (180 samples): bias=[0.00066167 0.00071974 0.013     ] level roll=-0.001 pitch=+0.000
+[verify default] 10/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00265546 -0.00147366  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (176 samples): bias=[0.00024435 0.0020609  0.013     ] level roll=+0.000 pitch=-0.000
+[verify default] 11/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 65 samples: [-0.00071282 -0.00102832  0.013     ]; level ref roll=-0.000 pitch=+0.001
+live calibration (178 samples): bias=[-0.00145284  0.00034645  0.013     ] level roll=-0.001 pitch=+0.000
+[verify default] 12/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [0.00207114 0.00127413 0.013     ]; level ref roll=-0.001 pitch=-0.000
+live calibration (177 samples): bias=[-0.00095007 -0.00085411  0.013     ] level roll=-0.000 pitch=+0.000
+[verify default] 13/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00131977 -0.00087235  0.013     ]; level ref roll=+0.001 pitch=-0.001
+live calibration (172 samples): bias=[ 0.00129224 -0.0001227   0.013     ] level roll=-0.000 pitch=+0.000
+[verify default] 14/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00039554  0.00100735  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (180 samples): bias=[0.00134162 0.00052277 0.013     ] level roll=+0.001 pitch=+0.000
+[verify default] 15/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [0.0014795 0.0004745 0.013    ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[-1.81268625e-04 -3.95616870e-05  1.30000003e-02] level roll=+0.001 pitch=-0.001
+[verify default] 16/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00079525 -0.0005772   0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (180 samples): bias=[ 3.00109162e-06 -8.26672984e-04  1.30000003e-02] level roll=-0.000 pitch=-0.000
+[verify default] 17/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [0.00153138 0.00033397 0.013     ]; level ref roll=-0.001 pitch=-0.001
+live calibration (179 samples): bias=[-0.00017129 -0.00122467  0.013     ] level roll=-0.000 pitch=+0.000
+[verify default] 18/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00091179 -0.00203336  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (180 samples): bias=[0.00074174 0.00010904 0.013     ] level roll=-0.000 pitch=+0.000
+[verify default] 19/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [6.27862291e-05 3.66173045e-03 1.30000003e-02]; level ref roll=+0.001 pitch=+0.000
+live calibration (179 samples): bias=[-0.00051844 -0.00018405  0.013     ] level roll=-0.000 pitch=+0.000
+[verify default] 20/20 gates=0 finished=False aborted=True error=
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00170621 -0.00131327  0.013     ]; level ref roll=-0.000 pitch=-0.002
+live calibration (180 samples): bias=[-0.00035771  0.0003151   0.013     ] level roll=+0.000 pitch=-0.000
+[verify best] 1/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00091354 -0.00348217  0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (180 samples): bias=[-0.00062836 -0.00043939  0.013     ] level roll=+0.000 pitch=-0.000
+[verify best] 2/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 65 samples: [ 0.00255308 -0.00241554  0.013     ]; level ref roll=+0.000 pitch=-0.000
+live calibration (180 samples): bias=[-0.00079895 -0.00266559  0.013     ] level roll=+0.000 pitch=+0.000
+[verify best] 3/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00089534  0.00077266  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (180 samples): bias=[-7.15792023e-05  5.67185208e-04  1.30000003e-02] level roll=+0.000 pitch=-0.000
+[verify best] 4/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00164839  0.00090428  0.013     ]; level ref roll=+0.001 pitch=+0.000
+live calibration (178 samples): bias=[ 0.00010628 -0.00026748  0.013     ] level roll=-0.000 pitch=+0.001
+[verify best] 5/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [0.00011364 0.00010692 0.013     ]; level ref roll=+0.001 pitch=+0.001
+live calibration (180 samples): bias=[0.00073203 0.00030007 0.013     ] level roll=+0.000 pitch=-0.001
+[verify best] 6/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00070512 -0.00149109  0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (178 samples): bias=[ 5.46814209e-04 -8.53462991e-05  1.30000003e-02] level roll=-0.000 pitch=+0.000
+[verify best] 7/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00101347  0.0009874   0.013     ]; level ref roll=+0.001 pitch=-0.000
+live calibration (175 samples): bias=[-0.00043017  0.0009208   0.013     ] level roll=-0.000 pitch=+0.000
+[verify best] 8/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 65 samples: [-0.00116348 -0.00081473  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (178 samples): bias=[0.00041826 0.00055723 0.013     ] level roll=-0.000 pitch=+0.000
+[verify best] 9/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00134611 -0.00319435  0.013     ]; level ref roll=+0.000 pitch=-0.000
+live calibration (177 samples): bias=[ 0.00086645 -0.00136408  0.013     ] level roll=+0.000 pitch=-0.000
+[verify best] 10/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 65 samples: [ 0.00088854 -0.0013397   0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (176 samples): bias=[-9.26890627e-05  1.83062509e-03  1.30000003e-02] level roll=+0.001 pitch=-0.000
+[verify best] 11/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00118745  0.00042379  0.013     ]; level ref roll=-0.001 pitch=-0.000
+live calibration (180 samples): bias=[-0.00074724 -0.00012228  0.013     ] level roll=-0.000 pitch=-0.000
+[verify best] 12/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00143029 -0.00067662  0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (179 samples): bias=[-0.00020706 -0.00057089  0.013     ] level roll=-0.000 pitch=-0.001
+[verify best] 13/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [ 0.00236919 -0.00062843  0.013     ]; level ref roll=+0.001 pitch=-0.000
+live calibration (176 samples): bias=[0.00100722 0.00065285 0.013     ] level roll=+0.000 pitch=+0.000
+[verify best] 14/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00222707  0.00216296  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (180 samples): bias=[ 1.38241379e-03 -9.62539850e-05  1.30000003e-02] level roll=-0.000 pitch=+0.000
+[verify best] 15/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00056539 -0.0010217   0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (180 samples): bias=[ 0.00039721 -0.00163764  0.013     ] level roll=+0.000 pitch=+0.000
+[verify best] 16/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00073981  0.00206776  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (180 samples): bias=[-0.00039043 -0.00082655  0.013     ] level roll=+0.001 pitch=-0.000
+[verify best] 17/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00156008 -0.00088015  0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (180 samples): bias=[ 0.0015852  -0.00051582  0.013     ] level roll=-0.000 pitch=-0.000
+[verify best] 18/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-0.00250859  0.00083861  0.013     ]; level ref roll=-0.001 pitch=-0.001
+live calibration (180 samples): bias=[-0.00017671  0.00044766  0.013     ] level roll=-0.001 pitch=-0.000
+[verify best] 19/20 gates=0 finished=False aborted=True error=
+gyro bias calibrated over 64 samples: [-3.31675254e-05  8.35164266e-04  1.30000003e-02]; level ref roll=-0.000 pitch=-0.001
+live calibration (179 samples): bias=[0.00023566 0.00118632 0.013     ] level roll=+0.000 pitch=+0.000
+[verify best] 20/20 gates=0 finished=False aborted=True error=
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00170621 -0.00131327  0.013     ]; level ref roll=-0.000 pitch=-0.002
+live calibration (180 samples): bias=[-0.00034296  0.00066441  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 1/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [9.42600036e-05 3.21277429e-04 1.30000003e-02]; level ref roll=+0.000 pitch=-0.001
+live calibration (180 samples): bias=[-0.00030464 -0.00017     0.013     ] level roll=+0.000 pitch=+0.000
+[flake single_gate] 2/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00132292 -0.00012945  0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (180 samples): bias=[-0.00097496 -0.00088271  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 3/30 gates=1 finished=True error=
+gyro bias calibrated over 65 samples: [-0.00048329  0.00236979  0.013     ]; level ref roll=-0.000 pitch=+0.001
+live calibration (180 samples): bias=[ 1.76457068e-03 -9.08405228e-05  1.30000003e-02] level roll=+0.000 pitch=+0.000
+[flake single_gate] 4/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00090462 -0.00014849  0.013     ]; level ref roll=-0.001 pitch=-0.000
+live calibration (180 samples): bias=[-9.79120345e-05 -1.29044955e-04  1.30000003e-02] level roll=+0.000 pitch=+0.000
+[flake single_gate] 5/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [1.15708964e-03 9.88199929e-07 1.30000003e-02]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[-0.00051734  0.00055353  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 6/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-1.28543682e-05 -3.97271084e-04  1.30000003e-02]; level ref roll=-0.000 pitch=-0.001
+live calibration (180 samples): bias=[0.00137051 0.00015882 0.013     ] level roll=+0.000 pitch=+0.000
+[flake single_gate] 7/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00092732 -0.002464    0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[ 0.00017819 -0.00164147  0.013     ] level roll=-0.000 pitch=+0.000
+[flake single_gate] 8/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00152296 0.00161372 0.013     ]; level ref roll=+0.001 pitch=-0.001
+live calibration (180 samples): bias=[-0.00222877  0.00119113  0.013     ] level roll=+0.000 pitch=-0.001
+[flake single_gate] 9/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-1.01046000e-03 -4.40840369e-05  1.30000003e-02]; level ref roll=+0.001 pitch=+0.000
+live calibration (180 samples): bias=[0.00069378 0.001069   0.013     ] level roll=+0.000 pitch=-0.001
+[flake single_gate] 10/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00290443  0.00103654  0.013     ]; level ref roll=-0.001 pitch=-0.001
+live calibration (180 samples): bias=[ 3.62394021e-04 -9.27785482e-06  1.30000003e-02] level roll=+0.001 pitch=+0.001
+[flake single_gate] 11/30 gates=1 finished=True error=
+gyro bias calibrated over 65 samples: [-0.00156503  0.00083661  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[ 0.00020492 -0.00026223  0.013     ] level roll=-0.000 pitch=+0.001
+[flake single_gate] 12/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [ 0.00089202 -0.00072143  0.013     ]; level ref roll=+0.000 pitch=-0.000
+live calibration (180 samples): bias=[6.88806114e-04 8.26782056e-05 1.30000003e-02] level roll=-0.000 pitch=+0.000
+[flake single_gate] 13/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00129309 -0.00055626  0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (180 samples): bias=[-0.00017691  0.00095288  0.013     ] level roll=-0.000 pitch=+0.000
+[flake single_gate] 14/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00219196 0.00109706 0.013     ]; level ref roll=+0.000 pitch=+0.000
+live calibration (180 samples): bias=[-0.00026428  0.00047412  0.013     ] level roll=+0.000 pitch=-0.001
+[flake single_gate] 15/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00025077 0.00087289 0.013     ]; level ref roll=-0.001 pitch=+0.001
+live calibration (180 samples): bias=[-0.00071561 -0.00076871  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 16/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [ 0.00064986 -0.00131555  0.013     ]; level ref roll=+0.002 pitch=+0.000
+live calibration (180 samples): bias=[-0.00028495 -0.00032345  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 17/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00035665  0.00089993  0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[-0.00060057 -0.00230793  0.013     ] level roll=-0.001 pitch=+0.000
+[flake single_gate] 18/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.0026523  0.00069115 0.013     ]; level ref roll=+0.000 pitch=-0.001
+live calibration (180 samples): bias=[ 8.72730691e-05 -4.83193013e-04  1.30000003e-02] level roll=-0.000 pitch=+0.000
+[flake single_gate] 19/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00036353 -0.00070949  0.013     ]; level ref roll=-0.001 pitch=+0.000
+live calibration (180 samples): bias=[ 2.96805489e-05 -1.22632438e-03  1.30000003e-02] level roll=-0.000 pitch=+0.001
+[flake single_gate] 20/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00058706 -0.00237476  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (180 samples): bias=[-0.00040214  0.00022381  0.013     ] level roll=+0.000 pitch=-0.000
+[flake single_gate] 21/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00214216  0.00058517  0.013     ]; level ref roll=+0.001 pitch=-0.001
+live calibration (180 samples): bias=[-2.12333410e-06  1.13294021e-03  1.30000003e-02] level roll=-0.000 pitch=-0.001
+[flake single_gate] 22/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00036593 0.00107534 0.013     ]; level ref roll=-0.001 pitch=-0.001
+live calibration (180 samples): bias=[-0.00130976 -0.00010867  0.013     ] level roll=-0.001 pitch=-0.000
+[flake single_gate] 23/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00184188 0.00093204 0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[-0.00056149  0.0010808   0.013     ] level roll=-0.000 pitch=+0.001
+[flake single_gate] 24/30 gates=0 finished=False error=
+gyro bias calibrated over 64 samples: [0.00042501 0.00012573 0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (179 samples): bias=[0.00089425 0.00090484 0.013     ] level roll=+0.000 pitch=-0.000
+[flake single_gate] 25/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00232456 0.00096766 0.013     ]; level ref roll=-0.000 pitch=-0.001
+live calibration (180 samples): bias=[ 0.00071579 -0.00013661  0.013     ] level roll=+0.000 pitch=+0.000
+[flake single_gate] 26/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [ 0.00122266 -0.00149619  0.013     ]; level ref roll=+0.001 pitch=-0.000
+live calibration (180 samples): bias=[-5.63839228e-05  1.61262845e-03  1.30000003e-02] level roll=-0.001 pitch=+0.001
+[flake single_gate] 27/30 gates=0 finished=False error=
+gyro bias calibrated over 64 samples: [-0.00103709  0.00123151  0.013     ]; level ref roll=-0.000 pitch=+0.000
+live calibration (180 samples): bias=[ 0.00013175 -0.00019143  0.013     ] level roll=+0.000 pitch=+0.000
+[flake single_gate] 28/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [0.00023313 0.00019443 0.013     ]; level ref roll=+0.000 pitch=+0.001
+live calibration (180 samples): bias=[ 0.00054641 -0.00023784  0.013     ] level roll=+0.000 pitch=-0.001
+[flake single_gate] 29/30 gates=1 finished=True error=
+gyro bias calibrated over 64 samples: [-0.00050148 -0.000662    0.013     ]; level ref roll=-0.000 pitch=-0.000
+live calibration (180 samples): bias=[ 0.00055736 -0.00080579  0.013     ] level roll=-0.000 pitch=-0.000
+[flake single_gate] 30/30 gates=1 finished=True error=
+[rebaseline] summary=C:\Users\tsion\Projects\eni_dcim_qa\tuning\campaigns\2026-07-15-rebaseline-5ec57ee\summary.md
