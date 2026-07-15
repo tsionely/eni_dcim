@@ -74,7 +74,25 @@ Standing tasks:
 4. **Review reports** (optional, read-only): findings on the pilot code go in
    `tuning/review-<date>.md` — flag, don't fix.
 
-### CURRENT TASK: re-baseline v2 on e8098e2+ (previous run superseded)
+### CURRENT TASK: re-baseline v3 — after the Windows timer fix
+
+Your v2 run diagnosed itself perfectly: overrun_frac 0.74 + heartbeat
+timeouts + chronic stale-imu are all one root cause — Windows' default
+15.6ms timer granularity vs our 4ms loop. The pilot now requests 1ms
+timer resolution process-wide (aigp.core.scheduler, winmm
+timeBeginPeriod). Re-run on the new HEAD when the operator's SIM LOCK
+clears:
+
+1. Windows CI: expect overrun_frac and the heartbeat timeouts to drop
+   sharply. Report before/after numbers — this quantifies the fix.
+2. Campaign with the same contamination guard (>10% stale-imu aborts
+   the measurement — it worked exactly as designed in v2, keep it).
+3. Your v2 default-verification glimpse (4 gates, one 2-gate finish,
+   under 30% contamination) suggests the pilot is capable on Windows
+   too — v3 should give the first clean Windows baseline.
+
+### PREVIOUS: re-baseline v2 (2026-07-15, invalidated by its own guard —
+### root cause fixed, see above)
 
 Your 2026-07-15 re-baseline was received — good guard discipline on the
 FlightSim detection. Its verdict is however OBSOLETE: it measured commit

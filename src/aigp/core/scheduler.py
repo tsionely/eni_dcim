@@ -15,7 +15,19 @@ catch up with a burst of back-to-back ticks.
 """
 from __future__ import annotations
 
+import sys
 import time
+
+# Windows sleeps at the system timer granularity — 15.6ms by default —
+# which wrecks a 4ms control loop AND the mock sim's IMU pacing (Codex's
+# Windows CI: overrun_frac 0.74, chronic stale-imu aborts in campaigns).
+# Request 1ms resolution once per process; harmless if it fails.
+if sys.platform == "win32":                                # pragma: no cover
+    try:
+        import ctypes
+        ctypes.WinDLL("winmm").timeBeginPeriod(1)
+    except Exception:
+        pass
 
 
 class RateLoop:
