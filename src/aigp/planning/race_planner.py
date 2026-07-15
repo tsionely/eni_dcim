@@ -64,6 +64,15 @@ class RacePlanner:
         self._commit_until_ns = None
         self._commit_v_body = None
 
+    def _aim_up(self, dist: float) -> float:
+        """Aim-above-center insurance, tapered off near the gate.
+
+        Far out it counters the systematic altitude sag; at the gate itself
+        the aim point must converge to (near) the true center — phase3b
+        crossed 0.6m high and clipped the top bar.
+        """
+        return self.aim_up_m * float(np.clip(dist / 4.0, 0.0, 1.0))
+
     # -- planning --------------------------------------------------------------
 
     def plan(self, now_ns: int, mode: str, state: StateEstimate,
@@ -83,9 +92,18 @@ class RacePlanner:
                 return Setpoint(phase="recover", v_body=np.zeros(3), yaw_rate=0.0)
             self._recover_until_ns = None
 
-        # -- commit: blind-window lock
+        # -- commit: LIVE-STEERED through-gate window (phase3b flight 1
+        # clipped the top bar because the vector was locked 0.5s/1.5m before
+        # the crossing while fresh fixes still existed; gate_rel is
+        # dead-reckoned through dropouts, so keep steering on it and only
+        # fall back to the last vector once the gate is truly gone/behind).
         if self._commit_until_ns is not None:
             if now_ns < self._commit_until_ns and self._commit_v_body is not None:
+                gate = state.gate_rel
+                if gate is not None and gate.t[2] > 0.3:
+                    direction, dist = ap.gate_direction_body(
+                        gate, self._aim_up(np.linalg.norm(gate.t)))
+                    self._commit_v_body = direction * self.commit_speed
                 return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
             self._commit_until_ns = None
             self._commit_v_body = None
@@ -100,11 +118,12 @@ class RacePlanner:
             )
 
         # -- approach
-        direction, dist = ap.gate_direction_body(gate, self.aim_up_m)
+        dist = float(np.linalg.norm(gate.t))
+        direction, dist = ap.gate_direction_body(gate, self._aim_up(dist))
         if abs(direction[1]) > 0.05:
             self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:
-            # Enter the blind window: lock the through-gate vector.
+            # Enter the through-gate window.
             v = direction * self.commit_speed
             self._commit_v_body = v
             self._commit_until_ns = now_ns + int(self.commit_duration_s * 1e9)

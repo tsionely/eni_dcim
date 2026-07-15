@@ -53,7 +53,9 @@ class HsvGateDetector(GateDetector):
         self.min_confidence = float(params.get("perception.detector.min_confidence"))
         self.gate_w = float(params.get("perception.gate.width_m"))
         self.gate_h = float(params.get("perception.gate.height_m"))
-        self.camera = PinholeCamera(float(params.get("perception.camera.fov_deg")))
+        self.camera = PinholeCamera(
+            float(params.get("perception.camera.fov_deg")),
+            float(params.get("perception.camera.mount_pitch_deg", default=0.0)))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _mask(self, img: np.ndarray) -> np.ndarray:

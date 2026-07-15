@@ -54,7 +54,8 @@
   },
   "perception": {
     "camera": {
-      "fov_deg": 90.0
+      "fov_deg": 90.0,
+      "mount_pitch_deg": 0.0
     },
     "gate": {
       "width_m": 1.6,

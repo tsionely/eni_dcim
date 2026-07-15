@@ -73,8 +73,10 @@ class StateEstimator:
         # After gate_relock_s without an accepted fix, the next fix re-locks.
         self.lock_tol_frac = float(params.get("estimation.gate_lock_tol_frac",
                                               default=0.35))
+        # Floor must stay BELOW gate size: at 1m range a 1.5m floor accepted
+        # a 0.72m target jump mid-commit (phase3b flight 1).
         self.lock_tol_min = float(params.get("estimation.gate_lock_tol_min_m",
-                                             default=1.5))
+                                             default=0.6))
         self.relock_s = float(params.get("estimation.gate_relock_s", default=1.2))
         self.max_age_s = float(params.get("estimation.gate_rel_max_age_s"))
         self._cam_fov_deg = float(params.get("perception.camera.fov_deg",

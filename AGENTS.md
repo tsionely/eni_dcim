@@ -223,7 +223,25 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3b — R2-TRAINING with target lock + velocity resets
+## CURRENT TASK: Phase 3c — R2-TRAINING with live-steered commit
+
+phase3b flight 1 was a near-pass: locked on the right gate, flew at it,
+crossed 0.6m HIGH and clipped the top bar (docs/08 + telemetry). Fixed in
+this commit: the commit window now keeps steering on the dead-reckoned
+gate pose all the way through (no more stale locked vector), the aim-up
+insurance tapers to ~0 at the gate, and the target-lock tolerance scales
+with range (a mid-commit quad jump at 1m is now rejected).
+
+1. `git pull`. Single engine instance, SIM LOCK, R2-TRAINING.
+2. `python scripts/fly_once.py --max-duration 120`, DEFAULT params, 3
+   flights. Watch per flight:
+   - Where it crosses relative to the opening (high/low/left/right) —
+     even on a clip, WHICH bar it touched is the key datapoint.
+   - Whether commit visibly corrects vertically in the last meters.
+3. Collect with `--label phase3c-r2training` (slices around every
+   crossing attempt), notes.md, push, VERIFY on origin.
+
+## PREVIOUS: Phase 3b — R2-TRAINING with target lock + velocity resets
 
 phase3a was a breakthrough recon: the corrected sensor model HELD on the
 real sim (nose pointed at the gate, reached 1.4m from it in 3s), R2 gates

@@ -21,8 +21,20 @@ from aigp.core.messages import RelPose
 
 
 class PinholeCamera:
-    def __init__(self, fov_deg: float) -> None:
+    def __init__(self, fov_deg: float, mount_pitch_deg: float = 0.0) -> None:
         self.fov_deg = fov_deg
+        # Camera-to-IMU-body pitch offset (up-positive). The pilot's "body"
+        # frame IS the IMU frame; an FPV camera is typically up-tilted, and
+        # phase3b rest frames suggest a substantial camera-vs-IMU pitch
+        # offset. PnP outputs are de-rotated by this angle so that the
+        # cam->body axis permutation downstream is exact. 0 = old behavior;
+        # calibration owns the real value (--patch perception.camera.mount_pitch_deg).
+        theta = math.radians(mount_pitch_deg)
+        c, s = math.cos(theta), math.sin(theta)
+        # Rotation about the camera x (right) axis by +theta.
+        self._mount_rot = np.array([[1.0, 0.0, 0.0],
+                                    [0.0, c, -s],
+                                    [0.0, s, c]]) if abs(theta) > 1e-9 else None
 
     def matrix(self, width: int, height: int) -> np.ndarray:
         fx = (width / 2.0) / math.tan(math.radians(self.fov_deg) / 2.0)
@@ -80,6 +92,9 @@ class PinholeCamera:
         # Orient the normal toward the camera side we approach from.
         if normal[2] > 0:
             normal = -normal
+        if self._mount_rot is not None:
+            t = self._mount_rot @ t
+            normal = self._mount_rot @ normal
         return RelPose(t=t, normal=normal)
 
 
