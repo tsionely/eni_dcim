@@ -74,7 +74,26 @@ Standing tasks:
 4. **Review reports** (optional, read-only): findings on the pilot code go in
    `tuning/review-<date>.md` — flag, don't fix.
 
-### CURRENT TASK (starts NOW, in parallel with Sakana's phase3a): re-baseline
+### CURRENT TASK: re-baseline v2 on e8098e2+ (previous run superseded)
+
+Your 2026-07-15 re-baseline was received — good guard discipline on the
+FlightSim detection. Its verdict is however OBSOLETE: it measured commit
+5ec57ee (pre live-steered-commit), 25% of campaign flights died on
+"stale channels: imu" (machine contention), and your own verification
+showed best==default==0/20 — i.e. the CEM result was noise-fit. The
+suggested patch is REJECTED (cloud re-ran your exact 2-gate track on
+e8098e2: 4/4 first-gate, 3/4 FULL-TRACK finishes). Redo on current code:
+
+1. Windows CI on e8098e2+, CLEAN machine (no FlightSim, nothing heavy):
+   the 4 failures you saw (hover overrun 0.74, 3 heartbeat timeouts) need
+   a clean-run verdict before we treat them as Windows bugs.
+2. Campaign as before but: verify HEAD >= e8098e2; ABORT and restart the
+   measurement if >10% of flights show "stale channels: imu"; log CPU
+   state per batch. Expect nonzero finish rates now — if default gives 0%
+   finishes on the 2-gate track, that itself is the P0 finding.
+3. Keep the FlightSim guard exactly as you ran it.
+
+### PREVIOUS: re-baseline (2026-07-15, superseded — see above)
 
 docs/07 flipped the sensor model; the mock is now FAITHFUL to the real sim
 (inverted gyro reporting, frozen z-gyro, straight commands, body-fixed
