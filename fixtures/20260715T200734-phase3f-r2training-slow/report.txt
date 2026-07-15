@@ -1,0 +1,198 @@
+===== Phase 3f R2 slow preflight 2026-07-15T22:30:05.5799613+03:00 =====
+HEAD short=9bad0d6 full=9bad0d69f109a596b1b64ec6a7b4b535c0baf454
+9bad0d6 Phase 3f: rerun the slow set on the cross-track code; mount 34 rejected
+82ea6c8 Wire cross-track lateral nulling (center_gain was never connected)
+1998e5c [sim-run] phase3e r2 slow approach
+17e26c2 [analysis] Pin lateral frame offset on phase3d
+f6efeb0 Phase 3e: slow-approach flights + lateral frame-offset analysis task
+--- Phase 3f task lines ---
+ 257: 6. Commit and push:
+ 258: 
+ 259:    ```powershell
+ 260:    git add fixtures
+ 261:    git commit -m "[sim-run] phase1 vs sim v<version>"
+ 262:    git push
+ 263:    ```
+ 264: 
+ 265: ## CURRENT TASK: Phase 3f — slow approach WITH cross-track nulling
+ 266: 
+ 267: phase3e flight 3 (slow) got a near-centered dead-reckoned state at 1.45m
+ 268: (u -0.04, v -0.03) and lost it in the last meter — precisely the failure
+ 269: the new cross-track term fixes (center_gain was defined but wired to
+ 270: NOTHING until commit 82ea6c8; approach/commit now null lateral meters
+ 271: directly). Your mount A/B verdict (34 over-corrects) is adopted: default
+ 272: stays 29. Fly the same slow set on the NEW code:
+ 273: 
+ 274: 1. `git pull` (verify HEAD >= 82ea6c8). SIM LOCK. R2-TRAINING.
+ 275: 2. 3 flights, same slow patch set as phase3e:
+ 276:    `python scripts/fly_once.py --max-duration 150
+ 277:     --patch planner.approach.speed_far_mps=1.2
+ 278:     --patch planner.approach.speed_near_mps=0.8
+ 279:     --patch planner.commit.speed_mps=1.2
+ 280:     --patch planner.commit.duration_s=2.5`
+ 281: 3. Optional flight 4 if 1-3 miss laterally by a constant margin:
+ 282:    add `--patch planner.approach.center_gain=1.0` (stronger nulling).
+ 283: 4. Collect `--label phase3f-r2training-slow`, notes.md, push, VERIFY.
+ 284: 
+ 285: ## PREVIOUS: Phase 3e — SLOW approach (phantom starves at low speed)
+ 286: 
+ 287: phase3d confirmed the altitude fix (failure signature is no longer
+ 288: uniformly high/top) and exposed the LAST blocker: a persistent LATERAL
+ 289: phantom velocity (vy_est -1..-3 m/s opposite to true motion) during
+ 290: approach, scaling with speed/yaw activity — same disease as the pitch
+ 291: phantom, lateral axis. Until the analyst pins the lateral frame offset,
+ 292: starve the phantom: fly SLOW. At 1.2 m/s the phantom shrinks to ~0.5 m/s
+ 293: and the servo can hold the opening.
+ 294: 
+ 295: 1. `git pull`. SIM LOCK (good discipline last cycle — keep it).
+ 296:    R2-TRAINING.
+ 297: 2. THE SLOW FLIGHT, 3 times:
+ 298:    `python scripts/fly_once.py --max-duration 150
+ 299:     --patch planner.approach.speed_far_mps=1.2
+ 300:     --patch planner.approach.speed_near_mps=0.8
+ 301:     --patch planner.commit.speed_mps=1.2
+ 302:     --patch planner.commit.duration_s=2.5`
+ 303:    A pass at ANY speed is the milestone. Note crossing side as usual.
+ 304: 3. Optional flight 4 — the mount-pitch A/B that phase3d skipped (its F4
+ 305:    was a stale re-report of the old roll-scale flight):
+ 306:    slow patches as above PLUS `--patch perception.camera.mount_pitch_deg=24`
+ 307:    if flights 1-3 still cross high, or =34 if they cross low.
+ 308: 4. Collect `--label phase3e-r2training-slow`, notes.md, push, VERIFY.
+ 309: 
+ 310: ## PREVIOUS: Phase 3d — R2-TRAINING with the camera mount modeled
+ 311: 
+ 312: phase3c telemetry closed the case on the "always crosses high" mystery:
+ 313: the planner COMMANDED descent, the estimator CLAIMED descent (+1..+3
+ 314: m/s), and the gate still dove in the image — the drone never actually
+ 315: descended. Root cause: the camera's optical axis sits ~29deg ABOVE the
+ 316: IMU x-axis (rest-frame calibration: optical +11deg above horizon, IMU x
+ 317: -17.8deg), and the unmodeled offset converted forward speed into phantom
+ 318: descent (~V*sin(29) = 1.2-1.5 m/s at approach speed — exactly what the
+ 319: logs show). Defaults now carry perception.camera.mount_pitch_deg=29 and
+ 320: the mock mirrors both sensor frames. The roll-scale patch from phase3c
+ 321: flight 4 is REJECTED (made things worse laterally, weak evidence base).
+ 322: 
+ 323: 1. `git pull`. Single engine instance, SIM LOCK (the lock file was
+ 324:    MISSING during your phase3c run while campaigns wanted the machine —
+ 325:    please create/remove it every cycle). R2-TRAINING.
+ 326: 2. `python scripts/fly_once.py --max-duration 120`, DEFAULT params,
+ 327:    3 flights. Watch: approach should now hold/gain the RIGHT altitude
+ 328:    (no more sailing over the gate); note crossing side as before.
+ 329: 3. Optional flight 4 A/B on the calibration value:
+ 330:    `--patch perception.camera.mount_pitch_deg=24` (if flights 1-3 cross
+ 331:    LOW, the true offset is smaller; if still high, try 34).
+ 332: 4. Collect with `--label phase3d-r2training`, notes.md per flight, push,
+ 333:    VERIFY on origin.
+ 334: 
+ 335: ## PREVIOUS: Phase 3c — R2-TRAINING with live-steered commit
+ 336: 
+ 337: phase3b flight 1 was a near-pass: locked on the right gate, flew at it,
+ 338: crossed 0.6m HIGH and clipped the top bar (docs/08 + telemetry). Fixed in
+ 339: this commit: the commit window now keeps steering on the dead-reckoned
+ 340: gate pose all the way through (no more stale locked vector), the aim-up
+ 341: insurance tapers to ~0 at the gate, and the target-lock tolerance scales
+ 342: with range (a mid-commit quad jump at 1m is now rejected).
+ 343: 
+ 344: 1. `git pull`. Single engine instance, SIM LOCK, R2-TRAINING.
+ 345: 2. `python scripts/fly_once.py --max-duration 120`, DEFAULT params, 3
+ 346:    flights. Watch per flight:
+ 347:    - Where it crosses relative to the opening (high/low/left/right) —
+ 348:      even on a clip, WHICH bar it touched is the key datapoint.
+ 349:    - Whether commit visibly corrects vertically in the last meters.
+ 350: 3. Optional flight 4, A/B from the analyst's R2 deep-dive (roll gyro
+ 351:    under-reports ~0.74x on both phase3a flights):
+ 352:    `--patch estimation.gyro_scale_roll=0.75`
+ 353: 4. Collect with `--label phase3c-r2training` (slices around every
+ 354:    crossing attempt), notes.md, push, VERIFY on origin.
+ 355: 
+--- SIM LOCK before create ---
+no existing lock
+--- SIM LOCK created ---
+SIM OPERATOR lock phase3f-r2training-slow pid=48640 time=2026-07-15T22:43:44.3385192+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+--- sim process/ports before launch ---
+
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- sim process/ports after launch ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+30176 DCGame-Win64-Shipping 15/07/2026 22:43:45 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+15272 FlightSim             15/07/2026 22:43:45 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 30176 DCGame-Win64-Shipping
+udp 5601 <- PID 30176 DCGame-Win64-Shipping
+
+
+===== Phase 3f R2-TRAINING SLOW Flight 1/4 2026-07-15T22:50:32.4473204+03:00 =====
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=4.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 15, 'duration_s': 26.860393399954773, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6715, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T195033-8edfeec4', 'log_dir': 'logs\\20260715T195033-8edfeec4'}
+R2F_F1_EXIT=0
+--- helper stdout R2F F1 ---
+sim window: AI-GP   22:50:40
+event r2-training clicked (400,381) 22:50:47
+RACE clicked 22:50:50
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f1_slow\r2f_f1_slow_00_225050.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f1_slow\r2f_f1_slow_01_225054.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f1_slow\r2f_f1_slow_02_225057.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f1_slow\r2f_f1_slow_03_225101.png
+--- helper stderr R2F F1 ---
+
+
+===== Phase 3f R2-TRAINING SLOW Flight 2/4 2026-07-15T23:00:10.8259140+03:00 =====
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [ 0.00053897 -0.00295291  0.00013356]; level ref roll=-0.000 pitch=-0.310
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.9)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 4, 'duration_s': 26.660103799891658, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6665, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T200011-8edfeec4', 'log_dir': 'logs\\20260715T200011-8edfeec4'}
+R2F_F2_EXIT=0
+--- helper stdout R2F F2 ---
+sim window: AI-GP   23:00:18
+event r2-training clicked (400,381) 23:00:25
+RACE clicked 23:00:28
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f2_slow\r2f_f2_slow_00_230028.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f2_slow\r2f_f2_slow_01_230032.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f2_slow\r2f_f2_slow_02_230035.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f2_slow\r2f_f2_slow_03_230039.png
+--- helper stderr R2F F2 ---
+
+
+===== Phase 3f R2-TRAINING SLOW Flight 3/4 2026-07-15T23:01:41.8550617+03:00 =====
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [-0.00038213  0.00231844  0.00022451]; level ref roll=+0.001 pitch=-0.006
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=2.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 26.11634110007435, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6529, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T200142-8edfeec4', 'log_dir': 'logs\\20260715T200142-8edfeec4'}
+R2F_F3_EXIT=0
+--- helper stdout R2F F3 ---
+sim window: AI-GP   23:01:49
+event r2-training clicked (400,381) 23:01:56
+RACE clicked 23:01:59
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f3_slow\r2f_f3_slow_00_230159.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f3_slow\r2f_f3_slow_01_230203.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f3_slow\r2f_f3_slow_02_230206.png
+C:\Users\tsion\AppData\Local\Temp\phase3f_r2_shots\r2f_f3_slow\r2f_f3_slow_03_230210.png
+--- helper stderr R2F F3 ---
+
+
+===== Phase 3f recording sizes and slices 2026-07-15T23:06:31.9648079+03:00 =====
+20260715T195033-8edfeec4 recording 312.13 MB
+20260715T200011-8edfeec4 recording 293.54 MB
+20260715T200142-8edfeec4 recording 282.68 MB
+kept 21522/21523 datagrams, 30.0 MB -> 20260715T195033-8edfeec4_r2f_slice_start.aigprec
+kept 21529/21530 datagrams, 30.0 MB -> 20260715T200011-8edfeec4_r2f_slice_start.aigprec
+kept 21517/21518 datagrams, 30.0 MB -> 20260715T200142-8edfeec4_r2f_slice_start.aigprec
+
+Name                                                MB
+----                                                --
+20260715T195033-8edfeec4_r2f_slice_start.aigprec 28.88
+20260715T200011-8edfeec4_r2f_slice_start.aigprec 28.88
+20260715T200142-8edfeec4_r2f_slice_start.aigprec 28.88
+
+
