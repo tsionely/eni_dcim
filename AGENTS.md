@@ -242,7 +242,32 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3c — R2-TRAINING with live-steered commit
+## CURRENT TASK: Phase 3d — R2-TRAINING with the camera mount modeled
+
+phase3c telemetry closed the case on the "always crosses high" mystery:
+the planner COMMANDED descent, the estimator CLAIMED descent (+1..+3
+m/s), and the gate still dove in the image — the drone never actually
+descended. Root cause: the camera's optical axis sits ~29deg ABOVE the
+IMU x-axis (rest-frame calibration: optical +11deg above horizon, IMU x
+-17.8deg), and the unmodeled offset converted forward speed into phantom
+descent (~V*sin(29) = 1.2-1.5 m/s at approach speed — exactly what the
+logs show). Defaults now carry perception.camera.mount_pitch_deg=29 and
+the mock mirrors both sensor frames. The roll-scale patch from phase3c
+flight 4 is REJECTED (made things worse laterally, weak evidence base).
+
+1. `git pull`. Single engine instance, SIM LOCK (the lock file was
+   MISSING during your phase3c run while campaigns wanted the machine —
+   please create/remove it every cycle). R2-TRAINING.
+2. `python scripts/fly_once.py --max-duration 120`, DEFAULT params,
+   3 flights. Watch: approach should now hold/gain the RIGHT altitude
+   (no more sailing over the gate); note crossing side as before.
+3. Optional flight 4 A/B on the calibration value:
+   `--patch perception.camera.mount_pitch_deg=24` (if flights 1-3 cross
+   LOW, the true offset is smaller; if still high, try 34).
+4. Collect with `--label phase3d-r2training`, notes.md per flight, push,
+   VERIFY on origin.
+
+## PREVIOUS: Phase 3c — R2-TRAINING with live-steered commit
 
 phase3b flight 1 was a near-pass: locked on the right gate, flew at it,
 crossed 0.6m HIGH and clipped the top bar (docs/08 + telemetry). Fixed in

@@ -87,6 +87,7 @@ class MockSim:
                  rate_tau_s: float = 0.06, hover_thrust: float = 0.5,
                  drag: float = 0.35, honor_velocity: bool = True,
                  image_size: tuple[int, int] = (640, 360), fov_deg: float = 90.0,
+                 mount_pitch_deg: float = 29.0, imu_pitch_deg: float = -17.8,
                  seed: int = 0) -> None:
         self.mav_addr = mav_addr
         self.video_addr = video_addr
@@ -120,6 +121,20 @@ class MockSim:
         self.frame_ts_epoch = True
         self.image_w, self.image_h = image_size
         self.fx = (self.image_w / 2.0) / math.tan(math.radians(fov_deg) / 2.0)
+        # Real-sim sensor frames (phase2h + phase3c): the IMU is mounted
+        # pitched ~-17.8deg relative to the airframe, and the camera's
+        # optical axis sits mount_pitch_deg ABOVE the IMU x-axis (net
+        # ~+11deg above the level airframe). IMU messages are reported in
+        # the tilted IMU frame; the camera projects along its own axis.
+        self._imu_pitch = math.radians(imu_pitch_deg)
+        ci, si = math.cos(self._imu_pitch), math.sin(self._imu_pitch)
+        # body -> IMU-frame rotation (rows = IMU axes in body coords).
+        self._body_to_imu = np.array([[ci, 0.0, -si],
+                                      [0.0, 1.0, 0.0],
+                                      [si, 0.0, ci]])
+        cam_body_pitch = math.radians(mount_pitch_deg) + self._imu_pitch
+        self._mount_c = math.cos(cam_body_pitch)
+        self._mount_s = math.sin(cam_body_pitch)
         self.rng = np.random.default_rng(seed)
 
         self.drone = DroneState()
@@ -241,12 +256,12 @@ class MockSim:
                     self.yaw_rate_cmd = 0.0 if ignore_yaw_rate else msg.yaw_rate
             elif mtype == "SET_ATTITUDE_TARGET":
                 self.ctrl_mode = "att_rate"
-                # The real v1.0.3385 sim applies rate commands with the sign
-                # INVERTED vs the MAVLink convention (phase2b probe D, all
-                # three axes); the mock mirrors that so the same config flies
-                # both.
-                self.rate_cmd = self.rate_cmd_sign * np.array([
+                # Commands arrive in the pilot's (IMU) frame — the frame the
+                # whole real-sim closed loop was validated in — and execute
+                # as airframe body rates.
+                cmd_imu = self.rate_cmd_sign * np.array([
                     msg.body_roll_rate, msg.body_pitch_rate, msg.body_yaw_rate])
+                self.rate_cmd = self._body_to_imu.T @ cmd_imu
                 self.thrust_cmd = float(np.clip(msg.thrust, 0.0, 1.0))
             elif mtype == "TIMESYNC" and msg.ts1 == 0:
                 # Echo protocol: reply with our time in tc1, requester stamp in ts1.
@@ -266,12 +281,13 @@ class MockSim:
         f_world = a_world - np.array([0.0, 0.0, GRAVITY])
         rot = euler_matrix(self.drone.roll, self.drone.pitch, self.drone.yaw)
         f_body = rot.T @ f_world
+        f_body = self._body_to_imu @ f_body      # report in the tilted IMU frame
         f_body += self.rng.normal(0.0, self.imu_noise, 3)
         if self.ctrl_mode == "att_rate":
             gyro = self.drone.rates.copy()
         else:
             gyro = np.array([0.0, 0.0, self.drone.yaw_rate])
-        gyro = gyro * self.gyro_report_sign
+        gyro = (self._body_to_imu @ gyro) * self.gyro_report_sign
         gyro += self.rng.normal(0.0, self.imu_noise * 0.2, 3)
         if self.gyro_z_frozen:
             gyro[2] = 0.013          # hard-pinned at a constant (R10)
@@ -422,14 +438,21 @@ class MockSim:
     def _project(self, point: np.ndarray) -> tuple[float, float] | None:
         # BODY-FIXED camera: full attitude rotation, like the real sim
         # (phase2k: gate pixel motion tracks pitch/roll at ~fx px/rad — the
-        # camera is bolted to the frame, not gimbal-stabilized).
+        # camera is bolted to the frame, not gimbal-stabilized), with the
+        # FPV mount UP-TILT relative to the IMU frame (phase3c: real-sim
+        # optical axis sits ~29deg above the IMU x-axis; the unmodeled
+        # offset turned forward speed into phantom descent).
         rel = point - self.drone.pos
         rot = euler_matrix(self.drone.roll, self.drone.pitch, self.drone.yaw)
         bx, by, bz = rot.T @ rel     # world -> body: x fwd, y right, z down
-        if bx < 0.2:
+        c, s = self._mount_c, self._mount_s
+        zc = c * bx - s * bz         # camera fwd (optical axis, tilted up)
+        if zc < 0.2:
             return None
-        u = self.image_w / 2.0 + self.fx * (by / bx)
-        v = self.image_h / 2.0 + self.fx * (bz / bx)
+        xc = by                      # camera right
+        yc = s * bx + c * bz         # camera down
+        u = self.image_w / 2.0 + self.fx * (xc / zc)
+        v = self.image_h / 2.0 + self.fx * (yc / zc)
         return (u, v)
 
     def _gate_corners(self, gate: Gate, grow: float = 0.0) -> list[np.ndarray]:
