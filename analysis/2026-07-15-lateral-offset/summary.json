@@ -1,0 +1,545 @@
+{
+  "rest_mount": [
+    {
+      "label": "20260715T121747-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "hover_window_s": [
+        2.0,
+        18.5655999
+      ],
+      "n_dets": 935,
+      "n_imu": 511,
+      "imu_accel_mean": [
+        -2.999625198061919,
+        -0.0021964262609612453,
+        -9.33972839459981
+      ],
+      "imu_roll_deg": -0.013474262540393665,
+      "imu_pitch_deg": -17.805374681853845,
+      "gate_t_cam_mean_m": [
+        0.024588855417905515,
+        -3.208156682009014,
+        5.560860517051378
+      ],
+      "gate_center_px_mean": [
+        321.346256684492,
+        175.36363636363637
+      ],
+      "gate_center_px_std": [
+        1.757173805968098,
+        8.962100154722455
+      ],
+      "optical_yaw_to_gate_deg": 0.25334720272093486,
+      "optical_pitch_to_gate_deg": 29.98139139346122,
+      "pixel_yaw_deg": 0.24104490965731187,
+      "pixel_pitch_deg": 0.8300796341867922,
+      "frame_edge_roll_deg_mean": -1.3466459575142986,
+      "frame_edge_roll_deg_std": 2.2176210565415233,
+      "imu_roll_small_deg": -0.013474262540393665,
+      "mount_yaw_est_deg": 0.25334720272093486,
+      "mount_yaw_est_unc_deg": 0.6146175970394026,
+      "mount_roll_est_deg": -1.333171694973905,
+      "mount_roll_est_unc_deg": 2.7176210565415233,
+      "pitch_gate_minus_imu_deg": 47.786766075315064,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    },
+    {
+      "label": "20260715T122040-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "hover_window_s": [
+        2.0,
+        18.5007872
+      ],
+      "n_dets": 884,
+      "n_imu": 1900,
+      "imu_accel_mean": [
+        -1.0829323328796185,
+        -0.004173609959451776,
+        -9.676172298130236
+      ],
+      "imu_roll_deg": -0.0247133074745839,
+      "imu_pitch_deg": -6.385822951504253,
+      "gate_t_cam_mean_m": [
+        0.1154633160701866,
+        -3.232128576470248,
+        5.575789819970483
+      ],
+      "gate_center_px_mean": [
+        324.2658371040724,
+        174.59049773755657
+      ],
+      "gate_center_px_std": [
+        22.042544303395296,
+        9.907270011134528
+      ],
+      "optical_yaw_to_gate_deg": 1.1863100165998914,
+      "optical_pitch_to_gate_deg": 30.099663654261512,
+      "pixel_yaw_deg": 0.7637499547150456,
+      "pixel_pitch_deg": 0.9684754065367842,
+      "frame_edge_roll_deg_mean": -0.8684271507475819,
+      "frame_edge_roll_deg_std": 2.28029374829655,
+      "imu_roll_small_deg": -0.0247133074745839,
+      "mount_yaw_est_deg": 1.1863100165998914,
+      "mount_yaw_est_unc_deg": 4.240477896077192,
+      "mount_roll_est_deg": -0.843713843272998,
+      "mount_roll_est_unc_deg": 2.78029374829655,
+      "pitch_gate_minus_imu_deg": 36.485486605765765,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    },
+    {
+      "label": "20260715T122352-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "hover_window_s": [
+        2.0,
+        18.7832332
+      ],
+      "n_dets": 943,
+      "n_imu": 1925,
+      "imu_accel_mean": [
+        -2.5394117911450276,
+        -0.010771500352141144,
+        -9.468202991237888
+      ],
+      "imu_roll_deg": -0.06518251071713375,
+      "imu_pitch_deg": -15.013631147185025,
+      "gate_t_cam_mean_m": [
+        0.07839565675778713,
+        -3.2367129844946696,
+        5.570927300078204
+      ],
+      "gate_center_px_mean": [
+        323.6484623541888,
+        174.43425238600213
+      ],
+      "gate_center_px_std": [
+        19.393316000182473,
+        9.860367860563429
+      ],
+      "optical_yaw_to_gate_deg": 0.8062291175662251,
+      "optical_pitch_to_gate_deg": 30.15662024287762,
+      "pixel_yaw_deg": 0.6532263666895045,
+      "pixel_pitch_deg": 0.9964428038047093,
+      "frame_edge_roll_deg_mean": -1.129205079052284,
+      "frame_edge_roll_deg_std": 2.243831005385279,
+      "imu_roll_small_deg": -0.06518251071713375,
+      "mount_yaw_est_deg": 0.8062291175662251,
+      "mount_yaw_est_unc_deg": 3.768118049165309,
+      "mount_roll_est_deg": -1.0640225683351503,
+      "mount_roll_est_unc_deg": 2.743831005385279,
+      "pitch_gate_minus_imu_deg": 45.170251390062646,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    },
+    {
+      "label": "20260715T044545-411f3135",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "hover_window_s": [
+        2.0,
+        45.5137539
+      ],
+      "n_dets": 0,
+      "n_imu": 0,
+      "status": "insufficient_imu"
+    },
+    {
+      "label": "20260715T045100-411f3135",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "hover_window_s": [
+        2.0,
+        18.6472227
+      ],
+      "n_dets": 790,
+      "n_imu": 512,
+      "imu_accel_mean": [
+        -2.999626954086125,
+        -0.002322098473086953,
+        -9.340182173997164
+      ],
+      "imu_roll_deg": -0.014244522954906028,
+      "imu_pitch_deg": -17.804574022251792,
+      "gate_t_cam_mean_m": [
+        0.02617634663381292,
+        -0.1122318142491391,
+        6.414675605766838
+      ],
+      "gate_center_px_mean": [
+        321.4291139240506,
+        175.21360759493672
+      ],
+      "gate_center_px_std": [
+        1.9286006535030165,
+        8.63818364774061
+      ],
+      "optical_yaw_to_gate_deg": 0.233805410054217,
+      "optical_pitch_to_gate_deg": 1.0023504934710559,
+      "pixel_yaw_deg": 0.25588016224447196,
+      "pixel_pitch_deg": 0.8569363596688077,
+      "frame_edge_roll_deg_mean": -1.062072099165956,
+      "frame_edge_roll_deg_std": 2.508686565075398,
+      "imu_roll_small_deg": -0.014244522954906028,
+      "mount_yaw_est_deg": 0.233805410054217,
+      "mount_yaw_est_unc_deg": 0.6453104372705813,
+      "mount_roll_est_deg": -1.04782757621105,
+      "mount_roll_est_unc_deg": 3.008686565075398,
+      "pitch_gate_minus_imu_deg": 18.806924515722848,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    },
+    {
+      "label": "20260715T045458-411f3135",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "hover_window_s": [
+        2.0,
+        18.7871525
+      ],
+      "n_dets": 894,
+      "n_imu": 1934,
+      "imu_accel_mean": [
+        -2.992206455509813,
+        0.046953817064784305,
+        -9.299877162803169
+      ],
+      "imu_roll_deg": 0.28927615321877775,
+      "imu_pitch_deg": -17.835417274261843,
+      "gate_t_cam_mean_m": [
+        0.037784839144176956,
+        -0.14880358888250567,
+        6.507115533788431
+      ],
+      "gate_center_px_mean": [
+        321.917225950783,
+        173.99552572706935
+      ],
+      "gate_center_px_std": [
+        5.307214573845689,
+        10.874595680360082
+      ],
+      "optical_yaw_to_gate_deg": 0.3326954116357796,
+      "optical_pitch_to_gate_deg": 1.3100016258635208,
+      "pixel_yaw_deg": 0.34327387812498383,
+      "pixel_pitch_deg": 1.0749708321048714,
+      "frame_edge_roll_deg_mean": -0.8594851422633412,
+      "frame_edge_roll_deg_std": 2.328956574524349,
+      "imu_roll_small_deg": 0.28927615321877775,
+      "mount_yaw_est_deg": 0.3326954116357796,
+      "mount_yaw_est_unc_deg": 1.2501660003142483,
+      "mount_roll_est_deg": -1.148761295482119,
+      "mount_roll_est_unc_deg": 2.828956574524349,
+      "pitch_gate_minus_imu_deg": 19.145418900125364,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    },
+    {
+      "label": "20260715T051458-6092dbc0",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "hover_window_s": [
+        2.0,
+        18.6793417
+      ],
+      "n_dets": 865,
+      "n_imu": 1925,
+      "imu_accel_mean": [
+        -0.7595101453731586,
+        0.027540481028618752,
+        -9.649920187615729
+      ],
+      "imu_roll_deg": 0.163519388124907,
+      "imu_pitch_deg": -4.500265279452779,
+      "gate_t_cam_mean_m": [
+        0.0332696085057628,
+        -0.1305437036567848,
+        6.398049240585214
+      ],
+      "gate_center_px_mean": [
+        321.71820809248555,
+        174.34942196531793
+      ],
+      "gate_center_px_std": [
+        4.531521037823366,
+        9.22959863674226
+      ],
+      "optical_yaw_to_gate_deg": 0.2979331513402544,
+      "optical_pitch_to_gate_deg": 1.168882153809732,
+      "pixel_yaw_deg": 0.30764101862244275,
+      "pixel_pitch_deg": 1.0116269683725712,
+      "frame_edge_roll_deg_mean": -1.1389398613798847,
+      "frame_edge_roll_deg_std": 2.4626739469531906,
+      "imu_roll_small_deg": 0.163519388124907,
+      "mount_yaw_est_deg": 0.2979331513402544,
+      "mount_yaw_est_unc_deg": 1.1113114905564756,
+      "mount_roll_est_deg": -1.3024592495047917,
+      "mount_roll_est_unc_deg": 2.9626739469531906,
+      "pitch_gate_minus_imu_deg": 5.669147433262511,
+      "pitch_cal_precedent_deg": 29.0,
+      "status": "ok"
+    }
+  ],
+  "vy_yaw": [
+    {
+      "label": "20260715T121747-22978559",
+      "phase": "phase3d",
+      "status": "ok",
+      "n": 516,
+      "vy_mean": 0.8299222352134873,
+      "vy_std": 1.8663808074125174,
+      "vy_abs_mean": 1.5583814528350857,
+      "speed_mean": 3.3830344014158253,
+      "abs_yaw_rate_mean": 0.23701021428997757,
+      "yaw_integral_end_rad": 4.8233176647065354,
+      "corr_vy_speed": 0.4351818682458076,
+      "corr_vy_abs_yaw_rate": 0.40681351387741616,
+      "corr_vy_yaw_integral": -0.18364140854808625,
+      "corr_absvy_speed": 0.7186384691136254,
+      "corr_absvy_abs_yaw_rate": 0.4405894268014197,
+      "corr_absvy_yaw_integral": -0.029381563477720102,
+      "slope_vy_per_speed": 0.9337135637960862,
+      "slope_absvy_per_speed": 1.0908774005422464,
+      "slope_absvy_per_yawint": -0.02015523410880452,
+      "implied_mount_yaw_deg_from_slope": -69.02129626948195,
+      "verdict": "static_mount_offset",
+      "verdict_note": "|vy| tracks forward speed more than yaw-integral \u2192 geometric mount yaw/roll.",
+      "plot": "plots/20260715T121747-22978559_vy_vs_yaw.png"
+    },
+    {
+      "label": "20260715T122040-22978559",
+      "phase": "phase3d",
+      "status": "ok",
+      "n": 488,
+      "vy_mean": -0.505854653462544,
+      "vy_std": 1.4077780290639352,
+      "vy_abs_mean": 1.2943903562951513,
+      "speed_mean": 3.2657894004240124,
+      "abs_yaw_rate_mean": 0.16897638991889072,
+      "yaw_integral_end_rad": 1.7915285190136558,
+      "corr_vy_speed": 0.2673284194201617,
+      "corr_vy_abs_yaw_rate": 0.24817550683782008,
+      "corr_vy_yaw_integral": -0.13870961952321134,
+      "corr_absvy_speed": 0.2467485444985143,
+      "corr_absvy_abs_yaw_rate": -0.07833378787905057,
+      "corr_absvy_yaw_integral": 0.12190769332608176,
+      "slope_vy_per_speed": 0.2856779451948721,
+      "slope_absvy_per_speed": 0.14045231524351595,
+      "slope_absvy_per_yawint": 0.14854363307917345,
+      "implied_mount_yaw_deg_from_slope": -16.599376882377683,
+      "verdict": "mixed_or_weak",
+      "verdict_note": "Neither correlation dominates; both mount and coupling may contribute.",
+      "plot": "plots/20260715T122040-22978559_vy_vs_yaw.png"
+    },
+    {
+      "label": "20260715T122352-22978559",
+      "phase": "phase3d",
+      "status": "ok",
+      "n": 445,
+      "vy_mean": -0.21509853358088726,
+      "vy_std": 1.41677700191097,
+      "vy_abs_mean": 0.9569837142221337,
+      "speed_mean": 3.162967925518719,
+      "abs_yaw_rate_mean": 0.18968773151947457,
+      "yaw_integral_end_rad": 1.7051890138682122,
+      "corr_vy_speed": -0.37301269025641676,
+      "corr_vy_abs_yaw_rate": 0.09670677198158326,
+      "corr_vy_yaw_integral": 0.00798725814673375,
+      "corr_absvy_speed": 0.6977925978868238,
+      "corr_absvy_abs_yaw_rate": -0.0667646992279413,
+      "corr_absvy_yaw_integral": -0.04218353067199815,
+      "slope_vy_per_speed": -0.3986437163362955,
+      "slope_absvy_per_speed": 0.561437372679098,
+      "slope_absvy_per_yawint": -0.07965023429576266,
+      "implied_mount_yaw_deg_from_slope": 23.493417979763056,
+      "verdict": "static_mount_offset",
+      "verdict_note": "|vy| tracks forward speed more than yaw-integral \u2192 geometric mount yaw/roll.",
+      "plot": "plots/20260715T122352-22978559_vy_vs_yaw.png"
+    },
+    {
+      "label": "20260715T044545-411f3135",
+      "status": "no_approach"
+    },
+    {
+      "label": "20260715T045100-411f3135",
+      "phase": "phase3c",
+      "status": "ok",
+      "n": 144,
+      "vy_mean": -0.32980938591742803,
+      "vy_std": 0.4087734547853451,
+      "vy_abs_mean": 0.4521308572040615,
+      "speed_mean": 3.1349413478825627,
+      "abs_yaw_rate_mean": 0.12141605089347568,
+      "yaw_integral_end_rad": 0.3353815232204403,
+      "corr_vy_speed": -0.616185913515946,
+      "corr_vy_abs_yaw_rate": 0.12381999495515764,
+      "corr_vy_yaw_integral": -0.07982726315938733,
+      "corr_absvy_speed": 0.5602183765137613,
+      "corr_absvy_abs_yaw_rate": -0.11420982952152532,
+      "corr_absvy_yaw_integral": -0.01387701208675665,
+      "slope_vy_per_speed": -0.4904485202292401,
+      "slope_absvy_per_speed": 0.2915750250140943,
+      "slope_absvy_per_yawint": -0.05243713948379476,
+      "implied_mount_yaw_deg_from_slope": 29.37006577042629,
+      "verdict": "static_mount_offset",
+      "verdict_note": "|vy| tracks forward speed more than yaw-integral \u2192 geometric mount yaw/roll.",
+      "plot": "plots/20260715T045100-411f3135_vy_vs_yaw.png"
+    },
+    {
+      "label": "20260715T045458-411f3135",
+      "phase": "phase3c",
+      "status": "ok",
+      "n": 312,
+      "vy_mean": -0.1651219216027415,
+      "vy_std": 1.5208213974381088,
+      "vy_abs_mean": 1.010667111210483,
+      "speed_mean": 3.1798114379308062,
+      "abs_yaw_rate_mean": 0.20966079908096164,
+      "yaw_integral_end_rad": 2.4675322709305023,
+      "corr_vy_speed": -0.45607465462390173,
+      "corr_vy_abs_yaw_rate": 0.19969182593691437,
+      "corr_vy_yaw_integral": -0.5255124531641635,
+      "corr_absvy_speed": 0.7796951876158129,
+      "corr_absvy_abs_yaw_rate": -0.04157966422804631,
+      "corr_absvy_yaw_integral": 0.618760903978095,
+      "slope_vy_per_speed": -0.7304064737802027,
+      "slope_absvy_per_speed": 0.9428677518977447,
+      "slope_absvy_per_yawint": 0.8754690133946655,
+      "implied_mount_yaw_deg_from_slope": 46.92048101399818,
+      "verdict": "static_mount_offset",
+      "verdict_note": "|vy| tracks forward speed more than yaw-integral \u2192 geometric mount yaw/roll.",
+      "plot": "plots/20260715T045458-411f3135_vy_vs_yaw.png"
+    },
+    {
+      "label": "20260715T051458-6092dbc0",
+      "phase": "phase3c",
+      "status": "ok",
+      "n": 141,
+      "vy_mean": -1.0628488540716392,
+      "vy_std": 0.9944515095582744,
+      "vy_abs_mean": 1.0929753816855787,
+      "speed_mean": 3.06329973454339,
+      "abs_yaw_rate_mean": 0.499321955083503,
+      "yaw_integral_end_rad": 1.3969468618810639,
+      "corr_vy_speed": -0.45608197392946354,
+      "corr_vy_abs_yaw_rate": 0.28703521686761596,
+      "corr_vy_yaw_integral": -0.961863537208523,
+      "corr_absvy_speed": 0.3884848113361523,
+      "corr_absvy_abs_yaw_rate": -0.2968130356154598,
+      "corr_absvy_yaw_integral": 0.9517031051076557,
+      "slope_vy_per_speed": -0.7823559596273628,
+      "slope_absvy_per_speed": 0.6441465535328786,
+      "slope_absvy_per_yawint": 1.8818531908400635,
+      "implied_mount_yaw_deg_from_slope": 51.476793864326254,
+      "verdict": "yaw_coupling",
+      "verdict_note": "|vy| grows with yaw activity integral \u2192 frozen-z / tilted-IMU coupling.",
+      "plot": "plots/20260715T051458-6092dbc0_vy_vs_yaw.png"
+    }
+  ],
+  "vertical": [
+    {
+      "label": "20260715T121747-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "status": "ok",
+      "n_close": 10,
+      "dist_mean_m": 3.2460976443485317,
+      "v_norm_mean": 0.5720833333333333,
+      "v_norm_std": 0.008343743497708668,
+      "u_norm_mean": 0.045390625000000004,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.5720833333333333
+    },
+    {
+      "label": "20260715T122040-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "status": "ok",
+      "n_close": 12,
+      "dist_mean_m": 3.7735264829203747,
+      "v_norm_mean": 0.394675925925926,
+      "v_norm_std": 0.28055030324505376,
+      "u_norm_mean": -0.53203125,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.394675925925926
+    },
+    {
+      "label": "20260715T122352-22978559",
+      "phase": "phase3d",
+      "mount_pitch_param": 29.0,
+      "status": "ok",
+      "n_close": 21,
+      "dist_mean_m": 2.478428850389396,
+      "v_norm_mean": 0.4427248677248678,
+      "v_norm_std": 0.3905355126214718,
+      "u_norm_mean": 0.33154761904761915,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.4427248677248678
+    },
+    {
+      "label": "20260715T044545-411f3135",
+      "phase": "phase3c",
+      "status": "no_close_dets"
+    },
+    {
+      "label": "20260715T045100-411f3135",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "status": "ok",
+      "n_close": 8,
+      "dist_mean_m": 5.2053781606272,
+      "v_norm_mean": 0.5074652777777777,
+      "v_norm_std": 0.07060125891523937,
+      "u_norm_mean": 0.00888671875,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.5074652777777777
+    },
+    {
+      "label": "20260715T045458-411f3135",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "status": "ok",
+      "n_close": 8,
+      "dist_mean_m": 3.276912444074674,
+      "v_norm_mean": 0.9208333333333334,
+      "v_norm_std": 0.00240562612162348,
+      "u_norm_mean": 0.045507812499999994,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.9208333333333334
+    },
+    {
+      "label": "20260715T051458-6092dbc0",
+      "phase": "phase3c",
+      "mount_pitch_param": 0.0,
+      "status": "ok",
+      "n_close": 8,
+      "dist_mean_m": 4.033689336650761,
+      "v_norm_mean": 0.5430555555555555,
+      "v_norm_std": 0.01511912573408144,
+      "u_norm_mean": -0.28173828125,
+      "vertical_side": "HIGH/top",
+      "high_score": 0.5430555555555555
+    }
+  ],
+  "pitch_recommendation": {
+    "phase3c_v_norm_mean": 0.6571180555555555,
+    "phase3d_v_norm_mean": 0.4698280423280424,
+    "delta_v_norm": -0.1872900132275131,
+    "recommend_mount_pitch_deg": 34,
+    "note": "phase3d still HIGH (v_norm=0.47); increase mount_pitch toward 34."
+  },
+  "mechanism_synthesis": {
+    "mount_yaw_mean_deg": 0.52,
+    "mount_yaw_std_deg": 0.36,
+    "mount_roll_mean_deg": -1.12,
+    "mount_roll_std_deg": 0.17,
+    "primary": "speed_proportional_frame_error",
+    "reject_large_mount_yaw": true,
+    "reject_yaw_coupling_primary_on_phase3d": true,
+    "recommend_mount_roll_deg": -1.0,
+    "recommend_mount_pitch_deg": 34
+  }
+}
