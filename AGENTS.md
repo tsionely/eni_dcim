@@ -158,7 +158,28 @@ Standing tasks (in priority order, redone as new recordings appear):
 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
    failures) — document with data in your report; do NOT fix code, flag it.
 
-### CURRENT TASK: pin the LATERAL frame offset (phase3d data, P0)
+### CURRENT TASK: the crossing-miss map (convergence dashboard)
+
+We are converging on the first pass fix-by-fix; the missing instrument
+is a unified view of HOW EACH ATTEMPT MISSED, comparable across code
+versions. Build it from ALL R2 fixtures (phase3c/3d/3e/3f, and 3g when
+it lands):
+
+1. **Crossing reconstruction per flight**: from flight.jsonl STATE
+   messages (the lock-accepted, dead-reckoned pose — NOT raw detections,
+   which include lock-rejected fixes and mislead), find the moment the
+   gate plane is crossed or the closest approach, and record the miss
+   vector (lateral m, vertical m relative to opening center).
+2. **The dashboard**: one table + one scatter plot of miss vectors,
+   colored by phase/code version. This shows whether cross-track (3f+)
+   and altitude hold (3g) each shrank their axis, and what residual is
+   left — the next fix gets aimed by this chart.
+3. **Close-range PnP outlier autopsy**: the 2-4m range shows rare huge
+   vertical jumps (max 4m in phase3f F1). Pull the exact frames that
+   produced them from the slices — what does the detector see there
+   (partial ring? banner? other gate through the opening)?
+
+### PREVIOUS: pin the LATERAL frame offset (done: analysis/2026-07-15-lateral-offset)
 
 The vertical phantom is fixed (mount_pitch=29); phase3d exposes a
 LATERAL twin: vy_est reads -1..-3 m/s OPPOSITE to true motion during
