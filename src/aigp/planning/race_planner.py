@@ -41,18 +41,33 @@ class RacePlanner:
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
+        # Miss-recovery (phase3g): per-attempt pass probability is finally
+        # meaningful, so multiply attempts instead of demanding a perfect
+        # first arrow. If the opening escapes the corridor mid-commit,
+        # abort and RETREAT (backward, altitude held) until the gate is
+        # back in view at a sane range — instead of clipping the frame and
+        # flailing into walls, which is how most R2 flights actually died.
+        self.abort_offset_m = float(p.get("planner.commit.abort_offset_m",
+                                          default=0.45))
+        self.retreat_speed = float(p.get("planner.retreat.speed_mps", default=1.2))
+        self.retreat_s = float(p.get("planner.retreat.duration_s", default=2.0))
+        self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
         self.recover_brake_s = float(p.get("planner.recover.brake_s"))
         self.force_hover = bool(p.get("planner.force_hover", default=False))
 
         self._commit_until_ns: int | None = None
         self._commit_v_body: np.ndarray | None = None
         self._recover_until_ns: int | None = None
+        self._retreat_until_ns: int | None = None
+        self._abort_breach = 0
         self._last_seen_side = 1.0   # search toward the last known bearing
 
     def reset(self) -> None:
         self._commit_until_ns = None
         self._commit_v_body = None
         self._recover_until_ns = None
+        self._retreat_until_ns = None
+        self._abort_breach = 0
         self._last_seen_side = 1.0
 
     # -- external events ------------------------------------------------------
@@ -60,11 +75,13 @@ class RacePlanner:
     def on_gate_passed(self) -> None:
         self._commit_until_ns = None
         self._commit_v_body = None
+        self._retreat_until_ns = None
 
     def on_collision(self, now_ns: int) -> None:
         self._recover_until_ns = now_ns + int(self.recover_brake_s * 1e9)
         self._commit_until_ns = None
         self._commit_v_body = None
+        self._retreat_until_ns = None
 
     def _aim_up(self, dist: float) -> float:
         """Aim-above-center insurance, tapered off near the gate.
@@ -94,6 +111,15 @@ class RacePlanner:
                 return Setpoint(phase="recover", v_body=np.zeros(3), yaw_rate=0.0)
             self._recover_until_ns = None
 
+        # -- retreat: back away after a blown attempt until the gate is in
+        # view again at a sane range, then re-approach (multiply attempts).
+        if self._retreat_until_ns is not None:
+            if now_ns < self._retreat_until_ns:
+                return Setpoint(phase="retreat",
+                                v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
+                                yaw_rate=0.0)
+            self._retreat_until_ns = None
+
         # -- commit: LIVE-STEERED through-gate window (phase3b flight 1
         # clipped the top bar because the vector was locked 0.5s/1.5m before
         # the crossing while fresh fixes still existed; gate_rel is
@@ -103,15 +129,42 @@ class RacePlanner:
             if now_ns < self._commit_until_ns and self._commit_v_body is not None:
                 gate = state.gate_rel
                 if gate is not None and gate.t[2] > 0.3:
-                    au = self._aim_up(np.linalg.norm(gate.t))
+                    d_body = ap.cam_to_body(gate.t)
+                    dist = float(np.linalg.norm(d_body))
+                    au = self._aim_up(dist)
+                    # Abort the attempt if the opening is escaping the
+                    # corridor — a frame clip is now certain; retreating
+                    # for another pass beats plowing into the bar. Debounced:
+                    # a single noisy blend sample must not kill a good run.
+                    off = float(np.hypot(d_body[1], d_body[2] - au))
+                    if dist < 1.5 and off > self.abort_offset_m:
+                        self._abort_breach += 1
+                    else:
+                        self._abort_breach = 0
+                    if self._abort_breach >= 4 and self.retreat_enabled:
+                        self._abort_breach = 0
+                        self._commit_until_ns = None
+                        self._commit_v_body = None
+                        self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
+                        return Setpoint(phase="retreat",
+                                        v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
+                                        yaw_rate=0.0)
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
                         gate, state.q_att, au, self.alt_gain)
                     self._commit_v_body = direction * self.commit_speed + extra
                 return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
+            # Window expired without a gate-passed event: we are past the
+            # plane outside the opening (or stalled) — back off and retry
+            # instead of the blind flail that ended most R2 flights.
             self._commit_until_ns = None
             self._commit_v_body = None
+            if self.retreat_enabled:
+                self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
+                return Setpoint(phase="retreat",
+                                v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
+                                yaw_rate=0.0)
 
         gate = state.gate_rel
         if gate is None:

@@ -62,9 +62,13 @@ def test_commit_locks_vector():
     assert sp2.phase == "commit"
     assert np.allclose(sp2.v_body, v_locked)
 
-    # Window expires -> back to search (no new detection).
+    # Window expires without a pass -> RETREAT (back off for another
+    # attempt), and only after the retreat window -> search.
     sp3 = p.plan(int(5e9), "race", make_state(), None)
-    assert sp3.phase == "search"
+    assert sp3.phase == "retreat"
+    assert sp3.v_body[0] < 0.0                    # flying backward
+    sp4 = p.plan(int(5e9 + 3e9), "race", make_state(), None)
+    assert sp4.phase == "search"
 
 
 def test_gate_passed_clears_commit():
