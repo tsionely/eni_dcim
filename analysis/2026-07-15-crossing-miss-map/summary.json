@@ -1,0 +1,248 @@
+{
+  "attempts": [
+    {
+      "phase": "phase3c",
+      "flight_id": "20260715T044545-411f3135",
+      "status": "no_gate_rel",
+      "n_states_with_gate": 0,
+      "closest_dist_m": null,
+      "miss_lateral_m": null,
+      "miss_vertical_m": null,
+      "t_closest_s": null,
+      "gate_rel_age_s": null,
+      "result": "flight timeout",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3c",
+      "flight_id": "20260715T045100-411f3135",
+      "status": "ok",
+      "n_states_with_gate": 461,
+      "closest_dist_m": 1.1178335711390086,
+      "miss_lateral_m": -0.045537500025763455,
+      "miss_vertical_m": 0.9340342894918781,
+      "t_closest_s": 21.6360033,
+      "gate_rel_age_s": 1.21005048,
+      "result": "environment collision (impulse=1.2)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3c",
+      "flight_id": "20260715T045458-411f3135",
+      "status": "ok",
+      "n_states_with_gate": 702,
+      "closest_dist_m": 0.1714315402228998,
+      "miss_lateral_m": -0.010113182443353323,
+      "miss_vertical_m": 0.12169987160348739,
+      "t_closest_s": 22.095969,
+      "gate_rel_age_s": 1.089216016,
+      "result": "environment collision (impulse=5.2)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3c",
+      "flight_id": "20260715T051458-6092dbc0",
+      "status": "ok",
+      "n_states_with_gate": 487,
+      "closest_dist_m": 2.0177589173978934,
+      "miss_lateral_m": 0.16624398594187603,
+      "miss_vertical_m": 1.7618170113689073,
+      "t_closest_s": 20.9764088,
+      "gate_rel_age_s": 1.186280984,
+      "result": "environment collision (impulse=17.5)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3d",
+      "flight_id": "20260715T121747-22978559",
+      "status": "ok",
+      "n_states_with_gate": 837,
+      "closest_dist_m": 0.35618584425949784,
+      "miss_lateral_m": -0.09562162192864664,
+      "miss_vertical_m": 0.23421190112009954,
+      "t_closest_s": 21.5162048,
+      "gate_rel_age_s": 1.02498228,
+      "result": "environment collision (impulse=28.5)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3d",
+      "flight_id": "20260715T122040-22978559",
+      "status": "ok",
+      "n_states_with_gate": 854,
+      "closest_dist_m": 0.2538586980841819,
+      "miss_lateral_m": -0.1738005644059678,
+      "miss_vertical_m": 0.09494547646460215,
+      "t_closest_s": 21.5764928,
+      "gate_rel_age_s": 0.753961872,
+      "result": "environment collision (impulse=1.2)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3d",
+      "flight_id": "20260715T122352-22978559",
+      "status": "ok",
+      "n_states_with_gate": 800,
+      "closest_dist_m": 0.131180840041377,
+      "miss_lateral_m": -0.027703290156032317,
+      "miss_vertical_m": -0.012851038007882487,
+      "t_closest_s": 28.4762068,
+      "gate_rel_age_s": 1.239338832,
+      "result": "environment collision (impulse=3.7)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3e",
+      "flight_id": "20260715T183716-8e6cf1f5",
+      "status": "ok",
+      "n_states_with_gate": 563,
+      "closest_dist_m": 2.457076347697427,
+      "miss_lateral_m": -0.38408734621787394,
+      "miss_vertical_m": 0.9374685016250459,
+      "t_closest_s": 21.9161635,
+      "gate_rel_age_s": 1.185187304,
+      "result": "environment collision (impulse=2.5)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3e",
+      "flight_id": "20260715T184758-8e6cf1f5",
+      "status": "ok",
+      "n_states_with_gate": 1620,
+      "closest_dist_m": 3.1134375745766323,
+      "miss_lateral_m": 0.3701583610008393,
+      "miss_vertical_m": -0.3520083495781384,
+      "t_closest_s": 21.3159754,
+      "gate_rel_age_s": 1.087872568,
+      "result": "stale channels: frame",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3e",
+      "flight_id": "20260715T185046-8e6cf1f5",
+      "status": "ok",
+      "n_states_with_gate": 1034,
+      "closest_dist_m": 1.4524990433387768,
+      "miss_lateral_m": -0.06104805537594985,
+      "miss_vertical_m": -0.024652397589113424,
+      "t_closest_s": 21.4964491,
+      "gate_rel_age_s": 1.210963104,
+      "result": "environment collision (impulse=1.3)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3e",
+      "flight_id": "20260715T185843-7f28e2fb",
+      "status": "ok",
+      "n_states_with_gate": 491,
+      "closest_dist_m": 2.8654344484292094,
+      "miss_lateral_m": -0.11439877599349874,
+      "miss_vertical_m": 0.38376309684816823,
+      "t_closest_s": 21.2562118,
+      "gate_rel_age_s": 1.178309096,
+      "result": "environment collision (impulse=3.0)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3f",
+      "flight_id": "20260715T195033-8edfeec4",
+      "status": "ok",
+      "n_states_with_gate": 688,
+      "closest_dist_m": 1.5286614067293676,
+      "miss_lateral_m": -0.23838839057598424,
+      "miss_vertical_m": 0.2985566068943142,
+      "t_closest_s": 22.0765123,
+      "gate_rel_age_s": 1.204154512,
+      "result": "environment collision (impulse=4.2)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3f",
+      "flight_id": "20260715T200011-8edfeec4",
+      "status": "ok",
+      "n_states_with_gate": 697,
+      "closest_dist_m": 2.5859118942410158,
+      "miss_lateral_m": 0.012290733720037845,
+      "miss_vertical_m": 0.510418663316294,
+      "t_closest_s": 21.4559563,
+      "gate_rel_age_s": 1.191966376,
+      "result": "environment collision (impulse=1.9)",
+      "gates_passed": 0
+    },
+    {
+      "phase": "phase3f",
+      "flight_id": "20260715T200142-8edfeec4",
+      "status": "ok",
+      "n_states_with_gate": 670,
+      "closest_dist_m": 2.0361996644122007,
+      "miss_lateral_m": -0.08546079558436828,
+      "miss_vertical_m": 0.20104615623832522,
+      "t_closest_s": 21.5961238,
+      "gate_rel_age_s": 1.255873344,
+      "result": "environment collision (impulse=2.4)",
+      "gates_passed": 0
+    }
+  ],
+  "pnp_outliers": [
+    {
+      "t": 14.5032132,
+      "dist": 4.43057712868304,
+      "tx": 0.14326179881848994,
+      "ty": -2.863121729204239,
+      "tz": 3.378168692349017,
+      "center": [
+        331.5,
+        109.5
+      ],
+      "conf": 1.0,
+      "ts_ns": 1784118260518789700,
+      "reason": "|ty|=2.86m at 4.43m",
+      "dty": null,
+      "phase": "phase3d",
+      "flight_id": "20260715T122352-22978559",
+      "frame_file": "pnp_outliers/phase3d_978559_t14.5_ty-2.9.jpg"
+    },
+    {
+      "t": 7.0796246,
+      "dist": 4.0054238062343455,
+      "tx": -0.4562110224302273,
+      "ty": -2.534124566525223,
+      "tz": 3.06814342101137,
+      "center": [
+        281.0,
+        123.0
+      ],
+      "conf": 1.0,
+      "ts_ns": 1784118061039329800,
+      "reason": "|ty|=2.53m at 4.01m",
+      "dty": 0.7216673964827331,
+      "phase": "phase3d",
+      "flight_id": "20260715T122040-22978559",
+      "frame_file": "pnp_outliers/phase3d_978559_t7.1_ty-2.5.jpg"
+    },
+    {
+      "t": 6.9538476,
+      "dist": 4.421453738776524,
+      "tx": 1.6245890510202166,
+      "ty": -2.139176000652532,
+      "tz": 3.5119637836513022,
+      "center": [
+        450.5,
+        161.75
+      ],
+      "conf": 1.0,
+      "ts_ns": 1784145054115956500,
+      "reason": "|ty|=2.14m at 4.42m",
+      "dty": 0.12331343227264613,
+      "phase": "phase3f",
+      "flight_id": "20260715T195033-8edfeec4",
+      "frame_file": "pnp_outliers/phase3f_dfeec4_t7.0_ty-2.1.jpg"
+    }
+  ],
+  "autopsy_notes": [
+    "`phase3d_978559_t14.5_ty-2.9.jpg`: |ty|=2.86m at 4.43m; center=[331.5, 109.5]; slice_t\u22481.17s (err 13.33s). ",
+    "`phase3d_978559_t7.1_ty-2.5.jpg`: |ty|=2.53m at 4.01m; center=[281.0, 123.0]; slice_t\u22481.14s (err 5.94s). ",
+    "`phase3f_dfeec4_t7.0_ty-2.1.jpg`: |ty|=2.14m at 4.42m; center=[450.5, 161.75]; slice_t\u22481.39s (err 5.56s). "
+  ],
+  "phase3g_present": false
+}
