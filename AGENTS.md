@@ -140,7 +140,27 @@ Standing tasks (in priority order, redone as new recordings appear):
 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
    failures) — document with data in your report; do NOT fix code, flag it.
 
-### CURRENT TASK: R2 deep-dive on the phase3a slices (already in fixtures/)
+### CURRENT TASK: pin the LATERAL frame offset (phase3d data, P0)
+
+The vertical phantom is fixed (mount_pitch=29); phase3d exposes a
+LATERAL twin: vy_est reads -1..-3 m/s OPPOSITE to true motion during
+approach (see flight 20260715T121747: vy_est -2..-3 while the gate
+bearing converges rightward). Pin its mechanism on the phase3d slices +
+flight.jsonl:
+
+1. **Camera mount YAW/ROLL offsets**: from rest-phase frames across all
+   phase3c/3d flights — gate azimuth in camera vs the known start-pad
+   geometry (drone parked on the same pad, gate bearing repeatable), and
+   frame-edge roll angle vs IMU gravity roll. Deliver offsets in deg
+   with uncertainty, like the pitch calibration in docs/08.
+2. **Phantom-vs-yaw-activity correlation**: from flight.jsonl, correlate
+   the vy_est error signature against commanded yaw activity — tests the
+   frozen-z/tilted-IMU coupling theory vs a static mount yaw offset
+   (constant-with-speed => mount; grows-with-yaw-integral => coupling).
+3. **Did mount_pitch=29 land?**: compare vertical crossing errors
+   phase3c (pre) vs phase3d (post) — quantify, and recommend 24/29/34.
+
+### PREVIOUS: R2 deep-dive on the phase3a slices (done: analysis/2026-07-14-r2-deepdive)
 
 The committed slices (r2_f2/f3_slice_start.aigprec) show the R2 world:
 red AI-GP gates, a glowing CYAN racing line through the whole track, red
@@ -242,7 +262,32 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3d — R2-TRAINING with the camera mount modeled
+## CURRENT TASK: Phase 3e — SLOW approach (phantom starves at low speed)
+
+phase3d confirmed the altitude fix (failure signature is no longer
+uniformly high/top) and exposed the LAST blocker: a persistent LATERAL
+phantom velocity (vy_est -1..-3 m/s opposite to true motion) during
+approach, scaling with speed/yaw activity — same disease as the pitch
+phantom, lateral axis. Until the analyst pins the lateral frame offset,
+starve the phantom: fly SLOW. At 1.2 m/s the phantom shrinks to ~0.5 m/s
+and the servo can hold the opening.
+
+1. `git pull`. SIM LOCK (good discipline last cycle — keep it).
+   R2-TRAINING.
+2. THE SLOW FLIGHT, 3 times:
+   `python scripts/fly_once.py --max-duration 150
+    --patch planner.approach.speed_far_mps=1.2
+    --patch planner.approach.speed_near_mps=0.8
+    --patch planner.commit.speed_mps=1.2
+    --patch planner.commit.duration_s=2.5`
+   A pass at ANY speed is the milestone. Note crossing side as usual.
+3. Optional flight 4 — the mount-pitch A/B that phase3d skipped (its F4
+   was a stale re-report of the old roll-scale flight):
+   slow patches as above PLUS `--patch perception.camera.mount_pitch_deg=24`
+   if flights 1-3 still cross high, or =34 if they cross low.
+4. Collect `--label phase3e-r2training-slow`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3d — R2-TRAINING with the camera mount modeled
 
 phase3c telemetry closed the case on the "always crosses high" mystery:
 the planner COMMANDED descent, the estimator CLAIMED descent (+1..+3
