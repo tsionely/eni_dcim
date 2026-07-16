@@ -347,12 +347,14 @@ disambiguates), the two-gate mock test passes, and retreat/retry covers
 misses per gate.
 
 1. `git pull` (HEAD >= 43ef2b0). SIM LOCK. R2-TRAINING.
-2. 3 flights, slow speed patches, LONGER window:
+2. 3 flights, DEFAULT SPEEDS (the milestone pass was a first-attempt,
+   default-speed run — 2.2s from takeoff to through the gate; the slow
+   crutch is retired), longer window:
    `python scripts/fly_once.py --max-duration 300
-    --patch planner.approach.speed_far_mps=1.2
-    --patch planner.approach.speed_near_mps=0.8
-    --patch planner.commit.speed_mps=1.2
     --patch safety.flight_timeout_s=300`
+   Note: the milestone flight died 13.5s AFTER its pass with a hard env
+   hit (impulse 15.5) while approaching gate 2 — R2 has obstacles
+   (pillars, parked aircraft) between stations. Note WHERE it hits.
 3. Per flight note: gates passed (the race HUD count), what happens
    AFTER each pass (does it find the next gate? how long does search
    take?), where the run ends.
