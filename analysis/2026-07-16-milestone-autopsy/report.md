@@ -57,14 +57,26 @@ Interpretation: gate-2 attempt aborted almost immediately — age-aware lock was
 
 ### What did it hit?
 
-Frames: `collision_frames/` (operator `f4_*` + any extracted vision frames).
+**Correction:** operator `f4_late.jpg` / `f4_end.jpg` are **not** sim FPV (pause menu / terminal UI -- `f4_late` is ~37% red UI chrome). Collision ID must come from `vision.aigprec`.
 
-- `f4_end.jpg`: edge vert_peak=39.7 horiz_peak=255.0 (high vert_peak suggests pillar/column structure).
-- `f4_late.jpg`: edge vert_peak=54.4 horiz_peak=152.0 (high vert_peak suggests pillar/column structure).
-- `f4_mid.jpg`: edge vert_peak=26.1 horiz_peak=96.6 (high vert_peak suggests pillar/column structure).
-- Kinematics: in the last 1s before collision, STATE `gate_rel` dist jumped ~14m→40m (lock switch / far gate), while flying straight toward the stale/next lock — consistent with an intervening obstacle not in the gate model.
+Extracted FPV frames (`_extract_hit.py` -> `collision_frames/vision_t*.jpg`, flight-t relative to first log `mono_ns`):
 
-- Vision coverage: `{"path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec", "n_assembled_frames": 4512, "rec_duration_s": 22.2347633, "flight_t_first": 17.7544988, "flight_t_last": 39.9892621, "covers_pass": true, "covers_collision": true}`
+| tgt | t | err | cyan_frac | center80 bright | note |
+|---|---:|---:|---:|---:|---|
+| 26.4 pass | 26.392 | 0.008 | 0.0050 | 28.8 | through gate 1 |
+| 32.5 commit | 32.502 | 0.002 | 0.0000 | 38.7 | gate-2 commit |
+| 33.0 retreat | 33.001 | 0.001 | 0.0000 | 10.5 | backing off |
+| 35.5 | 35.500 | 0.000 | 0.0000 | 43.7 | still some scene detail |
+| 37.5 | 37.499 | 0.001 | 0.0000 | 22.2 | dark mass growing |
+| 38.5 | 38.501 | 0.001 | 0.0000 | 18.0 | strong horizontal edge on right |
+| 39.5 | 39.499 | 0.001 | 0.0000 | 0.8 | FOV nearly black |
+| 39.79 collision | 39.790 | 0.000 | 0.0000 | 3.7 | impulse 15.5 |
+
+**Visual ID from FPV near t=39.5-39.8:** the camera flies into a **large dark surface that fills the FOV** (center 80x80 brightness ~1-4; >90% of pixels near-black). This is **not a thin pillar/column** -- a freestanding pillar would leave lit hangar scene on one or both sides; here the dark mass occludes almost the entire frame. At t~38.5 a broad **horizontal edge** cuts across the right FOV, then the view goes black as range closes -- consistent with the face/underside of a **large structure** (parked-aircraft scale or hangar wall/obstacle slab), not a vertical column. Underexposure at contact prevents a confident aircraft-vs-wall paint-job ID; **exclude pillar**.
+
+Kinematics agree: last-second `gate_rel` dist jump ~14m->40m (lock switch) while flying straight -- obstacle was never in the gate model.
+
+Vision coverage: 4512 assembled frames, flight_t ~17.75-39.99 s (covers pass + collision).
 
 ## 3. Cyan line as obstacle-free corridor (phase4b input)
 
@@ -81,7 +93,7 @@ HSV bands (from R2 deep-dive): H∈[90,98], S≥120, V≥120.
 | `slice_115732-phase3i-r2tr__r2i_slice_start` | 198 | 100.0 | 0.0292 | 0.00 |
 | `slice_132549-phase3j-r2tr_erun_slice_start` | 290 | 100.0 | 0.0343 | 0.00 |
 
-### Operator screens (collision context)
+### Operator screens (not FPV -- UI only; ignore for cyan/obstacle ID)
 
 - `f4_mid.jpg`: cyan_frac=0.0000 (absent/weak)
 - `f4_late.jpg`: cyan_frac=0.0013 (absent/weak)
@@ -89,11 +101,13 @@ HSV bands (from R2 deep-dive): H∈[90,98], S≥120, V≥120.
 
 ### Verdict (phase4b navigation design)
 
-**NO — not continuously segmentable in this window** (present 26%). Do not bet phase4b on cyan-only corridor follow without better inter-gate recordings.
+**NO -- not continuously segmentable in this window** (present 26% of `pass_intergate` 2559 frames). Inter-gate recording exists; cyan drops out for multi-second gaps -- do not bet phase4b on cyan-only follow.
 
 Would following the line have avoided the hit?
 
-- **Cannot prove from pixels yet** (inter-gate frames missing/short). Kinematically the hit is a straight-line chase after a failed gate-2 commit; any corridor prior (cyan or map) that keeps the path off pillars/aircraft would address the failure mode. **Collect inter-gate slice next.**
+- We **do** have inter-gate vision: `pass_intergate` = **2559 frames** from pass->collision with cyan present on **26%** of frames (mean frac 0.0022; max absent gap ~7.8 s). Cyan is **not** continuous through the corridor -- it drops out for multi-second stretches, including the final approach where FPV cyan_frac=0 from t~32.5 through the hit.
+- So: following cyan when visible might have helped earlier in the segment, but it would **not** have steered clear at the collision itself (line absent in FPV for ~7 s before impact). Phase4b needs a fallback when the ribbon disappears -- cyan-only is insufficient. Kinematically the hit remains a straight-line chase after the failed gate-2 commit/retreat.
+
 
 ## Deliverables
 

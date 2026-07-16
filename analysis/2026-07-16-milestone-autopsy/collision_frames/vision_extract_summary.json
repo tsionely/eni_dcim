@@ -1,0 +1,78 @@
+{
+  "t0": 617446274798100,
+  "n_assembled": 4512,
+  "frames": [
+    {
+      "tgt": 26.4,
+      "label": "pass",
+      "t": 26.3921286,
+      "err": 0.007871399999999085,
+      "cyan_frac": 0.005021701388888889,
+      "center_bright_80": 28.75296875,
+      "file": "vision_t26.4.jpg"
+    },
+    {
+      "tgt": 32.5,
+      "label": "commit",
+      "t": 32.5020707,
+      "err": 0.0020706999999973164,
+      "cyan_frac": 0.0,
+      "center_bright_80": 38.68484375,
+      "file": "vision_t32.5.jpg"
+    },
+    {
+      "tgt": 33.0,
+      "label": "retreat",
+      "t": 33.0008942,
+      "err": 0.0008941999999976247,
+      "cyan_frac": 0.0,
+      "center_bright_80": 10.49046875,
+      "file": "vision_t33.0.jpg"
+    },
+    {
+      "tgt": 35.5,
+      "label": "",
+      "t": 35.499904,
+      "err": 9.599999999920783e-05,
+      "cyan_frac": 0.0,
+      "center_bright_80": 43.7153125,
+      "file": "vision_t35.5.jpg"
+    },
+    {
+      "tgt": 37.5,
+      "label": "",
+      "t": 37.499223,
+      "err": 0.0007769999999993615,
+      "cyan_frac": 0.0,
+      "center_bright_80": 22.23484375,
+      "file": "vision_t37.5.jpg"
+    },
+    {
+      "tgt": 38.5,
+      "label": "",
+      "t": 38.5005717,
+      "err": 0.0005717000000018402,
+      "cyan_frac": 0.0,
+      "center_bright_80": 18.03390625,
+      "file": "vision_t38.5.jpg"
+    },
+    {
+      "tgt": 39.5,
+      "label": "",
+      "t": 39.4986073,
+      "err": 0.0013926999999966938,
+      "cyan_frac": 0.0,
+      "center_bright_80": 0.84578125,
+      "file": "vision_t39.5.jpg"
+    },
+    {
+      "tgt": 39.79,
+      "label": "collision",
+      "t": 39.7897855,
+      "err": 0.00021449999999845204,
+      "cyan_frac": 0.0,
+      "center_bright_80": 3.7365625,
+      "file": "vision_t39.8.jpg"
+    }
+  ]
+}
