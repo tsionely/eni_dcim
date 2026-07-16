@@ -14,41 +14,30 @@ Phase3h+ **retry cycles**: each `approach→commit→(retreat)?` segmented via `
 | phase | flight | att | cycle | status | closest dist (m) | lateral (m) | vertical (m) | age (s) | gates | result |
 |---|---|---:|---|---|---:|---:|---:|---:|---:|---|
 | phase3c | `20260715T044545-411f3135` | 1/1 | `—` | no_gate_rel | — | — | — | — | 0 | flight timeout |
-| phase3c | `20260715T045100-411f3135` | 1/2 | `approach+commit` | ok | 1.12 | -0.05 | +0.93 | 1.21 | 0 | environment collision (impulse=1.2) |
-| phase3c | `20260715T045100-411f3135` | 2/2 | `approach+recover` | ok | 19.90 | +7.51 | +7.11 | 0.10 | 0 | environment collision (impulse=1.2) |
-| phase3c | `20260715T045458-411f3135` | 1/3 | `approach+commit` | ok | 0.17 | -0.01 | +0.12 | 1.09 | 0 | environment collision (impulse=5.2) |
-| phase3c | `20260715T045458-411f3135` | 2/3 | `approach+commit+recover` | ok | 1.56 | -0.23 | +0.65 | 1.19 | 0 | environment collision (impulse=5.2) |
-| phase3c | `20260715T045458-411f3135` | 3/3 | `approach` | ok | 10.76 | +1.86 | +1.39 | 0.54 | 0 | environment collision (impulse=5.2) |
+| phase3c | `20260715T045100-411f3135` | 1/1 | `approach+commit+approach+recover` | ok | 1.12 | -0.05 | +0.93 | 1.21 | 0 | environment collision (impulse=1.2) |
+| phase3c | `20260715T045458-411f3135` | 1/2 | `approach+commit+approach+commit+recover` | ok | 0.17 | -0.01 | +0.12 | 1.09 | 0 | environment collision (impulse=5.2) |
+| phase3c | `20260715T045458-411f3135` | 2/2 | `approach` | ok | 10.76 | +1.86 | +1.39 | 0.54 | 0 | environment collision (impulse=5.2) |
 | phase3c | `20260715T051458-6092dbc0` | 1/1 | `approach` | ok | 2.02 | +0.17 | +1.76 | 1.19 | 0 | environment collision (impulse=17.5) |
-| phase3d | `20260715T121747-22978559` | 1/3 | `approach+commit` | ok | 0.36 | -0.10 | +0.23 | 1.02 | 0 | environment collision (impulse=28.5) |
-| phase3d | `20260715T121747-22978559` | 2/3 | `approach` | ok | 3.06 | +0.10 | -1.39 | 1.50 | 0 | environment collision (impulse=28.5) |
-| phase3d | `20260715T121747-22978559` | 3/3 | `approach` | ok | 9.29 | +1.26 | -1.69 | 1.18 | 0 | environment collision (impulse=28.5) |
-| phase3d | `20260715T122040-22978559` | 1/3 | `approach+commit` | ok | 1.82 | -0.43 | +0.24 | 1.18 | 0 | environment collision (impulse=1.2) |
-| phase3d | `20260715T122040-22978559` | 2/3 | `approach+commit` | ok | 1.34 | +0.21 | -0.59 | 1.49 | 0 | environment collision (impulse=1.2) |
-| phase3d | `20260715T122040-22978559` | 3/3 | `approach` | ok | 5.78 | +3.52 | -2.31 | 0.01 | 0 | environment collision (impulse=1.2) |
-| phase3d | `20260715T122352-22978559` | 1/4 | `approach+commit` | ok | 0.18 | -0.14 | +0.10 | 1.19 | 0 | environment collision (impulse=3.7) |
-| phase3d | `20260715T122352-22978559` | 2/4 | `approach` | ok | 5.86 | -0.45 | -0.39 | 1.48 | 0 | environment collision (impulse=3.7) |
-| phase3d | `20260715T122352-22978559` | 3/4 | `approach+commit` | ok | 0.13 | -0.03 | -0.01 | 1.24 | 0 | environment collision (impulse=3.7) |
-| phase3d | `20260715T122352-22978559` | 4/4 | `approach+commit` | ok | 1.80 | +0.48 | -1.02 | 0.20 | 0 | environment collision (impulse=3.7) |
+| phase3d | `20260715T121747-22978559` | 1/2 | `approach+commit+approach` | ok | 0.36 | -0.10 | +0.23 | 1.02 | 0 | environment collision (impulse=28.5) |
+| phase3d | `20260715T121747-22978559` | 2/2 | `approach` | ok | 9.29 | +1.26 | -1.69 | 1.18 | 0 | environment collision (impulse=28.5) |
+| phase3d | `20260715T122040-22978559` | 1/2 | `approach+commit+approach+commit` | ok | 1.34 | +0.21 | -0.59 | 1.49 | 0 | environment collision (impulse=1.2) |
+| phase3d | `20260715T122040-22978559` | 2/2 | `approach` | ok | 5.78 | +3.52 | -2.31 | 0.01 | 0 | environment collision (impulse=1.2) |
+| phase3d | `20260715T122352-22978559` | 1/2 | `approach+commit+approach` | ok | 0.18 | -0.14 | +0.10 | 1.19 | 0 | environment collision (impulse=3.7) |
+| phase3d | `20260715T122352-22978559` | 2/2 | `approach+commit+approach+commit` | ok | 0.13 | -0.03 | -0.01 | 1.24 | 0 | environment collision (impulse=3.7) |
 | phase3e | `20260715T183716-8e6cf1f5` | 1/1 | `approach` | ok | 2.46 | -0.38 | +0.94 | 1.19 | 0 | environment collision (impulse=2.5) |
 | phase3e | `20260715T184758-8e6cf1f5` | 1/1 | `approach+recover` | ok | 3.11 | +0.37 | -0.35 | 1.09 | 0 | stale channels: frame |
-| phase3e | `20260715T185046-8e6cf1f5` | 1/2 | `approach+commit` | ok | 1.45 | -0.06 | -0.02 | 1.21 | 0 | environment collision (impulse=1.3) |
-| phase3e | `20260715T185046-8e6cf1f5` | 2/2 | `approach+recover` | ok | 15.00 | +1.91 | -0.85 | 1.19 | 0 | environment collision (impulse=1.3) |
+| phase3e | `20260715T185046-8e6cf1f5` | 1/1 | `approach+commit+approach+recover` | ok | 1.45 | -0.06 | -0.02 | 1.21 | 0 | environment collision (impulse=1.3) |
 | phase3e | `20260715T185843-7f28e2fb` | 1/1 | `approach` | ok | 2.87 | -0.11 | +0.38 | 1.18 | 0 | environment collision (impulse=3.0) |
-| phase3f | `20260715T195033-8edfeec4` | 1/2 | `approach+commit` | ok | 1.53 | -0.24 | +0.30 | 1.20 | 0 | environment collision (impulse=4.2) |
-| phase3f | `20260715T195033-8edfeec4` | 2/2 | `approach+recover` | ok | 14.13 | +1.26 | -0.92 | 0.34 | 0 | environment collision (impulse=4.2) |
+| phase3f | `20260715T195033-8edfeec4` | 1/1 | `approach+commit+approach+recover` | ok | 1.53 | -0.24 | +0.30 | 1.20 | 0 | environment collision (impulse=4.2) |
 | phase3f | `20260715T200011-8edfeec4` | 1/1 | `approach+recover` | ok | 2.59 | +0.01 | +0.51 | 1.19 | 0 | environment collision (impulse=1.9) |
 | phase3f | `20260715T200142-8edfeec4` | 1/1 | `approach` | ok | 2.04 | -0.09 | +0.20 | 1.26 | 0 | environment collision (impulse=2.4) |
-| phase3g | `20260715T203300-8edfeec4` | 1/3 | `approach+commit+recover` | ok | 1.27 | +0.04 | +0.06 | 1.19 | 0 | environment collision (impulse=10.1) |
-| phase3g | `20260715T203300-8edfeec4` | 2/3 | `approach+commit` | ok | 0.45 | +0.44 | -0.06 | 1.20 | 0 | environment collision (impulse=10.1) |
-| phase3g | `20260715T203300-8edfeec4` | 3/3 | `approach` | ok | 16.27 | -4.58 | +0.63 | 1.23 | 0 | environment collision (impulse=10.1) |
-| phase3g | `20260715T204925-8edfeec4` | 1/4 | `approach+commit` | ok | 1.98 | -0.12 | +0.19 | 1.19 | 0 | environment collision (impulse=5.1) |
-| phase3g | `20260715T204925-8edfeec4` | 2/4 | `approach` | ok | 13.75 | +1.64 | -0.63 | 0.00 | 0 | environment collision (impulse=5.1) |
-| phase3g | `20260715T204925-8edfeec4` | 3/4 | `approach` | ok | 31.23 | -5.23 | +0.92 | 1.49 | 0 | environment collision (impulse=5.1) |
-| phase3g | `20260715T204925-8edfeec4` | 4/4 | `approach` | ok | 33.32 | -4.86 | +5.05 | 1.24 | 0 | environment collision (impulse=5.1) |
+| phase3g | `20260715T203300-8edfeec4` | 1/2 | `approach+commit+recover` | ok | 1.27 | +0.04 | +0.06 | 1.19 | 0 | environment collision (impulse=10.1) |
+| phase3g | `20260715T203300-8edfeec4` | 2/2 | `approach+commit+approach` | ok | 0.45 | +0.44 | -0.06 | 1.20 | 0 | environment collision (impulse=10.1) |
+| phase3g | `20260715T204925-8edfeec4` | 1/3 | `approach+commit+approach` | ok | 1.98 | -0.12 | +0.19 | 1.19 | 0 | environment collision (impulse=5.1) |
+| phase3g | `20260715T204925-8edfeec4` | 2/3 | `approach` | ok | 31.23 | -5.23 | +0.92 | 1.49 | 0 | environment collision (impulse=5.1) |
+| phase3g | `20260715T204925-8edfeec4` | 3/3 | `approach` | ok | 33.32 | -4.86 | +5.05 | 1.24 | 0 | environment collision (impulse=5.1) |
 | phase3g | `20260715T205124-8edfeec4` | 1/1 | `approach+commit` | ok | 1.84 | -0.08 | +0.29 | 1.19 | 0 | environment collision (impulse=1.2) |
-| phase3g | `20260715T205845-fc86a160` | 1/2 | `approach+commit` | ok | 1.12 | -0.01 | +0.09 | 1.26 | 0 | environment collision (impulse=9.3) |
-| phase3g | `20260715T205845-fc86a160` | 2/2 | `approach+commit` | ok | 0.05 | -0.05 | +0.02 | 1.10 | 0 | environment collision (impulse=9.3) |
+| phase3g | `20260715T205845-fc86a160` | 1/1 | `approach+commit+approach+commit` | ok | 0.05 | -0.05 | +0.02 | 1.10 | 0 | environment collision (impulse=9.3) |
 | phase3h | `20260715T213138-8edfeec4` | 1/1 | `approach+commit+retreat` | ok | 1.34 | -0.14 | -0.47 | 0.26 | 0 | gate clip budget exceeded (11) |
 | phase3h | `20260715T213225-8edfeec4` | 1/2 | `approach+commit+retreat` | ok | 0.72 | -0.12 | -0.05 | 1.21 | 0 | environment collision (impulse=2.5) |
 | phase3h | `20260715T213225-8edfeec4` | 2/2 | `approach` | ok | 29.31 | -18.28 | -3.51 | 0.01 | 0 | environment collision (impulse=2.5) |
@@ -57,16 +46,18 @@ Phase3h+ **retry cycles**: each `approach→commit→(retreat)?` segmented via `
 | phase3h | `20260716T022502-8edfeec4` | 1/2 | `approach+commit+retreat` | ok | 1.33 | -0.88 | -0.49 | 0.23 | 0 | environment collision (impulse=7.6) |
 | phase3h | `20260716T022502-8edfeec4` | 2/2 | `approach` | ok | 8.99 | +0.20 | -2.55 | 0.03 | 0 | environment collision (impulse=7.6) |
 
-## Phase summary (ok attempts only)
+## Phase summary (ok attempts with closest dist ≤ 5 m)
+
+Far retries / search flails remain in the table above but are excluded here and from the scatter so the convergence chart stays readable.
 
 | phase | n | mean |lat| | mean lat | mean vert | mean |vert| | rms miss |
 |---|---:|---:|---:|---:|---:|---:|
-| phase3c | 6 | 1.64 | +1.54 | +1.99 | 1.99 | 4.41 |
-| phase3d | 10 | 0.67 | +0.44 | -0.68 | 0.80 | 1.63 |
-| phase3e | 5 | 0.57 | +0.34 | +0.02 | 0.51 | 1.08 |
-| phase3f | 4 | 0.40 | +0.24 | +0.02 | 0.48 | 0.85 |
-| phase3g | 10 | 1.70 | -1.28 | +0.65 | 0.79 | 3.19 |
-| phase3h | 7 | 2.85 | -2.79 | -1.01 | 1.02 | 7.12 |
+| phase3c | 3 | 0.07 | +0.04 | +0.94 | 0.94 | 1.16 |
+| phase3d | 4 | 0.12 | -0.01 | -0.07 | 0.23 | 0.35 |
+| phase3e | 4 | 0.23 | -0.05 | +0.24 | 0.42 | 0.60 |
+| phase3f | 3 | 0.11 | -0.10 | +0.34 | 0.34 | 0.39 |
+| phase3g | 5 | 0.15 | +0.05 | +0.10 | 0.12 | 0.26 |
+| phase3h | 5 | 0.29 | -0.28 | -0.20 | 0.22 | 0.52 |
 
 ## Phase3h retry spotlight
 
@@ -88,7 +79,7 @@ Each flight may have multiple attempts (retreat-and-retry). Misses below are per
 
 ![miss scatter](plots/miss_scatter.png)
 
-Origin = gate opening center. Points = STATE closest approach **per attempt**. Ideal pass sits near (0,0). Right/up in the plot = aircraft LEFT / HIGH. Labels: flight hex; `#N` suffix when a flight has multiple attempts.
+Origin = gate opening center. Points = STATE closest approach **per attempt** (closest dist ≤ 5 m). Ideal pass sits near (0,0). Right/up = aircraft LEFT / HIGH. Labels: flight hex; `#N` when a flight has multiple attempts. Far retries stay in the table only.
 
 ## Close-range PnP outlier autopsy (2–4.5 m)
 

@@ -50,9 +50,7 @@ PHASE_COLORS = {
 }
 
 # Planner phases that belong to a gate attempt window.
-_ATTEMPT_PHASES = frozenset({"approach", "commit"})
 _ATTEMPT_START = "approach"
-_ATTEMPT_ENDERS = frozenset({"retreat", "recover", "hover", "search", "takeoff"})
 
 
 @dataclass
@@ -88,39 +86,52 @@ def _segment_attempts_from_setpoints(
 ) -> list[tuple[float, float, list[str]]]:
     """Return [(t_start, t_end, phases_in_attempt), ...] from (t, phase) stream.
 
-    An attempt starts on transition INTO approach. It includes approach/commit
-    until retreat/recover/hover (or next approach). Retreat itself is recorded
-    in phases but the miss is evaluated on approach+commit STATE only.
+    An attempt starts on `approach` after takeoff/hover/retreat/recover/search
+    (or at first approach). `commit→approach` continues the SAME attempt
+    (live-steered mid-pass, not a retry). `retreat`/`recover` closes the
+    attempt; a later `approach` is a new retry cycle.
     """
     if not setpoints:
         return []
     attempts: list[tuple[float, float, list[str]]] = []
     cur_start: float | None = None
     cur_phases: list[str] = []
-    prev = None
+    prev: str | None = None
+
+    def close(at_t: float) -> None:
+        nonlocal cur_start, cur_phases
+        if cur_start is not None:
+            attempts.append((cur_start, at_t, list(cur_phases)))
+        cur_start = None
+        cur_phases = []
+
     for t, ph in setpoints:
-        if ph == _ATTEMPT_START and prev != _ATTEMPT_START:
+        if ph == _ATTEMPT_START:
+            if cur_start is None:
+                cur_start = t
+                cur_phases = [ph]
+            elif prev == "commit":
+                # Same physical pass — do not split.
+                if cur_phases[-1] != ph:
+                    cur_phases.append(ph)
+            elif prev in ("retreat", "recover", "hover", "search", "takeoff"):
+                # Should already be closed; start fresh if not.
+                if cur_start is not None:
+                    close(t)
+                cur_start = t
+                cur_phases = [ph]
+        elif ph == "commit" and cur_start is not None:
+            if not cur_phases or cur_phases[-1] != ph:
+                cur_phases.append(ph)
+        elif ph in ("retreat", "recover"):
             if cur_start is not None:
-                attempts.append((cur_start, t, list(cur_phases)))
-            cur_start = t
-            cur_phases = [ph]
-        elif cur_start is not None:
-            if ph in _ATTEMPT_PHASES:
                 if not cur_phases or cur_phases[-1] != ph:
                     cur_phases.append(ph)
-            elif ph in _ATTEMPT_ENDERS:
-                if ph == "retreat" or ph == "recover":
-                    if not cur_phases or cur_phases[-1] != ph:
-                        cur_phases.append(ph)
-                    attempts.append((cur_start, t, list(cur_phases)))
-                    cur_start = None
-                    cur_phases = []
-                else:
-                    # hover/search: close attempt at this transition
-                    attempts.append((cur_start, t, list(cur_phases)))
-                    cur_start = None
-                    cur_phases = []
+                close(t)
+        elif ph in ("hover", "search") and cur_start is not None:
+            close(t)
         prev = ph
+
     if cur_start is not None and setpoints:
         attempts.append((cur_start, setpoints[-1][0], list(cur_phases)))
     return attempts
@@ -593,12 +604,27 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
             f"{a.gate_rel_age_s:.2f} | {a.gates_passed} | {a.result or '—'} |"
         )
 
-    # Phase summaries
-    lines += ["", "## Phase summary (ok attempts only)", ""]
+    # Phase summaries (close approaches only — far post-retreat flails excluded)
+    CLOSE_M = 5.0
+    lines += [
+        "",
+        f"## Phase summary (ok attempts with closest dist ≤ {CLOSE_M:.0f} m)",
+        "",
+        "Far retries / search flails remain in the table above but are excluded "
+        "here and from the scatter so the convergence chart stays readable.",
+        "",
+    ]
     lines.append("| phase | n | mean |lat| | mean lat | mean vert | mean |vert| | rms miss |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|")
     for phase in ["phase3c", "phase3d", "phase3e", "phase3f", "phase3g", "phase3h", "phase3i"]:
-        ok = [a for a in attempts if a.phase == phase and a.status == "ok"]
+        ok = [
+            a
+            for a in attempts
+            if a.phase == phase
+            and a.status == "ok"
+            and a.closest_dist_m is not None
+            and a.closest_dist_m <= CLOSE_M
+        ]
         if not ok:
             continue
         lat = np.array([a.miss_lateral_m for a in ok], float)
@@ -642,9 +668,10 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
         "",
         "![miss scatter](plots/miss_scatter.png)",
         "",
-        "Origin = gate opening center. Points = STATE closest approach **per attempt**. "
-        "Ideal pass sits near (0,0). Right/up in the plot = aircraft LEFT / HIGH. "
-        "Labels: flight hex; `#N` suffix when a flight has multiple attempts.",
+        "Origin = gate opening center. Points = STATE closest approach **per attempt** "
+        "(closest dist ≤ 5 m). Ideal pass sits near (0,0). Right/up = aircraft LEFT / HIGH. "
+        "Labels: flight hex; `#N` when a flight has multiple attempts. "
+        "Far retries stay in the table only.",
         "",
         "## Close-range PnP outlier autopsy (2–4.5 m)",
         "",
@@ -691,17 +718,22 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
     (OUT / "report.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def plot_scatter(attempts: list[Attempt]):
+def plot_scatter(attempts: list[Attempt], close_m: float = 5.0):
     fig, ax = plt.subplots(figsize=(9.5, 7.5))
     for phase, color in PHASE_COLORS.items():
-        pts = [a for a in attempts if a.phase == phase and a.status == "ok"]
+        pts = [
+            a
+            for a in attempts
+            if a.phase == phase
+            and a.status == "ok"
+            and a.closest_dist_m is not None
+            and a.closest_dist_m <= close_m
+        ]
         if not pts:
             continue
         xs = [a.miss_lateral_m for a in pts]
         ys = [a.miss_vertical_m for a in pts]  # +UP = aircraft HIGH
-        marker = "o"
-        if phase in ("phase3h", "phase3i"):
-            marker = "D"
+        marker = "D" if phase in ("phase3h", "phase3i") else "o"
         ax.scatter(
             xs, ys, c=color, s=70, marker=marker, label=f"{phase} (n={len(pts)})", zorder=3
         )
@@ -716,7 +748,7 @@ def plot_scatter(attempts: list[Attempt]):
     ax.add_patch(plt.Rectangle((-0.75, -0.75), 1.5, 1.5, fill=False, ls="--", color="gray", label="~opening ±0.75m"))
     ax.set_xlabel("lateral miss (m)  [+ = aircraft LEFT of opening]")
     ax.set_ylabel("vertical miss (m)  [+ UP = aircraft HIGH / top-bar]")
-    ax.set_title("R2 crossing-miss map (STATE gate_rel per attempt)")
+    ax.set_title(f"R2 crossing-miss map (STATE, per attempt, dist≤{close_m:.0f}m)")
     ax.grid(True, alpha=0.3)
     ax.set_aspect("equal", adjustable="datalim")
     ax.legend(loc="best", fontsize=8)
