@@ -1,0 +1,47 @@
+PHASE 4B V2 R2-TRAINING CHAIN analysis
+HEAD 54a75a1 (time-based relock escape hatch fix)
+Ran three required flights plus one replacement for no-race F2. F1 and F3 are valid race attempts; F2 and F2b did not produce race telemetry.
+No gates passed; post-pass RIGHT-next-gate relock was not exercised. Post-miss behavior in F3 shows same-gate retry/clip behavior, not a far-gate chase.
+
+=== F1 default chain v2 20260716T153120-927a4c97 ===
+result=environment collision (impulse=4.0) dur=24.3s gates_passed=0 clips=0 env=1 loop_overrun=0.00000
+topics frames=1310 detections=929 imu=849 states=1215 races=105 collisions=1
+phase counts={'hover': 1080, 'takeoff': 76, 'approach': 59}
+phase sequence: hover -> takeoff -> approach
+race_start_range=(-1, 46695) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=1 commit=0 retreat=0 search=0 recover=0
+closest DIRECT: dist=1.29m t+25.3s rel=[0.16, -0.99, 0.81] u=0.14 v=-0.42 side=center-x/HIGH center=[366.2, 104.2]
+closest STATE: dist=2.72m t+24.9s rel=[-0.37, 0.16, 2.69] u=-0.14 v=0.11 side=center-x/center-y age=1.28s center=[276.4, 199.2]
+collisions: t+25.2s impulse=3.95 threat=2
+fsm: t+1.0 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+22.6 THROTTLE_DOWN->TAKEOFF race GO | t+24.1 TAKEOFF->RACING takeoff complete | t+25.2 RACING->ABORTED environment collision (impulse=4.0) | t+25.2 ABORTED->DONE flight over
+
+=== F2 default chain v2 timeout/no-race 20260716T153248-927a4c97 ===
+result=max duration dur=300.0s gates_passed=0 clips=0 env=0 loop_overrun=0.00001
+topics frames=0 detections=0 imu=0 states=15001 races=1200 collisions=0
+phase counts={'hover': 2255, 'takeoff': 75, 'search': 12671}
+phase sequence: hover -> takeoff -> search
+race_start_range=(-1, -1) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=0 commit=0 retreat=0 search=1 recover=0
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+46.0 THROTTLE_DOWN->TAKEOFF GO timeout — proceeding | t+47.5 TAKEOFF->RACING takeoff complete | t+300.9 RACING->ABORTED max duration | t+300.9 ABORTED->DONE flight over
+
+=== F2b default chain v2 replacement timeout/no-race 20260716T154201-927a4c97 ===
+result=max duration dur=300.0s gates_passed=0 clips=0 env=0 loop_overrun=0.00003
+topics frames=0 detections=0 imu=0 states=15001 races=1201 collisions=0
+phase counts={'hover': 2255, 'takeoff': 75, 'search': 12671}
+phase sequence: hover -> takeoff -> search
+race_start_range=(-1, -1) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=0 commit=0 retreat=0 search=1 recover=0
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+46.0 THROTTLE_DOWN->TAKEOFF GO timeout — proceeding | t+47.5 TAKEOFF->RACING takeoff complete | t+300.9 RACING->ABORTED max duration | t+300.9 ABORTED->DONE flight over
+
+=== F3 default chain v2 20260716T153853-927a4c97 ===
+result=environment collision (impulse=5.0) dur=31.5s gates_passed=0 clips=2 env=1 loop_overrun=0.00000
+topics frames=2366 detections=1275 imu=1495 states=1578 races=134 collisions=3
+phase counts={'hover': 1087, 'takeoff': 76, 'approach': 158, 'commit': 46, 'retreat': 108, 'recover': 40, 'search': 63}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> approach -> commit -> retreat -> recover -> approach -> search
+race_start_range=(-1, 45967) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=3 commit=2 retreat=2 search=1 recover=1
+closest DIRECT: dist=1.31m t+29.1s rel=[0.33, -0.44, 1.19] u=0.16 v=-0.00 side=RIGHT/center-y center=[369.8, 179.5]
+closest STATE: dist=0.06m t+26.2s rel=[-0.02, 0.06, -0.0] u=-0.20 v=1.99 side=LEFT/LOW age=0.89s center=[257.0, 538.7]
+collisions: t+29.1s impulse=0.45 threat=1; t+29.1s impulse=5.63 threat=2; t+32.5s impulse=5.05 threat=2
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+22.7 THROTTLE_DOWN->TAKEOFF race GO | t+24.2 TAKEOFF->RACING takeoff complete | t+32.5 RACING->ABORTED environment collision (impulse=5.0) | t+32.5 ABORTED->DONE flight over
+

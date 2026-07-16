@@ -1,0 +1,219 @@
+{
+  "label": "phase4b-r2training-chain-v2",
+  "created_utc": "20260716T154946",
+  "flight_code_commit": "54a75a14829235043be472c8c77f0ffe88e4f802",
+  "task_note": "F1/F3 valid race attempts, F2/F2b no-race timeouts; no gates passed so no pass+20 slices exist",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 17550,
+      "source": "phase4b_r2training_chain_v2_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase4b_v2_r2training_chain_analysis.txt",
+      "bytes": 4126
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 4126
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153120-927a4c97-flight.jsonl",
+      "bytes": 1527466,
+      "source": "logs/20260716T153120-927a4c97/flight.jsonl",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153120-927a4c97-result.json",
+      "bytes": 457,
+      "source": "logs/20260716T153120-927a4c97/result.json",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153120-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T153120-927a4c97/params.json",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153248-927a4c97-flight.jsonl",
+      "bytes": 7107518,
+      "source": "logs/20260716T153248-927a4c97/flight.jsonl",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153248-927a4c97-result.json",
+      "bytes": 474,
+      "source": "logs/20260716T153248-927a4c97/result.json",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153248-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T153248-927a4c97/params.json",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T154201-927a4c97-flight.jsonl",
+      "bytes": 7107606,
+      "source": "logs/20260716T154201-927a4c97/flight.jsonl",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T154201-927a4c97-result.json",
+      "bytes": 476,
+      "source": "logs/20260716T154201-927a4c97/result.json",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T154201-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T154201-927a4c97/params.json",
+      "note": "no-race/max-duration context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153853-927a4c97-flight.jsonl",
+      "bytes": 2329334,
+      "source": "logs/20260716T153853-927a4c97/flight.jsonl",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153853-927a4c97-result.json",
+      "bytes": 454,
+      "source": "logs/20260716T153853-927a4c97/result.json",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T153853-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T153853-927a4c97/params.json",
+      "note": "valid race attempt"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T153120-927a4c97_r2b_v2_nopass_start_slice.aigprec",
+      "bytes": 30279455,
+      "source": "logs/20260716T153120-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T153120-927a4c97/vision.aigprec",
+      "reason": "full recording ~174.2 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T153853-927a4c97_r2b_v2_nopass_start_slice.aigprec",
+      "bytes": 30280737,
+      "source": "logs/20260716T153853-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T153853-927a4c97/vision.aigprec",
+      "reason": "full recording ~316.9 MB > git fixture limit"
+    },
+    {
+      "kind": "recording",
+      "file": "recording.zip",
+      "bytes": 136,
+      "source": "collector-newest recording",
+      "note": "collector artifact; selected context may also be sliced"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_end.jpg",
+      "bytes": 25914
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_late.jpg",
+      "bytes": 52557
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid.jpg",
+      "bytes": 30997
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_start.jpg",
+      "bytes": 54263
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_end.jpg",
+      "bytes": 48085
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_late.jpg",
+      "bytes": 52016
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid.jpg",
+      "bytes": 53734
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_start.jpg",
+      "bytes": 64174
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_end.jpg",
+      "bytes": 57558
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_late.jpg",
+      "bytes": 66204
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_mid.jpg",
+      "bytes": 46982
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_start.jpg",
+      "bytes": 53189
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_end.jpg",
+      "bytes": 65072
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_late.jpg",
+      "bytes": 65718
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_mid.jpg",
+      "bytes": 23166
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_start.jpg",
+      "bytes": 55475
+    }
+  ]
+}

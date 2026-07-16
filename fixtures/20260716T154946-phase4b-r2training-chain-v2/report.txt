@@ -1,0 +1,246 @@
+===== Phase 4b V2 R2 chain preflight 2026-07-16T18:30:51.8257522+03:00 =====
+HEAD short=54a75a1 full=54a75a14829235043be472c8c77f0ffe88e4f802
+54a75a1 Time-based relock escape hatch (0.11s was an accident at 224Hz)
+2d20e41 [sim-run] phase4b safemode no-race timeout
+9d8850d [sim-run] phase4b partial telemetry
+8a046f5 [sim-run] phase4b r2 chain relock retry no passes
+bb3968b [tuning] Rebaseline v5 Windows QA report
+e742cf1 Relock distance sanity: stop chasing far gates after a near miss
+27fd679 [analysis] clarify collision is hangar truss; cyan helps post-pass only
+70bf395 [analysis] fix collision ID from vision frames (f4 screens were not FPV)
+d3366c4 [analysis] milestone autopsy + inter-gate cyan corridor study
+fd9d419 Retreat climbs too: stop the retry-cycle altitude bleed
+8d792a9 [sim-run] phase4a r2 chain no passes
+3d37d99 Cursor task: milestone autopsy + inter-gate frontier studies
+--- Phase 4b task excerpt ---
+s.md` there (what you observed: sim version, track, anomalies,
+   suggested code changes).
+6. Commit and push:
+
+   ```powershell
+   git add fixtures
+   git commit -m "[sim-run] phase1 vs sim v<version>"
+   git push
+   ```
+
+## CURRENT TASK: Phase 4b — chain build: relock sanity + retry altitude
+
+The milestone autopsy (analysis/2026-07-16-milestone-autopsy) measured
+the gate-2 failure chain: closed to ~1m, crossed 0.9m beside the opening
+(geometric termination + retreat fired correctly), then the RELOCK
+accepted a 27m gate off to the side and the drone chased it into a
+hangar steel truss. This build fixes both measured killers:
+- relock DISTANCE SANITY: after losing a near gate, candidates much
+  farther than the lost one are rejected (escape hatch after ~1s so we
+  never fly blind forever); a pass still resets the cap for the
+  legitimately-farther next gate
+- retreat now carries the blind climb bias (phase4a bled 8-35 ground
+  scrapes across retry cycles)
+The PASS crossing vector is our ground truth: (+0.006, +0.100) — the
+aim geometry is exactly right; do not touch aim params.
+
+1. `git pull` (HEAD must include "relock" fix). SIM LOCK. R2-TRAINING.
+2. 3 flights, DEFAULT speeds:
+   `python scripts/fly_once.py --max-duration 300
+    --patch safety.flight_timeout_s=300`
+3. Watch: gates passed; after each pass, does it lock the RIGHT next
+   gate; do retry cycles hold altitude now.
+4. Slice every pass + 20s after; note WHERE any hard hit happens.
+5. Collect `--label phase4b-r2training-chain`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 4a — FIRST PASS ACHIEVED; now chain the track
+
+The first R2 gate pass is in. The mission changes: from "pass a gate"
+to "complete the track". Everything needed for chaining is already in
+the build — on_gate_passed re-arms the pipeline for the next gate, the
+cyan-line prior picks the gate the racing line threads (its moment has
+arrived: with several gates visible after a pass, the line
+disambiguates), the two-gate mock test passes, and retreat/retry covers
+misses per gate.
+
+1. `git pull` (HEAD >= 43ef2b0). SIM LOCK. R2-TRAINING.
+2. 3 flights, DEFAULT SPEEDS (the milestone pass was a first-attempt,
+   default-speed run — 2.2s from takeoff to through the gate; the slow
+   crutch is retired), longer window:
+   `python scripts/fly_once.py --max-duration 300
+    --patch safety.flight_timeout_s=300`
+   Note: the milestone flight died 13.5s AFTER its pass with a hard env
+   hit (impulse 15.5) while approaching gate 2 — R2 has obstacles
+   (pillars, parked aircraft) between stations. Note WHERE it hits.
+3. Per flight note: gates passed (the race HUD count), what happens
+   AFTER each pass (does it find the next gate? how long does search
+   take?), where the run ends.
+4. Slices around EVERY pass + the 20s after it (the inter-gate segment
+   is the new unknown — that data drives the next code cycle).
+5. Collect `--label phase4a-r2training-chain`, notes.md, push, VERIFY.
+--- verify 54a75a1 ancestor ---
+HEAD is 54a75a1 or newer
+--- SIM LOCK before create ---
+no existing lock
+--- SIM LOCK created ---
+SIM OPERATOR lock phase4b-r2training-chain-v2 pid=14452 time=2026-07-16T18:30:53.6322096+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+
+===== Phase 4b v2 fresh sim restart: Flight 1/3 DEFAULT CHAIN 2026-07-16T18:30:53.6402400+03:00 =====
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+50896 DCGame-Win64-Shipping 16/07/2026 18:30:53 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+53172 FlightSim             16/07/2026 18:30:53 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 50896
+udp 5601 <- PID 50896
+
+===== Phase 4b V2 R2-TRAINING CHAIN Flight 1/3 DEFAULT CHAIN 2026-07-16T18:31:20.2603620+03:00 =====
+param overrides: DEFAULT SPEEDS; max-duration=300; safety.flight_timeout_s=300
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=4.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 24.288272500038147, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6072, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T153120-927a4c97', 'log_dir': 'logs\\20260716T153120-927a4c97'}
+r2b_v2_f1_default_chain_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2b_v2_f1_default_chain ---
+sim window: AI-GP   18:31:29
+event r2-training center clicked (1000,392) 18:31:39
+RACE clicked 18:31:41
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_000_183141.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_001_183145.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_002_183148.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_003_183151.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_004_183155.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_005_183158.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_006_183201.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_007_183204.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_008_183208.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f1_default_chain\r2b_v2_f1_default_chain_009_183211.png
+--- helper stderr r2b_v2_f1_default_chain ---
+
+===== Phase 4b v2 fresh sim restart: Flight 2/3 DEFAULT CHAIN 2026-07-16T18:32:11.4148533+03:00 =====
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+66748 DCGame-Win64-Shipping 16/07/2026 18:32:23 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+61364 FlightSim             16/07/2026 18:32:22 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 66748
+udp 5601 <- PID 66748
+
+===== Phase 4b V2 R2-TRAINING CHAIN Flight 2/3 DEFAULT CHAIN 2026-07-16T18:32:48.2364644+03:00 =====
+param overrides: DEFAULT SPEEDS; max-duration=300; safety.flight_timeout_s=300
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 300.0003292999463, 'loop_overrun_frac': 1.3333333333333333e-05, 'loop_stats': {'ticks': 75000, 'overruns': 1, 'overrun_frac': 1.3333333333333333e-05, 'max_late_us': 398}, 'flight_id': '20260716T153248-927a4c97', 'log_dir': 'logs\\20260716T153248-927a4c97'}
+r2b_v2_f2_default_chain_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2b_v2_f2_default_chain ---
+sim window: AI-GP   18:32:57
+event r2-training center clicked (1000,392) 18:33:08
+RACE clicked 18:33:11
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_000_183311.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_001_183314.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_002_183318.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_003_183321.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_004_183324.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_005_183328.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_006_183331.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_007_183335.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_008_183338.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_009_183341.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_010_183345.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_011_183348.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_012_183351.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_013_183355.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_014_183358.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_015_183401.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_016_183404.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_017_183407.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2_default_chain\r2b_v2_f2_default_chain_018_183410.png
+--- helper stderr r2b_v2_f2_default_chain ---
+
+===== Phase 4b v2 fresh sim restart: Flight 3/3 DEFAULT CHAIN 2026-07-16T18:38:15.1358187+03:00 =====
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+64688 DCGame-Win64-Shipping 16/07/2026 18:38:26 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+24348 FlightSim             16/07/2026 18:38:26 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 64688
+udp 5601 <- PID 64688
+
+===== Phase 4b V2 R2-TRAINING CHAIN Flight 3/3 DEFAULT CHAIN 2026-07-16T18:38:51.7949677+03:00 =====
+param overrides: DEFAULT SPEEDS; max-duration=300; safety.flight_timeout_s=300
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 2, 'env_hits': 1, 'duration_s': 31.548037200002, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 7887, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T153853-927a4c97', 'log_dir': 'logs\\20260716T153853-927a4c97'}
+r2b_v2_f3_default_chain_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2b_v2_f3_default_chain ---
+sim window: AI-GP   18:39:01
+event r2-training center clicked (1000,392) 18:39:11
+RACE clicked 18:39:14
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_000_183914.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_001_183917.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_002_183920.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_003_183924.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_004_183927.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_005_183930.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_006_183934.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_007_183937.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_008_183940.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_009_183944.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f3_default_chain\r2b_v2_f3_default_chain_010_183947.png
+--- helper stderr r2b_v2_f3_default_chain ---
+
+===== Phase 4b v2 chain run done 2026-07-16T18:39:51.0581163+03:00 =====
+
+===== Phase 4b v2 replacement fresh sim restart: Flight 2b/3 DEFAULT CHAIN replacement 2026-07-16T18:41:21.8507570+03:00 =====
+udp 14560 <- PID 66124
+udp 5601 <- PID 66124
+
+===== Phase 4b V2 R2-TRAINING CHAIN Flight 2b/3 DEFAULT replacement 2026-07-16T18:42:01.2543436+03:00 =====
+param overrides: DEFAULT SPEEDS; max-duration=300; safety.flight_timeout_s=300
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'max duration', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 300.00037759996485, 'loop_overrun_frac': 2.6666666666666667e-05, 'loop_stats': {'ticks': 75000, 'overruns': 2, 'overrun_frac': 2.6666666666666667e-05, 'max_late_us': 1793}, 'flight_id': '20260716T154201-927a4c97', 'log_dir': 'logs\\20260716T154201-927a4c97'}
+r2b_v2_f2b_default_chain_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2b_v2_f2b_default_chain ---
+sim window: AI-GP   18:42:10
+event r2-training center clicked (1000,392) 18:42:22
+RACE clicked 18:42:25
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_000_184225.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_001_184228.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_002_184232.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_003_184235.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_004_184238.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_005_184242.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_006_184245.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_007_184249.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_008_184252.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_009_184255.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_010_184259.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_011_184302.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_012_184305.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_013_184309.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_014_184312.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_015_184315.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_016_184318.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_017_184322.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_v2_r2_shots\r2b_v2_f2b_default_chain\r2b_v2_f2b_default_chain_018_184325.png
+--- helper stderr r2b_v2_f2b_default_chain ---
+
+===== Phase 4b v2 replacement done 2026-07-16T18:47:28.2257913+03:00 =====
