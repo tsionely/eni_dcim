@@ -72,11 +72,15 @@ Extracted FPV frames (`_extract_hit.py` -> `collision_frames/vision_t*.jpg`, fli
 | 39.5 | 39.499 | 0.001 | 0.0000 | 0.8 | FOV nearly black |
 | 39.79 collision | 39.790 | 0.000 | 0.0000 | 3.7 | impulse 15.5 |
 
-**Visual ID from FPV near t=39.5-39.8:** the camera flies into a **large dark surface that fills the FOV** (center 80x80 brightness ~1-4; >90% of pixels near-black). This is **not a thin pillar/column** -- a freestanding pillar would leave lit hangar scene on one or both sides; here the dark mass occludes almost the entire frame. At t~38.5 a broad **horizontal edge** cuts across the right FOV, then the view goes black as range closes -- consistent with the face/underside of a **large structure** (parked-aircraft scale or hangar wall/obstacle slab), not a vertical column. Underexposure at contact prevents a confident aircraft-vs-wall paint-job ID; **exclude pillar**.
+**Visual ID from FPV:**
 
-Kinematics agree: last-second `gate_rel` dist jump ~14m->40m (lock switch) while flying straight -- obstacle was never in the gate model.
+- **t=26.9 just after pass** (`just_after_pass_t26.9.jpg`): clear hangar corridor — Station 22/23 pillars, parked jets left/right, next red AI-GP gate ahead, and a bright **cyan ribbon on the floor** threading the clear lane (`cyan_frac≈0.013`). Following the ribbon here would stay off the pillars/aircraft.
+- **t=32.4 pre-retreat**: nose pitched up into the **ceiling grid**; Station 22 pillar on the right; **cyan_frac=0**. Gate-2 markers visible but corridor lost.
+- **t=38.5–39.8 contact**: FOV fills with **hangar structural steel** — lattice girder/truss members (horizontal + diagonal bracing), not a freestanding thin column with lit hangar beside it, and not a readable parked-aircraft silhouette (underexposed blackout). Impulse 15.5 hard env hit.
 
-Vision coverage: 4512 assembled frames, flight_t ~17.75-39.99 s (covers pass + collision).
+Kinematics agree: last-second `gate_rel` dist jump ~14m→40m (lock switch) while flying straight — obstacle was never in the gate model.
+
+Vision coverage: 4512 assembled frames, flight_t ~17.75–39.99 s (covers pass + collision).
 
 ## 3. Cyan line as obstacle-free corridor (phase4b input)
 
@@ -105,8 +109,9 @@ HSV bands (from R2 deep-dive): H∈[90,98], S≥120, V≥120.
 
 Would following the line have avoided the hit?
 
-- We **do** have inter-gate vision: `pass_intergate` = **2559 frames** from pass->collision with cyan present on **26%** of frames (mean frac 0.0022; max absent gap ~7.8 s). Cyan is **not** continuous through the corridor -- it drops out for multi-second stretches, including the final approach where FPV cyan_frac=0 from t~32.5 through the hit.
-- So: following cyan when visible might have helped earlier in the segment, but it would **not** have steered clear at the collision itself (line absent in FPV for ~7 s before impact). Phase4b needs a fallback when the ribbon disappears -- cyan-only is insufficient. Kinematically the hit remains a straight-line chase after the failed gate-2 commit/retreat.
+- **Right after the pass: yes, plausibly.** At t≈26.9 the ribbon is bright and sits in the clear floor lane past Station 22 / parked jets toward the next gate. A lateral ribbon-follower then would not have aimed at the steel.
+- **Through the whole inter-gate window: not as cyan-only.** `pass_intergate` = **2559 frames**, cyan present on only **26%** (max absent gap ~7.8 s). From t≈32.5 through impact, FPV `cyan_frac=0` while the aircraft pitches into structure after a failed gate-2 commit/retreat.
+- **Phase4b design:** use cyan as a **corridor prior when visible** (especially the first seconds after a pass / multi-gate disambiguation), but require a **fallback** (heading hold, map, or obstacle sense) for multi-second dropouts — do not ship cyan-only between gates.
 
 
 ## Deliverables
