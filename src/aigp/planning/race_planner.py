@@ -38,6 +38,8 @@ class RacePlanner:
         self.center_gain = float(p.get("planner.approach.center_gain"))
         self.alt_gain = float(p.get("planner.approach.alt_gain", default=0.8))
         self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
+        self.aim_up_floor_m = float(p.get("planner.approach.aim_up_floor_m",
+                                          default=0.3))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
@@ -84,13 +86,16 @@ class RacePlanner:
         self._retreat_until_ns = None
 
     def _aim_up(self, dist: float) -> float:
-        """Aim-above-center insurance, tapered off near the gate.
+        """Aim-above-center insurance, tapered toward a FLOOR near the gate.
 
-        Far out it counters the systematic altitude sag; at the gate itself
-        the aim point must converge to (near) the true center — phase3b
-        crossed 0.6m high and clipped the top bar.
+        Far out it counters the systematic altitude sag. It used to taper to
+        zero at the gate — phase3h then crossed consistently LOW by
+        0.2-0.45m (F1: dead-centered laterally, caught the bottom bar). The
+        floor keeps the crossing ~0.3m above center: safely inside the
+        +/-0.8m opening, clear of the measured low bias.
         """
-        return self.aim_up_m * float(np.clip(dist / 4.0, 0.0, 1.0))
+        floor = float(min(self.aim_up_m, self.aim_up_floor_m))
+        return max(floor, self.aim_up_m * float(np.clip(dist / 4.0, 0.0, 1.0)))
 
     # -- planning --------------------------------------------------------------
 

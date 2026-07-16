@@ -318,7 +318,26 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3h — the endgame build (blackout fix + retry)
+## CURRENT TASK: Phase 3i — one axis left: cross 0.3m above center
+
+phase3h was the closest cycle ever and every mechanism worked live:
+retry confirmed (multiple approach->commit->retreat->approach), F1
+crossed DEAD-CENTERED laterally (u=0.00) at 0.9m and F4 (default
+speeds!) reached 0.21m — both caught the LOW side. The vertical bias is
+now consistent: 0.2-0.45m LOW. This build stops tapering the aim to
+zero: the aim point keeps a 0.3m floor above the opening center all the
+way through (opening half-height is 0.8m — crossing +0.3 is safely
+inside and clear of the measured bias).
+
+1. `git pull` (HEAD must include "aim_up floor"). SIM LOCK. R2-TRAINING.
+2. 3 flights, slow patch set (same as 3e-3h).
+3. Optional flight 4: no patches (F4's 0.21m suggests default speeds
+   are back in play).
+4. If a flight crosses HIGH now: report the miss size — we bisect the
+   floor (0.15) next cycle.
+5. Collect `--label phase3i-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3h — the endgame build (blackout fix + retry)
 
 The analyst's crossing-miss map exposed the last-meter killer: at every
 closest approach the state was 0.75-1.26s STALE — the dead-reckoned
