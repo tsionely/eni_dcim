@@ -1324,3 +1324,33 @@ Summary:
   `planner.commit.distance_m=1.5729619093978944`,
   `planner.commit.duration_s=1.1792217758917576`.
 - The helper script then began its extra default verification pass and was stopped by the guard after 10/20 default-verification flights because the SIM OPERATOR lock appeared: `phase4b-r2training-chain`. I did not run anything further under the lock.
+
+## 2026-07-16 21:18:40 +03:00 - commit `9fe370237fa1cd57548aadb49f9f20f943b58311`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --rebase` fast-forwarded to `9fe370237fa1cd57548aadb49f9f20f943b58311`, which is the requested `9fe3702` baseline.
+- Pre-run guard was clear for Windows CI, the hover telemetry probe, and the reflight matrix: no `FlightSim`/`DCGame`, no `C:\Temp\eni_dcim_sim.lock`.
+- Captured full CI output in `tuning/pytest-windows-9fe3702-basetemp-full.txt`.
+- CI result: `71 passed, 3 failed, 1 xfailed, 2 warnings in 51.00s`.
+- Expected xfail observed: `test_first_gate_pass_with_second_gate_visible` remains xfailed and is not counted as a CI failure.
+- CI chain-correctness failures: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`, both heartbeat timeouts on `udpin:127.0.0.1:24550`; `tests/unit/test_fsm.py::test_env_collision_aborts` still did not mark the manager done.
+- Hover overrun is telemetry on Windows. The isolated mock hover probe recorded `overrun_frac=0.7426075268817204`, `ticks=1488`, `overruns=1105`, `max_late_us=27000`; captured in `tuning/phase5-hover-9fe3702/hover-overrun-telemetry.json`.
+- Reflight matrix completed offline across all 56 committed `.aigprec` slices and builds `fd9d419`, `54a75a1`, `80c6d44`, and `HEAD`.
+- Reflight pairing: 45 runnable slices per build, 11 skipped per build because no unique committed `*-flight.jsonl` could be paired, 0 errors.
+- Reflight result was byte-for-byte equivalent at the coverage level across all four builds: 12,356 fixes, 11,950 accepted fixes, 0 fixes below 5m, 12,356 fixes at `>=5m`.
+- The table is in `tuning/phase5-reflight-9fe3702/fix-coverage-vs-range.md`; full CSV/JSON are alongside it.
+- Interpretation: the current committed slices confirm the Phase 5 concern. The offline suite sees no close-range detector fixes below 5m on any recent build, so planner tuning cannot address the close-range blind stretch by itself.
+- Pre-push rebase later advanced HEAD to `5e3ada6d11203226c23f40d899871f39f298aea7`; the only intervening file was `docs/thinktank/BRIEF.md`, so code, fixtures, scripts, and the measured reflight inputs remained unchanged from `9fe3702`.

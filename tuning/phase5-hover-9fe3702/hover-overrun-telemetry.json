@@ -1,0 +1,13 @@
+{
+  "aborted": true,
+  "abort_reason": "max duration",
+  "gates_passed": 0,
+  "env_hits": 0,
+  "gate_clips": 0,
+  "loop_stats": {
+    "ticks": 1488,
+    "overruns": 1105,
+    "overrun_frac": 0.7426075268817204,
+    "max_late_us": 27000
+  }
+}

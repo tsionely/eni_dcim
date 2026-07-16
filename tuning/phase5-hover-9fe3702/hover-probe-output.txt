@@ -1,0 +1,17 @@
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00274433 -0.00285503  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (180 samples): bias=[-0.00090302  0.0008196   0.013     ] level roll=-0.000 pitch=-0.311
+{
+  "aborted": true,
+  "abort_reason": "max duration",
+  "gates_passed": 0,
+  "env_hits": 0,
+  "gate_clips": 0,
+  "loop_stats": {
+    "ticks": 1488,
+    "overruns": 1105,
+    "overrun_frac": 0.7426075268817204,
+    "max_late_us": 27000
+  }
+}
