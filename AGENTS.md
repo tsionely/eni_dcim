@@ -74,7 +74,25 @@ Standing tasks:
 4. **Review reports** (optional, read-only): findings on the pilot code go in
    `tuning/review-<date>.md` — flag, don't fix.
 
-### CURRENT TASK: re-baseline v4 — the deep Windows timer fix
+### CURRENT TASK: re-baseline v5 — never-sleep loop + FSM isolation
+
+v4 found the real flaw in v3's fix: RateLoop still slept the last
+sub-2.5ms stretch, and on your Windows ANY positive sleep costs a full
+15.6ms tick — hence byte-identical overrun_frac. The loop now sleeps
+ONLY when the wait exceeds a full timer tick and spins everything
+shorter (costs CPU on win32; correctness first). Your campaign-side win
+is already proven: stale-imu 0/4 with the auto-relax.
+
+When the SIM LOCK clears:
+1. **FSM isolation first**: run the two new failures 5x each, isolated:
+   `python -m pytest tests/unit/test_fsm.py -q` (x5). They pass 5/5 on
+   Linux; we need to know deterministic-vs-flaky on your box. If they
+   fail deterministically, paste the FULL -vv assertion context into
+   tuning/windows-ci.md — that's a real Windows bug I want.
+2. CI full run (hover overrun now informational on win32 anyway).
+3. Campaign 40 with the guard; --low-load fallback if needed.
+
+### PREVIOUS: re-baseline v4 (found the sleep-floor flaw — good measurement)
 
 Your v3 before/after (identical overrun_frac to 4 decimals) proved
 timeBeginPeriod is a no-op on your Windows — modern timer coalescing

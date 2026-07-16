@@ -68,9 +68,14 @@ class RateLoop:
         now = time.monotonic_ns()
         remaining = self._deadline - now
         if remaining > 0:
-            # Coarse sleep, then a short spin for the final stretch.
-            if remaining > self.spin_ns:
-                time.sleep((remaining - self.spin_ns) / 1e9)
+            # Coarse sleep, then a short spin for the final stretch. On
+            # Windows ANY positive sleep can cost a full 15.6ms timer tick
+            # (Codex v4: overrun_frac byte-identical after every resolution
+            # request) — so only sleep when the wait comfortably exceeds
+            # one tick, otherwise spin the whole remainder.
+            sleep_ns = remaining - self.spin_ns
+            if sleep_ns > (16_000_000 if sys.platform == "win32" else 0):
+                time.sleep(sleep_ns / 1e9)
             while time.monotonic_ns() < self._deadline:
                 pass
         else:
