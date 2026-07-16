@@ -186,45 +186,185 @@ def find_pnp_outliers(phase: str, path: Path, dist_lo=2.0, dist_hi=4.5, min_abs_
     return kept
 
 
-def extract_frame_near_t(slice_path: Path, target_t_s: float, t0_mono: int | None = None):
-    """Decode the assembled frame closest to target relative time in the slice."""
-    if not slice_path.exists():
-        return None, None
+def vision_search_roots() -> list[Path]:
+    roots = [
+        ROOT / "recordings",
+        ROOT / "logs",
+        ROOT.parent / "eni_dcim" / "recordings",
+        ROOT.parent / "eni_dcim" / "logs",
+        Path.home() / "Documents" / "eni_dcim" / "recordings",
+        Path.home() / "Documents" / "eni_dcim" / "logs",
+    ]
+    return [r for r in roots if r.exists()]
+
+
+def find_vision_sources(fix_dir: Path, flight_id: str) -> list[Path]:
+    cands: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(p: Path) -> None:
+        try:
+            rp = p.resolve()
+        except OSError:
+            return
+        if rp in seen or not p.is_file():
+            return
+        seen.add(rp)
+        cands.append(p)
+
+    for root in vision_search_roots():
+        for p in root.rglob("*%s*.aigprec" % flight_id):
+            add(p)
+        for d in root.rglob("*%s*" % flight_id):
+            if d.is_dir():
+                for p in d.glob("*.aigprec"):
+                    add(p)
+                v = d / "vision.aigprec"
+                if v.exists():
+                    add(v)
+    if fix_dir.exists():
+        for p in fix_dir.glob("%s*.aigprec" % flight_id):
+            add(p)
+
+    def rank(p: Path):
+        return (1 if "slice_start" in p.name.lower() else 0, -p.stat().st_size, str(p))
+
+    cands.sort(key=rank)
+    return cands
+
+
+def extract_frame_by_ts_ns(rec_path: Path, target_ts_ns: int | None, target_t_s: float | None = None, max_err_s: float = 0.08):
+    if not rec_path.exists():
+        return None, {"error": "missing", "source": str(rec_path)}
     assembler = ChunkAssembler()
     best = None
     first_mono = None
-    for mono_ns, stream_id, data in read_recording(str(slice_path)):
+    n_frames = 0
+    for mono_ns, stream_id, data in read_recording(str(rec_path)):
         if stream_id != STREAM_VISION:
             continue
         done = assembler.feed(data)
         if done is None:
             continue
         frame_id, ts_ns, jpeg = done
+        n_frames += 1
         if first_mono is None:
             first_mono = mono_ns
-        t = (mono_ns - first_mono) / 1e9
-        err = abs(t - target_t_s)
-        if best is None or err < best[0]:
-            best = (err, t, frame_id, jpeg)
-        if t > target_t_s + 2.0 and best is not None and best[0] < 0.5:
+        t_rel = (mono_ns - first_mono) / 1e9
+        if target_ts_ns is not None and ts_ns is not None:
+            err_s = abs(int(ts_ns) - int(target_ts_ns)) / 1e9
+            mode = "ts_ns"
+        elif target_t_s is not None:
+            err_s = abs(t_rel - float(target_t_s))
+            mode = "slice_t"
+        else:
+            continue
+        if best is None or err_s < best[0]:
+            best = (err_s, t_rel, frame_id, jpeg, ts_ns, mode)
+        if target_ts_ns is not None and ts_ns is not None and int(ts_ns) > int(target_ts_ns) and best[0] < max_err_s:
             break
     if best is None:
-        return None, None
-    img = cv2.imdecode(np.frombuffer(best[3], dtype=np.uint8), cv2.IMREAD_COLOR)
-    return img, {"t_slice": best[1], "err": best[0], "frame_id": best[2]}
+        return None, {"error": "no_frames", "source": str(rec_path), "n_frames": n_frames}
+    err_s, t_rel, frame_id, jpeg, ts_ns, mode = best
+    meta = {
+        "source": str(rec_path),
+        "source_name": rec_path.name,
+        "match_mode": mode,
+        "err_s": err_s,
+        "t_rel": t_rel,
+        "frame_id": frame_id,
+        "ts_ns": ts_ns,
+        "n_frames": n_frames,
+        "accepted": err_s <= max_err_s,
+    }
+    if err_s > max_err_s:
+        meta["error"] = "best_err %.3fs > %.3fs (recording does not cover outlier)" % (err_s, max_err_s)
+        return None, meta
+    img = cv2.imdecode(np.frombuffer(jpeg, dtype=np.uint8), cv2.IMREAD_COLOR)
+    return img, meta
 
 
-def annotate_and_save(img, out_path: Path, title: str, corners=None, center=None):
-    if img is None:
-        return False
-    vis = img.copy()
+def load_detection_at_ts(flight_jsonl: Path, ts_ns: int) -> dict | None:
+    with flight_jsonl.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            if rec.get("topic") != "detection":
+                continue
+            data = rec.get("data") or {}
+            if data.get("ts_ns") == ts_ns:
+                return data
+    return None
+
+
+def classify_pnp_outlier(det: dict, ty: float, dist: float) -> list[str]:
+    notes: list[str] = []
+    corners = det.get("corners_px") or det.get("corners")
+    center = det.get("center_px") or det.get("center")
+    pose = det.get("rel_pose") or {}
+    normal = pose.get("normal")
+    image_size = det.get("image_size") or [640, 360]
+    w, h = int(image_size[0]), int(image_size[1])
+    if corners is None or center is None:
+        notes.append("detection lacks corners/center")
+        return notes
+    pts = np.asarray(corners, dtype=float).reshape(-1, 2)
+    cx, cy = float(center[0]), float(center[1])
+    top = float(np.linalg.norm(pts[1] - pts[0]))
+    bot = float(np.linalg.norm(pts[2] - pts[3]))
+    left = float(np.linalg.norm(pts[3] - pts[0]))
+    right = float(np.linalg.norm(pts[2] - pts[1]))
+    trap = abs(top - bot) / (0.5 * (top + bot) + 1e-9)
+    elev_deg = math.degrees(math.atan2(abs(ty), max(dist, 1e-3)))
+    notes.append(
+        "corners_px=%s; center_px=[%.1f,%.1f]; edges top/bot/L/R=%.0f/%.0f/%.0f/%.0f; trap=%.2f"
+        % (corners, cx, cy, top, bot, left, right, trap)
+    )
+    if normal is not None:
+        n = [float(x) for x in normal]
+        notes.append("PnP normal=%s" % n)
+        if abs(n[1]) > 0.7:
+            notes.append("VERDICT: bad PnP / wrong quad - normal y-dominant (implausible for face-on ring).")
+        elif abs(n[2]) < 0.5:
+            notes.append("VERDICT: normal not camera-facing - partial ring or mis-ordered corners.")
+        elif elev_deg > 25 and dist < 5.0:
+            notes.append(
+                "VERDICT: ring-like quad but |ty| implies ~%.0fdeg at %.1fm - lock-rejected pose blow-up (banner/other-gate/partial), not true opening offset."
+                % (elev_deg, dist)
+            )
+        else:
+            notes.append("VERDICT: inconclusive from geometry alone.")
+    if cy < h * 0.28:
+        notes.append("quad center high in frame.")
+    if cx < w * 0.22 or cx > w * 0.78:
+        notes.append("quad near L/R edge (partial/off-axis).")
+    if trap > 0.22:
+        notes.append("strong trapezoid - steep perspective or partial ring.")
+    return notes
+
+
+def render_corners_evidence(out_path: Path, title: str, corners, center, image_size=(640, 360), backdrop=None, footer: str = "") -> bool:
+    w, h = int(image_size[0]), int(image_size[1])
+    if backdrop is not None:
+        vis = backdrop.copy()
+        if vis.shape[0] != h or vis.shape[1] != w:
+            vis = cv2.resize(vis, (w, h), interpolation=cv2.INTER_AREA)
+    else:
+        vis = np.full((h, w, 3), 32, dtype=np.uint8)
+        cv2.putText(vis, "NO PIXEL FRAME (schematic from corners_px)", (12, h // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (80, 80, 200), 1, cv2.LINE_AA)
     if corners is not None:
         pts = np.asarray(corners, dtype=np.int32).reshape(-1, 2)
         cv2.polylines(vis, [pts], True, (0, 255, 255), 2)
+        for i, (x, y) in enumerate(pts):
+            cv2.circle(vis, (int(x), int(y)), 4, (0, 200, 255), -1)
+            cv2.putText(vis, str(i), (int(x) + 4, int(y) - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
     if center is not None:
         cv2.circle(vis, (int(center[0]), int(center[1])), 6, (0, 0, 255), -1)
-    cv2.putText(vis, title[:80], (8, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
-    h, w = vis.shape[:2]
+        cv2.drawMarker(vis, (w // 2, h // 2), (180, 180, 180), cv2.MARKER_CROSS, 16, 1)
+    cv2.putText(vis, title[:90], (8, 22), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    if footer:
+        y0 = h - 10
+        for j, chunk in enumerate(reversed(footer.split(" | ")[:4])):
+            cv2.putText(vis, chunk[:90], (8, y0 - 16 * j), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (220, 220, 220), 1, cv2.LINE_AA)
     if w > 800:
         scale = 800 / w
         vis = cv2.resize(vis, (800, int(h * scale)), interpolation=cv2.INTER_AREA)
@@ -233,16 +373,23 @@ def annotate_and_save(img, out_path: Path, title: str, corners=None, center=None
     return True
 
 
-def find_slice_for_flight(fix_dir: Path, flight_id: str) -> Path | None:
-    # Common patterns: {id}_r2*_slice_start.aigprec
-    cands = list(fix_dir.glob(f"{flight_id}*.aigprec"))
-    if cands:
-        return cands[0]
-    # phase3d F4 reused older id
-    cands = list(fix_dir.glob("*slice*.aigprec"))
-    return cands[0] if len(cands) == 1 else None
+def annotate_and_save(img, out_path: Path, title: str, corners=None, center=None):
+    if img is None:
+        return False
+    return render_corners_evidence(out_path, title, corners, center, backdrop=img)
 
 
+def find_late_screen(fix_dir: Path, flight_index: int | None = None) -> Path | None:
+    screens = fix_dir / "screens"
+    if not screens.exists():
+        return None
+    if flight_index is not None:
+        for name in ("f%d_late.jpg" % flight_index, "f%d_approach.jpg" % flight_index):
+            p = screens / name
+            if p.exists():
+                return p
+    cands = sorted(screens.glob("*late*.jpg")) + sorted(screens.glob("*approach*.jpg"))
+    return cands[0] if cands else None
 def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes: list[str]):
     lines = [
         "# Crossing-miss map (phase3c–3f convergence dashboard)",
@@ -300,7 +447,7 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
         "",
         "## Close-range PnP outlier autopsy (2–4.5 m)",
         "",
-        "Raw detections (for autopsy only). Looking for |ty|≥2 m or consecutive Δty≥0.8 m.",
+        "Raw detections (for autopsy only). Looking for |ty|>=2 m. Frames matched by detection ts_ns; start slices rejected if they do not cover the outlier time.",
         "",
     ]
     if not outliers:
@@ -411,43 +558,103 @@ def main() -> int:
             continue
         selected.append(o)
 
+    # Enrich outliers with detection corners_px / normal via ts_ns.
+    for o in selected:
+        fix_dir = Path(o["fix_dir"])
+        fp = fix_dir / ("%s-flight.jsonl" % o["flight_id"])
+        det = load_detection_at_ts(fp, int(o["ts_ns"])) if fp.exists() and o.get("ts_ns") else None
+        o["detection"] = det
+        if det is not None:
+            o["corners"] = det.get("corners_px") or det.get("corners")
+            o["center"] = det.get("center_px") or det.get("center")
+            o["image_size"] = det.get("image_size") or [640, 360]
+            o["normal"] = (det.get("rel_pose") or {}).get("normal")
+            o["corners_px"] = o["corners"]
+            o["center_px"] = o["center"]
+
+    flight_index: dict[str, int] = {}
+    for phase, fix_dir in PHASE_DIRS:
+        if not fix_dir.exists():
+            continue
+        for idx, fp in enumerate(sorted(fix_dir.glob("*-flight.jsonl")), start=1):
+            flight_index[fp.stem.replace("-flight", "")] = idx
+
+    for old in (OUT / "pnp_outliers").glob("*.jpg"):
+        old.unlink()
+
     for i, o in enumerate(selected):
         fix_dir = Path(o["fix_dir"])
-        slice_path = find_slice_for_flight(fix_dir, o["flight_id"])
-        # Slice relative time may not match full log time — try matching by scanning
-        # detections near o['t'] is from full log; slices are usually start windows.
-        # Heuristic: many slices are from flight start; use o['t'] directly.
-        fname = f"{o['phase']}_{o['flight_id'][-6:]}_t{o['t']:.1f}_ty{o['ty']:+.1f}.jpg"
+        fname = "%s_%s_t%.1f_ty%+.1f.jpg" % (o["phase"], o["flight_id"][-6:], o["t"], o["ty"])
         out_img = OUT / "pnp_outliers" / fname
+        title = "%s %s t=%.1fs d=%.1f ty=%+.2f" % (o["phase"], o["flight_id"][-8:], o["t"], o["dist"], o["ty"])
+        sources = find_vision_sources(fix_dir, o["flight_id"])
         img = None
         meta = None
-        if slice_path is not None:
-            img, meta = extract_frame_near_t(slice_path, o["t"])
-            # If slice is start-only and t is late, err will be large — still save best
-        title = f"{o['phase']} {o['flight_id'][-8:]} t={o['t']:.1f}s d={o['dist']:.1f} ty={o['ty']:+.2f}"
-        ok = annotate_and_save(img, out_img, title, corners=o.get("corners"), center=o.get("center"))
-        if ok and meta is not None:
-            o["frame_file"] = f"pnp_outliers/{fname}"
-            note = (
-                f"`{fname}`: {o['reason']}; center={o.get('center')}; "
-                f"slice_t≈{meta['t_slice']:.2f}s (err {meta['err']:.2f}s). "
+        for src in sources:
+            img, meta = extract_frame_by_ts_ns(src, o.get("ts_ns"), target_t_s=o.get("t"), max_err_s=0.08)
+            if img is not None:
+                break
+        geom_notes = []
+        if o.get("detection") is not None:
+            geom_notes = classify_pnp_outlier(o["detection"], float(o["ty"]), float(o["dist"]))
+        rejected = ""
+        if img is not None:
+            ok = annotate_and_save(img, out_img, title, corners=o.get("corners"), center=o.get("center"))
+            evidence_kind = "exact_frame"
+        else:
+            backdrop = None
+            late = find_late_screen(fix_dir, flight_index.get(o["flight_id"]))
+            late_note = "no late/approach screen"
+            if late is not None:
+                backdrop = cv2.imread(str(late))
+                late_note = "backdrop=operator %s (NOT exact outlier frame)" % late.name
+            if meta is not None:
+                rejected = " Best candidate `%s` rejected: %s (duration~%.2fs)." % (
+                    Path(meta.get("source", "?")).name,
+                    meta.get("error", "err"),
+                    float(meta.get("t_rel", 0) or 0),
+                )
+            elif not sources:
+                rejected = " No local .aigprec under recordings/logs/fixtures."
+            footer = "ts_ns=%s | corners_px evidence | full recording unavailable locally | %s" % (
+                o.get("ts_ns"),
+                late_note,
             )
-            # Heuristic visual class from geometry
-            if o.get("center"):
-                cx, cy = o["center"]
-                if cy < 100:
-                    note += "Center high in frame (sky/ceiling / looking up). "
-                if cx < 80 or cx > 560:
-                    note += "Center near left/right edge (partial / off-axis). "
-            if abs(o["ty"]) > 3.0 and o["dist"] < 5.0:
-                note += "Likely wrong-quad / far gate / banner (ty≫plausible at this range). "
+            ok = render_corners_evidence(
+                out_img,
+                title + " [SCHEMATIC]",
+                o.get("corners"),
+                o.get("center"),
+                image_size=tuple(o.get("image_size") or [640, 360]),
+                backdrop=backdrop,
+                footer=footer,
+            )
+            evidence_kind = "schematic_corners_px"
+        if ok:
+            o["frame_file"] = "pnp_outliers/%s" % fname
+            o["evidence_kind"] = evidence_kind
+            if evidence_kind == "exact_frame" and meta is not None:
+                note = "`%s` EXACT frame from `%s` via %s (err=%.1fms). %s." % (
+                    fname,
+                    Path(meta["source"]).name,
+                    meta["match_mode"],
+                    meta["err_s"] * 1000,
+                    o["reason"],
+                )
+            else:
+                note = (
+                    "`%s` frames UNAVAILABLE at outlier t=%.2fs (ts_ns=%s).%s "
+                    "Attached schematic from detection corners_px/center_px. %s."
+                    % (fname, o["t"], o.get("ts_ns"), rejected, o["reason"])
+                )
+            for g in geom_notes:
+                note += " " + g
             autopsy_notes.append(note)
         else:
             autopsy_notes.append(
-                f"{o['phase']} `{o['flight_id']}` t={o['t']:.1f}: {o['reason']} — "
-                f"no matching slice frame extracted."
+                "%s `%s` t=%.1f: %s - could not write evidence plate."
+                % (o["phase"], o["flight_id"], o["t"], o["reason"])
             )
-
     plot_scatter(attempts)
     write_dashboard(attempts, selected, autopsy_notes)
 
@@ -487,7 +694,7 @@ def main() -> int:
     summary = {
         "attempts": [a.__dict__ for a in attempts],
         "pnp_outliers": [
-            {k: v for k, v in o.items() if k not in ("corners", "fix_dir")} for o in selected
+            {k: v for k, v in o.items() if k not in ("corners", "fix_dir", "detection")} for o in selected
         ],
         "autopsy_notes": autopsy_notes,
         "phase3g_present": any(p == "phase3g" for p, _ in PHASE_DIRS if _.exists()),

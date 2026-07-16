@@ -25,6 +25,10 @@ Convention at closest approach:
 | phase3f | `20260715T195033-8edfeec4` | ok | 1.53 | -0.24 | +0.30 | 1.20 | 0 | environment collision (impulse=4.2) |
 | phase3f | `20260715T200011-8edfeec4` | ok | 2.59 | +0.01 | +0.51 | 1.19 | 0 | environment collision (impulse=1.9) |
 | phase3f | `20260715T200142-8edfeec4` | ok | 2.04 | -0.09 | +0.20 | 1.26 | 0 | environment collision (impulse=2.4) |
+| phase3g | `20260715T203300-8edfeec4` | ok | 0.45 | +0.44 | -0.06 | 1.20 | 0 | environment collision (impulse=10.1) |
+| phase3g | `20260715T204925-8edfeec4` | ok | 1.98 | -0.12 | +0.19 | 1.19 | 0 | environment collision (impulse=5.1) |
+| phase3g | `20260715T205124-8edfeec4` | ok | 1.84 | -0.08 | +0.29 | 1.19 | 0 | environment collision (impulse=1.2) |
+| phase3g | `20260715T205845-fc86a160` | ok | 0.05 | -0.05 | +0.02 | 1.10 | 0 | environment collision (impulse=9.3) |
 
 ## Phase summary (ok attempts only)
 
@@ -34,6 +38,7 @@ Convention at closest approach:
 | phase3d | 3 | 0.10 | -0.10 | +0.11 | 0.11 | 0.19 |
 | phase3e | 4 | 0.23 | -0.05 | +0.24 | 0.42 | 0.60 |
 | phase3f | 3 | 0.11 | -0.10 | +0.34 | 0.34 | 0.39 |
+| phase3g | 4 | 0.17 | +0.05 | +0.11 | 0.14 | 0.29 |
 
 ## Scatter
 
@@ -43,19 +48,25 @@ Origin = gate opening center. Points = STATE closest approach. Ideal pass sits n
 
 ## Close-range PnP outlier autopsy (2–4.5 m)
 
-Raw detections (for autopsy only). Looking for |ty|≥2 m or consecutive Δty≥0.8 m.
+Raw detections (for autopsy only). Looking for |ty|>=2 m. Frames matched by detection ts_ns; start slices rejected if they do not cover the outlier time.
 
 | phase | flight | t (s) | dist (m) | ty (m) | Δty | reason | frame |
 |---|---|---:|---:|---:|---:|---|---|
 | phase3d | `20260715T122352-22978559` | 14.50 | 4.43 | -2.86 | — | |ty|=2.86m at 4.43m | pnp_outliers/phase3d_978559_t14.5_ty-2.9.jpg |
+| phase3g | `20260715T203300-8edfeec4` | 10.60 | 4.42 | -2.70 | — | |ty|=2.70m at 4.42m | pnp_outliers/phase3g_dfeec4_t10.6_ty-2.7.jpg |
 | phase3d | `20260715T122040-22978559` | 7.08 | 4.01 | -2.53 | 0.72 | |ty|=2.53m at 4.01m | pnp_outliers/phase3d_978559_t7.1_ty-2.5.jpg |
+| phase3g | `20260715T205124-8edfeec4` | 7.37 | 4.45 | -2.37 | — | |ty|=2.37m at 4.45m | pnp_outliers/phase3g_dfeec4_t7.4_ty-2.4.jpg |
 | phase3f | `20260715T195033-8edfeec4` | 6.95 | 4.42 | -2.14 | 0.12 | |ty|=2.14m at 4.42m | pnp_outliers/phase3f_dfeec4_t7.0_ty-2.1.jpg |
+| phase3g | `20260715T205845-fc86a160` | 12.93 | 3.28 | -2.06 | — | |ty|=2.06m at 3.28m | pnp_outliers/phase3g_86a160_t12.9_ty-2.1.jpg |
 
 ### What the detector saw
 
-- `phase3d_978559_t14.5_ty-2.9.jpg`: |ty|=2.86m at 4.43m; center=[331.5, 109.5]; slice_t≈1.17s (err 13.33s). 
-- `phase3d_978559_t7.1_ty-2.5.jpg`: |ty|=2.53m at 4.01m; center=[281.0, 123.0]; slice_t≈1.14s (err 5.94s). 
-- `phase3f_dfeec4_t7.0_ty-2.1.jpg`: |ty|=2.14m at 4.42m; center=[450.5, 161.75]; slice_t≈1.39s (err 5.56s). 
+- `phase3d_978559_t14.5_ty-2.9.jpg` frames UNAVAILABLE at outlier t=14.50s (ts_ns=1784118260518789700). Best candidate `20260715T122352-22978559_r2d_slice_start.aigprec` rejected: best_err 13.331s > 0.080s (recording does not cover outlier) (duration~1.17s). Attached schematic from detection corners_px/center_px. |ty|=2.86m at 4.43m. corners_px=[[255.0, 72.0], [385.0, 47.0], [395.0, 154.0], [291.0, 165.0]]; center_px=[331.5,109.5]; edges top/bot/L/R=132/105/100/107; trap=0.23 PnP normal=[-0.08874882851254678, 0.9606752649681918, -0.2631096363038515] VERDICT: bad PnP / wrong quad - normal y-dominant (implausible for face-on ring). strong trapezoid - steep perspective or partial ring.
+- `phase3g_dfeec4_t10.6_ty-2.7.jpg` frames UNAVAILABLE at outlier t=10.60s (ts_ns=1784147604649372200). Best candidate `20260715T203300-8edfeec4_r2g_slice_start.aigprec` rejected: best_err 9.464s > 0.080s (recording does not cover outlier) (duration~1.14s). Attached schematic from detection corners_px/center_px. |ty|=2.70m at 4.42m. corners_px=[[334.0, 86.0], [422.0, 43.0], [479.0, 181.0], [352.0, 175.0]]; center_px=[396.8,121.2]; edges top/bot/L/R=98/127/91/149; trap=0.26 PnP normal=[-0.5641153437672743, 0.7089171970539818, -0.4233323595562422] VERDICT: bad PnP / wrong quad - normal y-dominant (implausible for face-on ring). strong trapezoid - steep perspective or partial ring.
+- `phase3d_978559_t7.1_ty-2.5.jpg` frames UNAVAILABLE at outlier t=7.08s (ts_ns=1784118061039329800). Best candidate `20260715T122040-22978559_r2d_slice_start.aigprec` rejected: best_err 5.937s > 0.080s (recording does not cover outlier) (duration~1.14s). Attached schematic from detection corners_px/center_px. |ty|=2.53m at 4.01m. corners_px=[[216.0, 61.0], [341.0, 62.0], [353.0, 182.0], [214.0, 187.0]]; center_px=[281.0,123.0]; edges top/bot/L/R=125/139/126/121; trap=0.11 PnP normal=[0.12151406349795744, 0.2834592568364985, -0.9512545306519776] VERDICT: ring-like quad but |ty| implies ~32deg at 4.0m - lock-rejected pose blow-up (banner/other-gate/partial), not true opening offset.
+- `phase3g_dfeec4_t7.4_ty-2.4.jpg` frames UNAVAILABLE at outlier t=7.37s (ts_ns=1784148705266914200). Best candidate `20260715T205124-8edfeec4_r2g_slice_start.aigprec` rejected: best_err 6.000s > 0.080s (recording does not cover outlier) (duration~1.36s). Attached schematic from detection corners_px/center_px. |ty|=2.37m at 4.45m. corners_px=[[308.0, 103.0], [433.0, 98.0], [422.0, 210.0], [314.0, 215.0]]; center_px=[369.2,156.5]; edges top/bot/L/R=125/108/112/113; trap=0.15 PnP normal=[0.03994847980224759, 0.7614485044055758, -0.6469932720670294] VERDICT: bad PnP / wrong quad - normal y-dominant (implausible for face-on ring).
+- `phase3f_dfeec4_t7.0_ty-2.1.jpg` frames UNAVAILABLE at outlier t=6.95s (ts_ns=1784145054115956500). Best candidate `20260715T195033-8edfeec4_r2f_slice_start.aigprec` rejected: best_err 5.599s > 0.080s (recording does not cover outlier) (duration~1.37s). Attached schematic from detection corners_px/center_px. |ty|=2.14m at 4.42m. corners_px=[[366.0, 133.0], [503.0, 82.0], [528.0, 205.0], [405.0, 227.0]]; center_px=[450.5,161.8]; edges top/bot/L/R=146/125/102/126; trap=0.16 PnP normal=[-0.2459045791108058, 0.8238621139334973, -0.5106683416830992] VERDICT: bad PnP / wrong quad - normal y-dominant (implausible for face-on ring).
+- `phase3g_86a160_t12.9_ty-2.1.jpg` frames UNAVAILABLE at outlier t=12.93s (ts_ns=1784149153473635000). Best candidate `20260715T205845-fc86a160_r2g_slice_start.aigprec` rejected: best_err 10.571s > 0.080s (recording does not cover outlier) (duration~2.41s). Attached schematic from detection corners_px/center_px. |ty|=2.06m at 3.28m. corners_px=[[0.0, 0.0], [223.0, 5.0], [207.0, 158.0], [0.0, 168.0]]; center_px=[107.5,82.8]; edges top/bot/L/R=223/207/168/154; trap=0.07 PnP normal=[0.19509656849001422, 0.13742901916081343, -0.9711079207049635] VERDICT: ring-like quad but |ty| implies ~32deg at 3.3m - lock-rejected pose blow-up (banner/other-gate/partial), not true opening offset. quad center high in frame. quad near L/R edge (partial/off-axis).
 
 ## Reading the convergence
 
