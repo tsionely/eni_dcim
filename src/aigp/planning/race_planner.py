@@ -127,8 +127,13 @@ class RacePlanner:
         # view again at a sane range, then re-approach (multiply attempts).
         if self._retreat_until_ns is not None:
             if now_ns < self._retreat_until_ns:
+                # Retreat is blind (gate out of frame, no altitude anchor):
+                # phase4a flights bled height across retry cycles — 8-35
+                # ground scrapes per flight — until a hard hit ended them.
+                # Same sink compensation as the blind commit stretch.
                 return Setpoint(phase="retreat",
-                                v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
+                                v_body=np.array([-self.retreat_speed, 0.0,
+                                                 -self.blind_climb_bias]),
                                 yaw_rate=0.0)
             self._retreat_until_ns = None
 
