@@ -27,6 +27,12 @@ import time
 # out of power throttling, and let RateLoop spin instead of sleeping for
 # short waits (see _SPIN_NS below).
 _SPIN_NS = 200_000
+# Aggressive no-sleep mode (skip ALL sub-16ms sleeps) is opt-in for CI
+# precision measurements ONLY: enabled by default it starved the pilot's
+# RX threads on the real-sim machine and grounded phase3j entirely. The
+# flight-proven default keeps coarse sleeps.
+import os
+_MIN_SLEEP_NS = 16_000_000 if os.environ.get("AIGP_NOSLEEP") == "1" else 0
 if sys.platform == "win32":                                # pragma: no cover
     _SPIN_NS = 2_500_000        # never trust sub-16ms sleeps on Windows
     try:
@@ -74,10 +80,16 @@ class RateLoop:
             # request) — so only sleep when the wait comfortably exceeds
             # one tick, otherwise spin the whole remainder.
             sleep_ns = remaining - self.spin_ns
-            if sleep_ns > (16_000_000 if sys.platform == "win32" else 0):
+            if sleep_ns > _MIN_SLEEP_NS:
                 time.sleep(sleep_ns / 1e9)
             while time.monotonic_ns() < self._deadline:
-                pass
+                # sleep(0) yields the GIL each iteration: a raw pass-loop
+                # starves the RX/TX threads (mavlink, vision) — on the real
+                # sim frames arrived and were recorded but never got decoded
+                # in time, and the pilot killed itself on the frame watchdog
+                # (phase3j: 589 frames in the recording, "stale channels:
+                # frame" abort).
+                time.sleep(0)
         else:
             late = -remaining
             self.overruns += 1
