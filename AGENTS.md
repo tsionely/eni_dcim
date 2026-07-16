@@ -336,7 +336,29 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3i — one axis left: cross 0.3m above center
+## CURRENT TASK: Phase 3j — sink compensation in the structurally blind meter
+
+phase3i taught the geometry lesson: the +0.3m aim floor pushed the ring
+out of the FOV bottom at 3.7-4.3m (vs 0.9m in 3h) — flying higher costs
+sight. And the full ring CANNOT fit the FOV below ~1.4m, so the final
+stretch is ALWAYS dead-reckoned. The real enemy is the ~0.5m SINK during
+that blind stretch (+0.3 above aim at 4m -> -0.2 below center at the
+bar). This build: aim floor reverted (visibility wins) + a climb bias
+applied exactly and only while commit flies blind
+(planner.commit.blind_climb_bias_mps=0.2), + geometric commit
+termination already in (the clock can no longer cut a crossing short —
+phase3h F3 lost a dead-centered pass to the 1.2s window).
+
+1. `git pull` (HEAD must include "blind-phase sink"). SIM LOCK.
+   R2-TRAINING. Your login/row-click helper fix from 3i is appreciated —
+   keep it.
+2. 3 flights, slow patch set. NOTE the commit window patch is now
+   redundant (default duration_s=2.5, geometric termination) — drop
+   `planner.commit.duration_s` from the patch set, keep the speeds.
+3. Optional flight 4: no patches at all.
+4. Collect `--label phase3j-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3i — one axis left: cross 0.3m above center
 
 phase3h was the closest cycle ever and every mechanism worked live:
 retry confirmed (multiple approach->commit->retreat->approach), F1

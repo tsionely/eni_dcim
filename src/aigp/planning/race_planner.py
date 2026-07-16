@@ -39,7 +39,14 @@ class RacePlanner:
         self.alt_gain = float(p.get("planner.approach.alt_gain", default=0.8))
         self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
         self.aim_up_floor_m = float(p.get("planner.approach.aim_up_floor_m",
-                                          default=0.3))
+                                          default=0.0))
+        # The final ~1.4m is STRUCTURALLY blind (the full ring exceeds the
+        # FOV below that range) and the drone sinks ~0.5m during the blind
+        # dead-reckoned stretch (phase3h/3i: +0.3 above aim at 4m ->
+        # -0.2 below center at the bar). Counter the known sink with a
+        # climb bias exactly and only while commit flies blind.
+        self.blind_climb_bias = float(p.get("planner.commit.blind_climb_bias_mps",
+                                            default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
@@ -172,6 +179,8 @@ class RacePlanner:
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
                         gate, state.q_att, au, self.alt_gain)
+                    if state.gate_rel_age_s > 0.4:
+                        extra[2] -= self.blind_climb_bias   # blind-phase sink
                     self._commit_v_body = direction * self.commit_speed + extra
                 return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
             # Window expired without a gate-passed event: we are past the
