@@ -356,7 +356,28 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 4b — chain build: relock sanity + retry altitude
+## CURRENT TASK: Phase 4c — fast-fail launches + verified relock build
+
+phase4b v2 verdict: the relock fix WORKS (F3 stayed local after misses —
+no far-gate chase) and F3's closest state was 0.06m. Two ops/robustness
+fixes in this build:
+- watchdogs are armed at flight start: a no-race launch (0 frames, 0
+  imu) now aborts in under a second instead of burning 300s "searching"
+  on nothing (F2/F2b each wasted 5 minutes)
+- keep launching flights until you get 3 VALID race attempts; the
+  fast-fail makes dud launches cheap — just relaunch the race and rerun
+
+1. `git pull` (HEAD must include "arm_all"). SIM LOCK. R2-TRAINING.
+2. 3 VALID flights, default speeds:
+   `python scripts/fly_once.py --max-duration 300
+    --patch safety.flight_timeout_s=300`
+   (a flight that aborts within seconds with "stale channels" = dud
+   launch, not a pilot result — relaunch the race and retry)
+3. Watch: gates passed; post-miss behavior staying local (it did in
+   v2); retry cycles holding altitude.
+4. Collect `--label phase4c-r2training-chain`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 4b — chain build: relock sanity + retry altitude
 
 The milestone autopsy (analysis/2026-07-16-milestone-autopsy) measured
 the gate-2 failure chain: closed to ~1m, crossed 0.9m beside the opening

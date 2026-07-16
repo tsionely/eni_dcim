@@ -116,6 +116,7 @@ class RaceManager:
         if cached is not None:
             self._initial_race_start_ms = cached.race_start_boot_time_ms
         self._t_flight_start = time.monotonic()
+        self.watchdog.arm_all()
         self._transition(FlightState.ARMING, "flight start")
         self.io.arm()
         self._t_last_arm = time.monotonic()

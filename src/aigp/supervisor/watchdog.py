@@ -20,6 +20,18 @@ class Watchdog:
     def feed(self, name: str, now: float | None = None) -> None:
         self._last_feed[name] = now if now is not None else time.monotonic()
 
+    def arm_all(self, now: float | None = None) -> None:
+        """Arm every registered channel as if just fed.
+
+        A channel that NEVER feeds must still trip (phase4b: a no-race
+        launch produced ZERO imu samples and the pilot 'flew' search for
+        300s on nothing — the never-fed channel was never armed).
+        """
+        if now is None:
+            now = time.monotonic()
+        for name in self._thresholds:
+            self._last_feed.setdefault(name, now)
+
     def stale_channels(self, now: float | None = None) -> list[str]:
         if now is None:
             now = time.monotonic()

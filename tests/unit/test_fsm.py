@@ -33,6 +33,11 @@ def params():
         "control.throttle_down_s": 0.05,
         "control.go_timeout_s": 2.0,
         "safety.flight_timeout_s": 10.0,
+        # These tests exercise the FSM with NO data streams; watchdogs are
+        # armed at flight start now (never-fed channels must trip in real
+        # flights), so keep them out of the way here.
+        "safety.imu_stale_s": 30.0,
+        "safety.frame_stale_s": 30.0,
     })
 
 
@@ -130,7 +135,7 @@ def test_gate_clips_tolerated_up_to_budget(manager):
 def test_watchdog_abort(manager):
     manager.start_flight()
     to_flying(manager)
-    manager.watchdog.feed("imu", now=time.monotonic() - 1.0)   # stale
+    manager.watchdog.feed("imu", now=time.monotonic() - 31.0)   # stale
     manager.tick(hb(True), race(start=1), [])
     assert manager.result.aborted
     assert "stale" in manager.result.abort_reason
