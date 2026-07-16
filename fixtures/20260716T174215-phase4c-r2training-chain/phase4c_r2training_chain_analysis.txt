@@ -1,0 +1,39 @@
+PHASE 4C R2-TRAINING CHAIN analysis
+HEAD 80c6d44 (staged watchdog arming: imu at start, frame at GO).
+Each counted flight was TEXT-selected as "R2 - TRAINING" and visually verified R2 (cyan ribbon) before flying.
+One attempt (r2c_f_2) template-matched at only 0.42 (event list not showing R2 row / different screen) and was REJECTED pre-flight, not counted.
+NOTE: all three valid flights show "THROTTLE_DOWN -> TAKEOFF: GO timeout -- proceeding" ~t+46s: because the helper clicks RACE before fly_once starts, the pilot missed the live GO edge and proceeded on its 45s GO-timeout, then flew a real approach/commit/retreat.
+
+=== F1 20260716T164931-927a4c97 ===
+result=environment collision (impulse=11.5) dur=70.7s gates_passed=0 clips=0 env=1
+telemetry frames=21624 detections=10993 imu=8283 states=3536 collisions=1
+phase RUN sequence (collapsed): hover -> takeoff -> approach -> commit -> retreat -> search -> approach -> search -> hover
+phase run counts: approach=2 commit=1 retreat=1 recover=0 search=2
+max_active_gate_idx=0 pass_events=[]
+closest DIRECT: dist=2.66m t+53.9s u=-0.49 v=-0.38 side=LEFT/HIGH
+closest STATE: dist=0.16m t+49.3s u=-0.19 v=2.60 side=LEFT/LOW age=1.50s
+collisions: t+71.7s impulse=11.49
+fsm: t+1.0 IDLE->ARMING:flight start | t+1.0 ARMING->THROTTLE_DOWN:armed | t+46.0 THROTTLE_DOWN->TAKEOFF:GO timeout — proceeding | t+47.5 TAKEOFF->RACING:takeoff complete | t+71.7 RACING->ABORTED:environment collision (impulse=11.5) | t+71.7 ABORTED->DONE:flight over
+
+=== F2 20260716T165306-927a4c97 ===
+result=environment collision (impulse=9.6) dur=61.4s gates_passed=0 clips=0 env=1
+telemetry frames=18546 detections=11898 imu=7229 states=3072 collisions=1
+phase RUN sequence (collapsed): hover -> takeoff -> approach -> commit -> retreat -> search -> approach
+phase run counts: approach=2 commit=1 retreat=1 recover=0 search=1
+max_active_gate_idx=0 pass_events=[]
+closest DIRECT: dist=0.90m t+62.4s u=0.01 v=-0.53 side=center-x/HIGH
+closest STATE: dist=0.03m t+49.7s u=0.71 v=0.45 side=RIGHT/LOW age=0.68s
+collisions: t+62.4s impulse=9.62
+fsm: t+1.0 IDLE->ARMING:flight start | t+1.0 ARMING->THROTTLE_DOWN:armed | t+46.0 THROTTLE_DOWN->TAKEOFF:GO timeout — proceeding | t+47.5 TAKEOFF->RACING:takeoff complete | t+62.4 RACING->ABORTED:environment collision (impulse=9.6) | t+62.4 ABORTED->DONE:flight over
+
+=== F3 20260716T165535-927a4c97 ===
+result=environment collision (impulse=3.4) dur=59.9s gates_passed=0 clips=0 env=1
+telemetry frames=16973 detections=11018 imu=7053 states=2997 collisions=2
+phase RUN sequence (collapsed): hover -> takeoff -> approach -> commit -> retreat -> approach -> hover
+phase run counts: approach=2 commit=1 retreat=1 recover=0 search=0
+max_active_gate_idx=0 pass_events=[]
+closest DIRECT: dist=3.17m t+48.7s u=0.09 v=0.86 side=center-x/LOW
+closest STATE: dist=0.06m t+49.8s u=-0.38 v=1.87 side=LEFT/LOW age=1.06s
+collisions: t+60.9s impulse=3.43; t+60.9s impulse=3.81
+fsm: t+1.0 IDLE->ARMING:flight start | t+1.0 ARMING->THROTTLE_DOWN:armed | t+46.0 THROTTLE_DOWN->TAKEOFF:GO timeout — proceeding | t+47.5 TAKEOFF->RACING:takeoff complete | t+60.9 RACING->ABORTED:environment collision (impulse=3.4) | t+60.9 ABORTED->DONE:flight over
+

@@ -1,0 +1,109 @@
+===== Phase 4c R2 chain (text launcher) preflight 2026-07-16T19:48:27.2869774+03:00 =====
+HEAD short=80c6d44 full=80c6d44f550eaf7f9e0dfa5823a35265b41d849f
+80c6d44 Stage watchdog arming: imu at start, frame at GO
+0103606 Arm watchdogs at flight start: no-race launches fail fast
+90d2ef0 [sim-run] phase4b v2 relock escape telemetry
+54a75a1 Time-based relock escape hatch (0.11s was an accident at 224Hz)
+2d20e41 [sim-run] phase4b safemode no-race timeout
+9d8850d [sim-run] phase4b partial telemetry
+8a046f5 [sim-run] phase4b r2 chain relock retry no passes
+bb3968b [tuning] Rebaseline v5 Windows QA report
+Launcher: text-label match 'R2 - TRAINING' + cyan-ribbon R2 verification before counting a flight. fly_once starts after RACE clicked.
+--- verify 80c6d44 ancestor ---
+HEAD is 80c6d44 or newer
+--- SIM LOCK created ---
+SIM OPERATOR lock phase4c-r2training-chain pid=19300 time=2026-07-16T19:48:28.0038156+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+
+===== fresh sim restart: attempt 1 2026-07-16T19:48:28.0153096+03:00 =====
+udp 14560 <- PID 11540
+udp 5601 <- PID 11540
+
+===== Phase 4c R2-TRAINING attempt 1 2026-07-16T19:49:06.8192796+03:00 =====
+HELPER_STATUS={"label":"r2c_f_1","r2_row_found":true,"score":0.999868631362915,"click":[412,397],"cyan_pixels":141328,"r2_ok":true,"verify_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_1\\r2c_f_1_verify_194929.png","eventlist_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_1\\r2c_f_1_eventlist_194924.png"}
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=11.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 70.70000990002882, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 17675, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T164931-927a4c97', 'log_dir': 'logs\\20260716T164931-927a4c97'}
+r2c_f_1_FLY_EXIT=0
+--- helper stdout r2c_f_1 ---
+sim window: AI-GP   19:49:16
+R2 template match: (65, 370, 695, 55) score 0.999868631362915
+event r2-training TEXT clicked (412,397) score=1.000 19:49:27
+RACE clicked 19:49:29
+VERIFY_R2 cyan_pixels=141328 r2_ok=True path=C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_verify_194929.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_000_194930.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_001_194933.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_002_194936.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_003_194940.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_1\r2c_f_1_004_194943.png
+CLASSIFY {"flight_id": "20260716T164931-927a4c97", "valid": true, "frames": 21624, "imu": 8283, "detections": 10993, "race_start_max": 47716, "duration_s": 70.70000990002882, "gates_passed": 0, "abort_reason": "environment collision (impulse=11.5)", "env_hits": 1, "gate_clips": 0}
+VALID_COUNT=1 (20260716T164931-927a4c97)
+
+===== fresh sim restart: attempt 2 2026-07-16T19:51:09.6942111+03:00 =====
+udp 14560 <- PID 17352
+udp 5601 <- PID 17352
+
+===== Phase 4c R2-TRAINING attempt 2 2026-07-16T19:51:46.5691607+03:00 =====
+HELPER_STATUS={"label":"r2c_f_2","r2_row_found":false,"score":0.41638776659965515,"r2_ok":false,"reason":"template_not_found","eventlist_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_2\\r2c_f_2_eventlist_195204.png"}
+R2 not verified (wrong track/no match) -> exit race, retry
+
+===== fresh sim restart: attempt 3 2026-07-16T19:52:04.7267935+03:00 =====
+udp 14560 <- PID 22952
+udp 5601 <- PID 22952
+
+===== Phase 4c R2-TRAINING attempt 3 2026-07-16T19:52:42.3486976+03:00 =====
+HELPER_STATUS={"label":"r2c_f_3","r2_row_found":true,"score":0.9997996687889099,"click":[412,397],"cyan_pixels":92960,"r2_ok":true,"verify_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_3\\r2c_f_3_verify_195305.png","eventlist_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_3\\r2c_f_3_eventlist_195259.png"}
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=9.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 61.42403899994679, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 15356, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T165306-927a4c97', 'log_dir': 'logs\\20260716T165306-927a4c97'}
+r2c_f_3_FLY_EXIT=0
+--- helper stdout r2c_f_3 ---
+sim window: AI-GP   19:52:51
+R2 template match: (65, 370, 695, 55) score 0.9997996687889099
+event r2-training TEXT clicked (412,397) score=1.000 19:53:02
+RACE clicked 19:53:05
+VERIFY_R2 cyan_pixels=92960 r2_ok=True path=C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_verify_195305.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_000_195305.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_001_195308.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_002_195312.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_003_195315.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_3\r2c_f_3_004_195318.png
+CLASSIFY {"flight_id": "20260716T165306-927a4c97", "valid": true, "frames": 18546, "imu": 7229, "detections": 11898, "race_start_max": 46120, "duration_s": 61.42403899994679, "gates_passed": 0, "abort_reason": "environment collision (impulse=9.6)", "env_hits": 1, "gate_clips": 0}
+VALID_COUNT=2 (20260716T165306-927a4c97)
+
+===== fresh sim restart: attempt 4 2026-07-16T19:54:34.6571537+03:00 =====
+udp 14560 <- PID 18812
+udp 5601 <- PID 18812
+
+===== Phase 4c R2-TRAINING attempt 4 2026-07-16T19:55:11.7545747+03:00 =====
+HELPER_STATUS={"label":"r2c_f_4","r2_row_found":true,"score":0.9997984170913696,"click":[412,397],"cyan_pixels":73312,"r2_ok":true,"verify_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_4\\r2c_f_4_verify_195534.png","eventlist_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase4c_final_r2_shots\\r2c_f_4\\r2c_f_4_eventlist_195528.png"}
+param overrides: {'safety.flight_timeout_s': 300}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 59.92006640008185, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 14980, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T165535-927a4c97', 'log_dir': 'logs\\20260716T165535-927a4c97'}
+r2c_f_4_FLY_EXIT=0
+--- helper stdout r2c_f_4 ---
+sim window: AI-GP   19:55:20
+R2 template match: (65, 370, 695, 55) score 0.9997984170913696
+event r2-training TEXT clicked (412,397) score=1.000 19:55:31
+RACE clicked 19:55:34
+VERIFY_R2 cyan_pixels=73312 r2_ok=True path=C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_verify_195534.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_000_195534.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_001_195537.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_002_195541.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_003_195544.png
+C:\Users\tsion\AppData\Local\Temp\phase4c_final_r2_shots\r2c_f_4\r2c_f_4_004_195547.png
+CLASSIFY {"flight_id": "20260716T165535-927a4c97", "valid": true, "frames": 16973, "imu": 7053, "detections": 11018, "race_start_max": 45800, "duration_s": 59.92006640008185, "gates_passed": 0, "abort_reason": "environment collision (impulse=3.4)", "env_hits": 1, "gate_clips": 0}
+VALID_COUNT=3 (20260716T165535-927a4c97)
+
+===== Phase 4c done 2026-07-16T19:57:02.4584445+03:00 =====
+ALL_IDS=20260716T164931-927a4c97,20260716T165306-927a4c97,20260716T165535-927a4c97
+VALID_IDS=20260716T164931-927a4c97=r2c_f_1,20260716T165306-927a4c97=r2c_f_3,20260716T165535-927a4c97=r2c_f_4
+VALID_COUNT=3

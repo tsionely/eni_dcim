@@ -1,0 +1,199 @@
+{
+  "label": "phase4c-r2training-chain",
+  "created_utc": "20260716T174215",
+  "flight_code_commit": "80c6d44f550eaf7f9e0dfa5823a35265b41d849f",
+  "track_verified": "R2-TRAINING (cyan ribbon) per flight",
+  "result": "3 valid flights, 0 gates passed, local re-approach confirmed",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 8959,
+      "source": "phase4c_r2training_chain_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase4c_r2training_chain_analysis.txt",
+      "bytes": 3235
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 5035
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T164931-927a4c97-flight.jsonl",
+      "bytes": 12861958,
+      "source": "logs/20260716T164931-927a4c97/flight.jsonl",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T164931-927a4c97-result.json",
+      "bytes": 458,
+      "source": "logs/20260716T164931-927a4c97/result.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T164931-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T164931-927a4c97/params.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T164931-927a4c97_r2c_commitwindow_slice.aigprec",
+      "bytes": 30280112,
+      "source": "logs/20260716T164931-927a4c97/vision.aigprec",
+      "note": "commit/collision window slice (start-s 44, ~30 MB); no pass so no pass+20 window"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T164931-927a4c97/vision.aigprec",
+      "reason": "full recording ~1952.6 MB > git fixture limit; Drive candidate"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165306-927a4c97-flight.jsonl",
+      "bytes": 12050762,
+      "source": "logs/20260716T165306-927a4c97/flight.jsonl",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165306-927a4c97-result.json",
+      "bytes": 457,
+      "source": "logs/20260716T165306-927a4c97/result.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165306-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T165306-927a4c97/params.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T165306-927a4c97_r2c_commitwindow_slice.aigprec",
+      "bytes": 30280812,
+      "source": "logs/20260716T165306-927a4c97/vision.aigprec",
+      "note": "commit/collision window slice (start-s 44, ~30 MB); no pass so no pass+20 window"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T165306-927a4c97/vision.aigprec",
+      "reason": "full recording ~1835.5 MB > git fixture limit; Drive candidate"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165535-927a4c97-flight.jsonl",
+      "bytes": 11404497,
+      "source": "logs/20260716T165535-927a4c97/flight.jsonl",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165535-927a4c97-result.json",
+      "bytes": 457,
+      "source": "logs/20260716T165535-927a4c97/result.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T165535-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T165535-927a4c97/params.json",
+      "note": "valid R2-verified flight"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T165535-927a4c97_r2c_commitwindow_slice.aigprec",
+      "bytes": 30279620,
+      "source": "logs/20260716T165535-927a4c97/vision.aigprec",
+      "note": "commit/collision window slice (start-s 44, ~30 MB); no pass so no pass+20 window"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T165535-927a4c97/vision.aigprec",
+      "reason": "full recording ~1711.5 MB > git fixture limit; Drive candidate"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_early.jpg",
+      "bytes": 53970
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_end.jpg",
+      "bytes": 43001
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_late.jpg",
+      "bytes": 54419
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid.jpg",
+      "bytes": 54421
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_R2verify.jpg",
+      "bytes": 54537
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_early.jpg",
+      "bytes": 54875
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_end.jpg",
+      "bytes": 46571
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_late.jpg",
+      "bytes": 54304
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid.jpg",
+      "bytes": 54401
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_R2verify.jpg",
+      "bytes": 54985
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_early.jpg",
+      "bytes": 54647
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_end.jpg",
+      "bytes": 47344
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_late.jpg",
+      "bytes": 55416
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_mid.jpg",
+      "bytes": 54530
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_R2verify.jpg",
+      "bytes": 55111
+    }
+  ]
+}
