@@ -1,0 +1,56 @@
+===== Phase 4b SAFEMODE preflight 2026-07-16T18:04:04.0526618+03:00 =====
+HEAD short=9d8850d full=9d8850ddc10a6cdd9f8c720c2f52969627abbbe5
+9d8850d [sim-run] phase4b partial telemetry
+8a046f5 [sim-run] phase4b r2 chain relock retry no passes
+bb3968b [tuning] Rebaseline v5 Windows QA report
+e742cf1 Relock distance sanity: stop chasing far gates after a near miss
+27fd679 [analysis] clarify collision is hangar truss; cyan helps post-pass only
+70bf395 [analysis] fix collision ID from vision frames (f4 screens were not FPV)
+Command: python scripts/fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.retreat.enabled=false
+--- SIM LOCK before create ---
+no existing lock
+--- SIM LOCK created ---
+SIM OPERATOR lock phase4b-safemode pid=61628 time=2026-07-16T18:04:04.2138271+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+61116 DCGame-Win64-Shipping 16/07/2026 18:04:04 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+43752 FlightSim             16/07/2026 18:04:04 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 61116
+udp 5601 <- PID 61116
+
+===== Phase 4b SAFEMODE R2-TRAINING flight 2026-07-16T18:04:31.3117007+03:00 =====
+param overrides: {'safety.flight_timeout_s': 300, 'planner.retreat.enabled': False}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 300.00007880001795, 'loop_overrun_frac': 0.0004, 'loop_stats': {'ticks': 75000, 'overruns': 30, 'overrun_frac': 0.0004, 'max_late_us': 6034}, 'flight_id': '20260716T150432-a9b6f4bb', 'log_dir': 'logs\\20260716T150432-a9b6f4bb'}
+r2b_safemode_retreat_off_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2b_safemode_retreat_off ---
+sim window: AI-GP   18:04:40
+event r2-training center clicked (1000,392) 18:04:51
+RACE clicked 18:04:54
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_000_180454.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_001_180457.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_002_180501.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_003_180504.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_004_180507.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_005_180511.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_006_180514.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_007_180517.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_008_180521.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_009_180524.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_010_180528.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_011_180531.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_012_180534.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_013_180538.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_014_180541.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_015_180544.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_016_180548.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_017_180551.png
+C:\Users\tsion\AppData\Local\Temp\phase4b_safemode_shots\r2b_safemode_retreat_off\r2b_safemode_retreat_off_018_180554.png
+--- helper stderr r2b_safemode_retreat_off ---

@@ -1,0 +1,76 @@
+{
+  "label": "phase4b-safemode",
+  "items": [
+    {
+      "bytes": 4606,
+      "file": "report.txt",
+      "note": "",
+      "kind": "report",
+      "source": "phase4b_safemode_report.txt"
+    },
+    {
+      "bytes": 1011,
+      "file": "notes.md",
+      "note": "",
+      "kind": "notes",
+      "source": ""
+    },
+    {
+      "bytes": 691,
+      "file": "phase4b_safemode_analysis.txt",
+      "note": "",
+      "kind": "analysis",
+      "source": "phase4b_safemode_analysis.txt"
+    },
+    {
+      "bytes": 7107316,
+      "file": "20260716T150432-a9b6f4bb-flight.jsonl",
+      "note": "safemode no-race timeout telemetry",
+      "kind": "flight_log",
+      "source": "logs/20260716T150432-a9b6f4bb/flight.jsonl"
+    },
+    {
+      "bytes": 447,
+      "file": "20260716T150432-a9b6f4bb-result.json",
+      "note": "safemode no-race timeout telemetry",
+      "kind": "flight_log",
+      "source": "logs/20260716T150432-a9b6f4bb/result.json"
+    },
+    {
+      "bytes": 2241,
+      "file": "20260716T150432-a9b6f4bb-params.json",
+      "note": "safemode no-race timeout telemetry",
+      "kind": "flight_log",
+      "source": "logs/20260716T150432-a9b6f4bb/params.json"
+    },
+    {
+      "bytes": 49780,
+      "file": "screens/safemode_end.jpg",
+      "note": "",
+      "kind": "screenshot",
+      "source": ""
+    },
+    {
+      "bytes": 51285,
+      "file": "screens/safemode_late.jpg",
+      "note": "",
+      "kind": "screenshot",
+      "source": ""
+    },
+    {
+      "bytes": 58094,
+      "file": "screens/safemode_mid.jpg",
+      "note": "",
+      "kind": "screenshot",
+      "source": ""
+    },
+    {
+      "bytes": 63725,
+      "file": "screens/safemode_start.jpg",
+      "note": "",
+      "kind": "screenshot",
+      "source": ""
+    }
+  ],
+  "created_utc": "20260716T151454"
+}

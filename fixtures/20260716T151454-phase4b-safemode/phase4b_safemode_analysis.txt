@@ -1,0 +1,8 @@
+PHASE 4B SAFEMODE analysis
+Command: fly_once --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.retreat.enabled=false
+result=flight timeout dur=300.0s gates_passed=0 clips=0 env=0 loop_overrun=0.00040
+topics frames=0 detections=0 imu=0 states=15001 races=1201
+phase counts={'hover': 2256, 'takeoff': 75, 'search': 12670}
+phase sequence=hover -> takeoff -> search -> hover
+race_start_range=(-1, -1) max_gate_idx=0
+fsm: t+1.0 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+46.0 THROTTLE_DOWN->TAKEOFF GO timeout — proceeding | t+47.6 TAKEOFF->RACING takeoff complete | t+301.0 RACING->ABORTED flight timeout | t+301.0 ABORTED->DONE flight over
