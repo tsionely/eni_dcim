@@ -116,7 +116,12 @@ class RaceManager:
         if cached is not None:
             self._initial_race_start_ms = cached.race_start_boot_time_ms
         self._t_flight_start = time.monotonic()
-        self.watchdog.arm_all()
+        # Arm ONLY the imu channel here: a dead launch has no IMU at all
+        # (imu flows from connect on any live session). Frames legitimately
+        # start only when the operator clicks RACE — seconds after we enter
+        # THROTTLE_DOWN — so the frame channel is armed at the GO transition
+        # instead (arming it here killed every real launch in that gap).
+        self.watchdog.feed("imu")
         self._transition(FlightState.ARMING, "flight start")
         self.io.arm()
         self._t_last_arm = time.monotonic()
@@ -204,10 +209,12 @@ class RaceManager:
                         and race.race_start_boot_time_ms >= 0 \
                         and race.race_start_boot_time_ms != self._initial_race_start_ms \
                         and race.sim_boot_time_ms >= race.race_start_boot_time_ms:
+                    self.watchdog.arm_all()   # race live: frames must flow now
                     self._transition(FlightState.TAKEOFF, "race GO")
                 elif now - self._t_state >= self.go_timeout_s:
                     # No fresh race start observed (e.g. free-flight testing):
                     # proceed anyway rather than deadlock.
+                    self.watchdog.arm_all()
                     self._transition(FlightState.TAKEOFF, "GO timeout — proceeding")
 
         elif self.state == FlightState.TAKEOFF:
