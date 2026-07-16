@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import ctypes
 import json
@@ -25,12 +26,14 @@ from aigp.learning.optimizers import CEM
 from aigp.learning.results_db import ResultsDB
 from simtools.mock_sim import Gate, MockSim
 
-RUN_ID = os.environ.get("ENI_REBASELINE_RUN_ID", "2026-07-15-rebaseline-v3-f5e8865")
+RUN_LABEL = "rebaseline-v4"
+RUN_ID = os.environ.get("ENI_REBASELINE_RUN_ID", "2026-07-16-rebaseline-v4-44f5f74")
 OUT_DIR = ROOT / "tuning" / "campaigns" / RUN_ID
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / RUN_ID
 LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 MAV_BASE = 30550
 VIDEO_BASE = 31600
+LOW_LOAD = False
 
 TUNE_BOUNDS = {
     "planner.approach.aim_up_m": (0.1, 0.6),
@@ -42,11 +45,12 @@ TUNE_BOUNDS = {
 }
 
 BEFORE_CI = {
-    "commit": "1998e5cc047a25bf1cdf64976ffb9d13b4daf4e2",
-    "overrun_frac": 0.7431438127090301,
+    "commit": "f5e88659a26056a7f692412004e30fac498dc276",
+    "ci_overrun_frac": 0.7431254191817572,
+    "hover_probe_overrun_frac": 0.7468099395567495,
     "heartbeat_timeouts": 2,
-    "pytest_summary": "3 failed, 69 passed, 1 xfailed, 2 warnings in 47.58s",
-    "campaign_guard": "invalid: all three attempts exceeded >10% stale-IMU",
+    "pytest_summary": "3 failed, 69 passed, 1 xfailed, 2 warnings in 49.60s",
+    "campaign_guard": "guard-aborted: normal attempt 1 stale-IMU 18.2%, then SIM LOCK appeared",
 }
 
 
@@ -126,13 +130,14 @@ def cpu_row(phase: str, batch: str) -> dict:
 
 
 def make_cfg(label: str, port_offset: int) -> SimConfig:
+    control_hz = 125 if LOW_LOAD else 250
     return SimConfig(
         mavlink_ip="127.0.0.1",
         mavlink_port=MAV_BASE + port_offset,
         heartbeat_timeout_s=20.0,
         vision_ip="127.0.0.1",
         vision_port=VIDEO_BASE + port_offset,
-        control_hz=250,
+        control_hz=control_hz,
         planner_div=5,
         timesync_hz=10.0,
         log_dir=str(RUNTIME_DIR / label),
@@ -163,11 +168,23 @@ def mock_session(label: str, port_offset: int, gates: list[Gate] | None = None, 
         time.sleep(0.5)
 
 
+def low_load_mock_opts() -> dict:
+    if not LOW_LOAD:
+        return {}
+    return {
+        "video_hz": 12.0,
+        "imu_hz": 100.0,
+        "physics_hz": 125.0,
+        "image_size": (320, 180),
+    }
+
+
 def measure_hover_overrun(base_params: ParamSet) -> dict:
     assert_clean_sim_guard()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     gates = [Gate(pos=np.array([50.0, 0.0, -1.5]), travel_yaw=0.0)]
-    with mock_session("hover-overrun", port_offset=80, gates=gates) as app:
+    with mock_session("hover-overrun", port_offset=80, gates=gates,
+                      **low_load_mock_opts()) as app:
         params = base_params.patch({
             "safety.imu_stale_s": 0.25,
             "planner.search.yaw_rate_rps": 0.4,
@@ -259,12 +276,13 @@ def run_campaign_attempt(attempt: int, base_params: ParamSet) -> tuple[bool, dic
     db = ResultsDB(db_path)
     optimizer = CEM(TUNE_BOUNDS, seed=20260715 + attempt)
     db.record_campaign(
-        f"rebaseline-v3-cem-attempt-{attempt}",
+        f"{RUN_LABEL}-cem-attempt-{attempt}",
         "CEM",
         list(TUNE_BOUNDS.keys()),
         datetime.now(timezone.utc).isoformat(),
     )
-    with mock_session(f"campaign-attempt-{attempt}", port_offset=attempt) as app:
+    with mock_session(f"campaign-attempt-{attempt}", port_offset=attempt,
+                      **low_load_mock_opts()) as app:
         for idx in range(1, 41):
             assert_clean_sim_guard()
             if idx == 1 or (idx - 1) % 10 == 0:
@@ -282,7 +300,7 @@ def run_campaign_attempt(attempt: int, base_params: ParamSet) -> tuple[bool, dic
                     params,
                     result,
                     score,
-                    campaign_id=f"rebaseline-v3-cem-attempt-{attempt}",
+                    campaign_id=f"{RUN_LABEL}-cem-attempt-{attempt}",
                 )
                 row = flight_row(idx, "campaign", params, result, score, attempt)
             except Exception as exc:  # noqa: BLE001 - measurement diagnostics
@@ -326,7 +344,8 @@ def run_campaign(base_params: ParamSet) -> tuple[dict[str, float], list[dict], l
 def verify(label: str, params: ParamSet, n: int, port_offset: int) -> tuple[list[dict], list[dict]]:
     rows: list[dict] = []
     cpu_rows = [cpu_row("verify", f"{label}-start")]
-    with mock_session(f"verify-{label}", port_offset=port_offset) as app:
+    with mock_session(f"verify-{label}", port_offset=port_offset,
+                      **low_load_mock_opts()) as app:
         for idx in range(1, n + 1):
             assert_clean_sim_guard()
             if idx == 1 or (idx - 1) % 10 == 0:
@@ -379,18 +398,20 @@ def write_summary(best_params: dict[str, float], campaign_rows: list[dict],
         else "Best parameters from rejected contaminated attempt:"
     )
     lines = [
-        f"# Re-Baseline v3 Mock Campaign - {RUN_ID}",
+        f"# Re-Baseline v4 Mock Campaign - {RUN_ID}",
         "",
         "Role: QA & MOCK-TUNER.",
         "",
         f"Commit: `{commit_hash()}`.",
         "Pre-run requirement: clean machine, no `FlightSim`/`DCGame`, no sim lock.",
         "Scope: mock only. No real simulator was launched, reset, clicked, or commanded.",
+        f"Mode: `{'low-load' if LOW_LOAD else 'normal'}`.",
         "",
         "## Windows Timer Fix Quantification",
         "",
         f"- Before commit: `{BEFORE_CI['commit']}`.",
-        f"- Before hover `overrun_frac`: `{BEFORE_CI['overrun_frac']}`.",
+        f"- Before CI hover `overrun_frac`: `{BEFORE_CI['ci_overrun_frac']}`.",
+        f"- Before standalone hover probe `overrun_frac`: `{BEFORE_CI['hover_probe_overrun_frac']}`.",
         f"- Before heartbeat timeouts in Windows CI: `{BEFORE_CI['heartbeat_timeouts']}`.",
         f"- Before pytest summary: `{BEFORE_CI['pytest_summary']}`.",
         f"- After commit: `{commit_hash()}`.",
@@ -449,6 +470,7 @@ def write_summary(best_params: dict[str, float], campaign_rows: list[dict],
             "bounds": TUNE_BOUNDS,
             "campaign_attempt": attempt,
             "valid_campaign": valid_campaign,
+            "mode": "low-load" if LOW_LOAD else "normal",
             "before_ci": BEFORE_CI,
             "hover_overrun_after": hover_after,
             "best_params": best_params,
@@ -462,12 +484,20 @@ def write_summary(best_params: dict[str, float], campaign_rows: list[dict],
     )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    global LOW_LOAD
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--low-load", action="store_true",
+                        help="Use reduced-fidelity mock settings for busy Windows machines")
+    args = parser.parse_args(argv)
+    LOW_LOAD = bool(args.low_load)
+
     assert_clean_sim_guard()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
-    base_params = ParamSet.load(ROOT / "config" / "params_default.json")
-    print(f"[rebaseline-v3] commit={commit_hash()}", flush=True)
+    base_params = ParamSet.load(ROOT / "config" / "params_default.json").patch(
+        {"safety.imu_stale_s": 0.25})
+    print(f"[{RUN_LABEL}] commit={commit_hash()} mode={'low-load' if LOW_LOAD else 'normal'}", flush=True)
     hover_after = measure_hover_overrun(base_params)
     best_params, campaign_rows, cpu_rows, attempt, valid_campaign = run_campaign(base_params)
     best = base_params.patch(best_params) if best_params else base_params
@@ -477,7 +507,7 @@ def main() -> int:
     cpu_rows.extend(best_cpu)
     write_summary(best_params, campaign_rows, default_rows, best_rows,
                   cpu_rows, attempt, valid_campaign, hover_after)
-    print(f"[rebaseline-v3] summary={OUT_DIR / 'summary.md'}", flush=True)
+    print(f"[{RUN_LABEL}] summary={OUT_DIR / 'summary.md'}", flush=True)
     return 0 if valid_campaign else 2
 
 
