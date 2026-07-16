@@ -1,0 +1,40 @@
+.FF..                                                                    [100%]
+================================== FAILURES ===================================
+__________________________ test_env_collision_aborts __________________________
+
+manager = <aigp.supervisor.race_manager.RaceManager object at 0x00000200E215DB50>
+
+    def test_env_collision_aborts(manager):
+        manager.start_flight()
+        to_flying(manager)
+        event = CollisionEvent(ts_ns=0, collision_id=CollisionEvent.ENVIRONMENT,
+                               threat_level=2, impulse=5.0)
+        manager.tick(hb(True), race(start=1), [event])
+>       assert manager.done
+E       assert False
+E        +  where False = <aigp.supervisor.race_manager.RaceManager object at 0x00000200E215DB50>.done
+
+tests\unit\test_fsm.py:113: AssertionError
+___________________ test_gate_clips_tolerated_up_to_budget ____________________
+
+manager = <aigp.supervisor.race_manager.RaceManager object at 0x00000200E215EA50>
+
+    def test_gate_clips_tolerated_up_to_budget(manager):
+        manager.start_flight()
+        to_flying(manager)
+        clip = CollisionEvent(ts_ns=0, collision_id=CollisionEvent.GATE,
+                              threat_level=1, impulse=0.5)
+        for _ in range(10):   # max_gate_clips = 10
+            manager.tick(hb(True), race(start=1), [clip])
+        assert not manager.result.aborted
+        manager.tick(hb(True), race(start=1), [clip])      # 11th
+>       assert manager.result.aborted
+E       AssertionError: assert False
+E        +  where False = FlightResult(finished=False, aborted=False, abort_reason='', gates_passed=0, lap_time_s=None, gate_clips=11, env_hits=0, duration_s=0.0, loop_overrun_frac=0.0).aborted
+E        +    where FlightResult(finished=False, aborted=False, abort_reason='', gates_passed=0, lap_time_s=None, gate_clips=11, env_hits=0, duration_s=0.0, loop_overrun_frac=0.0) = <aigp.supervisor.race_manager.RaceManager object at 0x00000200E215EA50>.result
+
+tests\unit\test_fsm.py:127: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_fsm.py::test_env_collision_aborts - assert False
+FAILED tests/unit/test_fsm.py::test_gate_clips_tolerated_up_to_budget - Asser...
+2 failed, 3 passed in 2.54s

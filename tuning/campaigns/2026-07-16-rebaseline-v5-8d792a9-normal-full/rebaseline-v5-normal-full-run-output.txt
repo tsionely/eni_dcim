@@ -1,0 +1,179 @@
+[rebaseline-v5] commit=8d792a93fb4090760b83b94e7c4506a1131076b7 mode=normal
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 63 samples: [-0.00117451  0.00065245  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (180 samples): bias=[-0.00086665  0.00133211  0.013     ] level roll=-0.001 pitch=-0.311
+[hover-overrun] overrun_frac=0.7435043304463691 ticks=1501 abort=max duration
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00067898  0.00323581  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (180 samples): bias=[-0.00046933  0.00039474  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 1/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00077121 0.00028188 0.013     ]; level ref roll=+0.001 pitch=-0.310
+live calibration (180 samples): bias=[3.76445492e-06 5.85473637e-04 1.30000003e-02] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 2/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 4.87857632e-05 -8.65872717e-04  1.30000003e-02]; level ref roll=-0.000 pitch=-0.310
+live calibration (180 samples): bias=[-0.00020329  0.00050216  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 3/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00143534  0.00166242  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[ 0.00192528 -0.00073046  0.013     ] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 4/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00211384  0.00080984  0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (180 samples): bias=[ 0.0003622  -0.00034067  0.013     ] level roll=+0.001 pitch=-0.310
+[campaign attempt 1] 5/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00067675 -0.00171815  0.013     ]; level ref roll=+0.001 pitch=-0.311
+live calibration (180 samples): bias=[ 0.00047355 -0.00047477  0.013     ] level roll=+0.001 pitch=-0.311
+[campaign attempt 1] 6/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00066101 -0.00013336  0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (180 samples): bias=[-0.0002535  -0.00076658  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 7/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00191898 0.00032372 0.013     ]; level ref roll=-0.002 pitch=-0.310
+live calibration (180 samples): bias=[-0.00039113 -0.00034939  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 8/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00140596 -0.00146109  0.013     ]; level ref roll=+0.000 pitch=-0.310
+live calibration (180 samples): bias=[-0.00047233 -0.00099991  0.013     ] level roll=-0.001 pitch=-0.311
+[campaign attempt 1] 9/40 gates=2 finished=True stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 7.54372156e-05 -1.17339529e-03  1.30000003e-02]; level ref roll=-0.000 pitch=-0.311
+live calibration (180 samples): bias=[ 0.00100737 -0.00024629  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 10/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00090754 0.00096925 0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (180 samples): bias=[0.00016214 0.0019495  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 11/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00026308 -0.00033738  0.013     ]; level ref roll=+0.000 pitch=-0.310
+live calibration (180 samples): bias=[0.000818   0.00099778 0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 12/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.0012483  0.00055409 0.013     ]; level ref roll=+0.001 pitch=-0.311
+live calibration (180 samples): bias=[-0.00125469 -0.00053092  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 13/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00089089 -0.0004658   0.013     ]; level ref roll=+0.001 pitch=-0.312
+live calibration (180 samples): bias=[ 0.00069905 -0.00104096  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 14/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.0002907   0.00012877  0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (180 samples): bias=[0.00071907 0.00019683 0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 15/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00015909  0.00199737  0.013     ]; level ref roll=+0.001 pitch=-0.310
+live calibration (176 samples): bias=[ 0.00020674 -0.00081464  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 16/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-9.71709843e-04  3.22178626e-05  1.30000003e-02]; level ref roll=+0.000 pitch=-0.310
+live calibration (172 samples): bias=[0.00150091 0.00111682 0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 17/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00063536  0.00092505  0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (175 samples): bias=[0.00080721 0.00109285 0.013     ] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 18/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00131106  0.00043097  0.013     ]; level ref roll=+0.000 pitch=-0.310
+live calibration (172 samples): bias=[-0.00083099 -0.00037753  0.013     ] level roll=+0.001 pitch=-0.311
+[campaign attempt 1] 19/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00115825 -0.00010779  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (175 samples): bias=[-0.00116036 -0.00012464  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 20/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00052355 -0.00019007  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (178 samples): bias=[ 0.00026485 -0.00031937  0.013     ] level roll=-0.001 pitch=-0.310
+[campaign attempt 1] 21/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00078771 0.00031896 0.013     ]; level ref roll=-0.000 pitch=-0.312
+live calibration (176 samples): bias=[ 0.00047494 -0.0006089   0.013     ] level roll=+0.001 pitch=-0.311
+[campaign attempt 1] 22/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00038732 -0.00011769  0.013     ]; level ref roll=+0.001 pitch=-0.311
+live calibration (180 samples): bias=[-0.00082959  0.00020211  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 23/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-5.42161320e-06 -4.59747990e-04  1.30000003e-02]; level ref roll=-0.000 pitch=-0.312
+live calibration (179 samples): bias=[ 9.42231007e-05 -4.16333829e-04  1.30000003e-02] level roll=+0.001 pitch=-0.310
+[campaign attempt 1] 24/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00190657 -0.00161962  0.013     ]; level ref roll=+0.002 pitch=-0.311
+live calibration (178 samples): bias=[0.00015778 0.00014577 0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 25/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00043993 -0.00050434  0.013     ]; level ref roll=+0.000 pitch=-0.312
+live calibration (179 samples): bias=[ 0.00015707 -0.00024216  0.013     ] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 26/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00111589  0.00040111  0.013     ]; level ref roll=+0.002 pitch=-0.311
+live calibration (167 samples): bias=[-4.10247072e-05 -4.38713287e-04  1.30000003e-02] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 27/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00074509 -0.00167475  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (172 samples): bias=[5.91195334e-05 9.52757975e-04 1.30000003e-02] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 28/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-3.29684060e-04  8.22334555e-05  1.30000003e-02]; level ref roll=+0.000 pitch=-0.310
+live calibration (166 samples): bias=[-0.0003536   0.00131116  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 29/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00043192 0.00171951 0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (165 samples): bias=[0.00036352 0.00013295 0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 30/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00105516 -0.00246918  0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (161 samples): bias=[-0.00029422  0.00088889  0.013     ] level roll=+0.000 pitch=-0.311
+[campaign attempt 1] 31/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 63 samples: [-0.00028944  0.00023623  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (173 samples): bias=[4.81665346e-05 6.64227418e-04 1.30000003e-02] level roll=+0.001 pitch=-0.311
+[campaign attempt 1] 32/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 63 samples: [-0.00210131 -0.00132941  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (169 samples): bias=[-0.00028504 -0.00068804  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 33/40 gates=2 finished=True stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00093333 -0.00235622  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (174 samples): bias=[-8.22834209e-05 -3.12878969e-05  1.30000003e-02] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 34/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-0.00084438  0.00093981  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (168 samples): bias=[0.00036318 0.00058559 0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 35/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [0.00029466 0.00049314 0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (177 samples): bias=[1.68541630e-03 1.09894769e-05 1.30000003e-02] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 36/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [-4.95251302e-05  5.66916848e-04  1.30000003e-02]; level ref roll=+0.000 pitch=-0.310
+live calibration (166 samples): bias=[ 4.37238238e-04 -8.06220383e-05  1.30000003e-02] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 37/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00021154 -0.00073962  0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (174 samples): bias=[0.00049409 0.00031709 0.013     ] level roll=+0.000 pitch=-0.310
+[campaign attempt 1] 38/40 gates=1 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 64 samples: [ 0.00110915 -0.00079524  0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (166 samples): bias=[ 0.00053847 -0.00051236  0.013     ] level roll=-0.000 pitch=-0.311
+[campaign attempt 1] 39/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+gyro bias calibrated over 65 samples: [-0.0003946   0.00159541  0.013     ]; level ref roll=+0.001 pitch=-0.310
+live calibration (171 samples): bias=[ 0.00037438 -0.00078416  0.013     ] level roll=-0.001 pitch=-0.310
+[campaign attempt 1] 40/40 gates=0 finished=False stale_imu=False stale_rate=0.0%
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00276079  0.00058884  0.013     ]; level ref roll=-0.001 pitch=-0.312
+live calibration (170 samples): bias=[7.87046261e-05 5.16349150e-04 1.30000003e-02] level roll=+0.000 pitch=-0.311
+[verify default] 1/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [0.00031015 0.00158453 0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (167 samples): bias=[-0.00107785 -0.00029975  0.013     ] level roll=-0.000 pitch=-0.311
+[verify default] 2/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [-0.00130069  0.0002368   0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (165 samples): bias=[-0.00037157  0.00093338  0.013     ] level roll=+0.001 pitch=-0.310
+[verify default] 3/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [0.00184627 0.00036509 0.013     ]; level ref roll=+0.001 pitch=-0.310
+live calibration (170 samples): bias=[-0.00048461 -0.00254399  0.013     ] level roll=-0.000 pitch=-0.311
+[verify default] 4/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [-0.00081115 -0.00212316  0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (171 samples): bias=[0.00019963 0.00020029 0.013     ] level roll=-0.000 pitch=-0.310
+[verify default] 5/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [0.00176559 0.00073894 0.013     ]; level ref roll=+0.000 pitch=-0.312
+live calibration (177 samples): bias=[-0.00118329 -0.00147508  0.013     ] level roll=+0.000 pitch=-0.311
+[verify default] 6/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [ 0.00103122 -0.00075426  0.013     ]; level ref roll=+0.001 pitch=-0.311
+live calibration (175 samples): bias=[-3.82386760e-04 -8.04067394e-05  1.30000003e-02] level roll=+0.000 pitch=-0.311
+[verify default] 7/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [ 0.00175648 -0.00018013  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (172 samples): bias=[ 0.00027861 -0.0002975   0.013     ] level roll=-0.000 pitch=-0.311
+[verify default] 8/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [-0.00065687 -0.00306744  0.013     ]; level ref roll=+0.001 pitch=-0.310
+live calibration (170 samples): bias=[-0.00051846  0.00053244  0.013     ] level roll=+0.000 pitch=-0.311
+[verify default] 9/20 gates=0 finished=False stale_imu=False
+gyro bias calibrated over 64 samples: [-0.00010825  0.00052674  0.013     ]; level ref roll=+0.001 pitch=-0.311
+live calibration (176 samples): bias=[-0.00026903 -0.00031365  0.013     ] level roll=-0.000 pitch=-0.311
+[verify default] 10/20 gates=0 finished=False stale_imu=False
+python.exe : Traceback (most recent call last):
+At line:13 char:1
++ & $py tuning\run_rebaseline_v3_20260715.py *> $log
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+  File "C:\Users\tsion\Projects\eni_dcim_qa\tuning\run_rebaseline_v3_20260715.py", line 516, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\tsion\Projects\eni_dcim_qa\tuning\run_rebaseline_v3_20260715.py", line 505, in main
+    default_rows, default_cpu = verify("default", base_params, 20, port_offset=20)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\tsion\Projects\eni_dcim_qa\tuning\run_rebaseline_v3_20260715.py", line 350, in verify
+    assert_clean_sim_guard()
+  File "C:\Users\tsion\Projects\eni_dcim_qa\tuning\run_rebaseline_v3_20260715.py", line 85, in assert_clean_sim_guard
+    raise RuntimeError("sim guard blocked run: " + "; ".join(details))
+RuntimeError: sim guard blocked run: lock=SIM OPERATOR lock phase4b-r2training-chain pid=61100
+time=2026-07-16T17:35:35.5839937+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1

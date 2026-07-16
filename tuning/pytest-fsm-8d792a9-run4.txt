@@ -1,0 +1,55 @@
+FF...                                                                    [100%]
+================================== FAILURES ===================================
+_______________________________ test_happy_path _______________________________
+
+manager = <aigp.supervisor.race_manager.RaceManager object at 0x000001DEFDB55310>
+
+    def test_happy_path(manager):
+        manager.start_flight()
+        assert manager.state == FlightState.ARMING
+        assert manager.io.arm_calls == 1
+
+        # Race not started yet (countdown): baseline start = -1.
+        manager.tick(hb(True), race(active=0, start=-1), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+        assert manager.io.throttle_down_sends >= 1
+
+        # Handshake elapsed but race still counting down -> stay put (early-start
+        # protection).
+        time.sleep(0.06)
+        manager.tick(hb(True), race(active=0, start=-1), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+
+        # Countdown: race_start changes to a FUTURE timestamp -> still hold
+        # (phase2b: launching here earned an early-start DSQ).
+        manager.tick(hb(True), race(active=0, start=5000, boot=3000), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+
+        # GO: the sim clock reaches the scheduled start.
+        manager.tick(hb(True), race(active=0, start=5000, boot=5001), [])
+>       assert manager.state == FlightState.TAKEOFF
+E       AssertionError: assert 'THROTTLE_DOWN' == 'TAKEOFF'
+E
+E         - TAKEOFF
+E         + THROTTLE_DOWN
+
+tests\unit\test_fsm.py:77: AssertionError
+__________________________ test_env_collision_aborts __________________________
+
+manager = <aigp.supervisor.race_manager.RaceManager object at 0x000001DEFFF4EA20>
+
+    def test_env_collision_aborts(manager):
+        manager.start_flight()
+        to_flying(manager)
+        event = CollisionEvent(ts_ns=0, collision_id=CollisionEvent.ENVIRONMENT,
+                               threat_level=2, impulse=5.0)
+        manager.tick(hb(True), race(start=1), [event])
+>       assert manager.done
+E       assert False
+E        +  where False = <aigp.supervisor.race_manager.RaceManager object at 0x000001DEFFF4EA20>.done
+
+tests\unit\test_fsm.py:113: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_fsm.py::test_happy_path - AssertionError: assert 'THRO...
+FAILED tests/unit/test_fsm.py::test_env_collision_aborts - assert False
+2 failed, 3 passed in 1.44s

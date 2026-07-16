@@ -1284,3 +1284,43 @@ Summary:
 - After v4: hover overrun is telemetry-only on Windows; the standalone matching hover probe recorded `0.7471341874578556`.
 - After v4 heartbeat timeout count in CI: 2 (`test_single_gate_pass`, `test_campaign_loop_against_mock`).
 - New non-overrun failures: `tests/unit/test_fsm.py::test_happy_path` stayed in `THROTTLE_DOWN` instead of `TAKEOFF`; `tests/unit/test_fsm.py::test_env_collision_aborts` did not mark the manager done.
+
+## 2026-07-16 17:37:37 +03:00 - commit `8d792a93fb4090760b83b94e7c4506a1131076b7`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- Pre-run guard was clear for FSM isolation, full CI, and the campaign start: no `FlightSim`/`DCGame`, no `C:\Temp\eni_dcim_sim.lock`.
+- HEAD contains requested base `74d93d1`; actual tested HEAD was `8d792a93fb4090760b83b94e7c4506a1131076b7`.
+- FSM isolation first, `tests/unit/test_fsm.py -q` x5 with `AIGP_NOSLEEP=1`: runs 1-2 passed; runs 3-5 failed. This is flaky, not deterministic, so I did not paste full `-vv` context as a deterministic Windows bug.
+- FSM failure mix: run 3 failed `test_env_collision_aborts` and `test_gate_clips_tolerated_up_to_budget`; run 4 failed `test_happy_path` and `test_env_collision_aborts`; run 5 failed `test_happy_path`.
+- Captured FSM outputs in `tuning/pytest-fsm-8d792a9-run1.txt` through `tuning/pytest-fsm-8d792a9-run5.txt`.
+- The first full CI attempt hit `PermissionError: [WinError 5]` while pytest tried to clean `C:\Temp\pytest-eni`; an elevated rerun was used only for the required basetemp.
+- Captured full elevated CI output in `tuning/pytest-windows-8d792a9-basetemp-full.txt`.
+- CI result: `70 passed, 2 failed, 1 xfailed, 2 warnings in 49.82s`.
+- Expected xfail observed: `test_first_gate_pass_with_second_gate_visible` remains xfailed and is not counted as a CI failure.
+- CI failures: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`, both heartbeat timeouts on `udpin:127.0.0.1:24550`.
+- Before v5: v4 standalone hover probe `overrun_frac` was `0.7471341874578556`.
+- After v5: standalone hover probe with `AIGP_NOSLEEP=1` recorded `overrun_frac=0.7435043304463691` over 1501 ticks. This is slightly lower but still Windows-tick high; now reported as telemetry.
+- Campaign 40 with guard completed before the SIM OPERATOR lock appeared: 40/40 flights, stale-IMU `0/40` (`0.0%`), so no `--low-load` fallback was needed.
+- Campaign result: 2 finishes, 10 total gates, max 2 gates, best score `188.67200000000003`.
+- Best flight: `20260716T141808-fa6abf10`, 2 gates, finished true, no abort, no gate clips, no env hits, lap time `11.327999999999975`.
+- Best parameters for the next Sakana/mock starting point:
+  `control.att_rate.vz_i=0.4282407486549845`,
+  `control.att_rate.vz_p=0.5997127390752905`,
+  `estimation.vision_vel_blend=0.1752711783794073`,
+  `planner.approach.aim_up_m=0.5155244016963784`,
+  `planner.commit.distance_m=1.5729619093978944`,
+  `planner.commit.duration_s=1.1792217758917576`.
+- The helper script then began its extra default verification pass and was stopped by the guard after 10/20 default-verification flights because the SIM OPERATOR lock appeared: `phase4b-r2training-chain`. I did not run anything further under the lock.

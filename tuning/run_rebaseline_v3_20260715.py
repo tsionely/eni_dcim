@@ -26,8 +26,8 @@ from aigp.learning.optimizers import CEM
 from aigp.learning.results_db import ResultsDB
 from simtools.mock_sim import Gate, MockSim
 
-RUN_LABEL = "rebaseline-v4"
-RUN_ID = os.environ.get("ENI_REBASELINE_RUN_ID", "2026-07-16-rebaseline-v4-44f5f74")
+RUN_LABEL = "rebaseline-v5"
+RUN_ID = os.environ.get("ENI_REBASELINE_RUN_ID", "2026-07-16-rebaseline-v5-8d792a9")
 OUT_DIR = ROOT / "tuning" / "campaigns" / RUN_ID
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / RUN_ID
 LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
@@ -45,12 +45,12 @@ TUNE_BOUNDS = {
 }
 
 BEFORE_CI = {
-    "commit": "f5e88659a26056a7f692412004e30fac498dc276",
-    "ci_overrun_frac": 0.7431254191817572,
-    "hover_probe_overrun_frac": 0.7468099395567495,
+    "commit": "44f5f741878e3cf51461c4706e40b7aaaee5b523",
+    "ci_overrun_frac": None,
+    "hover_probe_overrun_frac": 0.7471341874578556,
     "heartbeat_timeouts": 2,
-    "pytest_summary": "3 failed, 69 passed, 1 xfailed, 2 warnings in 49.60s",
-    "campaign_guard": "guard-aborted: normal attempt 1 stale-IMU 18.2%, then SIM LOCK appeared",
+    "pytest_summary": "4 failed, 68 passed, 1 xfailed, 2 warnings in 48.22s",
+    "campaign_guard": "guard-aborted: normal attempt 1 reached 4/40 with 0.0% stale-IMU, then SIM LOCK appeared",
 }
 
 
@@ -398,7 +398,7 @@ def write_summary(best_params: dict[str, float], campaign_rows: list[dict],
         else "Best parameters from rejected contaminated attempt:"
     )
     lines = [
-        f"# Re-Baseline v4 Mock Campaign - {RUN_ID}",
+        f"# Re-Baseline v5 Mock Campaign - {RUN_ID}",
         "",
         "Role: QA & MOCK-TUNER.",
         "",
@@ -406,6 +406,7 @@ def write_summary(best_params: dict[str, float], campaign_rows: list[dict],
         "Pre-run requirement: clean machine, no `FlightSim`/`DCGame`, no sim lock.",
         "Scope: mock only. No real simulator was launched, reset, clicked, or commanded.",
         f"Mode: `{'low-load' if LOW_LOAD else 'normal'}`.",
+        f"AIGP_NOSLEEP: `{os.environ.get('AIGP_NOSLEEP', '')}`.",
         "",
         "## Windows Timer Fix Quantification",
         "",

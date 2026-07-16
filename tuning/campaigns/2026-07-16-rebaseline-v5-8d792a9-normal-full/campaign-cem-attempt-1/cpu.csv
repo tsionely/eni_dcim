@@ -1,0 +1,7 @@
+ts_utc,phase,batch,cpu_total_pct,lock_exists,flightsim_processes
+2026-07-16T14:14:58.181901+00:00,campaign,attempt-1-start,12.423625254582483,False,
+2026-07-16T14:14:59.716213+00:00,campaign,attempt-1-before-01,13.200000000000001,False,
+2026-07-16T14:18:33.396950+00:00,campaign,attempt-1-before-11,16.27218934911243,False,
+2026-07-16T14:23:05.763437+00:00,campaign,attempt-1-before-21,12.20657276995305,False,
+2026-07-16T14:27:14.830046+00:00,campaign,attempt-1-before-31,9.715639810426534,False,
+2026-07-16T14:31:34.612243+00:00,campaign,attempt-1-end,6.6974595842956175,False,

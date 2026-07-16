@@ -1,0 +1,39 @@
+F....                                                                    [100%]
+================================== FAILURES ===================================
+_______________________________ test_happy_path _______________________________
+
+manager = <aigp.supervisor.race_manager.RaceManager object at 0x000001C494F7F350>
+
+    def test_happy_path(manager):
+        manager.start_flight()
+        assert manager.state == FlightState.ARMING
+        assert manager.io.arm_calls == 1
+
+        # Race not started yet (countdown): baseline start = -1.
+        manager.tick(hb(True), race(active=0, start=-1), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+        assert manager.io.throttle_down_sends >= 1
+
+        # Handshake elapsed but race still counting down -> stay put (early-start
+        # protection).
+        time.sleep(0.06)
+        manager.tick(hb(True), race(active=0, start=-1), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+
+        # Countdown: race_start changes to a FUTURE timestamp -> still hold
+        # (phase2b: launching here earned an early-start DSQ).
+        manager.tick(hb(True), race(active=0, start=5000, boot=3000), [])
+        assert manager.state == FlightState.THROTTLE_DOWN
+
+        # GO: the sim clock reaches the scheduled start.
+        manager.tick(hb(True), race(active=0, start=5000, boot=5001), [])
+>       assert manager.state == FlightState.TAKEOFF
+E       AssertionError: assert 'THROTTLE_DOWN' == 'TAKEOFF'
+E
+E         - TAKEOFF
+E         + THROTTLE_DOWN
+
+tests\unit\test_fsm.py:77: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_fsm.py::test_happy_path - AssertionError: assert 'THRO...
+1 failed, 4 passed in 1.43s
