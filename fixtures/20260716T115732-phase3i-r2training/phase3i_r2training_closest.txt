@@ -1,0 +1,44 @@
+PHASE 3I  R2-TRAINING  aim_up floor +0.3m: closest-approach analysis
+flight_code_commit 9d741b071990e73de0e116b1a15031b86f812a42
+Valid slow flights are F1c, F2, F3d. Several initial/replacement attempts were no-race/login-modal/timeouts; documented below.
+
+=== F1 slow valid replacement  20260716T113216-8edfeec4 ===
+result: environment collision (impulse=1.5) | dur 35.6s | gates 0 | clips 0 | env 17 | loop_overrun=0.00000
+topics: frames=953 detections=682 states=1782 collisions=17
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> recover -> approach
+ATTEMPTS approach=2 commit=1 retreat=1
+closest DIRECT: dist=3.80m t=[0.25, -0.6, 3.75] u=0.08 v=0.63 side=center-x/LOW center=[344.5, 293.0]
+closest HIGH direct sample: dist=5.68m v=-0.35 approx image miss=0.35 half-frame, t_y=-3.68m
+closest STATE: dist=1.23m gr=[-0.09, 0.19, 1.21] u=-0.07 v=0.28 age=1.47s side=center-x/LOW
+closest HIGH state sample: dist=3.67m v=-0.16 approx image miss=0.16 half-frame, gate_rel_y=-0.32m age=0.15s
+
+=== F2 slow valid original  20260716T031114-8edfeec4 ===
+result: environment collision (impulse=1.3) | dur 28.2s | gates 0 | clips 0 | env 1 | loop_overrun=0.00000
+topics: frames=945 detections=552 states=1409 collisions=2
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> search -> approach
+ATTEMPTS approach=2 commit=1 retreat=1
+closest DIRECT: dist=3.66m t=[0.42, -0.13, 3.63] u=0.13 v=0.92 side=center-x/LOW center=[362.0, 345.2]
+closest HIGH direct sample: dist=6.59m v=-0.36 approx image miss=0.36 half-frame, t_y=-4.24m
+closest STATE: dist=1.55m gr=[0.01, 0.06, 1.55] u=0.01 v=0.07 age=1.19s side=center-x/center-y
+closest HIGH state sample: dist=4.28m v=-0.16 approx image miss=0.16 half-frame, gate_rel_y=-0.38m age=0.24s
+
+=== F3 slow valid direct-click replacement  20260716T114244-8edfeec4 ===
+result: environment collision (impulse=1.3) | dur 26.7s | gates 0 | clips 0 | env 1 | loop_overrun=0.00000
+topics: frames=2563 detections=1270 states=1334 collisions=1
+phase sequence: hover -> takeoff -> approach -> search -> approach -> hover
+ATTEMPTS approach=2 commit=0 retreat=0
+closest DIRECT: dist=4.28m t=[-0.11, -0.78, 4.2] u=-0.01 v=0.61 side=center-x/LOW center=[316.0, 289.2]
+closest HIGH direct sample: dist=6.01m v=-0.77 approx image miss=0.77 half-frame, t_y=-4.72m
+closest STATE: dist=2.25m gr=[-0.0, 0.17, 2.24] u=-0.00 v=0.13 age=1.21s side=center-x/center-y
+closest HIGH state sample: dist=3.15m v=-0.29 approx image miss=0.29 half-frame, gate_rel_y=-0.51m age=1.49s
+
+=== invalid/no-race/optional attempts excluded from valid-flight count ===
+20260716T030847-8edfeec4: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2254, 'takeoff': 75, 'search': 3672} race_start_range=(-1, -1)
+20260716T031209-8edfeec4: stale channels: frame dur=9.7s frames=1048 detections=483 phases={'hover': 484} race_start_range=(-1, -1)
+20260716T031246-fc86a160: stale channels: frame dur=7.6s frames=1261 detections=443 phases={'hover': 381} race_start_range=(42865, 42865)
+20260716T031450-8edfeec4: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2255, 'takeoff': 75, 'search': 3671} race_start_range=(-1, -1)
+20260716T031753-8edfeec4: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2255, 'takeoff': 75, 'search': 3671} race_start_range=(-1, -1)
+20260716T032056-fc86a160: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2255, 'takeoff': 75, 'search': 3671} race_start_range=(-1, -1)
+20260716T113354-8edfeec4: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2255, 'takeoff': 75, 'search': 3671} race_start_range=(-1, -1)
+20260716T113657-fc86a160: flight timeout dur=120.0s frames=0 detections=0 phases={'hover': 2256, 'takeoff': 75, 'search': 3670} race_start_range=(-1, -1)
+20260716T115412-fc86a160: stale channels: frame dur=13.7s frames=1441 detections=773 phases={'hover': 685} race_start_range=(-1, -1)
