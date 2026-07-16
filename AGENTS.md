@@ -193,7 +193,27 @@ Standing tasks (in priority order, redone as new recordings appear):
 4. **Cross-checks**: anything suspicious (frame gaps, clock jumps, decode
    failures) — document with data in your report; do NOT fix code, flag it.
 
-### CURRENT TASK: the crossing-miss map (convergence dashboard)
+### CURRENT TASK: the milestone autopsy + the inter-gate frontier
+
+Gate 1 has been PASSED (fixtures/20260716T132549-phase3j-r2training-rerun,
+flight 20260716T131137: first-attempt pass at default speeds, t=25.4,
+then a hard env hit 13.5s later while chasing gate 2). Three studies:
+
+1. **Extend the miss map** with phase3i + phase3j-rerun rows — including
+   the PASS itself (its crossing vector is our first ground-truth
+   "success" datapoint; everything else calibrates against it).
+2. **Inter-gate segment study (the new frontier)**: from the milestone
+   flight's log + slice — what happened between the pass (t=25.4) and
+   the collision (t=38.9)? Track the gate-2 lock quality, the brief
+   commit->retreat at t=31.6-31.8, and identify WHAT it hit (frames
+   around the collision: pillar? parked aircraft?). R2 has obstacles
+   between stations and the pilot flies straight lines.
+3. **Cyan line as an obstacle-free corridor**: from all R2 slices — is
+   the ribbon continuously visible/segmentable while flying BETWEEN
+   gates (not just on approach)? Would following it have avoided the
+   collision? This decides the phase4b navigation design.
+
+### PREVIOUS: the crossing-miss map (convergence dashboard)
 
 We are converging on the first pass fix-by-fix; the missing instrument
 is a unified view of HOW EACH ATTEMPT MISSED, comparable across code
