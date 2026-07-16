@@ -1,0 +1,204 @@
+{
+  "label": "phase4a-r2training-chain",
+  "created_utc": "20260716T135229",
+  "flight_code_commit": "f332244dc26cdb8722f9df4c7de793bf25db15bf",
+  "task_note": "current AGENTS used default speeds; all selected valid flights gates_passed=0 so no pass+20 slices exist",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 16020,
+      "source": "phase4a_r2training_chain_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase4a_r2training_chain_analysis.txt",
+      "bytes": 4347
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 4479
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133531-927a4c97-flight.jsonl",
+      "bytes": 2058019,
+      "source": "logs/20260716T133531-927a4c97/flight.jsonl",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133531-927a4c97-result.json",
+      "bytes": 457,
+      "source": "logs/20260716T133531-927a4c97/result.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133531-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T133531-927a4c97/params.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134842-927a4c97-flight.jsonl",
+      "bytes": 2312422,
+      "source": "logs/20260716T134842-927a4c97/flight.jsonl",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134842-927a4c97-result.json",
+      "bytes": 457,
+      "source": "logs/20260716T134842-927a4c97/result.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134842-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T134842-927a4c97/params.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134309-927a4c97-flight.jsonl",
+      "bytes": 1792732,
+      "source": "logs/20260716T134309-927a4c97/flight.jsonl",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134309-927a4c97-result.json",
+      "bytes": 496,
+      "source": "logs/20260716T134309-927a4c97/result.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T134309-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T134309-927a4c97/params.json",
+      "note": "selected valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133703-927a4c97-flight.jsonl",
+      "bytes": 7107454,
+      "source": "logs/20260716T133703-927a4c97/flight.jsonl",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133703-927a4c97-result.json",
+      "bytes": 479,
+      "source": "logs/20260716T133703-927a4c97/result.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T133703-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T133703-927a4c97/params.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T133531-927a4c97_r2a_nopass_start_slice.aigprec",
+      "bytes": 30278811,
+      "source": "logs/20260716T133531-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T133531-927a4c97/vision.aigprec",
+      "reason": "full recording ~260.3 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T134842-927a4c97_r2a_nopass_start_slice.aigprec",
+      "bytes": 30280239,
+      "source": "logs/20260716T134842-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T134842-927a4c97/vision.aigprec",
+      "reason": "full recording ~274.3 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T134309-927a4c97_r2a_nopass_start_slice.aigprec",
+      "bytes": 30279514,
+      "source": "logs/20260716T134309-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T134309-927a4c97/vision.aigprec",
+      "reason": "full recording ~166.9 MB > git fixture limit"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_end.jpg",
+      "bytes": 50857
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_late.jpg",
+      "bytes": 64627
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid.jpg",
+      "bytes": 22093
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_start.jpg",
+      "bytes": 54277
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_end.jpg",
+      "bytes": 56441
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_late.jpg",
+      "bytes": 56325
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_mid.jpg",
+      "bytes": 27911
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2b_start.jpg",
+      "bytes": 54291
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_end.jpg",
+      "bytes": 54927
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_late.jpg",
+      "bytes": 55253
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_mid.jpg",
+      "bytes": 34011
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_start.jpg",
+      "bytes": 9536
+    }
+  ]
+}
