@@ -21,17 +21,39 @@ import time
 # Windows sleeps at the system timer granularity — 15.6ms by default —
 # which wrecks a 4ms control loop AND the mock sim's IMU pacing (Codex's
 # Windows CI: overrun_frac 0.74, chronic stale-imu aborts in campaigns).
-# Request 1ms resolution once per process; harmless if it fails.
+# timeBeginPeriod(1) alone measured NO effect on Windows 11 (identical
+# overrun_frac to 4 decimals): modern Windows ignores it for background
+# processes via timer coalescing. Defense in depth: also opt the process
+# out of power throttling, and let RateLoop spin instead of sleeping for
+# short waits (see _SPIN_NS below).
+_SPIN_NS = 200_000
 if sys.platform == "win32":                                # pragma: no cover
+    _SPIN_NS = 2_500_000        # never trust sub-16ms sleeps on Windows
     try:
         import ctypes
+        from ctypes import wintypes
+
         ctypes.WinDLL("winmm").timeBeginPeriod(1)
+
+        class _PowerThrottling(ctypes.Structure):
+            _fields_ = [("Version", wintypes.ULONG),
+                        ("ControlMask", wintypes.ULONG),
+                        ("StateMask", wintypes.ULONG)]
+
+        # PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION = 0x4;
+        # StateMask 0 -> do NOT throttle (honor the requested resolution).
+        _state = _PowerThrottling(1, 0x4, 0)
+        _k32 = ctypes.WinDLL("kernel32")
+        _k32.SetProcessInformation(
+            _k32.GetCurrentProcess(), 4,        # ProcessPowerThrottling
+            ctypes.byref(_state), ctypes.sizeof(_state))
     except Exception:
         pass
 
 
 class RateLoop:
-    def __init__(self, hz: float, resync_periods: int = 5, spin_ns: int = 200_000) -> None:
+    def __init__(self, hz: float, resync_periods: int = 5,
+                 spin_ns: int = _SPIN_NS) -> None:
         self.period_ns = int(1e9 / hz)
         self.resync_periods = resync_periods
         self.spin_ns = spin_ns

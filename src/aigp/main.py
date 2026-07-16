@@ -113,6 +113,11 @@ def run_campaign(cfg: SimConfig, params: ParamSet, args: argparse.Namespace) -> 
     sim = None
     if args.sim == "mock":
         from simtools.mock_sim import MockSim
+        # Mock IMU pacing jitter is a harness artifact, not a flight risk —
+        # the tests relax the watchdog the same way. Without this, Windows
+        # campaign flights die 10-30% on "stale channels: imu".
+        if float(params.get("safety.imu_stale_s")) < 0.25:
+            params = params.patch({"safety.imu_stale_s": 0.25})
         mock_opts = {}
         if args.low_load:
             # Shared machines (e.g. the real sim running in the background)
