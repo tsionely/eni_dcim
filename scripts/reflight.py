@@ -92,6 +92,15 @@ def main(argv=None):
     ap.add_argument("--log", required=True)
     ap.add_argument("--params", default="config/params_default.json")
     ap.add_argument("--patch", action="append", default=[])
+    ap.add_argument("--blind-last-s", type=float, default=0.0,
+                    help="pseudo-dropout: hide vision from the estimator for "
+                         "the final T seconds and report dead-reckoning error "
+                         "vs what the detector actually measured")
+    ap.add_argument("--imu-warmup-s", type=float, default=3.0,
+                    help="IMU history fed before the first frame; the flight "
+                         "log spans the whole flight and replaying a cold "
+                         "estimator through minutes of IMU-only corrupts the "
+                         "state the slice window is judged on")
     args = ap.parse_args(argv)
 
     params = apply_patches(ParamSet.load(args.params), args.patch)
@@ -108,13 +117,16 @@ def main(argv=None):
           f"(ids {frames[0][1]}..{frames[-1][1]})")
 
     # Merge on the recorder/log mono timeline and replay in order.
-    events = ([("imu", t, (ts, a, g)) for t, ts, a, g in imu]
+    t_warm = frames[0][0] - int(args.imu_warmup_s * 1e9)
+    events = ([("imu", t, (ts, a, g)) for t, ts, a, g in imu if t >= t_warm]
               + [("frame", t, (fid, sim_ns, img)) for t, fid, sim_ns, img in frames])
     events.sort(key=lambda e: e[1])
 
     fix_ranges = []          # ranges at which the detector produced a fix
     coverage = []            # (mono_s, range, accepted?) timeline
+    blind = []               # (believed, measured) during the hidden window
     t0 = events[0][1]
+    blind_from = frames[-1][0] - int(args.blind_last_s * 1e9)
     for kind, mono, payload in events:
         if kind == "imu":
             ts, a, g = payload
@@ -124,6 +136,19 @@ def main(argv=None):
             det = detector.detect(CameraFrame(frame_id=fid, ts_ns=sim_ns, image=img))
             if det is not None and det.rel_pose is not None:
                 rng = float(np.linalg.norm(det.rel_pose.t))
+                if args.blind_last_s > 0 and mono >= blind_from:
+                    # Pseudo-dropout: the estimator flies on dead
+                    # reckoning while we keep the detector's answer as
+                    # the reference (advisory Q3 harness). Reference
+                    # continuity filter: single-frame far-gate flickers
+                    # (10-21m mid-approach) are not the locked target.
+                    gr = est.state.gate_rel
+                    ref_prev = blind[-1][1] if blind else (
+                        float(np.linalg.norm(gr.t)) if gr is not None else None)
+                    if gr is not None and ref_prev is not None \
+                            and abs(rng - ref_prev) < 2.0:
+                        blind.append((float(np.linalg.norm(gr.t)), rng))
+                    continue
                 before = est._gate_rel_ts_ns
                 est.update_vision(det)
                 accepted = est._gate_rel_ts_ns != before
@@ -142,6 +167,11 @@ def main(argv=None):
         close = [r for _, r, _ in coverage if r < 3.0]
         if close:
             print(f"closest fix range: {min(close):.2f}m")
+    if blind:
+        errs = np.array([b - m for b, m in blind])
+        print(f"\nblind window ({args.blind_last_s:.1f}s, {len(blind)} ref frames):"
+              f" believed-minus-measured range error"
+              f" end={errs[-1]:+.2f}m  max|.|={np.abs(errs).max():.2f}m")
     return 0
 
 

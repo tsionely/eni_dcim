@@ -1,6 +1,6 @@
 import struct
 
-from aigp.io.vision_rx import HEADER_FORMAT, ChunkAssembler
+from aigp.io.vision_rx import HEADER_FORMAT, ChunkAssembler, VisionRX
 
 
 def make_packet(frame_id: int, chunk_id: int, total: int, full: bytes,
@@ -70,3 +70,21 @@ def test_runt_packet_ignored():
     asm = ChunkAssembler()
     assert asm.feed(b"short") is None
     assert asm.pending == 0
+
+
+def test_rebroadcast_dedupe():
+    """The real sim re-sends each exposure ~8-9x (measured ~280 msg/s vs
+    ~30 unique/s). Duplicates must be dropped BEFORE decode so the
+    estimator sees each exposure once and a frozen stream stops feeding
+    the frame watchdog."""
+    rx = VisionRX.__new__(VisionRX)          # logic only, no socket/bus
+    rx._last_frame_id = None
+    assert rx._is_new_exposure(1500)
+    assert not rx._is_new_exposure(1500)     # rebroadcast
+    assert rx._is_new_exposure(1501)
+    assert not rx._is_new_exposure(1500)     # late rebroadcast of older id
+    assert not rx._is_new_exposure(1501)
+    assert rx._is_new_exposure(1502)
+    # Large backward jump = the sim restarted numbering (new race): accept.
+    assert rx._is_new_exposure(3)
+    assert rx._is_new_exposure(4)

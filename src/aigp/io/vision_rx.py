@@ -105,6 +105,25 @@ class VisionRX(Agent):
         self.assembler = ChunkAssembler()
         self.frames_decoded = 0
         self.frames_failed = 0
+        self.frames_duplicate = 0
+        self._last_frame_id: int | None = None
+
+    def _is_new_exposure(self, frame_id: int) -> bool:
+        """Drop the sim's frame REBROADCASTS before the JPEG decode.
+
+        v1.0.3385 re-sends each exposure ~8-9x (measured: ~280 frame
+        messages/s vs ~30 unique/s on real recordings). Without this,
+        every duplicate costs a full imdecode + detector pass, the
+        estimator ingests each exposure ~9x as independent measurements,
+        and a FROZEN stream keeps feeding the frame watchdog. IDs only
+        grow within a stream; a large backward jump means the sim
+        restarted its numbering (new race) — accept and re-anchor.
+        """
+        last = self._last_frame_id
+        if last is not None and frame_id <= last and frame_id > last - 1000:
+            return False
+        self._last_frame_id = frame_id
+        return True
 
     def _run(self) -> None:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -135,6 +154,9 @@ class VisionRX(Agent):
                 if done is None:
                     continue
                 frame_id, sim_time_ns, jpeg = done
+                if not self._is_new_exposure(frame_id):
+                    self.frames_duplicate += 1
+                    continue
                 img = cv2.imdecode(np.frombuffer(jpeg, dtype=np.uint8), cv2.IMREAD_COLOR)
                 if img is None:
                     self.frames_failed += 1
