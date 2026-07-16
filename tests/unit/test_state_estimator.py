@@ -138,9 +138,11 @@ def test_relock_distance_sanity_rejects_far_gate():
     assert est._gate_rel is not None and np.linalg.norm(est._gate_rel.t) < 6
 
 
-def test_relock_escape_hatch_eventually_accepts():
-    """If only far candidates exist, the 25-rejection escape hatch must
-    re-lock rather than fly blind forever."""
+def test_relock_escape_hatch_is_time_based():
+    """If only far candidates exist, the TIME-based hatch (2.5s) re-locks —
+    but not sooner: a count-based hatch opened in 0.11s at the real sim's
+    224Hz fix rate and sent every phase4b flight chasing a far gate into
+    hangar steel."""
     est = make_estimator()
     ts = 0
     for i in range(30):
@@ -150,7 +152,14 @@ def test_relock_escape_hatch_eventually_accepts():
     for i in range(80):
         ts += int(0.02e9)
         _tick(est, ts)
-    for i in range(30):                      # far gate is all there is
+    # 1s of far-gate fixes at 50Hz: must still be REJECTED (< 2.5s).
+    for i in range(50):
+        ts += int(0.02e9)
+        _tick(est, ts)
+        est.update_vision(_det(ts, [5.0, 0.0, 20.0]))
+    assert est._gate_rel is None or np.linalg.norm(est._gate_rel.t) < 10
+    # After 2.5s+ of consistent far fixes: accepted.
+    for i in range(100):
         ts += int(0.02e9)
         _tick(est, ts)
         est.update_vision(_det(ts, [5.0, 0.0, 20.0]))

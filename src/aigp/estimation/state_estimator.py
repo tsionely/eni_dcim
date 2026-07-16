@@ -125,7 +125,7 @@ class StateEstimator:
         self._vision_yaw_ts_ns = 0
         self._cmd_yaw_rate = 0.0
         self._last_lock_dist: float | None = None
-        self._relock_rejects = 0
+        self._relock_reject_since_ns: int | None = None
         self._now_ns = 0
         # Frame timestamps and IMU timestamps live in DIFFERENT clock domains
         # on the real sim (frames: unix epoch; MAVLink IMU: sim boot time —
@@ -301,10 +301,16 @@ class StateEstimator:
             cand = float(np.linalg.norm(t_body))
             cap = max(self._last_lock_dist + 4.0, self._last_lock_dist * 2.5) \
                 if self._last_lock_dist is not None else float("inf")
-            if cand > cap and self._relock_rejects < 25:
-                self._relock_rejects += 1
-                return False
-            self._relock_rejects = 0
+            if cand > cap:
+                # TIME-based escape hatch: a fix-count hatch opened in 0.11s
+                # at the real sim's 224Hz (phase4b: one far-relock chase into
+                # steel per flight) — search never got a chance to re-find
+                # the near gate. Hold out for a sane candidate for 2.5s.
+                if self._relock_reject_since_ns is None:
+                    self._relock_reject_since_ns = self._now_ns
+                if (self._now_ns - self._relock_reject_since_ns) < 2.5e9:
+                    return False
+            self._relock_reject_since_ns = None
             self._fix_history.clear()
             self._gate_rel = None
             self._gate_rel_ts_ns = None
@@ -340,7 +346,7 @@ class StateEstimator:
             if not self._lock_accepts(t_body):
                 return
             self._last_lock_dist = float(np.linalg.norm(t_body))
-            self._relock_rejects = 0
+            self._relock_reject_since_ns = None
             self._gate_center_px = det.center_px
             q_now = self._attitude_at(self._rebase_det_ts(det.ts_ns))
             baseline = None
@@ -411,7 +417,7 @@ class StateEstimator:
         self._gate_center_px = None
         self._fix_history.clear()
         self._last_lock_dist = None      # next gate is legitimately farther
-        self._relock_rejects = 0
+        self._relock_reject_since_ns = None
 
     # ---------------------------------------------------------------- state
 
