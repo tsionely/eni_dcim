@@ -1,0 +1,48 @@
+PHASE 3J R2-TRAINING attempted-flight analysis
+All attempts failed before usable R2 flight because the simulator/controller frame channel went stale.
+No gate-pass/crossing data available for 3j.
+
+=== initial slow F1 20260716T121026-8edfeec4 ===
+result=flight timeout dur=120.00s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=0 detections=0 imu=0 states=6001 races=482 phases={'hover': 2256, 'takeoff': 75, 'search': 3670}
+race_start_range=(-1, -1) recording_MB=0.00
+
+=== initial slow F2 20260716T121331-8edfeec4 ===
+result=flight timeout dur=120.00s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=0 detections=0 imu=0 states=6001 races=482 phases={'hover': 2255, 'takeoff': 75, 'search': 3671}
+race_start_range=(-1, -1) recording_MB=0.00
+
+=== initial slow F3 20260716T121635-8edfeec4 ===
+result=flight timeout dur=120.00s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=0 detections=0 imu=0 states=6001 races=482 phases={'hover': 2256, 'takeoff': 75, 'search': 3670}
+race_start_range=(-1, -1) recording_MB=0.00
+
+=== initial default F4 20260716T121939-2ca531c3 ===
+result=flight timeout dur=120.00s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=0 detections=0 imu=0 states=6001 races=483 phases={'hover': 2255, 'takeoff': 75, 'search': 3671}
+race_start_range=(-1, -1) recording_MB=0.00
+
+=== hardened slow F1b 20260716T122609-8edfeec4 ===
+result=stale channels: frame dur=14.23s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=1 detections=1 imu=1744 states=712 races=64 phases={'hover': 712}
+race_start_range=(-1, 348157) recording_MB=6.96
+last_frame={'mono_ns': 614733247977900, 'topic': 'frame', 'data': {'frame_id': 0, 'ts_ns': 1784204784435033200, 'shape': [360, 640, 3]}}
+
+=== preopen slow F1c 20260716T122932-8edfeec4 ===
+result=stale channels: frame dur=0.60s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=526 detections=2 imu=186 states=31 races=6 phases={'hover': 31}
+race_start_range=(-1, -1) recording_MB=41.43
+last_frame={'mono_ns': 614922113469000, 'topic': 'frame', 'data': {'frame_id': 113, 'ts_ns': 1784204973231891200, 'shape': [360, 640, 3]}}
+
+=== preclick slow F1d 20260716T123132-8edfeec4 ===
+result=stale channels: frame dur=0.63s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=72 detections=2 imu=63 states=32 races=10 phases={'hover': 32}
+race_start_range=(-1, 39704) recording_MB=12.70
+last_frame={'mono_ns': 615042245230000, 'topic': 'frame', 'data': {'frame_id': 15, 'ts_ns': 1784205093361647900, 'shape': [360, 640, 3]}}
+
+=== preclick delayed slow F1e 20260716T123403-8edfeec4 ===
+result=stale channels: frame dur=0.62s gates=0 clips=0 env=0 loop_overrun=0.00000
+topics frames=589 detections=0 imu=187 states=32 races=6 phases={'hover': 32}
+race_start_range=(40336, 40336) recording_MB=46.58
+last_frame={'mono_ns': 615193255661100, 'topic': 'frame', 'data': {'frame_id': 187, 'ts_ns': 1784205244374542800, 'shape': [360, 640, 3]}}
+

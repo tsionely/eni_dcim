@@ -1,0 +1,224 @@
+{
+  "label": "phase3j-r2training",
+  "created_utc": "20260716T123643",
+  "flight_code_commit": "bbe3aee6cf16ae45de0d84bd1ee7c9f59c6857ac",
+  "status": "blocked_no_valid_flight_frame_channel_stale",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 22753,
+      "source": "phase3j_r2training_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase3j_r2training_analysis.txt",
+      "bytes": 2977
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 4675
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121026-8edfeec4-flight.jsonl",
+      "bytes": 2842206,
+      "source": "logs/20260716T121026-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121026-8edfeec4-result.json",
+      "bytes": 437,
+      "source": "logs/20260716T121026-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121026-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T121026-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121331-8edfeec4-flight.jsonl",
+      "bytes": 2842199,
+      "source": "logs/20260716T121331-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121331-8edfeec4-result.json",
+      "bytes": 437,
+      "source": "logs/20260716T121331-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121331-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T121331-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121635-8edfeec4-flight.jsonl",
+      "bytes": 2842199,
+      "source": "logs/20260716T121635-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121635-8edfeec4-result.json",
+      "bytes": 437,
+      "source": "logs/20260716T121635-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121635-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T121635-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121939-2ca531c3-flight.jsonl",
+      "bytes": 2842426,
+      "source": "logs/20260716T121939-2ca531c3/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121939-2ca531c3-result.json",
+      "bytes": 437,
+      "source": "logs/20260716T121939-2ca531c3/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T121939-2ca531c3-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T121939-2ca531c3/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122609-8edfeec4-flight.jsonl",
+      "bytes": 944082,
+      "source": "logs/20260716T122609-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122609-8edfeec4-result.json",
+      "bytes": 443,
+      "source": "logs/20260716T122609-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122609-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T122609-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122932-8edfeec4-flight.jsonl",
+      "bytes": 144168,
+      "source": "logs/20260716T122932-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122932-8edfeec4-result.json",
+      "bytes": 442,
+      "source": "logs/20260716T122932-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T122932-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T122932-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123132-8edfeec4-flight.jsonl",
+      "bytes": 57062,
+      "source": "logs/20260716T123132-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123132-8edfeec4-result.json",
+      "bytes": 442,
+      "source": "logs/20260716T123132-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123132-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T123132-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123403-8edfeec4-flight.jsonl",
+      "bytes": 157536,
+      "source": "logs/20260716T123403-8edfeec4/flight.jsonl",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123403-8edfeec4-result.json",
+      "bytes": 442,
+      "source": "logs/20260716T123403-8edfeec4/result.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T123403-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T123403-8edfeec4/params.json",
+      "note": "attempted Phase 3j run; no valid sustained frame stream"
+    },
+    {
+      "kind": "recording",
+      "file": "recording.zip",
+      "bytes": 39977137,
+      "source": "newest short stale-frame attempt recording",
+      "note": "evidence only; no valid crossing"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/delayed_start_frame_stream_stale.jpg",
+      "bytes": 55229
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/login_modal_blocked_initial.jpg",
+      "bytes": 30811
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/preclick_race_visible.jpg",
+      "bytes": 54466
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/preopened_race_dialog.jpg",
+      "bytes": 24842
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/race_countdown_but_frame_stale.jpg",
+      "bytes": 54342
+    }
+  ]
+}
