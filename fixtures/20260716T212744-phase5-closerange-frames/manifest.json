@@ -1,0 +1,164 @@
+{
+  "label": "phase5-closerange-frames",
+  "created_utc": "20260716T212744",
+  "flight_code_commit": "9fe370237fa1cd57548aadb49f9f20f943b58311",
+  "result": "two valid R2 flights; four close-range final-approach slices",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 11553,
+      "source": "phase5_closerange_frames_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase5_closerange_analysis.txt",
+      "bytes": 1942
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 3388
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T203450-2ca531c3-flight.jsonl",
+      "bytes": 1549678,
+      "source": "logs/20260716T203450-2ca531c3/flight.jsonl",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T203450-2ca531c3-result.json",
+      "bytes": 496,
+      "source": "logs/20260716T203450-2ca531c3/result.json",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T203450-2ca531c3-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T203450-2ca531c3/params.json",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T212408-2ca531c3-flight.jsonl",
+      "bytes": 1201694,
+      "source": "logs/20260716T212408-2ca531c3/flight.jsonl",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T212408-2ca531c3-result.json",
+      "bytes": 456,
+      "source": "logs/20260716T212408-2ca531c3/result.json",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T212408-2ca531c3-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T212408-2ca531c3/params.json",
+      "note": "valid R2 flight"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T203450-2ca531c3_range5m_to_3m.aigprec",
+      "bytes": 30278401,
+      "source": "logs/<flight_id>/vision.aigprec",
+      "note": "close-range/final-approach slice"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T203450-2ca531c3_range3m_to_collision.aigprec",
+      "bytes": 30279038,
+      "source": "logs/<flight_id>/vision.aigprec",
+      "note": "close-range/final-approach slice"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T212408-2ca531c3_initial_to_5m.aigprec",
+      "bytes": 30279799,
+      "source": "logs/<flight_id>/vision.aigprec",
+      "note": "close-range/final-approach slice"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T212408-2ca531c3_close_to_collision.aigprec",
+      "bytes": 30279306,
+      "source": "logs/<flight_id>/vision.aigprec",
+      "note": "close-range/final-approach slice"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T203450-2ca531c3/vision.aigprec",
+      "reason": "full recording ~562.2 MB > git fixture limit; Drive candidate"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T212408-2ca531c3/vision.aigprec",
+      "reason": "full recording ~269.2 MB > git fixture limit; Drive candidate"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_close.jpg",
+      "bytes": 31134
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_early.jpg",
+      "bytes": 53988
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_end.jpg",
+      "bytes": 31123
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid1.jpg",
+      "bytes": 36692
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid2.jpg",
+      "bytes": 31153
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_R2verify.jpg",
+      "bytes": 54599
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_close.jpg",
+      "bytes": 57883
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_early.jpg",
+      "bytes": 54282
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_end.jpg",
+      "bytes": 57257
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid1.jpg",
+      "bytes": 31316
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid2.jpg",
+      "bytes": 57200
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_R2verify.jpg",
+      "bytes": 54467
+    }
+  ]
+}

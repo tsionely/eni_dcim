@@ -1,0 +1,152 @@
+===== Phase 5 closerange frames preflight 2026-07-16T23:20:36.6418725+03:00 =====
+HEAD short=9fe3702 full=9fe370237fa1cd57548aadb49f9f20f943b58311
+9fe3702 Phase 5: replay-driven development — the loop moves offline
+5834013 [sim-run] phase4c r2 chain 3 valid flights local re-approach no pass
+80c6d44 Stage watchdog arming: imu at start, frame at GO
+0103606 Arm watchdogs at flight start: no-race launches fail fast
+90d2ef0 [sim-run] phase4b v2 relock escape telemetry
+54a75a1 Time-based relock escape hatch (0.11s was an accident at 224Hz)
+2d20e41 [sim-run] phase4b safemode no-race timeout
+9d8850d [sim-run] phase4b partial telemetry
+Mode: fly_once FIRST, then text-match helper clicks R2-TRAINING/RACE and verifies cyan-ribbon R2 scene.
+--- SIM LOCK created ---
+SIM OPERATOR lock phase5-closerange-frames pid=50012 time=2026-07-16T23:20:36.8394959+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+
+===== fresh sim restart: phase5 attempt 1 2026-07-16T23:20:36.8497613+03:00 =====
+udp 14560 <- PID 66412
+udp 5601 <- PID 66412
+
+===== Phase 5 R2-TRAINING attempt 1 2026-07-16T23:21:03.5419943+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== fresh sim restart: phase5 attempt 2 2026-07-16T23:21:08.7041465+03:00 =====
+udp 14560 <- PID 61480
+udp 5601 <- PID 61480
+
+===== Phase 5 R2-TRAINING attempt 2 2026-07-16T23:21:45.4025930+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== fresh sim restart: phase5 attempt 3 2026-07-16T23:21:48.5861903+03:00 =====
+udp 14560 <- PID 612
+udp 5601 <- PID 612
+
+===== Phase 5 R2-TRAINING attempt 3 2026-07-16T23:22:26.0994378+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== fresh sim restart: phase5 attempt 4 2026-07-16T23:22:29.5854021+03:00 =====
+udp 14560 <- PID 68048
+udp 5601 <- PID 68048
+
+===== Phase 5 R2-TRAINING attempt 4 2026-07-16T23:23:06.3558713+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== fresh sim restart: phase5 attempt 5 2026-07-16T23:23:09.8538421+03:00 =====
+udp 14560 <- PID 69296
+udp 5601 <- PID 69296
+
+===== Phase 5 R2-TRAINING attempt 5 2026-07-16T23:23:46.7665436+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== fresh sim restart: phase5 attempt 6 2026-07-16T23:23:50.4253648+03:00 =====
+udp 14560 <- PID 22664
+udp 5601 <- PID 22664
+
+===== Phase 5 R2-TRAINING attempt 6 2026-07-16T23:24:27.3115642+03:00 =====
+HELPER_STATUS=none
+R2 verification failed or missing; stopping pilot/helper and retrying.
+
+===== Phase 5 run done 2026-07-16T23:24:30.5228019+03:00 =====
+ALL_IDS=
+VALID_IDS=
+VALID_COUNT=0
+
+===== Phase 5 PREOPEN attempt 7 2026-07-16T23:32:27.7351377+03:00 =====
+R2 template (65, 370, 695, 55) 0.9998675584793091
+PREOPEN_OK C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_race_dialog_preopen.png
+PREOPEN_STATUS={"ok":true,"score":0.9998675584793091,"click":[412,397],"dialog_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5_r2_shots\\phase5_f_7_preopen\\phase5_f_7_preopen_race_dialog_preopen.png"}
+RACE_STATUS={"race_clicked":true,"cyan_pixels":27773,"r2_ok":true,"verify_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5_r2_shots\\phase5_f_7_preopen\\phase5_f_7_preopen_verify_after_race.png"}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 20.91603620001115, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5229, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T203318-2ca531c3', 'log_dir': 'logs\\20260716T203318-2ca531c3'}
+phase5_f_7_preopen_FLY_EXIT=0
+RACE_CLICKED cyan=27773 r2_ok=True
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_000_233321.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_001_233324.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_002_233328.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_003_233331.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_004_233334.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_005_233338.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_006_233341.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_007_233344.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_008_233347.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_009_233350.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_7_preopen\phase5_f_7_preopen_010_233354.png
+CLASSIFY {"flight_id": "20260716T203318-2ca531c3", "valid": true, "frames": 4942, "imu": 2532, "detections": 3016, "race_start_max": 35783, "duration_s": 20.91603620001115, "gates_passed": 0, "abort_reason": "stale channels: frame", "env_hits": 0, "gate_clips": 0}
+VALID_COUNT=1 (20260716T203318-2ca531c3)
+
+===== Phase 5 PREOPEN attempt 8 2026-07-16T23:34:01.9843962+03:00 =====
+R2 template (65, 370, 695, 55) 0.9998658299446106
+PREOPEN_OK C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_race_dialog_preopen.png
+PREOPEN_STATUS={"ok":true,"score":0.9998658299446106,"click":[412,397],"dialog_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5_r2_shots\\phase5_f_8_preopen\\phase5_f_8_preopen_race_dialog_preopen.png"}
+RACE_STATUS={"race_clicked":true,"cyan_pixels":207352,"r2_ok":true,"verify_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5_r2_shots\\phase5_f_8_preopen\\phase5_f_8_preopen_verify_after_race.png"}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.3)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 9.412170000025071, 'loop_overrun_frac': 0.00042498937526561835, 'loop_stats': {'ticks': 2353, 'overruns': 1, 'overrun_frac': 0.00042498937526561835, 'max_late_us': 578}, 'flight_id': '20260716T203450-2ca531c3', 'log_dir': 'logs\\20260716T203450-2ca531c3'}
+phase5_f_8_preopen_FLY_EXIT=0
+RACE_CLICKED cyan=207352 r2_ok=True
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_000_233453.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_001_233456.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_002_233500.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_003_233503.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_004_233506.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_005_233509.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_006_233512.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_007_233515.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_8_preopen\phase5_f_8_preopen_008_233519.png
+CLASSIFY {"flight_id": "20260716T203450-2ca531c3", "valid": true, "frames": 2628, "imu": 1200, "detections": 1001, "race_start_max": 38346, "duration_s": 9.412170000025071, "gates_passed": 0, "abort_reason": "environment collision (impulse=3.3)", "env_hits": 1, "gate_clips": 0}
+VALID_COUNT=2 (20260716T203450-2ca531c3)
+
+===== Phase 5 preopen attempts done 2026-07-16T23:35:22.5012185+03:00 =====
+ALL_IDS=20260716T203318-2ca531c3,20260716T203450-2ca531c3
+VALID_IDS=20260716T203318-2ca531c3=phase5_f_7_preopen,20260716T203450-2ca531c3=phase5_f_8_preopen
+VALID_COUNT=2
+
+===== Phase 5 CONNECTED-THEN-RACE attempt 9 2026-07-17T00:21:47.6002183+03:00 =====
+R2 template (698, 699, 625, 49) 0.36195433139801025
+PREOPEN_STATUS={"ok":false,"score":0.36195433139801025,"reason":"r2_template_not_found"}
+
+===== Phase 5 CONNECTED-THEN-RACE attempt 10 2026-07-17T00:22:33.6308593+03:00 =====
+R2 template (895, 906, 660, 52) 0.41638776659965515
+PREOPEN_STATUS={"ok":false,"score":0.41638776659965515,"reason":"r2_template_not_found"}
+
+===== Phase 5 CONNECTED-THEN-RACE attempt 11 2026-07-17T00:23:19.1734140+03:00 =====
+R2 template (65, 370, 695, 55) 0.9998659491539001
+PREOPEN_OK C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_race_dialog_preopen.png
+PREOPEN_STATUS={"ok":true,"score":0.9998659491539001,"click":[412,397],"dialog_path":"C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5_r2_shots\\phase5_f_11_connected\\phase5_f_11_connected_race_dialog_preopen.png"}
+CONNECTED_SEEN=True
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 86 samples: [-7.04290362e-05 -1.89991178e-04  7.79592259e-06]; level ref roll=+0.001 pitch=-0.309
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 6.564047100022435, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 1641, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T212408-2ca531c3', 'log_dir': 'logs\\20260716T212408-2ca531c3'}
+phase5_f_11_connected_FLY_EXIT=0
+RACE_CLICKED cyan=25587 r2_ok=True
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_000_002411.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_001_002415.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_002_002418.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_003_002422.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_004_002425.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_005_002428.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_006_002432.png
+C:\Users\tsion\AppData\Local\Temp\phase5_r2_shots\phase5_f_11_connected\phase5_f_11_connected_007_002435.png
+CLASSIFY {"flight_id": "20260716T212408-2ca531c3", "valid": true, "frames": 1985, "imu": 846, "detections": 946, "race_start_max": 39316, "duration_s": 6.564047100022435, "gates_passed": 0, "abort_reason": "environment collision (impulse=3.7)", "env_hits": 1, "gate_clips": 0}
+VALID_IDS_NOW=20260716T203450-2ca531c3=phase5_f_8_preopen,20260716T212408-2ca531c3=phase5_f_11_connected
+FINAL_PHASE5_VALID_IDS=20260716T203450-2ca531c3=phase5_f_8_preopen,20260716T212408-2ca531c3=phase5_f_11_connected

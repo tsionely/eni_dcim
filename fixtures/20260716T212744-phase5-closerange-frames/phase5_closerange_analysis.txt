@@ -1,0 +1,23 @@
+PHASE 5 close-range frame collection analysis
+Two valid R2-TRAINING flights. Text-matched R2 row and verified cyan-ribbon scene. Flight 1 pre-opened race dialog then fly_once; Flight 2 started fly_once first, waited for connected, then clicked RACE immediately.
+
+=== F1 20260716T203450-2ca531c3 ===
+result=environment collision (impulse=3.3) dur=9.4s gates=0 env=1 clips=0
+telemetry frames=2628 detections=1001 imu=1200 race_start_max=38346
+phase runs: hover -> takeoff -> approach -> commit -> retreat -> search counts={'hover': 151, 'takeoff': 75, 'approach': 82, 'commit': 37, 'retreat': 101, 'search': 25}
+direct range thresholds: <=8m t+1.0s; <=5m t+5.4s; <=3m t+6.9s; <=2m t+7.2s; <=1m NEVER
+closest DIRECT dist=1.50m t+7.3s u=0.00 v=0.68 side=center-x/LOW
+closest STATE dist=0.03m t+7.8s u=-0.16 v=0.45 side=LEFT/LOW age=0.49s
+collisions: t+10.4s impulse=3.33
+fsm: t+1.0 IDLE->ARMING:flight start | t+1.0 ARMING->THROTTLE_DOWN:armed | t+4.0 THROTTLE_DOWN->TAKEOFF:race GO | t+5.5 TAKEOFF->RACING:takeoff complete | t+10.4 RACING->ABORTED:environment collision (impulse=3.3) | t+10.4 ABORTED->DONE:flight over
+
+=== F2 20260716T212408-2ca531c3 ===
+result=environment collision (impulse=3.7) dur=6.6s gates=0 env=1 clips=0
+telemetry frames=1985 detections=946 imu=846 race_start_max=39316
+phase runs: hover -> takeoff -> approach -> commit counts={'hover': 194, 'takeoff': 75, 'approach': 59, 'commit': 1}
+direct range thresholds: <=8m t+1.0s; <=5m t+7.1s; <=3m t+7.1s; <=2m t+7.2s; <=1m NEVER
+closest DIRECT dist=1.67m t+7.3s u=0.07 v=-0.32 side=center-x/HIGH
+closest STATE dist=1.98m t+7.5s u=0.04 v=0.25 side=center-x/LOW age=0.94s
+collisions: t+7.5s impulse=3.74
+fsm: t+1.0 IDLE->ARMING:flight start | t+1.0 ARMING->THROTTLE_DOWN:armed | t+4.8 THROTTLE_DOWN->TAKEOFF:race GO | t+6.3 TAKEOFF->RACING:takeoff complete | t+7.5 RACING->ABORTED:environment collision (impulse=3.7) | t+7.5 ABORTED->DONE:flight over
+
