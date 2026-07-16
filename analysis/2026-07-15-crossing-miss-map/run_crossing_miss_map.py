@@ -1,8 +1,11 @@
-"""Crossing-miss map across phase3c/3d/3e/3f (+3g if present).
+"""Crossing-miss map across phase3c–3i (as fixtures land).
 
 From STATE gate_rel (lock-accepted / dead-reckoned), NOT raw detections.
-Miss vector at closest approach: lateral = cam tx (body y), vertical = cam ty
-(body z, down+). Positive vertical => aircraft HIGH / top-bar.
+Miss vector at closest approach per gate attempt: lateral = cam tx (body y),
+vertical = cam ty (body z, down+). Positive vertical => aircraft HIGH / top-bar.
+
+Phase3h+ may RETRY (approach→commit→retreat→approach). Each cycle is a
+separate attempt, segmented via setpoint.data.phase (not FSM).
 """
 from __future__ import annotations
 
@@ -32,9 +35,9 @@ PHASE_DIRS = [
     ("phase3e", ROOT / "fixtures" / "20260715T190627-phase3e-r2training-slow"),
     ("phase3f", ROOT / "fixtures" / "20260715T200734-phase3f-r2training-slow"),
 ]
-# Optional 3g
-for d in sorted((ROOT / "fixtures").glob("*phase3g*")):
-    PHASE_DIRS.append(("phase3g", d))
+for tag in ("phase3g", "phase3h", "phase3i"):
+    for d in sorted((ROOT / "fixtures").glob(f"*{tag}*")):
+        PHASE_DIRS.append((tag, d))
 
 PHASE_COLORS = {
     "phase3c": "#d62728",
@@ -42,20 +45,33 @@ PHASE_COLORS = {
     "phase3e": "#2ca02c",
     "phase3f": "#1f77b4",
     "phase3g": "#9467bd",
+    "phase3h": "#8c564b",
+    "phase3i": "#e377c2",
 }
+
+# Planner phases that belong to a gate attempt window.
+_ATTEMPT_PHASES = frozenset({"approach", "commit"})
+_ATTEMPT_START = "approach"
+_ATTEMPT_ENDERS = frozenset({"retreat", "recover", "hover", "search", "takeoff"})
 
 
 @dataclass
 class Attempt:
     phase: str
     flight_id: str
+    attempt_n: int  # 1-based within flight; retries get 2, 3, …
+    n_attempts_in_flight: int
     status: str
     n_states_with_gate: int
     closest_dist_m: float | None
     miss_lateral_m: float | None  # + = opening right of aircraft = aircraft LEFT of opening
     miss_vertical_m: float | None  # + = opening below aircraft = aircraft HIGH
     t_closest_s: float | None
+    t_attempt_start_s: float | None
+    t_attempt_end_s: float | None
     gate_rel_age_s: float | None
+    attempt_phases: str  # e.g. "approach+commit+retreat"
+    ended_retreat: bool
     result: str | None
     gates_passed: int | None
 
@@ -67,64 +83,215 @@ def load_result(path: Path) -> dict:
     return {}
 
 
-def reconstruct_miss(phase: str, path: Path) -> Attempt:
+def _segment_attempts_from_setpoints(
+    setpoints: list[tuple[float, str]],
+) -> list[tuple[float, float, list[str]]]:
+    """Return [(t_start, t_end, phases_in_attempt), ...] from (t, phase) stream.
+
+    An attempt starts on transition INTO approach. It includes approach/commit
+    until retreat/recover/hover (or next approach). Retreat itself is recorded
+    in phases but the miss is evaluated on approach+commit STATE only.
+    """
+    if not setpoints:
+        return []
+    attempts: list[tuple[float, float, list[str]]] = []
+    cur_start: float | None = None
+    cur_phases: list[str] = []
+    prev = None
+    for t, ph in setpoints:
+        if ph == _ATTEMPT_START and prev != _ATTEMPT_START:
+            if cur_start is not None:
+                attempts.append((cur_start, t, list(cur_phases)))
+            cur_start = t
+            cur_phases = [ph]
+        elif cur_start is not None:
+            if ph in _ATTEMPT_PHASES:
+                if not cur_phases or cur_phases[-1] != ph:
+                    cur_phases.append(ph)
+            elif ph in _ATTEMPT_ENDERS:
+                if ph == "retreat" or ph == "recover":
+                    if not cur_phases or cur_phases[-1] != ph:
+                        cur_phases.append(ph)
+                    attempts.append((cur_start, t, list(cur_phases)))
+                    cur_start = None
+                    cur_phases = []
+                else:
+                    # hover/search: close attempt at this transition
+                    attempts.append((cur_start, t, list(cur_phases)))
+                    cur_start = None
+                    cur_phases = []
+        prev = ph
+    if cur_start is not None and setpoints:
+        attempts.append((cur_start, setpoints[-1][0], list(cur_phases)))
+    return attempts
+
+
+def reconstruct_misses(phase: str, path: Path) -> list[Attempt]:
+    """One Attempt row per gate attempt (retries are separate rows)."""
     flight_id = path.stem.replace("-flight", "")
     result = load_result(path)
+    abort = result.get("abort_reason") or ("finished" if result.get("finished") else None)
+    gates_passed = int(result.get("gates_passed") or 0)
+
     t0 = None
-    best = None  # (dist, t, tx, ty, tz, age)
-    n_gate = 0
+    states: list[tuple[float, float, float, float, float, float]] = []
+    # (t, dist, tx, ty, tz, age)
+    n_gate_total = 0
+    setpoints_dwell: list[tuple[float, str]] = []
+    last_ph = None
+    last_t = None
+
     with path.open(encoding="utf-8") as f:
         for line in f:
             rec = json.loads(line)
-            if rec["topic"] != "state":
-                continue
+            topic = rec["topic"]
             mono = int(rec["mono_ns"])
             if t0 is None:
                 t0 = mono
             t = (mono - t0) / 1e9
             d = rec["data"]
-            gr = d.get("gate_rel")
-            if not gr or gr.get("t") is None:
-                continue
-            n_gate += 1
-            tx, ty, tz = (float(x) for x in gr["t"])
-            dist = math.sqrt(tx * tx + ty * ty + tz * tz)
-            age = float(d.get("gate_rel_age_s") or 0.0)
-            # Closest approach; break ties toward fresher lock
-            if best is None or dist < best[0] - 1e-6 or (
-                abs(dist - best[0]) < 0.05 and age < best[5]
+            if topic == "setpoint":
+                ph = d.get("phase")
+                if isinstance(ph, str):
+                    if last_ph is None or ph != last_ph:
+                        setpoints_dwell.append((t, ph))
+                        last_ph = ph
+                    last_t = t
+            elif topic == "state":
+                gr = d.get("gate_rel")
+                if not gr or gr.get("t") is None:
+                    continue
+                n_gate_total += 1
+                tx, ty, tz = (float(x) for x in gr["t"])
+                dist = math.sqrt(tx * tx + ty * ty + tz * tz)
+                age = float(d.get("gate_rel_age_s") or 0.0)
+                states.append((t, dist, tx, ty, tz, age))
+
+    if last_t is not None and setpoints_dwell:
+        # synthetic end marker so the last dwell has a closing time
+        setpoints_dwell.append((last_t, setpoints_dwell[-1][1]))
+
+    windows = _segment_attempts_from_setpoints(setpoints_dwell)
+    # Fallback: no approach segments — single whole-flight closest (legacy)
+    if not windows:
+        best = None
+        for t, dist, tx, ty, tz, age in states:
+            if best is None or dist < best[1] - 1e-6 or (
+                abs(dist - best[1]) < 0.05 and age < best[5]
             ):
-                best = (dist, t, tx, ty, tz, age)
+                best = (t, dist, tx, ty, tz, age)
+        if best is None:
+            return [
+                Attempt(
+                    phase=phase,
+                    flight_id=flight_id,
+                    attempt_n=1,
+                    n_attempts_in_flight=1,
+                    status="no_gate_rel",
+                    n_states_with_gate=0,
+                    closest_dist_m=None,
+                    miss_lateral_m=None,
+                    miss_vertical_m=None,
+                    t_closest_s=None,
+                    t_attempt_start_s=None,
+                    t_attempt_end_s=None,
+                    gate_rel_age_s=None,
+                    attempt_phases="",
+                    ended_retreat=False,
+                    result=abort,
+                    gates_passed=gates_passed,
+                )
+            ]
+        t, dist, tx, ty, tz, age = best
+        return [
+            Attempt(
+                phase=phase,
+                flight_id=flight_id,
+                attempt_n=1,
+                n_attempts_in_flight=1,
+                status="ok",
+                n_states_with_gate=n_gate_total,
+                closest_dist_m=dist,
+                miss_lateral_m=tx,
+                miss_vertical_m=ty,
+                t_closest_s=t,
+                t_attempt_start_s=None,
+                t_attempt_end_s=None,
+                gate_rel_age_s=age,
+                attempt_phases="(no setpoint approach)",
+                ended_retreat=False,
+                result=abort,
+                gates_passed=gates_passed,
+            )
+        ]
 
-    if best is None:
-        return Attempt(
-            phase=phase,
-            flight_id=flight_id,
-            status="no_gate_rel",
-            n_states_with_gate=0,
-            closest_dist_m=None,
-            miss_lateral_m=None,
-            miss_vertical_m=None,
-            t_closest_s=None,
-            gate_rel_age_s=None,
-            result=result.get("abort_reason") or result.get("status"),
-            gates_passed=result.get("gates_passed"),
+    out: list[Attempt] = []
+    n_att = len(windows)
+    for i, (t0a, t1a, phases) in enumerate(windows, start=1):
+        # Evaluate miss only during approach+commit (exclude retreat motion)
+        eval_end = t1a
+        if "retreat" in phases or "recover" in phases:
+            # end at first retreat/recover transition = t1a already
+            pass
+        best = None
+        n_gate = 0
+        for t, dist, tx, ty, tz, age in states:
+            if t < t0a - 1e-6 or t > eval_end + 1e-6:
+                continue
+            # Prefer states while still in approach/commit window: if we have
+            # retreat in phases, still use states up to t1a (retreat start).
+            n_gate += 1
+            if best is None or dist < best[1] - 1e-6 or (
+                abs(dist - best[1]) < 0.05 and age < best[5]
+            ):
+                best = (t, dist, tx, ty, tz, age)
+        ended_retreat = "retreat" in phases or "recover" in phases
+        if best is None:
+            out.append(
+                Attempt(
+                    phase=phase,
+                    flight_id=flight_id,
+                    attempt_n=i,
+                    n_attempts_in_flight=n_att,
+                    status="no_gate_rel",
+                    n_states_with_gate=0,
+                    closest_dist_m=None,
+                    miss_lateral_m=None,
+                    miss_vertical_m=None,
+                    t_closest_s=None,
+                    t_attempt_start_s=t0a,
+                    t_attempt_end_s=t1a,
+                    gate_rel_age_s=None,
+                    attempt_phases="+".join(phases),
+                    ended_retreat=ended_retreat,
+                    result=abort,
+                    gates_passed=gates_passed,
+                )
+            )
+            continue
+        t, dist, tx, ty, tz, age = best
+        out.append(
+            Attempt(
+                phase=phase,
+                flight_id=flight_id,
+                attempt_n=i,
+                n_attempts_in_flight=n_att,
+                status="ok",
+                n_states_with_gate=n_gate,
+                closest_dist_m=dist,
+                miss_lateral_m=tx,
+                miss_vertical_m=ty,
+                t_closest_s=t,
+                t_attempt_start_s=t0a,
+                t_attempt_end_s=t1a,
+                gate_rel_age_s=age,
+                attempt_phases="+".join(phases),
+                ended_retreat=ended_retreat,
+                result=abort,
+                gates_passed=gates_passed,
+            )
         )
-
-    dist, t, tx, ty, tz, age = best
-    return Attempt(
-        phase=phase,
-        flight_id=flight_id,
-        status="ok",
-        n_states_with_gate=n_gate,
-        closest_dist_m=dist,
-        miss_lateral_m=tx,  # cam x / body y
-        miss_vertical_m=ty,  # cam y / body z (down+)
-        t_closest_s=t,
-        gate_rel_age_s=age,
-        result=result.get("abort_reason") or ("finished" if result.get("finished") else None),
-        gates_passed=int(result.get("gates_passed") or 0),
-    )
+    return out
 
 
 def find_pnp_outliers(phase: str, path: Path, dist_lo=2.0, dist_hi=4.5, min_abs_ty=2.0, min_dty=0.8):
@@ -392,7 +559,7 @@ def find_late_screen(fix_dir: Path, flight_index: int | None = None) -> Path | N
     return cands[0] if cands else None
 def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes: list[str]):
     lines = [
-        "# Crossing-miss map (phase3c–3f convergence dashboard)",
+        "# Crossing-miss map (phase3c–3i convergence dashboard)",
         "",
         "Generated by `analysis/2026-07-15-crossing-miss-map/run_crossing_miss_map.py`.",
         "Miss vectors from **STATE `gate_rel`** (lock-accepted / dead-reckoned), "
@@ -402,20 +569,26 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
         "- **lateral_m** = cam `t_x` (body y): + = opening RIGHT of aircraft = aircraft LEFT of opening",
         "- **vertical_m** = cam `t_y` (body z, down+): + = opening BELOW aircraft = aircraft HIGH / top-bar",
         "",
+        "Phase3h+ **retry cycles**: each `approach→commit→(retreat)?` segmented via "
+        "`setpoint.data.phase` is a separate row (`att` column). Earlier phases usually "
+        "have one attempt per flight.",
+        "",
         "## Miss table (every R2 attempt)",
         "",
-        "| phase | flight | status | closest dist (m) | lateral (m) | vertical (m) | age (s) | gates | result |",
-        "|---|---|---|---:|---:|---:|---:|---:|---|",
+        "| phase | flight | att | cycle | status | closest dist (m) | lateral (m) | vertical (m) | age (s) | gates | result |",
+        "|---|---|---:|---|---|---:|---:|---:|---:|---:|---|",
     ]
     for a in attempts:
+        att = f"{a.attempt_n}/{a.n_attempts_in_flight}"
+        cycle = a.attempt_phases or "—"
         if a.status != "ok":
             lines.append(
-                f"| {a.phase} | `{a.flight_id}` | {a.status} | — | — | — | — | "
+                f"| {a.phase} | `{a.flight_id}` | {att} | `{cycle}` | {a.status} | — | — | — | — | "
                 f"{a.gates_passed if a.gates_passed is not None else '—'} | {a.result or '—'} |"
             )
             continue
         lines.append(
-            f"| {a.phase} | `{a.flight_id}` | ok | {a.closest_dist_m:.2f} | "
+            f"| {a.phase} | `{a.flight_id}` | {att} | `{cycle}` | ok | {a.closest_dist_m:.2f} | "
             f"{a.miss_lateral_m:+.2f} | {a.miss_vertical_m:+.2f} | "
             f"{a.gate_rel_age_s:.2f} | {a.gates_passed} | {a.result or '—'} |"
         )
@@ -424,7 +597,7 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
     lines += ["", "## Phase summary (ok attempts only)", ""]
     lines.append("| phase | n | mean |lat| | mean lat | mean vert | mean |vert| | rms miss |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|")
-    for phase in ["phase3c", "phase3d", "phase3e", "phase3f", "phase3g"]:
+    for phase in ["phase3c", "phase3d", "phase3e", "phase3f", "phase3g", "phase3h", "phase3i"]:
         ok = [a for a in attempts if a.phase == phase and a.status == "ok"]
         if not ok:
             continue
@@ -436,14 +609,42 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
             f"{np.mean(vert):+.2f} | {np.mean(np.abs(vert)):.2f} | {rms:.2f} |"
         )
 
+    # phase3h retry spotlight
+    h_rows = [a for a in attempts if a.phase == "phase3h"]
+    if h_rows:
+        lines += [
+            "",
+            "## Phase3h retry spotlight",
+            "",
+            "Each flight may have multiple attempts (retreat-and-retry). "
+            "Misses below are per attempt — not collapsed to one closest-overall.",
+            "",
+        ]
+        by_f: dict[str, list[Attempt]] = {}
+        for a in h_rows:
+            by_f.setdefault(a.flight_id, []).append(a)
+        for fid, rows in by_f.items():
+            lines.append(f"- `{fid}`: {len(rows)} attempt(s)")
+            for a in rows:
+                if a.status != "ok":
+                    lines.append(f"  - att {a.attempt_n}: {a.status} (`{a.attempt_phases}`)")
+                else:
+                    lines.append(
+                        f"  - att {a.attempt_n}: dist={a.closest_dist_m:.2f} m, "
+                        f"lat={a.miss_lateral_m:+.2f}, vert={a.miss_vertical_m:+.2f}, "
+                        f"age={a.gate_rel_age_s:.2f}s, cycle=`{a.attempt_phases}`"
+                        + (" → retreated" if a.ended_retreat else "")
+                    )
+
     lines += [
         "",
         "## Scatter",
         "",
         "![miss scatter](plots/miss_scatter.png)",
         "",
-        "Origin = gate opening center. Points = STATE closest approach. "
-        "Ideal pass sits near (0,0). Right/up in the plot = aircraft LEFT / HIGH.",
+        "Origin = gate opening center. Points = STATE closest approach **per attempt**. "
+        "Ideal pass sits near (0,0). Right/up in the plot = aircraft LEFT / HIGH. "
+        "Labels: flight hex; `#N` suffix when a flight has multiple attempts.",
         "",
         "## Close-range PnP outlier autopsy (2–4.5 m)",
         "",
@@ -476,6 +677,9 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
         "- **phase3e** (slow): both axes may shrink via phantom starvation.",
         "- **phase3f** (cross-track): lateral |mean| should drop vs 3e.",
         "- **phase3g** (altitude hold): vertical residual is the target if present.",
+        "- **phase3h** (age-aware lock + retreat-and-retry): multiple points per flight; "
+          "did retries improve the miss?",
+        "- **phase3i**: include when fixture lands.",
         "",
         "## Deliverables",
         "",
@@ -488,27 +692,31 @@ def write_dashboard(attempts: list[Attempt], outliers: list[dict], autopsy_notes
 
 
 def plot_scatter(attempts: list[Attempt]):
-    fig, ax = plt.subplots(figsize=(8.5, 7))
+    fig, ax = plt.subplots(figsize=(9.5, 7.5))
     for phase, color in PHASE_COLORS.items():
         pts = [a for a in attempts if a.phase == phase and a.status == "ok"]
         if not pts:
             continue
         xs = [a.miss_lateral_m for a in pts]
-        ys = [a.miss_vertical_m for a in pts]  # plot up = aircraft high visually? 
-        # User-facing: vertical axis "up on plot = aircraft HIGH" => use -ty so high is up
-        # Wait: ty+ = high aircraft. Plot y = -ty would put high DOWN. Use plot y = -ty for image-like?
-        # Plot y = miss_vertical_m so +UP = aircraft HIGH.
-        ys = [a.miss_vertical_m for a in pts]
-        ax.scatter(xs, ys, c=color, s=70, label=f"{phase} (n={len(pts)})", zorder=3)
+        ys = [a.miss_vertical_m for a in pts]  # +UP = aircraft HIGH
+        marker = "o"
+        if phase in ("phase3h", "phase3i"):
+            marker = "D"
+        ax.scatter(
+            xs, ys, c=color, s=70, marker=marker, label=f"{phase} (n={len(pts)})", zorder=3
+        )
         for a, x, y in zip(pts, xs, ys):
-            ax.annotate(a.flight_id[-6:], (x, y), textcoords="offset points", xytext=(4, 4), fontsize=7, color=color)
+            label = a.flight_id[-6:]
+            if a.n_attempts_in_flight > 1:
+                label = f"{label}#{a.attempt_n}"
+            ax.annotate(label, (x, y), textcoords="offset points", xytext=(4, 4), fontsize=7, color=color)
     ax.axhline(0, color="k", lw=0.8)
     ax.axvline(0, color="k", lw=0.8)
     # Opening size reference (~1.5m half-width / half-height typical)
     ax.add_patch(plt.Rectangle((-0.75, -0.75), 1.5, 1.5, fill=False, ls="--", color="gray", label="~opening ±0.75m"))
     ax.set_xlabel("lateral miss (m)  [+ = aircraft LEFT of opening]")
     ax.set_ylabel("vertical miss (m)  [+ UP = aircraft HIGH / top-bar]")
-    ax.set_title("R2 crossing-miss map (STATE gate_rel closest approach)")
+    ax.set_title("R2 crossing-miss map (STATE gate_rel per attempt)")
     ax.grid(True, alpha=0.3)
     ax.set_aspect("equal", adjustable="datalim")
     ax.legend(loc="best", fontsize=8)
@@ -534,13 +742,15 @@ def main() -> int:
         flights = sorted(fix_dir.glob("*-flight.jsonl"))
         print(f"{phase}: {len(flights)} flights in {fix_dir.name}", flush=True)
         for fp in flights:
-            a = reconstruct_miss(phase, fp)
-            attempts.append(a)
-            print(
-                f"  {a.flight_id}: {a.status} dist={a.closest_dist_m} "
-                f"lat={a.miss_lateral_m} vert={a.miss_vertical_m}",
-                flush=True,
-            )
+            flight_attempts = reconstruct_misses(phase, fp)
+            attempts.extend(flight_attempts)
+            for a in flight_attempts:
+                print(
+                    f"  {a.flight_id} att{a.attempt_n}/{a.n_attempts_in_flight} "
+                    f"[{a.attempt_phases}]: {a.status} dist={a.closest_dist_m} "
+                    f"lat={a.miss_lateral_m} vert={a.miss_vertical_m}",
+                    flush=True,
+                )
             # PnP autopsy focus on phase3f (and others that have big outliers)
             outs = find_pnp_outliers(phase, fp)
             for o in outs:
@@ -667,10 +877,17 @@ def main() -> int:
             [
                 "phase",
                 "flight_id",
+                "attempt_n",
+                "n_attempts_in_flight",
+                "attempt_phases",
+                "ended_retreat",
                 "status",
                 "closest_dist_m",
                 "miss_lateral_m",
                 "miss_vertical_m",
+                "t_closest_s",
+                "t_attempt_start_s",
+                "t_attempt_end_s",
                 "gate_rel_age_s",
                 "gates_passed",
                 "result",
@@ -681,23 +898,33 @@ def main() -> int:
                 [
                     a.phase,
                     a.flight_id,
+                    a.attempt_n,
+                    a.n_attempts_in_flight,
+                    a.attempt_phases,
+                    a.ended_retreat,
                     a.status,
                     a.closest_dist_m,
                     a.miss_lateral_m,
                     a.miss_vertical_m,
+                    a.t_closest_s,
+                    a.t_attempt_start_s,
+                    a.t_attempt_end_s,
                     a.gate_rel_age_s,
                     a.gates_passed,
                     a.result,
                 ]
             )
 
+    present = sorted({p for p, d in PHASE_DIRS if d.exists()})
     summary = {
         "attempts": [a.__dict__ for a in attempts],
         "pnp_outliers": [
             {k: v for k, v in o.items() if k not in ("corners", "fix_dir", "detection")} for o in selected
         ],
         "autopsy_notes": autopsy_notes,
-        "phase3g_present": any(p == "phase3g" for p, _ in PHASE_DIRS if _.exists()),
+        "phases_present": present,
+        "phase3h_present": "phase3h" in present,
+        "phase3i_present": "phase3i" in present,
     }
     (OUT / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"Wrote report + {len(attempts)} attempts, {len(selected)} outliers", flush=True)
