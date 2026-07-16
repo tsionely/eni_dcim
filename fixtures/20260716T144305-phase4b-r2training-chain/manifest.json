@@ -1,0 +1,183 @@
+{
+  "label": "phase4b-r2training-chain",
+  "created_utc": "20260716T144305",
+  "flight_code_commit": "e742cf17564d47b5b69e58d93d81c7def1abc502",
+  "task_note": "all three selected valid flights gates_passed=0 so no pass+20 slices exist; relock-after-pass not exercised",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 12840,
+      "source": "phase4b_r2training_chain_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase4b_r2training_chain_analysis.txt",
+      "bytes": 3660
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 3870
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143604-927a4c97-flight.jsonl",
+      "bytes": 2420877,
+      "source": "logs/20260716T143604-927a4c97/flight.jsonl",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143604-927a4c97-result.json",
+      "bytes": 497,
+      "source": "logs/20260716T143604-927a4c97/result.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143604-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143604-927a4c97/params.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143739-927a4c97-flight.jsonl",
+      "bytes": 2355929,
+      "source": "logs/20260716T143739-927a4c97/flight.jsonl",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143739-927a4c97-result.json",
+      "bytes": 456,
+      "source": "logs/20260716T143739-927a4c97/result.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143739-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143739-927a4c97/params.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143915-927a4c97-flight.jsonl",
+      "bytes": 1854664,
+      "source": "logs/20260716T143915-927a4c97/flight.jsonl",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143915-927a4c97-result.json",
+      "bytes": 458,
+      "source": "logs/20260716T143915-927a4c97/result.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T143915-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143915-927a4c97/params.json",
+      "note": "selected phase4b valid flight"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T143604-927a4c97_r2b_nopass_start_slice.aigprec",
+      "bytes": 30279171,
+      "source": "logs/20260716T143604-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T143604-927a4c97/vision.aigprec",
+      "reason": "full recording ~298.3 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T143739-927a4c97_r2b_nopass_start_slice.aigprec",
+      "bytes": 30279249,
+      "source": "logs/20260716T143739-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T143739-927a4c97/vision.aigprec",
+      "reason": "full recording ~328.5 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T143915-927a4c97_r2b_nopass_start_slice.aigprec",
+      "bytes": 30279193,
+      "source": "logs/20260716T143915-927a4c97/vision.aigprec",
+      "note": "no-pass start/attempt slice; no pass+20 window existed"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T143915-927a4c97/vision.aigprec",
+      "reason": "full recording ~231.4 MB > git fixture limit"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_end.jpg",
+      "bytes": 48424
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_late.jpg",
+      "bytes": 32200
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_mid.jpg",
+      "bytes": 47092
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_start.jpg",
+      "bytes": 53948
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_end.jpg",
+      "bytes": 49097
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_late.jpg",
+      "bytes": 11535
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid.jpg",
+      "bytes": 25091
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_start.jpg",
+      "bytes": 54294
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_end.jpg",
+      "bytes": 26305
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_late.jpg",
+      "bytes": 51150
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_mid.jpg",
+      "bytes": 36410
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_start.jpg",
+      "bytes": 54329
+    }
+  ]
+}
