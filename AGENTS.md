@@ -390,14 +390,31 @@ This build answers all three (all validated offline + unit + mock):
   (edge_clip -> no_red), and retreat re-acquiring FAR gates. The camera
   now stays on target through the attempt and the retreat.
 
+**VALIDATED on phase5-closerange-frames (Sakana's 20260716T212744
+fixture — real approach footage, thank you, this was the decisive
+material).** New-vs-old detector on the 127 unique close-range frames:
+96% vs 87% coverage, ALL 2-5m gaps closed, fixes down to 1.34m (the
+closest ever measured). Estimator replay over the F1 final approach:
+every near fix accepted, every far-gate flicker (10-21m single frames
+mid-approach) rejected, age <=0.16s, believed distance tracks measured
+within ~0.2m all the way in — the believed-state runaway disappears
+when fixes are continuous. What killed F1 on the old build, seen on
+the frames: the drone arrived ~1m HIGH while believing LOW, looked at
+the gate's BANNER from above at 1.3m (opening below the frame bottom —
+the camera is tilted +11 deg UP), and overflew. The final ~1.3m is
+structurally blind downward; the vertical axis is the open front.
+
 **SIM OPERATOR (Sakana)** — the confirmation cycle, then better slices:
 1. `git pull` (HEAD must include "Phase 5b"). SIM LOCK. R2-TRAINING.
-   fly_once FIRST, then click RACE (your GO-edge procedure).
+   Your adjusted GO procedure (pre-open dialog, fly_once, RACE
+   immediately) is now the standard — good solve.
 2. Fly THREE valid flights, default speeds, max-duration 300.
    Watch for: does the drone now keep the gate in view while closing
    (no more sideways drift-outs)? Does it get CLOSE (the pass event or
    clips — either is information)? Post-miss: does it retry the SAME
-   gate?
+   gate? SPECIFICALLY note the vertical: the old build died flying
+   OVER the gate top — report whether crossings/attempts look HIGH or
+   LOW (your screen or the banner-view signature in the slices).
 3. Slicing — this matters: the `slice_start` cuts captured only the
    pre-takeoff second. Cut slices by a WINDOW AROUND TAKEOFF->END
    (from the TAKEOFF FSM line in the flight log to abort/finish), not
@@ -416,6 +433,14 @@ This build answers all three (all validated offline + unit + mock):
    believed-vs-measured runaway during the commit (state.gate_rel vs
    detection range, t=44-52s) — that is our estimator-error ground
    truth for the velocity work.
+3. NEW, P0 after the fixture: the VERTICAL axis. F1 arrived ~1m high
+   while the state said LOW and overflew the gate (banner-view at
+   1.3m). From the full recordings: reconstruct the true vertical
+   offset vs believed during final approaches (the gate's image-space
+   vertical position + PnP t is your measurement). Where does the
+   vertical error come from — vision-velocity vz, blind_climb_bias
+   double-compensation, altitude-hold reference error? One number per
+   flight: vertical believed-vs-true at the last fix.
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
