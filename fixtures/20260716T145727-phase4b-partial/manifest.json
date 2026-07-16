@@ -1,0 +1,90 @@
+{
+  "label": "phase4b-partial",
+  "created_utc": "20260716T145727",
+  "items": [
+    {
+      "kind": "report",
+      "note": "",
+      "file": "report.txt",
+      "bytes": 712,
+      "source": "phase4b_partial_report.txt"
+    },
+    {
+      "kind": "notes",
+      "note": "",
+      "file": "notes.md",
+      "bytes": 807,
+      "source": ""
+    },
+    {
+      "kind": "analysis",
+      "note": "",
+      "file": "phase4b_r2training_chain_analysis.txt",
+      "bytes": 3660,
+      "source": "phase4b_r2training_chain_analysis.txt"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143604-927a4c97-flight.jsonl",
+      "bytes": 2420877,
+      "source": "logs/20260716T143604-927a4c97/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143604-927a4c97-result.json",
+      "bytes": 497,
+      "source": "logs/20260716T143604-927a4c97/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143604-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143604-927a4c97/params.json"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143739-927a4c97-flight.jsonl",
+      "bytes": 2355929,
+      "source": "logs/20260716T143739-927a4c97/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143739-927a4c97-result.json",
+      "bytes": 456,
+      "source": "logs/20260716T143739-927a4c97/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143739-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143739-927a4c97/params.json"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143915-927a4c97-flight.jsonl",
+      "bytes": 1854664,
+      "source": "logs/20260716T143915-927a4c97/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143915-927a4c97-result.json",
+      "bytes": 458,
+      "source": "logs/20260716T143915-927a4c97/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "note": "partial/aborted phase4b telemetry",
+      "file": "20260716T143915-927a4c97-params.json",
+      "bytes": 2191,
+      "source": "logs/20260716T143915-927a4c97/params.json"
+    }
+  ]
+}

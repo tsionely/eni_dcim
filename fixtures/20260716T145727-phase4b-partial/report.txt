@@ -1,0 +1,11 @@
+Phase 4b partial telemetry package
+
+Existing Phase 4b flights already run on e742cf1 / relock sanity build.
+All flights are partial/aborted and are included for cloud diagnosis.
+
+Visual one-liners:
+- 20260716T143604-927a4c97: approached Gate 1 low/center, entered commit/retreat twice, then hit environment before an official pass.
+- 20260716T143739-927a4c97: approached Gate 1, first close view was left/high then stale state went left/low; one retreat/search cycle, then hard env hit.
+- 20260716T143915-927a4c97: approached from right/low, committed/recovered, then hard hit before pass; no next-gate relock seen.
+
+No gates were passed in these three flights, so post-pass relock was not exercised.

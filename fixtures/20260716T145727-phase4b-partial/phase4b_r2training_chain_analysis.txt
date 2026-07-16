@@ -1,0 +1,41 @@
+PHASE 4B R2-TRAINING CHAIN analysis
+HEAD e742cf1 (relock distance sanity + retreat altitude hold build)
+Selected flights: three default-speed R2-TRAINING runs with max-duration 300 and safety.flight_timeout_s=300.
+All three gates_passed=0; therefore no pass+20s slices exist and RIGHT-next-gate relock after pass was not exercised.
+
+=== F1 default chain 20260716T143604-927a4c97 ===
+result=environment collision (impulse=3.7) dur=31.4s gates_passed=0 clips=0 env=1 loop_overrun=0.00013
+topics frames=1997 detections=1508 imu=1574 states=1572 races=134 collisions=1
+phase counts={'hover': 1095, 'takeoff': 75, 'approach': 109, 'commit': 141, 'retreat': 152}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> approach -> commit -> retreat
+race_start_range=(-1, 47226) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=2 commit=2 retreat=2 search=0 recover=0
+closest DIRECT: dist=4.39m t+24.8s rel=[-0.14, -0.56, 4.35] u=-0.04 v=0.69 side=center-x/LOW center=[308.5, 304.2]
+closest STATE: dist=0.14m t+31.3s rel=[-0.13, 0.04, -0.0] u=-1.14 v=0.41 side=LEFT/LOW age=0.87s center=[-44.7, 254.1]
+collisions: t+32.4s impulse=3.69 threat=2
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+22.8 THROTTLE_DOWN->TAKEOFF race GO | t+24.3 TAKEOFF->RACING takeoff complete | t+32.4 RACING->ABORTED environment collision (impulse=3.7) | t+32.4 ABORTED->DONE flight over
+
+=== F2 default chain 20260716T143739-927a4c97 ===
+result=environment collision (impulse=4.0) dur=31.1s gates_passed=0 clips=0 env=1 loop_overrun=0.00000
+topics frames=1984 detections=1351 imu=1613 states=1554 races=132 collisions=1
+phase counts={'hover': 1089, 'takeoff': 75, 'approach': 126, 'commit': 126, 'retreat': 101, 'search': 37}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> approach -> search
+race_start_range=(-1, 45459) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=2 commit=1 retreat=1 search=1 recover=0
+closest DIRECT: dist=1.85m t+29.8s rel=[-0.23, -1.23, 1.37] u=-0.16 v=-0.27 side=LEFT/HIGH center=[269.5, 131.8]
+closest STATE: dist=0.09m t+26.7s rel=[-0.08, 0.04, -0.02] u=-1.70 v=2.94 side=LEFT/LOW age=1.09s center=[-223.9, 709.4]
+collisions: t+32.0s impulse=3.97 threat=2
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+22.7 THROTTLE_DOWN->TAKEOFF race GO | t+24.2 TAKEOFF->RACING takeoff complete | t+32.0 RACING->ABORTED environment collision (impulse=4.0) | t+32.0 ABORTED->DONE flight over
+
+=== F3 default chain 20260716T143915-927a4c97 ===
+result=environment collision (impulse=13.4) dur=26.6s gates_passed=0 clips=0 env=2 loop_overrun=0.00000
+topics frames=1582 detections=1172 imu=1104 states=1333 races=114 collisions=2
+phase counts={'hover': 1083, 'takeoff': 75, 'approach': 53, 'commit': 121, 'recover': 1}
+phase sequence: hover -> takeoff -> approach -> commit -> recover
+race_start_range=(-1, 46539) max_active_gate_idx=0 max_last_gate_time=-1 pass_events=[]
+ATTEMPTS approach=1 commit=1 retreat=0 search=0 recover=1
+closest DIRECT: dist=4.82m t+24.1s rel=[2.29, -0.93, 4.14] u=0.58 v=0.53 side=RIGHT/LOW center=[506.5, 276.0]
+closest STATE: dist=0.57m t+25.6s rel=[-0.34, 0.17, 0.43] u=-0.79 v=0.70 side=LEFT/LOW age=1.46s center=[65.7, 306.3]
+collisions: t+27.6s impulse=0.73 threat=1; t+27.6s impulse=13.42 threat=2
+fsm: t+0.9 IDLE->ARMING flight start | t+1.0 ARMING->THROTTLE_DOWN armed | t+22.6 THROTTLE_DOWN->TAKEOFF race GO | t+24.1 TAKEOFF->RACING takeoff complete | t+27.6 RACING->ABORTED environment collision (impulse=13.4) | t+27.6 ABORTED->DONE flight over
+
