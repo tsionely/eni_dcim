@@ -441,6 +441,15 @@ structurally blind downward; the vertical axis is the open front.
    vertical error come from — vision-velocity vz, blind_climb_bias
    double-compensation, altitude-hold reference error? One number per
    flight: vertical believed-vs-true at the last fix.
+4. Think-tank measurement pack (docs/thinktank/RESPONSE.md §3, small
+   adds to your existing harness): (a) for each sub-2m miss frame,
+   does the red contour touch a border and WHICH one (P1); (b) pitch +
+   gate-bbox bottom row at the last accepted fix per approach (P2/P3);
+   (c) cyan availability histogram specifically in the last 5m; (d)
+   fix-delta histogram + gate-normal sign-flip count (PnP flips vs
+   real far gates — we see single-frame 10-21m fixes mid-approach);
+   (e) Shi-Tomasi count / blur metric on lower half of close frames;
+   (f) fraction of last-5m frames with a second gate visible.
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
