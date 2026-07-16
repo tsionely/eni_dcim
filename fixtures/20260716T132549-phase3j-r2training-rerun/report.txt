@@ -1,0 +1,315 @@
+===== Phase 3j RERUN R2 preflight 2026-07-16T16:03:27.0430843+03:00 =====
+HEAD short=43ef2b0 full=43ef2b04952343c2e9766f2e127941a786ce78a2
+43ef2b0 Fix phase3j grounding: my no-sleep loop starved the pilot's RX threads
+925b060 [sim-run] phase3j r2 blocked by stale frame channel
+bbe3aee Blind-commit climb bias; aim floor reverted (visibility beats altitude)
+5d51646 [sim-run] phase3i r2 aim-up floor slow flights (still low; no pass)
+5907077 Geometric commit termination: the clock must not cut a crossing short
+74d93d1 RateLoop: never sleep sub-tick waits on Windows (spin instead)
+8449f3a [analysis] fix attempt segmentation; phase3h retries on miss map
+70456d2 [tuning] Rebaseline v4 CI guard report
+df45fc8 [analysis] extend crossing-miss map with phase3h per-attempt retries
+9d741b0 aim_up floor: cross 0.3m above center instead of tapering to zero
+44f5f74 [sim-run] phase3h r2 age-aware lock + retreat-and-retry (retry confirmed; F1 centered clip; no pass)
+c82a720 Deep Windows timing fix: throttling opt-out, spin floor, campaign stale relax
+--- Phase 3j task excerpt ---
+s.md` there (what you observed: sim version, track, anomalies,
+   suggested code changes).
+6. Commit and push:
+
+   ```powershell
+   git add fixtures
+   git commit -m "[sim-run] phase1 vs sim v<version>"
+   git push
+   ```
+
+## CURRENT TASK: Phase 3j — sink compensation in the structurally blind meter
+
+phase3i taught the geometry lesson: the +0.3m aim floor pushed the ring
+out of the FOV bottom at 3.7-4.3m (vs 0.9m in 3h) — flying higher costs
+sight. And the full ring CANNOT fit the FOV below ~1.4m, so the final
+stretch is ALWAYS dead-reckoned. The real enemy is the ~0.5m SINK during
+that blind stretch (+0.3 above aim at 4m -> -0.2 below center at the
+bar). This build: aim floor reverted (visibility wins) + a climb bias
+applied exactly and only while commit flies blind
+(planner.commit.blind_climb_bias_mps=0.2), + geometric commit
+termination already in (the clock can no longer cut a crossing short —
+phase3h F3 lost a dead-centered pass to the 1.2s window).
+
+1. `git pull` (HEAD must include "blind-phase sink"). SIM LOCK.
+   R2-TRAINING. Your login/row-click helper fix from 3i is appreciated —
+   keep it.
+2. 3 flights, slow patch set. NOTE the commit window patch is now
+   redundant (default duration_s=2.5, geometric termination) — drop
+   `planner.commit.duration_s` from the patch set, keep the speeds.
+3. Optional flight 4: no patches at all.
+4. Collect `--label phase3j-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3i — one axis left: cross 0.3m above center
+
+phase3h was the closest cycle ever and every mechanism worked live:
+retry confirmed (multiple approach->commit->retreat->approach), F1
+crossed DEAD-CENTERED laterally (u=0.00) at 0.9m and F4 (default
+speeds!) reached 0.21m — both caught the LOW side. The vertical bias is
+now consistent: 0.2-0.45m LOW. This build stops tapering the aim to
+zero: the aim point keeps a 0.3m floor above the opening center all the
+way through (opening half-height is 0.8m — crossing +0.3 is safely
+inside and clear of the measured bias).
+
+1. `git pull` (HEAD must include "aim_up floor"). SIM LOCK. R2-TRAINING.
+2. 3 flights, slow patch set (same as 3e-3h).
+3. Optional flight 4: no patches (F4's 0.21m suggests default speeds
+   are back in play).
+4. If a flight crosses HIGH now: report the miss size — we bisect the
+   floor (0.15) next cycle.
+5. Collect `--label phase3i-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3h — the endgame build (blackout fix + retry)
+
+The analyst's crossing-miss map exposed the last-meter killer: at every
+closest approach the state was 0.75-1.26s STALE — the dead-reckoned
+prediction drifts, the fixed lock tolerance then reje
+--- verify 43ef2b0 ancestor ---
+HEAD is 43ef2b0 or newer
+--- SIM LOCK before create ---
+no existing lock
+--- SIM LOCK created ---
+SIM OPERATOR lock phase3j-r2training-rerun pid=67792 time=2026-07-16T16:03:27.8276944+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+
+===== Phase 3j rerun fresh sim restart: SLOW Flight 1/4 2026-07-16T16:03:27.8372014+03:00 =====
+after close:
+
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+15620 DCGame-Win64-Shipping 16/07/2026 16:03:28 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+66584 FlightSim             16/07/2026 16:03:28 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 15620
+udp 5601 <- PID 15620
+
+===== Phase 3j RERUN R2-TRAINING SLOW Flight 1/4 2026-07-16T16:03:55.2572847+03:00 =====
+param overrides: SPEEDS ONLY approach_far=1.2 approach_near=0.8 commit_speed=1.2 (NO commit.duration_s patch)
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 120.00401460006833, 'loop_overrun_frac': 3.333222225925803e-05, 'loop_stats': {'ticks': 30001, 'overruns': 1, 'overrun_frac': 3.333222225925803e-05, 'max_late_us': 931}, 'flight_id': '20260716T130355-8edfeec4', 'log_dir': 'logs\\20260716T130355-8edfeec4'}
+r2j_rerun_f1_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f1_slow ---
+sim window: AI-GP   16:04:04
+event r2-training center clicked (1000,392) 16:04:15
+RACE clicked 16:04:17
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_00_160417.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_01_160420.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_02_160423.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_03_160427.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_04_160430.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_05_160433.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_06_160436.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_07_160439.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_08_160442.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_09_160446.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_10_160449.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_11_160452.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_12_160455.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_13_160458.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1_slow\r2j_rerun_f1_slow_14_160501.png
+--- helper stderr r2j_rerun_f1_slow ---
+
+===== Phase 3j rerun fresh sim restart: SLOW Flight 2/4 2026-07-16T16:06:22.3361411+03:00 =====
+after close:
+
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+ 9532 DCGame-Win64-Shipping 16/07/2026 16:06:34 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+66384 FlightSim             16/07/2026 16:06:34 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 9532
+udp 5601 <- PID 9532
+
+===== Phase 3j RERUN R2-TRAINING SLOW Flight 2/4 2026-07-16T16:06:59.5101144+03:00 =====
+param overrides: SPEEDS ONLY approach_far=1.2 approach_near=0.8 commit_speed=1.2 (NO commit.duration_s patch)
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 29.19228810002096, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 7298, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T130659-8edfeec4', 'log_dir': 'logs\\20260716T130659-8edfeec4'}
+r2j_rerun_f2_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f2_slow ---
+sim window: AI-GP   16:07:08
+event r2-training center clicked (1000,392) 16:07:19
+RACE clicked 16:07:21
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_00_160721.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_01_160724.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_02_160728.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_03_160731.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_04_160734.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_05_160737.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_06_160741.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_07_160744.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_08_160747.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_09_160750.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f2_slow\r2j_rerun_f2_slow_10_160753.png
+--- helper stderr r2j_rerun_f2_slow ---
+
+===== Phase 3j rerun fresh sim restart: SLOW Flight 3/4 2026-07-16T16:07:55.5318997+03:00 =====
+after close:
+
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+63712 DCGame-Win64-Shipping 16/07/2026 16:08:07 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+16408 FlightSim             16/07/2026 16:08:07 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 63712
+udp 5601 <- PID 63712
+
+===== Phase 3j RERUN R2-TRAINING SLOW Flight 3/4 2026-07-16T16:08:32.8930426+03:00 =====
+param overrides: SPEEDS ONLY approach_far=1.2 approach_near=0.8 commit_speed=1.2 (NO commit.duration_s patch)
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 120.00004600000102, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 30000, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T130833-8edfeec4', 'log_dir': 'logs\\20260716T130833-8edfeec4'}
+r2j_rerun_f3_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f3_slow ---
+sim window: AI-GP   16:08:41
+event r2-training center clicked (1000,392) 16:08:52
+RACE clicked 16:08:54
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_00_160854.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_01_160857.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_02_160900.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_03_160904.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_04_160907.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_05_160910.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_06_160913.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_07_160916.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_08_160919.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_09_160923.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_10_160926.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_11_160929.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_12_160932.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_13_160935.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3_slow\r2j_rerun_f3_slow_14_160939.png
+--- helper stderr r2j_rerun_f3_slow ---
+
+===== Phase 3j rerun fresh sim restart: Flight 4/4 DEFAULT SPEEDS no patches 2026-07-16T16:10:59.6611243+03:00 =====
+after close:
+
+after relaunch:
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+66472 DCGame-Win64-Shipping 16/07/2026 16:11:11 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+66808 FlightSim             16/07/2026 16:11:11 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 66472
+udp 5601 <- PID 66472
+
+===== Phase 3j RERUN R2-TRAINING Flight 4/4 DEFAULT SPEEDS no patches 2026-07-16T16:11:36.5996837+03:00 =====
+param overrides: DEFAULT / no patches
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=15.5)', 'gates_passed': 1, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 38.864026300027035, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 9716, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T131137-2ca531c3', 'log_dir': 'logs\\20260716T131137-2ca531c3'}
+r2j_rerun_f4_defaultspeed_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f4_defaultspeed ---
+sim window: AI-GP   16:11:45
+event r2-training center clicked (1000,392) 16:11:56
+RACE clicked 16:11:58
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_00_161158.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_01_161202.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_02_161205.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_03_161208.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_04_161212.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_05_161215.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_06_161218.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_07_161222.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_08_161225.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_09_161228.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_10_161231.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_11_161234.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_12_161238.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f4_defaultspeed\r2j_rerun_f4_defaultspeed_13_161241.png
+--- helper stderr r2j_rerun_f4_defaultspeed ---
+
+===== Phase 3j rerun done 2026-07-16T16:12:42.7009793+03:00 =====
+
+===== Phase 3j rerun replacement fresh sim restart: SLOW Flight 1b replacement 2026-07-16T16:15:47.3120036+03:00 =====
+udp 14560 <- PID 17576
+udp 5601 <- PID 17576
+
+===== Phase 3j RERUN R2-TRAINING SLOW Flight 1b replacement 2026-07-16T16:16:30.1077271+03:00 =====
+param overrides: SPEEDS ONLY approach_far=1.2 approach_near=0.8 commit_speed=1.2 (NO commit.duration_s patch)
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 27.32880809996277, 'loop_overrun_frac': 0.0030737704918032786, 'loop_stats': {'ticks': 6832, 'overruns': 21, 'overrun_frac': 0.0030737704918032786, 'max_late_us': 5449}, 'flight_id': '20260716T131630-8edfeec4', 'log_dir': 'logs\\20260716T131630-8edfeec4'}
+r2j_rerun_f1b_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f1b_slow ---
+sim window: AI-GP   16:16:39
+event r2-training center clicked (1000,392) 16:16:50
+RACE clicked 16:16:52
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_00_161652.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_01_161656.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_02_161700.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_03_161704.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_04_161707.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_05_161711.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_06_161714.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_07_161718.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f1b_slow\r2j_rerun_f1b_slow_08_161721.png
+--- helper stderr r2j_rerun_f1b_slow ---
+
+===== Phase 3j rerun replacement fresh sim restart: SLOW Flight 3b replacement 2026-07-16T16:17:24.5347488+03:00 =====
+udp 14560 <- PID 67344
+udp 5601 <- PID 67344
+
+===== Phase 3j RERUN R2-TRAINING SLOW Flight 3b replacement 2026-07-16T16:18:01.1103325+03:00 =====
+param overrides: SPEEDS ONLY approach_far=1.2 approach_near=0.8 commit_speed=1.2 (NO commit.duration_s patch)
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 32.13201659999322, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 8033, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T131802-8edfeec4', 'log_dir': 'logs\\20260716T131802-8edfeec4'}
+r2j_rerun_f3b_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2j_rerun_f3b_slow ---
+sim window: AI-GP   16:18:10
+event r2-training center clicked (1000,392) 16:18:21
+RACE clicked 16:18:23
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_00_161823.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_01_161826.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_02_161830.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_03_161833.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_04_161837.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_05_161840.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_06_161843.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_07_161846.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_08_161850.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_09_161853.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_10_161856.png
+C:\Users\tsion\AppData\Local\Temp\phase3j_rerun_r2_shots\r2j_rerun_f3b_slow\r2j_rerun_f3b_slow_11_161900.png
+--- helper stderr r2j_rerun_f3b_slow ---
+
+===== Phase 3j rerun replacements done 2026-07-16T16:19:00.6996056+03:00 =====

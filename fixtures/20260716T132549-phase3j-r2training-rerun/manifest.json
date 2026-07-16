@@ -1,0 +1,278 @@
+{
+  "label": "phase3j-r2training-rerun",
+  "created_utc": "20260716T132549",
+  "flight_code_commit": "43ef2b04952343c2e9766f2e127941a786ce78a2",
+  "milestone": "optional default flight 20260716T131137-2ca531c3 gates_passed=1",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 22303,
+      "source": "phase3j_r2training_rerun_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase3j_rerun_r2training_analysis.txt",
+      "bytes": 3057
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 5505
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131630-8edfeec4-flight.jsonl",
+      "bytes": 1239415,
+      "source": "logs/20260716T131630-8edfeec4/flight.jsonl",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131630-8edfeec4-result.json",
+      "bytes": 482,
+      "source": "logs/20260716T131630-8edfeec4/result.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131630-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T131630-8edfeec4/params.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130659-8edfeec4-flight.jsonl",
+      "bytes": 2329776,
+      "source": "logs/20260716T130659-8edfeec4/flight.jsonl",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130659-8edfeec4-result.json",
+      "bytes": 456,
+      "source": "logs/20260716T130659-8edfeec4/result.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130659-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T130659-8edfeec4/params.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131802-8edfeec4-flight.jsonl",
+      "bytes": 2503537,
+      "source": "logs/20260716T131802-8edfeec4/flight.jsonl",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131802-8edfeec4-result.json",
+      "bytes": 456,
+      "source": "logs/20260716T131802-8edfeec4/result.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131802-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T131802-8edfeec4/params.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131137-2ca531c3-flight.jsonl",
+      "bytes": 3628163,
+      "source": "logs/20260716T131137-2ca531c3/flight.jsonl",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131137-2ca531c3-result.json",
+      "bytes": 458,
+      "source": "logs/20260716T131137-2ca531c3/result.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T131137-2ca531c3-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T131137-2ca531c3/params.json",
+      "note": "selected flight"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130355-8edfeec4-flight.jsonl",
+      "bytes": 2842581,
+      "source": "logs/20260716T130355-8edfeec4/flight.jsonl",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130355-8edfeec4-result.json",
+      "bytes": 475,
+      "source": "logs/20260716T130355-8edfeec4/result.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130355-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T130355-8edfeec4/params.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130833-8edfeec4-flight.jsonl",
+      "bytes": 16329847,
+      "source": "logs/20260716T130833-8edfeec4/flight.jsonl",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130833-8edfeec4-result.json",
+      "bytes": 437,
+      "source": "logs/20260716T130833-8edfeec4/result.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T130833-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T130833-8edfeec4/params.json",
+      "note": "excluded/no-race context"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T131630-8edfeec4_r2j_rerun_slice_start.aigprec",
+      "bytes": 30278111,
+      "source": "logs/20260716T131630-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T131630-8edfeec4/vision.aigprec",
+      "reason": "full recording ~124.0 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T130659-8edfeec4_r2j_rerun_slice_start.aigprec",
+      "bytes": 30278528,
+      "source": "logs/20260716T130659-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T130659-8edfeec4/vision.aigprec",
+      "reason": "full recording ~319.8 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T131802-8edfeec4_r2j_rerun_slice_start.aigprec",
+      "bytes": 30279533,
+      "source": "logs/20260716T131802-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T131802-8edfeec4/vision.aigprec",
+      "reason": "full recording ~354.5 MB > git fixture limit"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T131137-2ca531c3_r2j_rerun_slice_start.aigprec",
+      "bytes": 30279318,
+      "source": "logs/20260716T131137-2ca531c3/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T131137-2ca531c3/vision.aigprec",
+      "reason": "full recording ~496.0 MB > git fixture limit"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1b_end.jpg",
+      "bytes": 46642
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1b_late.jpg",
+      "bytes": 46642
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1b_mid.jpg",
+      "bytes": 44952
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1b_start.jpg",
+      "bytes": 54305
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_end.jpg",
+      "bytes": 56211
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_late.jpg",
+      "bytes": 30272
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_mid.jpg",
+      "bytes": 30349
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_start.jpg",
+      "bytes": 54296
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3b_end.jpg",
+      "bytes": 10955
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3b_late.jpg",
+      "bytes": 21473
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3b_mid.jpg",
+      "bytes": 45412
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3b_start.jpg",
+      "bytes": 54349
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_end.jpg",
+      "bytes": 26421
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_late.jpg",
+      "bytes": 24623
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_mid.jpg",
+      "bytes": 26949
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_start.jpg",
+      "bytes": 54323
+    }
+  ]
+}

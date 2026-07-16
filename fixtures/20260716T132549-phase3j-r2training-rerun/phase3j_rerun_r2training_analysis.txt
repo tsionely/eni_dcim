@@ -1,0 +1,44 @@
+PHASE 3J RERUN R2-TRAINING analysis
+flight_code_commit 43ef2b04952343c2e9766f2e127941a786ce78a2 (scheduler RX starvation fix)
+
+SELECTED FLIGHTS: 3 slow attempts + optional default milestone pass
+
+=== F1 slow replacement (frame-stale after live launch) 20260716T131630-8edfeec4 ===
+result=stale channels: frame dur=27.3s gates=0 clips=0 env=0 loop_overrun=0.00307
+topics frames=135 detections=120 imu=1064 states=1367 races=117 collisions=0
+phase sequence: hover -> takeoff -> approach -> commit -> retreat
+race_start_range=(-1, 49841) max_gate_idx=0
+ATTEMPTS approach=1 commit=1 retreat=1
+closest DIRECT: dist=1.66m t=[0.14, -0.78, 1.46] u=0.09 v=0.26 side=center-x/LOW center=[349.2, 226.5]
+closest STATE: dist=0.45m gr=[0.05, -0.14, 0.42] u=0.11 v=-0.57 side=center-x/HIGH age=0.61s center=[354.6, 77.4]
+
+=== F2 slow original valid 20260716T130659-8edfeec4 ===
+result=environment collision (impulse=1.6) dur=29.2s gates=0 clips=0 env=3 loop_overrun=0.00000
+topics frames=2169 detections=1661 imu=1371 states=1460 races=124 collisions=3
+phase sequence: hover -> takeoff -> approach -> commit -> retreat
+race_start_range=(-1, 45730) max_gate_idx=0
+ATTEMPTS approach=1 commit=1 retreat=1
+closest DIRECT: dist=2.99m t=[0.39, -0.26, 2.96] u=0.16 v=0.84 side=RIGHT/LOW center=[372.2, 330.5]
+closest STATE: dist=0.89m gr=[-0.13, 0.13, 0.87] u=-0.16 v=0.27 side=LEFT/LOW age=1.19s center=[270.3, 228.8]
+
+=== F3 slow replacement valid 20260716T131802-8edfeec4 ===
+result=environment collision (impulse=5.0) dur=32.1s gates=0 clips=0 env=1 loop_overrun=0.00000
+topics frames=2419 detections=1409 imu=1717 states=1607 races=137 collisions=1
+phase sequence: hover -> takeoff -> approach -> search -> approach
+race_start_range=(-1, 45973) max_gate_idx=0
+ATTEMPTS approach=2 commit=0 retreat=0
+closest DIRECT: dist=4.25m t=[-0.15, -0.17, 4.25] u=-0.04 v=0.88 side=center-x/LOW center=[306.5, 337.8]
+closest STATE: dist=2.13m gr=[0.03, 0.16, 2.12] u=0.01 v=0.14 side=center-x/center-y age=1.20s center=[324.1, 204.5]
+
+=== F4 default milestone pass 20260716T131137-2ca531c3 ===
+result=environment collision (impulse=15.5) dur=38.9s gates=1 clips=0 env=1 loop_overrun=0.00000
+topics frames=4396 detections=2057 imu=2513 states=1944 races=163 collisions=1
+phase sequence: hover -> takeoff -> approach -> commit -> approach -> commit -> retreat -> approach -> search -> approach
+race_start_range=(-1, 45728) max_gate_idx=1
+ATTEMPTS approach=4 commit=2 retreat=1
+closest DIRECT: dist=3.30m t=[-0.1, -0.64, 3.24] u=-0.03 v=0.54 side=center-x/LOW center=[311.2, 277.8]
+closest STATE: dist=0.10m gr=[0.01, 0.1, 0.02] u=0.08 v=3.37 side=center-x/LOW age=1.08s center=[344.6, 787.1]
+
+=== excluded/no-race/timeouts ===
+20260716T130355-8edfeec4: flight timeout dur=120.0s frames=0 detections=0 race_start_range=(-1, -1) phases={'hover': 2255, 'takeoff': 75, 'search': 3671}
+20260716T130833-8edfeec4: flight timeout dur=120.0s frames=20894 detections=14344 race_start_range=(-1, -1) phases={'hover': 2257, 'takeoff': 75, 'approach': 3669}
