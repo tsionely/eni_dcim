@@ -1,103 +1,113 @@
 {
-  "n_sources": 35,
-  "n_frames_total": 14975,
-  "n_fixes_total": 11807,
+  "n_sources": 37,
+  "n_frames_total": 19850,
+  "n_fixes_total": 17020,
   "agg_by_bin": {
     "5-8m": {
-      "frames": 11707,
-      "fixes": 10673,
-      "misses": 1034,
+      "frames": 15755,
+      "fixes": 15484,
+      "misses": 271,
       "reasons": {
-        "partial_ring": 640,
-        "edge_clip": 276,
-        "exposure_dark": 113,
-        "area_reject": 5
+        "exposure_dark": 155,
+        "area_reject": 5,
+        "partial_ring": 51,
+        "edge_clip": 16,
+        "no_red": 44
       }
     },
     "3-5m": {
-      "frames": 218,
-      "fixes": 114,
-      "misses": 104,
+      "frames": 473,
+      "fixes": 425,
+      "misses": 48,
       "reasons": {
-        "partial_ring": 14,
-        "edge_clip": 14,
-        "no_red": 44,
-        "exposure_dark": 32
+        "edge_clip": 31,
+        "exposure_dark": 17
       }
     },
     "2-3m": {
-      "frames": 0,
-      "fixes": 0,
-      "misses": 0,
-      "reasons": {}
+      "frames": 236,
+      "fixes": 96,
+      "misses": 140,
+      "reasons": {
+        "exposure_dark": 27,
+        "area_reject": 33,
+        "no_red": 80
+      }
     },
     "<2m": {
-      "frames": 0,
-      "fixes": 0,
-      "misses": 0,
-      "reasons": {}
+      "frames": 64,
+      "fixes": 48,
+      "misses": 16,
+      "reasons": {
+        "edge_clip": 9,
+        "exposure_dark": 7
+      }
     },
     ">=8m": {
-      "frames": 3008,
-      "fixes": 985,
-      "misses": 2023,
+      "frames": 3282,
+      "fixes": 930,
+      "misses": 2352,
       "reasons": {
-        "edge_clip": 295,
-        "partial_ring": 99,
-        "exposure_dark": 183,
-        "no_red": 1406,
+        "edge_clip": 52,
+        "exposure_dark": 281,
+        "partial_ring": 37,
+        "no_red": 1942,
         "area_reject": 40
       }
     },
     "no_preceding": {
-      "frames": 42,
-      "fixes": 35,
-      "misses": 7,
+      "frames": 40,
+      "fixes": 37,
+      "misses": 3,
       "reasons": {
-        "edge_clip": 7
+        "edge_clip": 3
       }
     }
   },
   "min_fix_ranges": {
     "20260714T203252-phase3a-r2training/r2_f2_slice_start.aigprec": 5.913782189363025,
-    "20260714T203252-phase3a-r2training/r2_f3_slice_start.aigprec": 6.387020063210564,
-    "20260714T212450-phase3b-r2training/20260714T210518-58cd98ad_r2_slice_start.aigprec": 6.387020063210564,
-    "20260714T212450-phase3b-r2training/20260714T210844-58cd98ad_r2_slice_start.aigprec": 6.288423861738868,
-    "20260714T212450-phase3b-r2training/20260714T211404-58cd98ad_r2_slice_start.aigprec": 6.387020063210564,
-    "20260715T052244-phase3c-r2training/20260715T045100-411f3135_r2c_slice_start.aigprec": 6.387020063210564,
-    "20260715T052244-phase3c-r2training/20260715T045458-411f3135_r2c_slice_start.aigprec": 6.387020063210564,
-    "20260715T052244-phase3c-r2training/20260715T051458-6092dbc0_r2c_slice_start.aigprec": 6.387020063210564,
-    "20260715T135600-phase3d-r2training/20260715T051458-6092dbc0_r2d_slice_start.aigprec": 6.387020063210564,
-    "20260715T135600-phase3d-r2training/20260715T121747-22978559_r2d_slice_start.aigprec": 6.398167516609932,
-    "20260715T135600-phase3d-r2training/20260715T122040-22978559_r2d_slice_start.aigprec": 6.387020063210564,
-    "20260715T135600-phase3d-r2training/20260715T122352-22978559_r2d_slice_start.aigprec": 6.288423861738868,
-    "20260715T190627-phase3e-r2training-slow/20260715T183716-8e6cf1f5_r2e_slice_start.aigprec": 6.398167516609932,
-    "20260715T190627-phase3e-r2training-slow/20260715T184758-8e6cf1f5_r2e_slice_start.aigprec": 6.387020063210564,
-    "20260715T190627-phase3e-r2training-slow/20260715T185046-8e6cf1f5_r2e_slice_start.aigprec": 6.387020063210564,
-    "20260715T190627-phase3e-r2training-slow/20260715T185843-7f28e2fb_r2e_slice_start.aigprec": 6.387020063210564,
-    "20260715T200734-phase3f-r2training-slow/20260715T195033-8edfeec4_r2f_slice_start.aigprec": 6.387020063210564,
-    "20260715T200734-phase3f-r2training-slow/20260715T200011-8edfeec4_r2f_slice_start.aigprec": 6.387020063210564,
-    "20260715T200734-phase3f-r2training-slow/20260715T200142-8edfeec4_r2f_slice_start.aigprec": 6.387020063210564,
-    "20260715T211420-phase3g-r2training/20260715T203300-8edfeec4_r2g_slice_start.aigprec": 6.3548886408138365,
-    "20260715T211420-phase3g-r2training/20260715T204925-8edfeec4_r2g_slice_start.aigprec": 6.387020063210564,
-    "20260715T211420-phase3g-r2training/20260715T205124-8edfeec4_r2g_slice_start.aigprec": 6.387020063210564,
+    "20260714T203252-phase3a-r2training/r2_f3_slice_start.aigprec": 6.029087395094179,
+    "20260714T212450-phase3b-r2training/20260714T210518-58cd98ad_r2_slice_start.aigprec": 6.237206375361313,
+    "20260714T212450-phase3b-r2training/20260714T210844-58cd98ad_r2_slice_start.aigprec": 6.10718378611443,
+    "20260714T212450-phase3b-r2training/20260714T211404-58cd98ad_r2_slice_start.aigprec": 6.217296686208097,
+    "20260715T052244-phase3c-r2training/20260715T045100-411f3135_r2c_slice_start.aigprec": 6.029087395094179,
+    "20260715T052244-phase3c-r2training/20260715T045458-411f3135_r2c_slice_start.aigprec": 6.173291776418848,
+    "20260715T052244-phase3c-r2training/20260715T051458-6092dbc0_r2c_slice_start.aigprec": 6.119930409092757,
+    "20260715T135600-phase3d-r2training/20260715T051458-6092dbc0_r2d_slice_start.aigprec": 6.119930409092757,
+    "20260715T135600-phase3d-r2training/20260715T121747-22978559_r2d_slice_start.aigprec": 6.027529652363452,
+    "20260715T135600-phase3d-r2training/20260715T122040-22978559_r2d_slice_start.aigprec": 6.194356742191387,
+    "20260715T135600-phase3d-r2training/20260715T122352-22978559_r2d_slice_start.aigprec": 6.029087389067251,
+    "20260715T190627-phase3e-r2training-slow/20260715T183716-8e6cf1f5_r2e_slice_start.aigprec": 6.173291776418848,
+    "20260715T190627-phase3e-r2training-slow/20260715T184758-8e6cf1f5_r2e_slice_start.aigprec": 6.029087395094179,
+    "20260715T190627-phase3e-r2training-slow/20260715T185046-8e6cf1f5_r2e_slice_start.aigprec": 6.183182010506738,
+    "20260715T190627-phase3e-r2training-slow/20260715T185843-7f28e2fb_r2e_slice_start.aigprec": 6.029087395094179,
+    "20260715T200734-phase3f-r2training-slow/20260715T195033-8edfeec4_r2f_slice_start.aigprec": 6.029087395094179,
+    "20260715T200734-phase3f-r2training-slow/20260715T200011-8edfeec4_r2f_slice_start.aigprec": 6.249772413304614,
+    "20260715T200734-phase3f-r2training-slow/20260715T200142-8edfeec4_r2f_slice_start.aigprec": 6.029087395094179,
+    "20260715T211420-phase3g-r2training/20260715T203300-8edfeec4_r2g_slice_start.aigprec": 6.194356742191387,
+    "20260715T211420-phase3g-r2training/20260715T204925-8edfeec4_r2g_slice_start.aigprec": 6.029087395094179,
+    "20260715T211420-phase3g-r2training/20260715T205124-8edfeec4_r2g_slice_start.aigprec": 6.029087395094179,
     "20260715T211420-phase3g-r2training/20260715T205845-fc86a160_r2g_slice_start.aigprec": 5.92215761233782,
-    "20260716T023148-phase3h-r2training/20260715T213138-8edfeec4_r2h_slice_start.aigprec": 6.387020063210564,
-    "20260716T023148-phase3h-r2training/20260715T213225-8edfeec4_r2h_slice_start.aigprec": 6.387020063210564,
-    "20260716T023148-phase3h-r2training/20260715T213406-fc86a160_r2h_slice_start.aigprec": 6.387020063210564,
-    "20260716T023148-phase3h-r2training/20260716T022502-8edfeec4_r2h_slice_start.aigprec": 6.387020063210564,
+    "20260716T023148-phase3h-r2training/20260715T213138-8edfeec4_r2h_slice_start.aigprec": 6.10718378611443,
+    "20260716T023148-phase3h-r2training/20260715T213225-8edfeec4_r2h_slice_start.aigprec": 6.029087395094179,
+    "20260716T023148-phase3h-r2training/20260715T213406-fc86a160_r2h_slice_start.aigprec": 6.173233829668898,
+    "20260716T023148-phase3h-r2training/20260716T022502-8edfeec4_r2h_slice_start.aigprec": 6.222377299954639,
     "20260716T115732-phase3i-r2training/20260716T031114-8edfeec4_r2i_slice_start.aigprec": 5.9009810864844505,
     "20260716T115732-phase3i-r2training/20260716T113216-8edfeec4_r2i_slice_start.aigprec": 5.92215761233782,
-    "20260716T115732-phase3i-r2training/20260716T114244-8edfeec4_r2i_slice_start.aigprec": 6.363307509762071,
-    "20260716T132549-phase3j-r2training-rerun/20260716T130659-8edfeec4_r2j_rerun_slice_start.aigprec": 6.387020063210564,
-    "20260716T132549-phase3j-r2training-rerun/20260716T131137-2ca531c3_r2j_rerun_slice_start.aigprec": 6.387020063210564,
-    "20260716T132549-phase3j-r2training-rerun/20260716T131630-8edfeec4_r2j_rerun_slice_start.aigprec": 6.2373368016947905,
-    "20260716T132549-phase3j-r2training-rerun/20260716T131802-8edfeec4_r2j_rerun_slice_start.aigprec": 6.361497387231571,
-    "local_pass_vision/20260716T131137": 3.3038621120533653
+    "20260716T115732-phase3i-r2training/20260716T114244-8edfeec4_r2i_slice_start.aigprec": 6.3224372197535255,
+    "20260716T132549-phase3j-r2training-rerun/20260716T130659-8edfeec4_r2j_rerun_slice_start.aigprec": 6.029087395094179,
+    "20260716T132549-phase3j-r2training-rerun/20260716T131137-2ca531c3_r2j_rerun_slice_start.aigprec": 6.235605883729632,
+    "20260716T132549-phase3j-r2training-rerun/20260716T131630-8edfeec4_r2j_rerun_slice_start.aigprec": 5.629249741874187,
+    "20260716T132549-phase3j-r2training-rerun/20260716T131802-8edfeec4_r2j_rerun_slice_start.aigprec": 6.029087395094179,
+    "local_full/20260716T131137-2ca531c3": 1.1529005004141408,
+    "local_full/20260716T203450-2ca531c3": 1.343044856888964,
+    "local_full/20260716T212408-2ca531c3": 1.672659584462913
   },
   "n_annotated": 40,
   "sources_with_sub5m_bins": [
-    "local_pass_vision/20260716T131137"
+    "local_full/20260716T131137-2ca531c3",
+    "local_full/20260716T203450-2ca531c3",
+    "local_full/20260716T212408-2ca531c3"
   ],
   "gate_size": {
     "model": {
@@ -443,14 +453,32 @@
         "dist": 0.06174039453165481,
         "age": 1.0602176,
         "gate_clips": 0
+      },
+      {
+        "flight_id": "20260716T203450-2ca531c3",
+        "lat": -0.016232167343025197,
+        "vert": 0.024957294648551145,
+        "radial": 0.02977162764825889,
+        "dist": 0.030753529518360436,
+        "age": 0.492724432,
+        "gate_clips": 0
+      },
+      {
+        "flight_id": "20260716T212408-2ca531c3",
+        "lat": 0.07667004096323068,
+        "vert": 0.27688511931080306,
+        "radial": 0.2873041323703179,
+        "dist": 1.9781088268446971,
+        "age": 0.943670488,
+        "gate_clips": 0
       }
     ],
     "n_clip_state_inside_model": 4,
-    "n_near_state_inside_model": 30,
+    "n_near_state_inside_model": 32,
     "interpretation": [
       "PASS at state (lat=+0.006, vert=+0.100) is deep inside the \u00b10.8m model half-opening \u2014 consistent with width_m=1.6 if state\u2248truth.",
       "4 CLIP flight(s) have closest STATE inside the model opening (\u00b10.8m) yet recorded gate_clips>0 \u2014 either the true scoring volume is smaller than 1.6\u00d71.6, or (more likely given Phase 5) the dead-reckoned state is fiction at the bar (blind stretch).",
-      "30 zero-clip near-misses also sit inside the model opening in STATE \u2014 same fiction/size ambiguity; clips are the harder bound."
+      "32 zero-clip near-misses also sit inside the model opening in STATE \u2014 same fiction/size ambiguity; clips are the harder bound."
     ],
     "lower_bound_half_from_pass_m": 0.10024239287190073,
     "clip_radial_median_m": 0.4353814635735996,
@@ -1048,6 +1076,38 @@
         "age": 1.0602176
       },
       "abort": "environment collision (impulse=3.4)"
+    },
+    {
+      "flight_id": "20260716T203450-2ca531c3",
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 6.7559863,
+        "dist": 0.030753529518360436,
+        "lat": -0.016232167343025197,
+        "vert": 0.024957294648551145,
+        "fwd": 0.007709070307766908,
+        "age": 0.492724432
+      },
+      "abort": "environment collision (impulse=3.3)"
+    },
+    {
+      "flight_id": "20260716T212408-2ca531c3",
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 6.5559499,
+        "dist": 1.9781088268446971,
+        "lat": 0.07667004096323068,
+        "vert": 0.27688511931080306,
+        "fwd": 1.957133328714179,
+        "age": 0.943670488
+      },
+      "abort": "environment collision (impulse=3.7)"
     }
   ]
 }

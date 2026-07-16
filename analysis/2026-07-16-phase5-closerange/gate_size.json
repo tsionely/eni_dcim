@@ -342,14 +342,32 @@
       "dist": 0.06174039453165481,
       "age": 1.0602176,
       "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T203450-2ca531c3",
+      "lat": -0.016232167343025197,
+      "vert": 0.024957294648551145,
+      "radial": 0.02977162764825889,
+      "dist": 0.030753529518360436,
+      "age": 0.492724432,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T212408-2ca531c3",
+      "lat": 0.07667004096323068,
+      "vert": 0.27688511931080306,
+      "radial": 0.2873041323703179,
+      "dist": 1.9781088268446971,
+      "age": 0.943670488,
+      "gate_clips": 0
     }
   ],
   "n_clip_state_inside_model": 4,
-  "n_near_state_inside_model": 30,
+  "n_near_state_inside_model": 32,
   "interpretation": [
     "PASS at state (lat=+0.006, vert=+0.100) is deep inside the \u00b10.8m model half-opening \u2014 consistent with width_m=1.6 if state\u2248truth.",
     "4 CLIP flight(s) have closest STATE inside the model opening (\u00b10.8m) yet recorded gate_clips>0 \u2014 either the true scoring volume is smaller than 1.6\u00d71.6, or (more likely given Phase 5) the dead-reckoned state is fiction at the bar (blind stretch).",
-    "30 zero-clip near-misses also sit inside the model opening in STATE \u2014 same fiction/size ambiguity; clips are the harder bound."
+    "32 zero-clip near-misses also sit inside the model opening in STATE \u2014 same fiction/size ambiguity; clips are the harder bound."
   ],
   "lower_bound_half_from_pass_m": 0.10024239287190073,
   "clip_radial_median_m": 0.4353814635735996,
@@ -946,6 +964,38 @@
         "age": 1.0602176
       },
       "abort": "environment collision (impulse=3.4)"
+    },
+    {
+      "flight_id": "20260716T203450-2ca531c3",
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 6.7559863,
+        "dist": 0.030753529518360436,
+        "lat": -0.016232167343025197,
+        "vert": 0.024957294648551145,
+        "fwd": 0.007709070307766908,
+        "age": 0.492724432
+      },
+      "abort": "environment collision (impulse=3.3)"
+    },
+    {
+      "flight_id": "20260716T212408-2ca531c3",
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 6.5559499,
+        "dist": 1.9781088268446971,
+        "lat": 0.07667004096323068,
+        "vert": 0.27688511931080306,
+        "fwd": 1.957133328714179,
+        "age": 0.943670488
+      },
+      "abort": "environment collision (impulse=3.7)"
     }
   ]
 }

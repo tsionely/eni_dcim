@@ -1,0 +1,519 @@
+{
+  "vertical": [
+    {
+      "flight_id": "20260716T203450-2ca531c3",
+      "t_last_fix_s": 8.5556768,
+      "range_m": 9.949606424566614,
+      "true_ty_m": -3.395779487397217,
+      "believed_ty_m": 0.07660684033128311,
+      "delta_believed_minus_true_m": 3.4723863277285,
+      "img_ty_m": 0.3420177208444773,
+      "center_v_px": 191.0,
+      "age_s": 1.292282432,
+      "t_closest_s": 8.5248468,
+      "believed_at_closest_ty": 0.0529819024268097,
+      "closest_dist_m": 1.9325279979666654,
+      "runaway_believed_minus_true_m": 3.4487613898240266,
+      "mean_vz_cmd_after": -0.19999999999999996,
+      "frac_blind_climb_active": null,
+      "mean_state_ty_after": 0.09354870590569811,
+      "note": "TRUE_LOW believed_HIGH (sign conflict at last fix)"
+    },
+    {
+      "flight_id": "20260716T212408-2ca531c3",
+      "t_last_fix_s": 7.4906006,
+      "range_m": 2.9415428309390332,
+      "true_ty_m": -1.4037709563017404,
+      "believed_ty_m": 0.30017314422002367,
+      "delta_believed_minus_true_m": 1.7039441005217641,
+      "img_ty_m": -0.5768181645044509,
+      "center_v_px": 117.25,
+      "age_s": 0.909423488,
+      "t_closest_s": 7.5228559,
+      "believed_at_closest_ty": 0.27688511931080306,
+      "closest_dist_m": 1.9781088268446971,
+      "runaway_believed_minus_true_m": 1.6806560756125435,
+      "mean_vz_cmd_after": 0.2028675652141128,
+      "frac_blind_climb_active": 1.0,
+      "mean_state_ty_after": 0.297209561941436,
+      "note": "TRUE_LOW believed_HIGH (sign conflict at last fix)"
+    },
+    {
+      "flight_id": "20260716T131137-2ca531c3",
+      "t_last_fix_s": 34.3144685,
+      "range_m": 8.955108532588861,
+      "true_ty_m": -0.43549096214419936,
+      "believed_ty_m": -9.952414855184488,
+      "delta_believed_minus_true_m": -9.516923893040289,
+      "img_ty_m": 4.337630695472729,
+      "center_v_px": 335.0,
+      "age_s": 0.466919744,
+      "t_closest_s": 38.34566,
+      "believed_at_closest_ty": -1.457391627207152,
+      "closest_dist_m": 13.185133539870403,
+      "runaway_believed_minus_true_m": -1.0219006650629527,
+      "mean_vz_cmd_after": -0.7516260062347511,
+      "frac_blind_climb_active": null,
+      "mean_state_ty_after": -10.649530736840413,
+      "note": "runaway |\u0394|=1.02m after last fix"
+    }
+  ],
+  "detector_comparison": {
+    "20260716T203450-2ca531c3": {
+      "old": {
+        "n_unique_frames": 305,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 130,
+            "fixes": 130,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 28,
+            "fixes": 28,
+            "fix_rate": 100.0
+          },
+          "2-3m": {
+            "frames": 3,
+            "fixes": 3,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 4,
+            "fixes": 4,
+            "fix_rate": 100.0
+          },
+          "other": {
+            "frames": 36,
+            "fixes": 36,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 160,
+            "fixes": 130,
+            "fix_rate": 81.25
+          },
+          "3-5m": {
+            "frames": 31,
+            "fixes": 28,
+            "fix_rate": 90.3225806451613
+          },
+          "2-3m": {
+            "frames": 3,
+            "fixes": 3,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 5,
+            "fixes": 4,
+            "fix_rate": 80.0
+          },
+          "other": {
+            "frames": 106,
+            "fixes": 36,
+            "fix_rate": 33.9622641509434
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {
+            "other_miss": 30
+          },
+          "3-5m": {
+            "other_miss": 3
+          },
+          "2-3m": {},
+          "<2m": {
+            "other_miss": 1
+          },
+          "other": {
+            "other_miss": 21,
+            "no_red": 49
+          }
+        }
+      },
+      "new": {
+        "n_unique_frames": 305,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 153,
+            "fixes": 153,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 33,
+            "fixes": 33,
+            "fix_rate": 100.0
+          },
+          "2-3m": {
+            "frames": 5,
+            "fixes": 5,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 5,
+            "fixes": 5,
+            "fix_rate": 100.0
+          },
+          "other": {
+            "frames": 31,
+            "fixes": 31,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 164,
+            "fixes": 153,
+            "fix_rate": 93.29268292682927
+          },
+          "3-5m": {
+            "frames": 35,
+            "fixes": 33,
+            "fix_rate": 94.28571428571429
+          },
+          "2-3m": {
+            "frames": 5,
+            "fixes": 5,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 6,
+            "fixes": 5,
+            "fix_rate": 83.33333333333333
+          },
+          "other": {
+            "frames": 95,
+            "fixes": 31,
+            "fix_rate": 32.63157894736842
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {
+            "other_miss": 11
+          },
+          "3-5m": {
+            "other_miss": 2
+          },
+          "2-3m": {},
+          "<2m": {
+            "other_miss": 1
+          },
+          "other": {
+            "other_miss": 15,
+            "no_red": 49
+          }
+        }
+      }
+    },
+    "20260716T212408-2ca531c3": {
+      "old": {
+        "n_unique_frames": 211,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 134,
+            "fixes": 134,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "2-3m": {
+            "frames": 9,
+            "fixes": 9,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 3,
+            "fixes": 3,
+            "fix_rate": 100.0
+          },
+          "other": {
+            "frames": 22,
+            "fixes": 22,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 148,
+            "fixes": 134,
+            "fix_rate": 90.54054054054055
+          },
+          "3-5m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "2-3m": {
+            "frames": 16,
+            "fixes": 8,
+            "fix_rate": 50.0
+          },
+          "<2m": {
+            "frames": 4,
+            "fixes": 3,
+            "fix_rate": 75.0
+          },
+          "other": {
+            "frames": 43,
+            "fixes": 23,
+            "fix_rate": 53.48837209302326
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {
+            "other_miss": 14
+          },
+          "3-5m": {},
+          "2-3m": {
+            "other_miss": 4,
+            "no_red": 4
+          },
+          "<2m": {
+            "other_miss": 1
+          },
+          "other": {
+            "other_miss": 20
+          }
+        }
+      },
+      "new": {
+        "n_unique_frames": 211,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 158,
+            "fixes": 158,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 16,
+            "fixes": 16,
+            "fix_rate": 100.0
+          },
+          "2-3m": {
+            "frames": 9,
+            "fixes": 9,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 3,
+            "fixes": 3,
+            "fix_rate": 100.0
+          },
+          "other": {
+            "frames": 15,
+            "fixes": 15,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 158,
+            "fixes": 158,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 17,
+            "fixes": 16,
+            "fix_rate": 94.11764705882354
+          },
+          "2-3m": {
+            "frames": 16,
+            "fixes": 8,
+            "fix_rate": 50.0
+          },
+          "<2m": {
+            "frames": 4,
+            "fixes": 3,
+            "fix_rate": 75.0
+          },
+          "other": {
+            "frames": 16,
+            "fixes": 16,
+            "fix_rate": 100.0
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {},
+          "3-5m": {
+            "other_miss": 1
+          },
+          "2-3m": {
+            "other_miss": 4,
+            "no_red": 4
+          },
+          "<2m": {
+            "other_miss": 1
+          },
+          "other": {}
+        }
+      }
+    },
+    "20260716T131137-2ca531c3": {
+      "old": {
+        "n_unique_frames": 653,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 193,
+            "fixes": 193,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 22,
+            "fixes": 22,
+            "fix_rate": 100.0
+          },
+          "2-3m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "<2m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "other": {
+            "frames": 142,
+            "fixes": 142,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 245,
+            "fixes": 193,
+            "fix_rate": 78.77551020408163
+          },
+          "3-5m": {
+            "frames": 37,
+            "fixes": 22,
+            "fix_rate": 59.45945945945946
+          },
+          "2-3m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "<2m": {
+            "frames": 0,
+            "fixes": 0,
+            "fix_rate": null
+          },
+          "other": {
+            "frames": 371,
+            "fixes": 142,
+            "fix_rate": 38.274932614555254
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {
+            "other_miss": 52
+          },
+          "3-5m": {
+            "other_miss": 8,
+            "no_red": 7
+          },
+          "2-3m": {},
+          "<2m": {},
+          "other": {
+            "other_miss": 70,
+            "no_red": 159
+          }
+        }
+      },
+      "new": {
+        "n_unique_frames": 653,
+        "by_own_range": {
+          "5-8m": {
+            "frames": 228,
+            "fixes": 228,
+            "fix_rate": 100.0
+          },
+          "3-5m": {
+            "frames": 35,
+            "fixes": 35,
+            "fix_rate": 100.0
+          },
+          "2-3m": {
+            "frames": 6,
+            "fixes": 6,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 3,
+            "fixes": 3,
+            "fix_rate": 100.0
+          },
+          "other": {
+            "frames": 142,
+            "fixes": 142,
+            "fix_rate": 100.0
+          }
+        },
+        "by_preceding": {
+          "5-8m": {
+            "frames": 262,
+            "fixes": 228,
+            "fix_rate": 87.02290076335878
+          },
+          "3-5m": {
+            "frames": 39,
+            "fixes": 35,
+            "fix_rate": 89.74358974358974
+          },
+          "2-3m": {
+            "frames": 6,
+            "fixes": 6,
+            "fix_rate": 100.0
+          },
+          "<2m": {
+            "frames": 4,
+            "fixes": 3,
+            "fix_rate": 75.0
+          },
+          "other": {
+            "frames": 342,
+            "fixes": 142,
+            "fix_rate": 41.52046783625731
+          }
+        },
+        "miss_reasons_prec": {
+          "5-8m": {
+            "other_miss": 27,
+            "no_red": 7
+          },
+          "3-5m": {
+            "other_miss": 4
+          },
+          "2-3m": {},
+          "<2m": {
+            "other_miss": 1
+          },
+          "other": {
+            "other_miss": 41,
+            "no_red": 159
+          }
+        }
+      }
+    }
+  },
+  "banner_frames": [
+    "2ca531c3_t8.25_vert.jpg",
+    "2ca531c3_t8.56_vert.jpg",
+    "2ca531c3_t8.96_vert.jpg",
+    "2ca531c3_t9.35_vert.jpg",
+    "2ca531c3_t7.19_vert.jpg",
+    "2ca531c3_t7.49_vert.jpg",
+    "2ca531c3_t7.73_vert.jpg"
+  ],
+  "headline_number": {
+    "20260716T203450-2ca531c3": 3.4723863277285,
+    "20260716T212408-2ca531c3": 1.7039441005217641,
+    "20260716T131137-2ca531c3": -9.516923893040289
+  }
+}

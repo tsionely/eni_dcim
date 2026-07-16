@@ -345,9 +345,18 @@ def discover_pairs() -> list[tuple[str, Path, Path | None]]:
                 log = cands[0] if cands else None
             sid = f"{fix.name}/{sl.name}"
             pairs.append((sid, sl, log))
-    # Local full vision for milestone pass (close-range gold)
-    local = Path(r"C:\Users\tsion\Projects\eni_dcim_phase1\logs\20260716T131137-2ca531c3\vision.aigprec")
-    log = ROOT / "fixtures" / "20260716T132549-phase3j-r2training-rerun" / "20260716T131137-2ca531c3-flight.jsonl"
-    if local.exists() and log.exists():
-        pairs.append(("local_pass_vision/20260716T131137", local, log))
+    # Local full vision recordings (close-range gold — not pad slices)
+    local_logs = Path(r"C:\Users\tsion\Projects\eni_dcim_phase1\logs")
+    for fid in (
+        "20260716T131137-2ca531c3",
+        "20260716T203450-2ca531c3",
+        "20260716T212408-2ca531c3",
+    ):
+        vision = local_logs / fid / "vision.aigprec"
+        log = local_logs / fid / "flight.jsonl"
+        if not log.exists():
+            cands = list((ROOT / "fixtures").glob(f"**/{fid}-flight.jsonl"))
+            log = cands[0] if cands else None
+        if vision.exists() and log is not None and log.exists():
+            pairs.append((f"local_full/{fid}", vision, log))
     return pairs
