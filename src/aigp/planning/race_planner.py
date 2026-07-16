@@ -58,6 +58,11 @@ class RacePlanner:
         # flailing into walls, which is how most R2 flights actually died.
         self.abort_offset_m = float(p.get("planner.commit.abort_offset_m",
                                           default=0.45))
+        # Camera-on-target yaw during commit/retreat (phase5 frames: with
+        # yaw pinned at 0 the lateral strafe walks the gate out the side
+        # of the fixed camera's FOV — edge_clip/no_red at 3-5m).
+        self.commit_yaw_gain = float(p.get("planner.commit.yaw_track_gain",
+                                           default=1.2))
         self.retreat_speed = float(p.get("planner.retreat.speed_mps", default=1.2))
         self.retreat_s = float(p.get("planner.retreat.duration_s", default=2.0))
         self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
@@ -91,6 +96,21 @@ class RacePlanner:
         self._commit_until_ns = None
         self._commit_v_body = None
         self._retreat_until_ns = None
+
+    def _retreat_setpoint(self, state: StateEstimate,
+                          climb_bias: float = 0.0) -> Setpoint:
+        """Back away for another attempt, camera held on the gate.
+
+        Keeping the nose turned onto the (dead-reckoned) gate means
+        re-acquisition happens on THIS gate — phase4c died relocking onto
+        far gates after a blown attempt and chasing them into steel.
+        """
+        yaw = 0.0
+        if state.gate_rel is not None:
+            yaw = ap.yaw_rate_to_bearing(state.gate_rel, self.commit_yaw_gain)
+        return Setpoint(phase="retreat",
+                        v_body=np.array([-self.retreat_speed, 0.0, -climb_bias]),
+                        yaw_rate=yaw)
 
     def _aim_up(self, dist: float) -> float:
         """Aim-above-center insurance, tapered toward a FLOOR near the gate.
@@ -127,14 +147,11 @@ class RacePlanner:
         # view again at a sane range, then re-approach (multiply attempts).
         if self._retreat_until_ns is not None:
             if now_ns < self._retreat_until_ns:
-                # Retreat is blind (gate out of frame, no altitude anchor):
-                # phase4a flights bled height across retry cycles — 8-35
-                # ground scrapes per flight — until a hard hit ended them.
-                # Same sink compensation as the blind commit stretch.
-                return Setpoint(phase="retreat",
-                                v_body=np.array([-self.retreat_speed, 0.0,
-                                                 -self.blind_climb_bias]),
-                                yaw_rate=0.0)
+                # Retreat is semi-blind (no altitude anchor): phase4a
+                # flights bled height across retry cycles — 8-35 ground
+                # scrapes per flight — until a hard hit ended them. Same
+                # sink compensation as the blind commit stretch.
+                return self._retreat_setpoint(state, self.blind_climb_bias)
             self._retreat_until_ns = None
 
         # -- commit: LIVE-STEERED through-gate window (phase3b flight 1
@@ -156,9 +173,7 @@ class RacePlanner:
                     self._commit_v_body = None
                     if self.retreat_enabled:
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
-                        return Setpoint(phase="retreat",
-                                        v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
-                                        yaw_rate=0.0)
+                        return self._retreat_setpoint(state)
                 elif gate is not None and gate.t[2] > 0.3:
                     d_body = ap.cam_to_body(gate.t)
                     dist = float(np.linalg.norm(d_body))
@@ -177,9 +192,7 @@ class RacePlanner:
                         self._commit_until_ns = None
                         self._commit_v_body = None
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
-                        return Setpoint(phase="retreat",
-                                        v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
-                                        yaw_rate=0.0)
+                        return self._retreat_setpoint(state)
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
@@ -187,7 +200,11 @@ class RacePlanner:
                     if state.gate_rel_age_s > 0.4:
                         extra[2] -= self.blind_climb_bias   # blind-phase sink
                     self._commit_v_body = direction * self.commit_speed + extra
-                return Setpoint(phase="commit", v_body=self._commit_v_body, yaw_rate=0.0)
+                yaw = 0.0
+                if gate is not None and gate.t[2] > 0.3:
+                    yaw = ap.yaw_rate_to_bearing(gate, self.commit_yaw_gain)
+                return Setpoint(phase="commit", v_body=self._commit_v_body,
+                                yaw_rate=yaw)
             # Window expired without a gate-passed event: we are past the
             # plane outside the opening (or stalled) — back off and retry
             # instead of the blind flail that ended most R2 flights.
@@ -195,9 +212,7 @@ class RacePlanner:
             self._commit_v_body = None
             if self.retreat_enabled:
                 self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
-                return Setpoint(phase="retreat",
-                                v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
-                                yaw_rate=0.0)
+                return self._retreat_setpoint(state)
 
         gate = state.gate_rel
         if gate is None:

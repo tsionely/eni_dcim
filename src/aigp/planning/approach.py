@@ -73,6 +73,20 @@ def approach_speed(dist: float, speed_far: float, speed_near: float,
     return speed_near + (speed_far - speed_near) * frac
 
 
+def yaw_rate_to_bearing(rel: RelPose, gain: float, cap_rps: float = 0.8) -> float:
+    """Yaw rate that turns the nose — and the FIXED camera — onto the gate.
+
+    Phase 5 frames show the failure this prevents: while commit strafes
+    laterally (crosstrack vy) with yaw pinned to zero, the gate slides out
+    the side of the FOV and detection ends exactly when it matters most.
+    Bearing comes from the (dead-reckoned) relative pose, so unlike the
+    image-center variant this keeps steering through detection dropouts.
+    """
+    d_body = cam_to_body(rel.t)
+    bearing = float(np.arctan2(d_body[1], d_body[0]))
+    return float(np.clip(gain * bearing, -cap_rps, cap_rps))
+
+
 def yaw_rate_to_center(center_px: tuple[float, float], image_size: tuple[int, int],
                        gain: float) -> float:
     """Yaw rate that brings the gate center toward the image center.

@@ -79,6 +79,40 @@ def test_gate_passed_clears_commit():
     assert sp.phase == "search"
 
 
+def test_commit_yaws_camera_onto_offset_gate():
+    """Phase 5 frames: commit strafes laterally with yaw pinned at 0 and the
+    gate walks out the side of the fixed camera's FOV (edge_clip/no_red).
+    While live-steering the commit, the nose must turn toward the gate."""
+    p = planner()
+    state = make_state(gate_t=[0.0, 0.0, 1.8], center_px=(320, 180))
+    assert p.plan(0, "race", state, None).phase == "commit"
+    # Next tick: gate drifted to the right in camera coords (+x cam = +y body).
+    sp = p.plan(int(0.1e9), "race",
+                make_state(gate_t=[0.6, 0.0, 1.5], center_px=(420, 180)), None)
+    assert sp.phase == "commit"
+    assert sp.yaw_rate > 0.1
+    # And a centered gate needs ~no yaw.
+    sp2 = p.plan(int(0.2e9), "race",
+                 make_state(gate_t=[0.0, 0.0, 1.2], center_px=(320, 180)), None)
+    assert abs(sp2.yaw_rate) < 0.05
+
+
+def test_retreat_keeps_camera_on_gate():
+    """Re-acquisition must happen on THIS gate: while retreating, keep
+    turning toward the (dead-reckoned) gate bearing instead of drifting."""
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    # Expire the commit window -> retreat begins.
+    sp = p.plan(int(5e9), "race", make_state(gate_t=[0.8, 0.0, 2.0]), None)
+    assert sp.phase == "retreat"
+    assert sp.yaw_rate > 0.05      # gate right -> positive yaw toward it
+    # Blind retreat (no gate estimate): no spurious yaw.
+    p2 = planner()
+    p2.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    sp2 = p2.plan(int(5e9), "race", make_state(), None)
+    assert sp2.phase == "retreat" and sp2.yaw_rate == 0.0
+
+
 def test_collision_triggers_recover_brake():
     p = planner()
     p.on_collision(now_ns=0)

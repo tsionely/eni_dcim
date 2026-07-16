@@ -356,49 +356,77 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 5 — REPLAY-DRIVEN DEVELOPMENT (new operating model)
+## CURRENT TASK: Phase 5b — BLOOM-PROOF DETECTOR IS IN; the story changed
 
-phase4c verdict (3 valid flights, closest states 0.03/0.06/0.16m, ZERO
-clips): the dead-reckoned state at crossing is fiction — the drone
-misses by a meter+ while believing it is centered. First reflight
-measurement on the real commit-window slice: the detector produces ZERO
-fixes below FIVE meters (not the 1.4m the geometry predicted). The
-blind stretch is 3.5x longer than assumed, and no planner tuning can
-fix blindness.
+The phase5 studies landed (thank you — both were decisive) and together
+with the frames they OVERTURNED the working theory. Established facts:
 
-New model: iteration happens OFFLINE on real recordings
-(scripts/reflight.py — estimator+detector replay over slice + jsonl).
-Live cycles are for CONFIRMATION only. Cloud owns the close-range
-perception fix; local roles below.
+1. **The committed `*_slice_start` fixtures are PAD footage.** The
+   slicer stamps every packet mono_ns=1 and duplicates payloads ~8x;
+   each slice holds ~1s of unique video from BEFORE takeoff (phase4c:
+   FSM shows 45s THROTTLE_DOWN, takeoff at t=45s; the "commitwindow"
+   slice covers t≈43-44s). The first gate stands ~6m from the launch
+   pad — that is the real origin of the "no fixes below 5m" number.
+   reflight.py now dedupes and takes frame timing from the flight log.
+2. **The live flight log disproves total close blindness**: phase4c
+   live detections reach 0.90m. But Cursor's real-approach bins show
+   ~50% fix loss at 3-5m — and the cause is on the frames: the CYAN
+   RIBBON'S GLOW washes the red ring to bright PINK (H~152 S~40-100
+   V~248 — outside both red hue bands, under the sat floor), the AI-GP
+   banner merges into the outline, and the bloom cuts the bottom bar,
+   so the convex-4-gon test fails on a plainly visible ring.
+3. **The believed state still runs away**: at the phase4c commit the
+   state said 0.03m while live detections said ~2.0m; the drone then
+   relocked far gates (13-45m) and died on hangar steel.
 
-**SIM OPERATOR (Sakana)** — one data-heavy cycle, then stand by:
-1. `git pull`. SIM LOCK. R2-TRAINING (your text-match helper is now the
-   standard — good work).
-2. Adopt your own recommendation: start fly_once FIRST, then click
-   RACE, so flights catch the live GO edge (no more 46s GO-timeout).
-3. Fly TWO flights, default speeds, max-duration 300. For EACH: slice
-   the FINAL APPROACH generously — from 8m range through the collision
-   (60s window if needed, two slices per flight are fine). These frames
-   are the raw material for the close-range detector work: we need to
-   SEE what the camera sees at 5m/3m/2m/1m.
-4. Collect `--label phase5-closerange-frames`, push, VERIFY.
+This build answers all three (all validated offline + unit + mock):
+- washed-red mask branch + minAreaRect box fallback: 100% frame
+  coverage on every committed slice (was 85-91%), rescuing exactly the
+  bloom-washed/broken-ring frames. More close fixes = less coasting =
+  less believed-state runaway.
+- commit & retreat now YAW THE NOSE onto the (dead-reckoned) gate
+  (planner.commit.yaw_track_gain=1.2): the frames showed the gate
+  walking out the side of the fixed camera during the lateral strafe
+  (edge_clip -> no_red), and retreat re-acquiring FAR gates. The camera
+  now stays on target through the attempt and the retreat.
 
-**DATA ANALYST (Cursor)** — the close-range perception study (P0):
-1. From ALL R2 slices: extract frames binned by PnP range (5-8m, 3-5m,
-   2-3m, <2m from the nearest preceding fix) and characterize WHY
-   detection stops below ~5m: ring clipped by frame edge? motion blur?
-   exposure? partial occlusion? Deliver 30+ annotated frames.
-2. Measure the TRUE gate size / scoring volume: the pass crossed at
-   state (+0.006,+0.100); clips and no-clip misses bound the real
-   opening. Reconcile with perception.gate.width_m=1.6.
-3. Everything via scripts/reflight.py where useful — extend it freely
-   under analysis/.
+**SIM OPERATOR (Sakana)** — the confirmation cycle, then better slices:
+1. `git pull` (HEAD must include "Phase 5b"). SIM LOCK. R2-TRAINING.
+   fly_once FIRST, then click RACE (your GO-edge procedure).
+2. Fly THREE valid flights, default speeds, max-duration 300.
+   Watch for: does the drone now keep the gate in view while closing
+   (no more sideways drift-outs)? Does it get CLOSE (the pass event or
+   clips — either is information)? Post-miss: does it retry the SAME
+   gate?
+3. Slicing — this matters: the `slice_start` cuts captured only the
+   pre-takeoff second. Cut slices by a WINDOW AROUND TAKEOFF->END
+   (from the TAKEOFF FSM line in the flight log to abort/finish), not
+   around race start. If the tool allows, verify the cut slice spans
+   >10s of unique frames before pushing.
+4. Collect `--label phase5b-confirm`, push, VERIFY.
 
-**QA (Codex)** — guard the new loop:
-1. Windows CI on current HEAD (chain-correctness verdict).
-2. Run reflight.py over ALL committed slices x all recent builds
-   (fd9d419, 54a75a1, 80c6d44): fix-coverage table per build — our
-   first offline regression suite for perception.
+**DATA ANALYST (Cursor)** — rerun the frame study on the NEW build:
+1. Your run_phase5_study.py harness, HEAD build, over the full local
+   recordings (local_pass_vision + any new phase5b material): fix rate
+   per range bin old-vs-new detector (washed_red/box_fallback on vs
+   off). Deliver: the same miss-reason table — expectation is
+   partial_ring/no_red(bloom) largely converted to fixes; what remains
+   (true edge_clip, exposure) sizes the NEXT perception task.
+2. From the phase4c full log you already have: quantify the
+   believed-vs-measured runaway during the commit (state.gate_rel vs
+   detection range, t=44-52s) — that is our estimator-error ground
+   truth for the velocity work.
+
+**QA (Codex)** — the regression suite, honest this time:
+1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
+   your matrix numbers were per-decode, not per-frame; rerun the matrix
+   on HEAD vs 9fe3702 with the fixed harness. Report per-slice: unique
+   frames, fix rate old/new detector. (Ranges will all be ~6m — these
+   are pad slices; that is expected now.)
+2. Windows CI on HEAD. The 3 known-flaky FSM/heartbeat failures under
+   load: if they reproduce, run those tests solo and report solo
+   verdicts; overrun_frac=0.74 on your box during hover is worth one
+   line of investigation (AIGP_NOSLEEP unset?).
 
 ## PREVIOUS: Phase 4c — fast-fail launches + verified relock build
 

@@ -46,7 +46,8 @@
     "commit": {
       "distance_m": 2.0,
       "duration_s": 2.5,
-      "speed_mps": 2.5
+      "speed_mps": 2.5,
+      "yaw_track_gain": 1.2
     },
     "recover": {
       "brake_s": 0.8
@@ -71,7 +72,15 @@
       "min_area_frac": 0.0008,
       "max_area_frac": 0.7,
       "approx_eps_frac": 0.04,
-      "min_confidence": 0.3
+      "min_confidence": 0.3,
+      "washed_red": true,
+      "washed_hue_min": 135,
+      "washed_sat_min": 20,
+      "washed_val_min": 150,
+      "washed_rg_min": 20,
+      "box_fallback": true,
+      "box_min_area_frac": 0.025,
+      "box_min_fill": 0.2
     }
   },
   "estimation": {

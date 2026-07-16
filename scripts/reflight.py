@@ -44,16 +44,45 @@ def load_imu(log_path: str):
     return imu
 
 
-def load_frames(slice_path: str):
+def load_frame_monos(log_path: str) -> dict[int, int]:
+    """frame_id -> recorder mono_ns, from the flight log's frame topic.
+
+    The slice tool rewrites the recording's own mono timestamps (observed:
+    every packet stamped mono_ns=1), which silently front-loaded all frames
+    before the first IMU sample in the merged replay. The flight log keeps
+    the true arrival time of every frame, so it is the ordering authority.
+    """
+    monos: dict[int, int] = {}
+    for line in open(log_path):
+        d = json.loads(line)
+        if d["topic"] == "frame":
+            monos.setdefault(int(d["data"]["frame_id"]), int(d["mono_ns"]))
+    return monos
+
+
+def load_frames(slice_path: str, frame_monos: dict[int, int] | None = None):
+    """Decode unique frames; timestamp from the flight log when available.
+
+    Slices also duplicate payload packets (observed: each frame decoded ~8
+    times) — dedupe by frame_id, keep the first decode.
+    """
     frames = []
+    seen: set[int] = set()
     asm = ChunkAssembler()
     for _, mono_ns, payload in read_recording(slice_path):
         done = asm.feed(payload)
         if done:
             frame_id, sim_ns, jpeg = done
+            if frame_id in seen:
+                continue
             img = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
-            if img is not None:
-                frames.append((mono_ns, frame_id, sim_ns, img))
+            if img is None:
+                continue
+            seen.add(frame_id)
+            if frame_monos is not None and frame_id in frame_monos:
+                mono_ns = frame_monos[frame_id]
+            frames.append((mono_ns, frame_id, sim_ns, img))
+    frames.sort(key=lambda f: f[0])
     return frames
 
 
@@ -70,10 +99,13 @@ def main(argv=None):
     est = StateEstimator(params)
 
     imu = load_imu(args.log)
-    frames = load_frames(args.slice)
-    print(f"imu samples: {len(imu)}, frames: {len(frames)}")
+    frames = load_frames(args.slice, load_frame_monos(args.log))
+    print(f"imu samples: {len(imu)}, unique frames: {len(frames)}")
     if not frames or not imu:
         return 1
+    span = (frames[-1][0] - frames[0][0]) / 1e9
+    print(f"frame mono span: {span:.2f}s "
+          f"(ids {frames[0][1]}..{frames[-1][1]})")
 
     # Merge on the recorder/log mono timeline and replay in order.
     events = ([("imu", t, (ts, a, g)) for t, ts, a, g in imu]
