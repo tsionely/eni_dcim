@@ -124,6 +124,8 @@ class StateEstimator:
         self._vision_yaw_rate = 0.0
         self._vision_yaw_ts_ns = 0
         self._cmd_yaw_rate = 0.0
+        self._last_lock_dist: float | None = None
+        self._relock_rejects = 0
         self._now_ns = 0
         # Frame timestamps and IMU timestamps live in DIFFERENT clock domains
         # on the real sim (frames: unix epoch; MAVLink IMU: sim boot time —
@@ -290,8 +292,19 @@ class StateEstimator:
         if err <= tol:
             return True                       # consistent with the lock
         if age > self.relock_s:
-            # Sustained loss: our gate is gone — re-lock on what we see,
-            # replacing (not blending with) the stale target.
+            # Sustained loss: our gate is gone — re-lock, but with DISTANCE
+            # SANITY: after a 1m attempt the milestone flight relocked onto
+            # a 27m gate off to the side and chased it into hangar steel.
+            # A relock candidate much farther than the gate we just lost is
+            # (almost certainly) the wrong gate; hold out for a sane one,
+            # with an escape hatch so we can't deadlock.
+            cand = float(np.linalg.norm(t_body))
+            cap = max(self._last_lock_dist + 4.0, self._last_lock_dist * 2.5) \
+                if self._last_lock_dist is not None else float("inf")
+            if cand > cap and self._relock_rejects < 25:
+                self._relock_rejects += 1
+                return False
+            self._relock_rejects = 0
             self._fix_history.clear()
             self._gate_rel = None
             self._gate_rel_ts_ns = None
@@ -326,6 +339,8 @@ class StateEstimator:
             n_body = cam_to_body(det.rel_pose.normal)
             if not self._lock_accepts(t_body):
                 return
+            self._last_lock_dist = float(np.linalg.norm(t_body))
+            self._relock_rejects = 0
             self._gate_center_px = det.center_px
             q_now = self._attitude_at(self._rebase_det_ts(det.ts_ns))
             baseline = None
@@ -395,6 +410,8 @@ class StateEstimator:
         self._gate_rel_ts_ns = None
         self._gate_center_px = None
         self._fix_history.clear()
+        self._last_lock_dist = None      # next gate is legitimately farther
+        self._relock_rejects = 0
 
     # ---------------------------------------------------------------- state
 

@@ -356,7 +356,32 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 4a — FIRST PASS ACHIEVED; now chain the track
+## CURRENT TASK: Phase 4b — chain build: relock sanity + retry altitude
+
+The milestone autopsy (analysis/2026-07-16-milestone-autopsy) measured
+the gate-2 failure chain: closed to ~1m, crossed 0.9m beside the opening
+(geometric termination + retreat fired correctly), then the RELOCK
+accepted a 27m gate off to the side and the drone chased it into a
+hangar steel truss. This build fixes both measured killers:
+- relock DISTANCE SANITY: after losing a near gate, candidates much
+  farther than the lost one are rejected (escape hatch after ~1s so we
+  never fly blind forever); a pass still resets the cap for the
+  legitimately-farther next gate
+- retreat now carries the blind climb bias (phase4a bled 8-35 ground
+  scrapes across retry cycles)
+The PASS crossing vector is our ground truth: (+0.006, +0.100) — the
+aim geometry is exactly right; do not touch aim params.
+
+1. `git pull` (HEAD must include "relock" fix). SIM LOCK. R2-TRAINING.
+2. 3 flights, DEFAULT speeds:
+   `python scripts/fly_once.py --max-duration 300
+    --patch safety.flight_timeout_s=300`
+3. Watch: gates passed; after each pass, does it lock the RIGHT next
+   gate; do retry cycles hold altitude now.
+4. Slice every pass + 20s after; note WHERE any hard hit happens.
+5. Collect `--label phase4b-r2training-chain`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 4a — FIRST PASS ACHIEVED; now chain the track
 
 The first R2 gate pass is in. The mission changes: from "pass a gate"
 to "complete the track". Everything needed for chaining is already in

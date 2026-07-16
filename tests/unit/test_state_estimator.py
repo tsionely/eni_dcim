@@ -110,3 +110,48 @@ def test_gate_lock_relocks_after_sustained_loss():
     est.update_vision(_det(ts, [3.0, 1.0, 14.0]))
     gr = est.state.gate_rel
     assert gr is not None and gr.distance > 10.0, "did not relock to the new gate"
+
+
+def test_relock_distance_sanity_rejects_far_gate():
+    """Milestone autopsy: after losing a ~1m gate mid-attempt, the relock
+    accepted a 27m gate off to the side and the drone chased it into
+    hangar steel. Relock must hold out for a sane-distance candidate."""
+    est = make_estimator()
+    ts = 0
+    for i in range(30):                      # lock a ~2m gate
+        ts = int(i * 0.02e9)
+        _tick(est, ts)
+        est.update_vision(_det(ts, [0.0, 0.0, 2.0]))
+    # Sustained loss (> relock_s), then a FAR gate appears.
+    for i in range(80):
+        ts += int(0.02e9)
+        _tick(est, ts)
+    ts += int(0.02e9)
+    _tick(est, ts)
+    est.update_vision(_det(ts, [18.0, -10.0, 17.0]))
+    gr = est._gate_rel
+    assert gr is None or np.linalg.norm(gr.t) < 10, "relocked onto the far gate"
+    # A sane-distance candidate IS accepted.
+    ts += int(0.02e9)
+    _tick(est, ts)
+    est.update_vision(_det(ts, [1.0, 0.5, 4.0]))
+    assert est._gate_rel is not None and np.linalg.norm(est._gate_rel.t) < 6
+
+
+def test_relock_escape_hatch_eventually_accepts():
+    """If only far candidates exist, the 25-rejection escape hatch must
+    re-lock rather than fly blind forever."""
+    est = make_estimator()
+    ts = 0
+    for i in range(30):
+        ts = int(i * 0.02e9)
+        _tick(est, ts)
+        est.update_vision(_det(ts, [0.0, 0.0, 2.0]))
+    for i in range(80):
+        ts += int(0.02e9)
+        _tick(est, ts)
+    for i in range(30):                      # far gate is all there is
+        ts += int(0.02e9)
+        _tick(est, ts)
+        est.update_vision(_det(ts, [5.0, 0.0, 20.0]))
+    assert est._gate_rel is not None and np.linalg.norm(est._gate_rel.t) > 10
