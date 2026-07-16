@@ -1,0 +1,951 @@
+{
+  "model": {
+    "width_m": 1.6,
+    "height_m": 1.6,
+    "half_w": 0.8,
+    "half_h": 0.8
+  },
+  "pass_pts": [
+    {
+      "flight_id": "20260716T131137-2ca531c3",
+      "lat": 0.0056548536181750455,
+      "vert": 0.10024239287190073,
+      "radial": 0.1004017664093988,
+      "dist": 0.10285874582309801,
+      "age": 1.081753008,
+      "gate_clips": 0
+    }
+  ],
+  "clip_pts": [
+    {
+      "flight_id": "20260714T202743-58cd98ad",
+      "lat": 0.008005563040540202,
+      "vert": -0.08302726799347723,
+      "radial": 0.08341232684715583,
+      "dist": 1.3955593249738634,
+      "age": 0.004005272,
+      "gate_clips": 1
+    },
+    {
+      "flight_id": "20260714T210518-58cd98ad",
+      "lat": 0.07446074050593315,
+      "vert": 0.5614458205674839,
+      "radial": 0.5663619084202144,
+      "dist": 0.8731553312032575,
+      "age": 0.53255532,
+      "gate_clips": 12
+    },
+    {
+      "flight_id": "20260715T213138-8edfeec4",
+      "lat": -0.26919184766901555,
+      "vert": -0.3421882054835192,
+      "radial": 0.4353814635735996,
+      "dist": 0.48193094212439436,
+      "age": 0.95947916,
+      "gate_clips": 11
+    },
+    {
+      "flight_id": "20260716T134309-927a4c97",
+      "lat": 1.2856146188489896,
+      "vert": -1.009539254108217,
+      "radial": 1.6346175252283357,
+      "dist": 2.077573870739474,
+      "age": 0.489446904,
+      "gate_clips": 1
+    },
+    {
+      "flight_id": "20260716T153853-927a4c97",
+      "lat": -0.016922122763414302,
+      "vert": 0.05932613608854655,
+      "radial": 0.061692371181668884,
+      "dist": 0.0616963671027494,
+      "age": 0.885896648,
+      "gate_clips": 2
+    }
+  ],
+  "near_miss_pts": [
+    {
+      "flight_id": "20260714T202447-58cd98ad",
+      "lat": -0.09227077891328053,
+      "vert": 0.4542544943647272,
+      "radial": 0.46353105860537275,
+      "dist": 0.5020347117447653,
+      "age": 1.068369928,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260714T211404-58cd98ad",
+      "lat": -0.07448921083937685,
+      "vert": 0.28716974664471656,
+      "radial": 0.29667339941333437,
+      "dist": 0.3060949058963292,
+      "age": 0.4335288,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T045100-411f3135",
+      "lat": -0.045537500025763455,
+      "vert": 0.9340342894918781,
+      "radial": 0.9351436883469801,
+      "dist": 1.1178335711390086,
+      "age": 1.21005048,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T045458-411f3135",
+      "lat": -0.010113182443353323,
+      "vert": 0.12169987160348739,
+      "radial": 0.12211934821082966,
+      "dist": 0.1714315402228998,
+      "age": 1.089216016,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T121747-22978559",
+      "lat": -0.09562162192864664,
+      "vert": 0.23421190112009954,
+      "radial": 0.2529796616460626,
+      "dist": 0.35618584425949784,
+      "age": 1.02498228,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T122040-22978559",
+      "lat": -0.1738005644059678,
+      "vert": 0.09494547646460215,
+      "radial": 0.19804363077090686,
+      "dist": 0.2538586980841819,
+      "age": 0.753961872,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T122352-22978559",
+      "lat": -0.027703290156032317,
+      "vert": -0.012851038007882487,
+      "radial": 0.030538851703188798,
+      "dist": 0.131180840041377,
+      "age": 1.239338832,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T185046-8e6cf1f5",
+      "lat": -0.06104805537594985,
+      "vert": -0.024652397589113424,
+      "radial": 0.06583772301710293,
+      "dist": 1.4524990433387768,
+      "age": 1.210963104,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T195033-8edfeec4",
+      "lat": -0.23838839057598424,
+      "vert": 0.2985566068943142,
+      "radial": 0.38205375574865647,
+      "dist": 1.5286614067293676,
+      "age": 1.204154512,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T203300-8edfeec4",
+      "lat": 0.43616769468430777,
+      "vert": -0.05823448363978144,
+      "radial": 0.4400380812736728,
+      "dist": 0.4481966754014821,
+      "age": 1.197870064,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T204925-8edfeec4",
+      "lat": -0.12471121664888875,
+      "vert": 0.1894954026343575,
+      "radial": 0.22685104182613605,
+      "dist": 1.9825360609078475,
+      "age": 1.186438656,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T205124-8edfeec4",
+      "lat": -0.07842563729153237,
+      "vert": 0.28949904186302206,
+      "radial": 0.29993378573310275,
+      "dist": 1.841601671086468,
+      "age": 1.193395632,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T205845-fc86a160",
+      "lat": -0.04757712704735871,
+      "vert": 0.021324696219171102,
+      "radial": 0.052137565026767814,
+      "dist": 0.053827381065637725,
+      "age": 1.10091664,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T213225-8edfeec4",
+      "lat": -0.12074770248961694,
+      "vert": -0.05108028615561595,
+      "radial": 0.131107601954504,
+      "dist": 0.7198620219561636,
+      "age": 1.20807308,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260715T213406-fc86a160",
+      "lat": 0.016514873462880535,
+      "vert": 0.05970241422290874,
+      "radial": 0.061944485707274476,
+      "dist": 0.20896223969713767,
+      "age": 1.200610688,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T022502-8edfeec4",
+      "lat": -0.49244895384176846,
+      "vert": -0.04113173907065881,
+      "radial": 0.49416373005192216,
+      "dist": 0.4984270808067039,
+      "age": 1.06172028,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T031114-8edfeec4",
+      "lat": 0.009006879332567675,
+      "vert": 0.06035192687542232,
+      "radial": 0.061020315902883995,
+      "dist": 1.554743244735217,
+      "age": 1.194805648,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T113216-8edfeec4",
+      "lat": -0.0892432494707389,
+      "vert": 0.19351417196935533,
+      "radial": 0.2131011316935735,
+      "dist": 1.2311557654306196,
+      "age": 1.474511472,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T130659-8edfeec4",
+      "lat": -0.13460592310975977,
+      "vert": 0.13226682114371335,
+      "radial": 0.18871477555213748,
+      "dist": 0.8871688081776545,
+      "age": 1.19427296,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T131630-8edfeec4",
+      "lat": 0.045681628148712086,
+      "vert": -0.1353489970649529,
+      "radial": 0.14285013880569328,
+      "dist": 0.44573827093644924,
+      "age": 0.613876336,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T133531-927a4c97",
+      "lat": 0.07126146935012352,
+      "vert": 0.19865337598533162,
+      "radial": 0.21104824283634327,
+      "dist": 1.1963884958511386,
+      "age": 1.18889644,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T134842-927a4c97",
+      "lat": 0.0325670015602227,
+      "vert": -0.17293491441687892,
+      "radial": 0.17597469765564816,
+      "dist": 0.18022396425511159,
+      "age": 0.893648352,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143604-927a4c97",
+      "lat": -0.13162663662820823,
+      "vert": 0.03527961902860331,
+      "radial": 0.13627260542331227,
+      "dist": 0.13631414365889225,
+      "age": 0.867333576,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143739-927a4c97",
+      "lat": -0.08226785991983977,
+      "vert": 0.039006898615790805,
+      "radial": 0.09104690502929225,
+      "dist": 0.0934368894459485,
+      "age": 1.087306312,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143915-927a4c97",
+      "lat": -0.3393350910937149,
+      "vert": 0.16854930256482017,
+      "radial": 0.37888939209572375,
+      "dist": 0.5708107405935128,
+      "age": 1.457948088,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143604-927a4c97",
+      "lat": -0.13162663662820823,
+      "vert": 0.03527961902860331,
+      "radial": 0.13627260542331227,
+      "dist": 0.13631414365889225,
+      "age": 0.867333576,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143739-927a4c97",
+      "lat": -0.08226785991983977,
+      "vert": 0.039006898615790805,
+      "radial": 0.09104690502929225,
+      "dist": 0.0934368894459485,
+      "age": 1.087306312,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T143915-927a4c97",
+      "lat": -0.3393350910937149,
+      "vert": 0.16854930256482017,
+      "radial": 0.37888939209572375,
+      "dist": 0.5708107405935128,
+      "age": 1.457948088,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T164931-927a4c97",
+      "lat": -0.017105933638947562,
+      "vert": 0.1345635972345025,
+      "radial": 0.13564650628139852,
+      "dist": 0.163812774688702,
+      "age": 1.495078792,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T165306-927a4c97",
+      "lat": 0.02592346981544148,
+      "vert": -0.01443065926877422,
+      "radial": 0.029669348058283397,
+      "dist": 0.03450142988516941,
+      "age": 0.679599008,
+      "gate_clips": 0
+    },
+    {
+      "flight_id": "20260716T165535-927a4c97",
+      "lat": -0.023922030372309798,
+      "vert": 0.056854571785742714,
+      "radial": 0.061682297866356144,
+      "dist": 0.06174039453165481,
+      "age": 1.0602176,
+      "gate_clips": 0
+    }
+  ],
+  "n_clip_state_inside_model": 4,
+  "n_near_state_inside_model": 30,
+  "interpretation": [
+    "PASS at state (lat=+0.006, vert=+0.100) is deep inside the \u00b10.8m model half-opening \u2014 consistent with width_m=1.6 if state\u2248truth.",
+    "4 CLIP flight(s) have closest STATE inside the model opening (\u00b10.8m) yet recorded gate_clips>0 \u2014 either the true scoring volume is smaller than 1.6\u00d71.6, or (more likely given Phase 5) the dead-reckoned state is fiction at the bar (blind stretch).",
+    "30 zero-clip near-misses also sit inside the model opening in STATE \u2014 same fiction/size ambiguity; clips are the harder bound."
+  ],
+  "lower_bound_half_from_pass_m": 0.10024239287190073,
+  "clip_radial_median_m": 0.4353814635735996,
+  "clip_vert_abs_median_m": 0.3421882054835192,
+  "all_rows": [
+    {
+      "flight_id": "20260714T202447-58cd98ad",
+      "fixture": "20260714T203252-phase3a-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 24.3960592,
+        "dist": 0.5020347117447653,
+        "lat": -0.09227077891328053,
+        "vert": 0.4542544943647272,
+        "fwd": -0.19281548045951125,
+        "age": 1.068369928
+      },
+      "abort": "environment collision (impulse=4.1)"
+    },
+    {
+      "flight_id": "20260714T202743-58cd98ad",
+      "fixture": "20260714T203252-phase3a-r2training",
+      "label": "CLIP",
+      "gates_passed": 0,
+      "gate_clips": 1,
+      "closest": {
+        "t": 21.2757677,
+        "dist": 1.3955593249738634,
+        "lat": 0.008005563040540202,
+        "vert": -0.08302726799347723,
+        "fwd": 1.3930643248793102,
+        "age": 0.004005272
+      },
+      "abort": "environment collision (impulse=5.0)"
+    },
+    {
+      "flight_id": "20260714T210518-58cd98ad",
+      "fixture": "20260714T212450-phase3b-r2training",
+      "label": "CLIP",
+      "gates_passed": 0,
+      "gate_clips": 12,
+      "closest": {
+        "t": 21.6758772,
+        "dist": 0.8731553312032575,
+        "lat": 0.07446074050593315,
+        "vert": 0.5614458205674839,
+        "fwd": 0.6645558073625443,
+        "age": 0.53255532
+      },
+      "abort": "gate clip budget exceeded (11)"
+    },
+    {
+      "flight_id": "20260714T211404-58cd98ad",
+      "fixture": "20260714T212450-phase3b-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 22.0961996,
+        "dist": 0.3060949058963292,
+        "lat": -0.07448921083937685,
+        "vert": 0.28716974664471656,
+        "fwd": -0.0753590438913525,
+        "age": 0.4335288
+      },
+      "abort": "environment collision (impulse=3.2)"
+    },
+    {
+      "flight_id": "20260715T045100-411f3135",
+      "fixture": "20260715T052244-phase3c-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.6360033,
+        "dist": 1.1178335711390086,
+        "lat": -0.045537500025763455,
+        "vert": 0.9340342894918781,
+        "fwd": 0.6124199334690168,
+        "age": 1.21005048
+      },
+      "abort": "environment collision (impulse=1.2)"
+    },
+    {
+      "flight_id": "20260715T045458-411f3135",
+      "fixture": "20260715T052244-phase3c-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 22.095969,
+        "dist": 0.1714315402228998,
+        "lat": -0.010113182443353323,
+        "vert": 0.12169987160348739,
+        "fwd": -0.12031474463156146,
+        "age": 1.089216016
+      },
+      "abort": "environment collision (impulse=5.2)"
+    },
+    {
+      "flight_id": "20260715T121747-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.5162048,
+        "dist": 0.35618584425949784,
+        "lat": -0.09562162192864664,
+        "vert": 0.23421190112009954,
+        "fwd": -0.2507382030012478,
+        "age": 1.02498228
+      },
+      "abort": "environment collision (impulse=28.5)"
+    },
+    {
+      "flight_id": "20260715T122040-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.5764928,
+        "dist": 0.2538586980841819,
+        "lat": -0.1738005644059678,
+        "vert": 0.09494547646460215,
+        "fwd": -0.15881737595135023,
+        "age": 0.753961872
+      },
+      "abort": "environment collision (impulse=1.2)"
+    },
+    {
+      "flight_id": "20260715T122352-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 28.4762068,
+        "dist": 0.131180840041377,
+        "lat": -0.027703290156032317,
+        "vert": -0.012851038007882487,
+        "fwd": 0.1275766096532275,
+        "age": 1.239338832
+      },
+      "abort": "environment collision (impulse=3.7)"
+    },
+    {
+      "flight_id": "20260715T185046-8e6cf1f5",
+      "fixture": "20260715T190627-phase3e-r2training-slow",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.4964491,
+        "dist": 1.4524990433387768,
+        "lat": -0.06104805537594985,
+        "vert": -0.024652397589113424,
+        "fwd": 1.451006156130285,
+        "age": 1.210963104
+      },
+      "abort": "environment collision (impulse=1.3)"
+    },
+    {
+      "flight_id": "20260715T195033-8edfeec4",
+      "fixture": "20260715T200734-phase3f-r2training-slow",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 22.0765123,
+        "dist": 1.5286614067293676,
+        "lat": -0.23838839057598424,
+        "vert": 0.2985566068943142,
+        "fwd": 1.4801488520220374,
+        "age": 1.204154512
+      },
+      "abort": "environment collision (impulse=4.2)"
+    },
+    {
+      "flight_id": "20260715T203300-8edfeec4",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 26.196285,
+        "dist": 0.4481966754014821,
+        "lat": 0.43616769468430777,
+        "vert": -0.05823448363978144,
+        "fwd": 0.0851278266486703,
+        "age": 1.197870064
+      },
+      "abort": "environment collision (impulse=10.1)"
+    },
+    {
+      "flight_id": "20260715T204925-8edfeec4",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.6562191,
+        "dist": 1.9825360609078475,
+        "lat": -0.12471121664888875,
+        "vert": 0.1894954026343575,
+        "fwd": 1.9695146198041793,
+        "age": 1.186438656
+      },
+      "abort": "environment collision (impulse=5.1)"
+    },
+    {
+      "flight_id": "20260715T205124-8edfeec4",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 21.4362845,
+        "dist": 1.841601671086468,
+        "lat": -0.07842563729153237,
+        "vert": 0.28949904186302206,
+        "fwd": 1.8170130541975422,
+        "age": 1.193395632
+      },
+      "abort": "environment collision (impulse=1.2)"
+    },
+    {
+      "flight_id": "20260715T205845-fc86a160",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 27.0566872,
+        "dist": 0.053827381065637725,
+        "lat": -0.04757712704735871,
+        "vert": 0.021324696219171102,
+        "fwd": 0.013381377562303981,
+        "age": 1.10091664
+      },
+      "abort": "environment collision (impulse=9.3)"
+    },
+    {
+      "flight_id": "20260715T213138-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "label": "CLIP",
+      "gates_passed": 0,
+      "gate_clips": 11,
+      "closest": {
+        "t": 19.9164406,
+        "dist": 0.48193094212439436,
+        "lat": -0.26919184766901555,
+        "vert": -0.3421882054835192,
+        "fwd": 0.20664078530971733,
+        "age": 0.95947916
+      },
+      "abort": "gate clip budget exceeded (11)"
+    },
+    {
+      "flight_id": "20260715T213225-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 23.1768186,
+        "dist": 0.7198620219561636,
+        "lat": -0.12074770248961694,
+        "vert": -0.05108028615561595,
+        "fwd": 0.7078221014948286,
+        "age": 1.20807308
+      },
+      "abort": "environment collision (impulse=2.5)"
+    },
+    {
+      "flight_id": "20260715T213406-fc86a160",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 22.2564433,
+        "dist": 0.20896223969713767,
+        "lat": 0.016514873462880535,
+        "vert": 0.05970241422290874,
+        "fwd": 0.19956978305771964,
+        "age": 1.200610688
+      },
+      "abort": "environment collision (impulse=25.5)"
+    },
+    {
+      "flight_id": "20260716T022502-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 24.0158541,
+        "dist": 0.4984270808067039,
+        "lat": -0.49244895384176846,
+        "vert": -0.04113173907065881,
+        "fwd": -0.06505200060462077,
+        "age": 1.06172028
+      },
+      "abort": "environment collision (impulse=7.6)"
+    },
+    {
+      "flight_id": "20260716T031114-8edfeec4",
+      "fixture": "20260716T115732-phase3i-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 22.4965396,
+        "dist": 1.554743244735217,
+        "lat": 0.009006879332567675,
+        "vert": 0.06035192687542232,
+        "fwd": 1.553545325407953,
+        "age": 1.194805648
+      },
+      "abort": "environment collision (impulse=1.3)"
+    },
+    {
+      "flight_id": "20260716T113216-8edfeec4",
+      "fixture": "20260716T115732-phase3i-r2training",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 27.6561427,
+        "dist": 1.2311557654306196,
+        "lat": -0.0892432494707389,
+        "vert": 0.19351417196935533,
+        "fwd": 1.2125726478953633,
+        "age": 1.474511472
+      },
+      "abort": "environment collision (impulse=1.5)"
+    },
+    {
+      "flight_id": "20260716T130659-8edfeec4",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 26.1561344,
+        "dist": 0.8871688081776545,
+        "lat": -0.13460592310975977,
+        "vert": 0.13226682114371335,
+        "fwd": 0.8668651727296849,
+        "age": 1.19427296
+      },
+      "abort": "environment collision (impulse=1.6)"
+    },
+    {
+      "flight_id": "20260716T131137-2ca531c3",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "label": "PASS",
+      "gates_passed": 1,
+      "gate_clips": 0,
+      "closest": {
+        "t": 25.2960977,
+        "dist": 0.10285874582309801,
+        "lat": 0.0056548536181750455,
+        "vert": 0.10024239287190073,
+        "fwd": 0.02234741359023908,
+        "age": 1.081753008
+      },
+      "abort": "environment collision (impulse=15.5)"
+    },
+    {
+      "flight_id": "20260716T131630-8edfeec4",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 27.3163648,
+        "dist": 0.44573827093644924,
+        "lat": 0.045681628148712086,
+        "vert": -0.1353489970649529,
+        "fwd": 0.4222279526755774,
+        "age": 0.613876336
+      },
+      "abort": "stale channels: frame"
+    },
+    {
+      "flight_id": "20260716T133531-927a4c97",
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 25.3161531,
+        "dist": 1.1963884958511386,
+        "lat": 0.07126146935012352,
+        "vert": 0.19865337598533162,
+        "fwd": 1.177626456989075,
+        "age": 1.18889644
+      },
+      "abort": "environment collision (impulse=1.6)"
+    },
+    {
+      "flight_id": "20260716T134309-927a4c97",
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "label": "CLIP",
+      "gates_passed": 0,
+      "gate_clips": 1,
+      "closest": {
+        "t": 34.57734,
+        "dist": 2.077573870739474,
+        "lat": 1.2856146188489896,
+        "vert": -1.009539254108217,
+        "fwd": 1.2823177198322546,
+        "age": 0.489446904
+      },
+      "abort": "environment collision (impulse=1.6)"
+    },
+    {
+      "flight_id": "20260716T134842-927a4c97",
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 32.9367164,
+        "dist": 0.18022396425511159,
+        "lat": 0.0325670015602227,
+        "vert": -0.17293491441687892,
+        "fwd": 0.0389047950364857,
+        "age": 0.893648352
+      },
+      "abort": "environment collision (impulse=1.7)"
+    },
+    {
+      "flight_id": "20260716T143604-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 30.3562209,
+        "dist": 0.13631414365889225,
+        "lat": -0.13162663662820823,
+        "vert": 0.03527961902860331,
+        "fwd": -0.0033649327778357274,
+        "age": 0.867333576
+      },
+      "abort": "environment collision (impulse=3.7)"
+    },
+    {
+      "flight_id": "20260716T143739-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 25.7764661,
+        "dist": 0.0934368894459485,
+        "lat": -0.08226785991983977,
+        "vert": 0.039006898615790805,
+        "fwd": -0.02099793784926129,
+        "age": 1.087306312
+      },
+      "abort": "environment collision (impulse=4.0)"
+    },
+    {
+      "flight_id": "20260716T143915-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 24.6563599,
+        "dist": 0.5708107405935128,
+        "lat": -0.3393350910937149,
+        "vert": 0.16854930256482017,
+        "fwd": 0.4269282493982419,
+        "age": 1.457948088
+      },
+      "abort": "environment collision (impulse=13.4)"
+    },
+    {
+      "flight_id": "20260716T143604-927a4c97",
+      "fixture": "20260716T145727-phase4b-partial",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 30.3562209,
+        "dist": 0.13631414365889225,
+        "lat": -0.13162663662820823,
+        "vert": 0.03527961902860331,
+        "fwd": -0.0033649327778357274,
+        "age": 0.867333576
+      },
+      "abort": "environment collision (impulse=3.7)"
+    },
+    {
+      "flight_id": "20260716T143739-927a4c97",
+      "fixture": "20260716T145727-phase4b-partial",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 25.7764661,
+        "dist": 0.0934368894459485,
+        "lat": -0.08226785991983977,
+        "vert": 0.039006898615790805,
+        "fwd": -0.02099793784926129,
+        "age": 1.087306312
+      },
+      "abort": "environment collision (impulse=4.0)"
+    },
+    {
+      "flight_id": "20260716T143915-927a4c97",
+      "fixture": "20260716T145727-phase4b-partial",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 24.6563599,
+        "dist": 0.5708107405935128,
+        "lat": -0.3393350910937149,
+        "vert": 0.16854930256482017,
+        "fwd": 0.4269282493982419,
+        "age": 1.457948088
+      },
+      "abort": "environment collision (impulse=13.4)"
+    },
+    {
+      "flight_id": "20260716T153853-927a4c97",
+      "fixture": "20260716T154946-phase4b-r2training-chain-v2",
+      "label": "CLIP",
+      "gates_passed": 0,
+      "gate_clips": 2,
+      "closest": {
+        "t": 25.2359327,
+        "dist": 0.0616963671027494,
+        "lat": -0.016922122763414302,
+        "vert": 0.05932613608854655,
+        "fwd": -0.0007021763741463828,
+        "age": 0.885896648
+      },
+      "abort": "environment collision (impulse=5.0)"
+    },
+    {
+      "flight_id": "20260716T164931-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 48.3159239,
+        "dist": 0.163812774688702,
+        "lat": -0.017105933638947562,
+        "vert": 0.1345635972345025,
+        "fwd": 0.0918403532487869,
+        "age": 1.495078792
+      },
+      "abort": "environment collision (impulse=11.5)"
+    },
+    {
+      "flight_id": "20260716T165306-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 48.7161686,
+        "dist": 0.03450142988516941,
+        "lat": 0.02592346981544148,
+        "vert": -0.01443065926877422,
+        "fwd": -0.017609044548688495,
+        "age": 0.679599008
+      },
+      "abort": "environment collision (impulse=9.6)"
+    },
+    {
+      "flight_id": "20260716T165535-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "label": "ZERO_CLIP_NEAR_MISS",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "closest": {
+        "t": 48.775921,
+        "dist": 0.06174039453165481,
+        "lat": -0.023922030372309798,
+        "vert": 0.056854571785742714,
+        "fwd": -0.002677769006189011,
+        "age": 1.0602176
+      },
+      "abort": "environment collision (impulse=3.4)"
+    }
+  ]
+}
