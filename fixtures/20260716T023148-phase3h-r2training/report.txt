@@ -1,0 +1,248 @@
+===== Phase 3h R2 preflight 2026-07-16T00:31:13.8963749+03:00 =====
+HEAD short=f5e8865 full=f5e88659a26056a7f692412004e30fac498dc276
+f5e8865 Age-aware gate-lock tolerance: end the last-meter vision blackout
+becc2f3 [sim-run] phase3g r2 absolute altitude hold (slow set + default; no gate pass)
+970e539 Retreat-and-retry: multiply pass attempts instead of perfecting one
+0296839 [analysis] crossing-miss map for phase3c-3f R2 flights
+8285135 Cursor task: crossing-miss map across all R2 phases
+2c3b765 Absolute altitude hold from the gate reference (approach + commit)
+499bcc0 [sim-run] phase3f r2 slow cross-track
+5265d84 Request 1ms Windows timer resolution (fixes 250Hz loop + mock pacing)
+--- Phase 3h task excerpt ---
+s.md` there (what you observed: sim version, track, anomalies,
+   suggested code changes).
+6. Commit and push:
+
+   ```powershell
+   git add fixtures
+   git commit -m "[sim-run] phase1 vs sim v<version>"
+   git push
+   ```
+
+## CURRENT TASK: Phase 3h — the endgame build (blackout fix + retry)
+
+The analyst's crossing-miss map exposed the last-meter killer: at every
+closest approach the state was 0.75-1.26s STALE — the dead-reckoned
+prediction drifts, the fixed lock tolerance then rejects TRUE fixes as
+"another gate", and the pilot flies its final meter blind on a drifted
+state (phase3d f3 "crossed dead center" per state, collided in reality).
+This build carries three weapons:
+- age-aware lock tolerance (accepts fixes again as prediction ages) —
+  kills the self-inflicted blackout
+- retreat-and-retry: a blown commit backs off 2.5m and re-attempts
+  instead of clipping and flailing (planner.retreat.enabled to A/B)
+- absolute altitude hold (already in 3g; two-gate mock test now passes)
+
+1. `git pull` (HEAD must include "age-aware" / "Retreat-and-retry").
+   SIM LOCK. R2-TRAINING.
+2. 3 flights, slow patch set (same as 3e/3f/3g).
+3. Watch: does it RE-ATTEMPT after a miss (retreat = flying backward
+   briefly)? Count attempts per flight. Any pass = the milestone.
+4. Optional flight 4: default speeds, no patches.
+5. Collect `--label phase3h-r2training`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3g — slow set with ABSOLUTE altitude hold
+
+phase3f verdict integrated: no constant lateral bias anymore (cross-track
+did its job) and close-range PnP vertical is actually stable (p90 2cm
+under 2m — the flips your closest-detection analysis saw were mid/far
+outliers the lock already rejects; note your "direct detection" samples
+include lock-REJECTED fixes, the state is what steers). The real slow-
+flight killer: at 1.2 m/s the vision-velocity SNR collapses and vz
+drifts -> ground. New in this commit: the vertical command now holds the
+ABSOLUTE gate-relative height (gate vector rotated to world; drift-free
+reference) in approach AND commit — no more integrating a drifting vz.
+
+1. `git pull` (HEAD must include "altitude hold"). SIM LOCK. R2-TRAINING.
+2. Same slow patch set, 3 flights:
+   `python scripts/fly_once.py --max-duration 150
+    --patch planner.approach.speed_far_mps=1.2
+    --patch planner.approach.speed_near_mps=0.8
+    --patch planner.commit.speed_mps=1.2
+    --patch planner.commit.duration_s=2.5`
+3. Optional fligh
+--- verify f5e8865 ancestor ---
+HEAD is f5e8865 or newer
+--- SIM LOCK before create ---
+no existing lock
+--- SIM LOCK created ---
+SIM OPERATOR lock phase3h-r2training pid=59684 time=2026-07-16T00:31:14.9729652+03:00 repo=C:\Users\tsion\Projects\eni_dcim_phase1
+--- sim process/ports before launch ---
+
+--- launching fresh sim: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe ---
+--- sim process/ports after launch ---
+
+   Id ProcessName           StartTime           Path
+   -- -----------           ---------           ----
+40504 DCGame-Win64-Shipping 16/07/2026 00:31:16 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim\Binaries\W…
+20684 FlightSim             16/07/2026 00:31:16 C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385\FlightSim.exe
+
+
+udp 14560 <- PID 40504 DCGame-Win64-Shipping
+udp 5601 <- PID 40504 DCGame-Win64-Shipping
+
+===== Phase 3h R2-TRAINING SLOW Flight 1/4 2026-07-16T00:31:34.9533887+03:00 =====
+param overrides: slow set approach_far=1.2 approach_near=0.8 commit=1.2 duration=2.5
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'gate clip budget exceeded (11)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 11, 'env_hits': 0, 'duration_s': 20.16021559992805, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 5040, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T213138-8edfeec4', 'log_dir': 'logs\\20260715T213138-8edfeec4'}
+r2h_f1_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2h_f1_slow ---
+sim window: AI-GP   00:31:43
+event r2-training clicked (400,381) 00:31:50
+RACE clicked 00:31:53
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_00_003153.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_01_003156.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_02_003200.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_03_003203.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_04_003206.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_05_003210.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_06_003213.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_07_003216.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_08_003219.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f1_slow\r2h_f1_slow_09_003222.png
+--- helper stderr r2h_f1_slow ---
+
+===== Phase 3h R2-TRAINING SLOW Flight 2/4 2026-07-16T00:32:24.8757052+03:00 =====
+param overrides: slow set approach_far=1.2 approach_near=0.8 commit=1.2 duration=2.5
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [0.00156621 0.0028623  0.00126189]; level ref roll=+0.005 pitch=-0.064
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=2.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 4, 'duration_s': 27.860040600062348, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 6965, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T213225-8edfeec4', 'log_dir': 'logs\\20260715T213225-8edfeec4'}
+r2h_f2_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2h_f2_slow ---
+sim window: AI-GP   00:32:32
+event r2-training clicked (400,381) 00:32:40
+RACE clicked 00:32:43
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_00_003243.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_01_003246.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_02_003250.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_03_003253.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_04_003256.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_05_003259.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_06_003302.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_07_003306.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_08_003309.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_09_003312.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f2_slow\r2h_f2_slow_10_003315.png
+--- helper stderr r2h_f2_slow ---
+
+===== Phase 3h R2-TRAINING SLOW Flight 3/4 2026-07-16T00:33:19.5804248+03:00 =====
+param overrides: slow set approach_far=1.2 approach_near=0.8 commit=1.2 duration=2.5
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [ 0.00023151  0.000177   -0.00042778]; level ref roll=+0.003 pitch=+0.185
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 7362, 'duration_s': 19.9004306999268, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 4975, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T213319-8edfeec4', 'log_dir': 'logs\\20260715T213319-8edfeec4'}
+r2h_f3_slow_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2h_f3_slow ---
+sim window: AI-GP   00:33:27
+event r2-training clicked (400,381) 00:33:35
+RACE clicked 00:33:37
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_00_003337.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_01_003341.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_02_003344.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_03_003347.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_04_003350.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_05_003353.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_06_003356.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_07_003359.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3_slow\r2h_f3_slow_08_003403.png
+--- helper stderr r2h_f3_slow ---
+
+===== Phase 3h R2-TRAINING Flight 4/4 DEFAULT SPEEDS no patches 2026-07-16T00:34:06.3040743+03:00 =====
+param overrides: DEFAULT / no patches
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [-0.00018166  0.00075643  0.00038963]; level ref roll=-0.006 pitch=+0.186
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=25.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 33.5523657000158, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 8388, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260715T213406-fc86a160', 'log_dir': 'logs\\20260715T213406-fc86a160'}
+r2h_f4_defaultspeed_FLY_EXIT=0
+helper still capturing; stopping helper process by object
+--- helper stdout r2h_f4_defaultspeed ---
+sim window: AI-GP   00:34:14
+event r2-training clicked (400,381) 00:34:22
+RACE clicked 00:34:24
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_00_003424.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_01_003428.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_02_003431.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_03_003434.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_04_003438.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_05_003441.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_06_003444.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_07_003448.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_08_003451.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_09_003454.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f4_defaultspeed\r2h_f4_defaultspeed_10_003457.png
+--- helper stderr r2h_f4_defaultspeed ---
+
+===== Phase 3h run done 2026-07-16T00:35:06.7001050+03:00 =====
+
+===== Phase 3h R2-TRAINING SLOW Flight 3b (replacement for no-race F3) 2026-07-16T05:22:32.5601495+03:00 =====
+sim procs:
+
+   Id ProcessName
+   -- -----------
+40504 DCGame-Win64-Shipping
+20684 FlightSim
+
+
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [-0.00740819  0.00690164 -0.00056082]; level ref roll=+0.043 pitch=-0.005
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2759, 'duration_s': 15.596359399962239, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 3899, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260716T022234-8edfeec4', 'log_dir': 'logs\\20260716T022234-8edfeec4'}
+r2h_f3b_slow_FLY_EXIT=0
+--- helper stdout r2h_f3b_slow ---
+sim window: AI-GP   05:22:42
+event r2-training clicked (400,381) 05:22:50
+RACE clicked 05:22:52
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_00_052252.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_01_052255.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_02_052259.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_03_052302.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_04_052305.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_05_052308.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_06_052311.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3b_slow\r2h_f3b_slow_07_052314.png
+--- helper stderr r2h_f3b_slow ---
+
+===== Phase 3h: fresh sim restart before Flight 3c 2026-07-16T05:24:28.1071002+03:00 =====
+after close:
+
+after relaunch:
+udp 14560 <- PID 64264
+udp 5601 <- PID 64264
+
+===== Phase 3h R2-TRAINING SLOW Flight 3c (replacement) 2026-07-16T05:25:02.2213201+03:00 =====
+param overrides: {'planner.approach.speed_far_mps': 1.2, 'planner.approach.speed_near_mps': 0.8, 'planner.commit.speed_mps': 1.2, 'planner.commit.duration_s': 2.5}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibration skipped: too few IMU samples
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 19, 'duration_s': 27.57205590000376, 'loop_overrun_frac': 0.0001450747134774409, 'loop_stats': {'ticks': 6893, 'overruns': 1, 'overrun_frac': 0.0001450747134774409, 'max_late_us': 466}, 'flight_id': '20260716T022502-8edfeec4', 'log_dir': 'logs\\20260716T022502-8edfeec4'}
+r2h_f3c_slow_FLY_EXIT=0
+--- helper stdout r2h_f3c_slow ---
+sim window: AI-GP   05:25:10
+event r2-training clicked (400,381) 05:25:18
+RACE clicked 05:25:20
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_00_052520.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_01_052524.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_02_052527.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_03_052531.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_04_052534.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_05_052537.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_06_052541.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_07_052544.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_08_052547.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_09_052551.png
+C:\Users\tsion\AppData\Local\Temp\phase3h_r2_shots\r2h_f3c_slow\r2h_f3c_slow_10_052554.png
+--- helper stderr r2h_f3c_slow ---

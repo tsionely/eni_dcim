@@ -1,0 +1,188 @@
+{
+  "label": "phase3h-r2training",
+  "created_utc": "20260716T023148",
+  "flight_code_commit": "f5e88659a26056a7f692412004e30fac498dc276",
+  "items": [
+    {
+      "kind": "report",
+      "file": "report.txt",
+      "bytes": 16937,
+      "source": "phase3h_r2training_report.txt"
+    },
+    {
+      "kind": "analysis",
+      "file": "phase3h_r2training_closest.txt",
+      "bytes": 2682
+    },
+    {
+      "kind": "notes",
+      "file": "notes.md",
+      "bytes": 5485
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213138-8edfeec4-flight.jsonl",
+      "bytes": 1898718,
+      "source": "logs/20260715T213138-8edfeec4/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213138-8edfeec4-result.json",
+      "bytes": 452,
+      "source": "logs/20260715T213138-8edfeec4/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213138-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260715T213138-8edfeec4/params.json"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260715T213138-8edfeec4_r2h_slice_start.aigprec",
+      "bytes": 30278835,
+      "source": "logs/20260715T213138-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260715T213138-8edfeec4/vision.aigprec",
+      "reason": "full recording ~234.1 MB > git fixture limit"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213225-8edfeec4-flight.jsonl",
+      "bytes": 3399900,
+      "source": "logs/20260715T213225-8edfeec4/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213225-8edfeec4-result.json",
+      "bytes": 457,
+      "source": "logs/20260715T213225-8edfeec4/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213225-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260715T213225-8edfeec4/params.json"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260715T213225-8edfeec4_r2h_slice_start.aigprec",
+      "bytes": 30279791,
+      "source": "logs/20260715T213225-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260715T213225-8edfeec4/vision.aigprec",
+      "reason": "full recording ~338.7 MB > git fixture limit"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T022502-8edfeec4-flight.jsonl",
+      "bytes": 2618443,
+      "source": "logs/20260716T022502-8edfeec4/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T022502-8edfeec4-result.json",
+      "bytes": 495,
+      "source": "logs/20260716T022502-8edfeec4/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260716T022502-8edfeec4-params.json",
+      "bytes": 2193,
+      "source": "logs/20260716T022502-8edfeec4/params.json"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260716T022502-8edfeec4_r2h_slice_start.aigprec",
+      "bytes": 30279016,
+      "source": "logs/20260716T022502-8edfeec4/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260716T022502-8edfeec4/vision.aigprec",
+      "reason": "full recording ~340.0 MB > git fixture limit"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213406-fc86a160-flight.jsonl",
+      "bytes": 4518564,
+      "source": "logs/20260715T213406-fc86a160/flight.jsonl"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213406-fc86a160-result.json",
+      "bytes": 456,
+      "source": "logs/20260715T213406-fc86a160/result.json"
+    },
+    {
+      "kind": "flight_log",
+      "file": "20260715T213406-fc86a160-params.json",
+      "bytes": 2193,
+      "source": "logs/20260715T213406-fc86a160/params.json"
+    },
+    {
+      "kind": "recording_slice",
+      "file": "20260715T213406-fc86a160_r2h_slice_start.aigprec",
+      "bytes": 30279664,
+      "source": "logs/20260715T213406-fc86a160/vision.aigprec",
+      "note": "start slice, max 30 MB"
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "logs/20260715T213406-fc86a160/vision.aigprec",
+      "reason": "full recording ~500.3 MB > git fixture limit"
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_gate.jpg",
+      "bytes": 33348
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f1_start.jpg",
+      "bytes": 28526
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_approach.jpg",
+      "bytes": 41390
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f2_retry.jpg",
+      "bytes": 26771
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3_noRace_menu.jpg",
+      "bytes": 56727
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3c_approach.jpg",
+      "bytes": 31546
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f3c_start.jpg",
+      "bytes": 72088
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_approach.jpg",
+      "bytes": 27111
+    },
+    {
+      "kind": "screenshot",
+      "file": "screens/f4_retry.jpg",
+      "bytes": 18346
+    }
+  ]
+}

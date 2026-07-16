@@ -1,0 +1,38 @@
+PHASE 3H  R2-TRAINING  closest-approach + retreat/attempt analysis
+flight_code_commit f5e8865 (age-aware lock tolerance + retreat-and-retry)
+NOTE: two earlier slow runs (20260715T213319 / 20260716T022234) never started a real race
+      (stale vision frame, main-menu capture) and are excluded; f3c is the valid 3rd slow flight
+      obtained after a fresh sim restart.
+
+=== f1 slow  20260715T213138-8edfeec4 ===
+result: gate clip budget exceeded (11) | dur 20.2s | gates 0 | clips 11 | env 0 | collisions 11
+phase counts: {'hover': 784, 'takeoff': 75, 'approach': 80, 'commit': 23, 'retreat': 37, 'recover': 10}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> recover -> hover
+ATTEMPTS(approach runs)=1  commit runs=1  RETREATS=1
+closest DIRECT detection: dist=0.90m t=[-0.02, -0.03, 0.9] u=-0.00 v=0.45 -> center-x/LOW
+closest STATE (steer): dist=0.48m gr=[-0.27, -0.34, 0.21] u=-1.30 v=-2.94 age=0.96s -> LEFT/HIGH
+
+=== f2 slow  20260715T213225-8edfeec4 ===
+result: environment collision (impulse=2.5) | dur 27.9s | gates 0 | clips 0 | env 4 | collisions 4
+phase counts: {'hover': 955, 'takeoff': 76, 'approach': 138, 'commit': 125, 'retreat': 100}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> approach -> hover
+ATTEMPTS(approach runs)=2  commit runs=1  RETREATS=1
+closest DIRECT detection: dist=2.68m t=[0.53, -0.12, 2.62] u=0.23 v=0.84 -> RIGHT/LOW
+closest STATE (steer): dist=0.72m gr=[-0.12, -0.05, 0.71] u=-0.17 v=-0.13 age=1.21s -> LEFT/center-y
+
+=== f3c slow (fresh sim)  20260716T022502-8edfeec4 ===
+result: environment collision (impulse=7.6) | dur 27.6s | gates 0 | clips 0 | env 19 | collisions 19
+phase counts: {'hover': 951, 'takeoff': 76, 'approach': 206, 'commit': 28, 'retreat': 73, 'recover': 45}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> recover -> approach
+ATTEMPTS(approach runs)=2  commit runs=1  RETREATS=1
+closest DIRECT detection: dist=1.11m t=[0.04, -0.58, 0.94] u=0.18 v=-0.46 -> RIGHT/HIGH
+closest STATE (steer): dist=0.50m gr=[-0.49, -0.04, -0.07] u=-10.01 v=-1.74 age=1.06s -> LEFT/HIGH
+
+=== f4 default  20260715T213406-fc86a160 ===
+result: environment collision (impulse=25.5) | dur 33.6s | gates 0 | clips 0 | env 1 | collisions 1
+phase counts: {'hover': 955, 'takeoff': 75, 'approach': 486, 'commit': 61, 'retreat': 101}
+phase sequence: hover -> takeoff -> approach -> commit -> retreat -> approach
+ATTEMPTS(approach runs)=2  commit runs=1  RETREATS=1
+closest DIRECT detection: dist=2.74m t=[-1.01, -1.67, 1.91] u=-0.39 v=-0.42 -> LEFT/HIGH
+closest STATE (steer): dist=0.21m gr=[0.02, 0.06, 0.2] u=0.08 v=0.53 age=1.20s -> center-x/LOW
+
