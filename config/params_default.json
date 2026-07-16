@@ -45,7 +45,7 @@
     },
     "commit": {
       "distance_m": 2.0,
-      "duration_s": 1.2,
+      "duration_s": 2.5,
       "speed_mps": 2.5
     },
     "recover": {

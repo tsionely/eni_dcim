@@ -133,7 +133,21 @@ class RacePlanner:
         if self._commit_until_ns is not None:
             if now_ns < self._commit_until_ns and self._commit_v_body is not None:
                 gate = state.gate_rel
-                if gate is not None and gate.t[2] > 0.3:
+                # Geometric termination: the dead-reckoned gate went well
+                # BEHIND us — the attempt is decided either way, and only
+                # the sim's pass event says which. Do not let the wall-clock
+                # window cut a good crossing short (phase3h F3: retreat
+                # fired 0.21m from a dead-centered plane because the 1.2s
+                # default window expired just before the crossing).
+                if gate is not None and gate.t[2] < -0.4:
+                    self._commit_until_ns = None
+                    self._commit_v_body = None
+                    if self.retreat_enabled:
+                        self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
+                        return Setpoint(phase="retreat",
+                                        v_body=np.array([-self.retreat_speed, 0.0, 0.0]),
+                                        yaw_rate=0.0)
+                elif gate is not None and gate.t[2] > 0.3:
                     d_body = ap.cam_to_body(gate.t)
                     dist = float(np.linalg.norm(d_body))
                     au = self._aim_up(dist)
