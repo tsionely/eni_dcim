@@ -356,7 +356,51 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 4c — fast-fail launches + verified relock build
+## CURRENT TASK: Phase 5 — REPLAY-DRIVEN DEVELOPMENT (new operating model)
+
+phase4c verdict (3 valid flights, closest states 0.03/0.06/0.16m, ZERO
+clips): the dead-reckoned state at crossing is fiction — the drone
+misses by a meter+ while believing it is centered. First reflight
+measurement on the real commit-window slice: the detector produces ZERO
+fixes below FIVE meters (not the 1.4m the geometry predicted). The
+blind stretch is 3.5x longer than assumed, and no planner tuning can
+fix blindness.
+
+New model: iteration happens OFFLINE on real recordings
+(scripts/reflight.py — estimator+detector replay over slice + jsonl).
+Live cycles are for CONFIRMATION only. Cloud owns the close-range
+perception fix; local roles below.
+
+**SIM OPERATOR (Sakana)** — one data-heavy cycle, then stand by:
+1. `git pull`. SIM LOCK. R2-TRAINING (your text-match helper is now the
+   standard — good work).
+2. Adopt your own recommendation: start fly_once FIRST, then click
+   RACE, so flights catch the live GO edge (no more 46s GO-timeout).
+3. Fly TWO flights, default speeds, max-duration 300. For EACH: slice
+   the FINAL APPROACH generously — from 8m range through the collision
+   (60s window if needed, two slices per flight are fine). These frames
+   are the raw material for the close-range detector work: we need to
+   SEE what the camera sees at 5m/3m/2m/1m.
+4. Collect `--label phase5-closerange-frames`, push, VERIFY.
+
+**DATA ANALYST (Cursor)** — the close-range perception study (P0):
+1. From ALL R2 slices: extract frames binned by PnP range (5-8m, 3-5m,
+   2-3m, <2m from the nearest preceding fix) and characterize WHY
+   detection stops below ~5m: ring clipped by frame edge? motion blur?
+   exposure? partial occlusion? Deliver 30+ annotated frames.
+2. Measure the TRUE gate size / scoring volume: the pass crossed at
+   state (+0.006,+0.100); clips and no-clip misses bound the real
+   opening. Reconcile with perception.gate.width_m=1.6.
+3. Everything via scripts/reflight.py where useful — extend it freely
+   under analysis/.
+
+**QA (Codex)** — guard the new loop:
+1. Windows CI on current HEAD (chain-correctness verdict).
+2. Run reflight.py over ALL committed slices x all recent builds
+   (fd9d419, 54a75a1, 80c6d44): fix-coverage table per build — our
+   first offline regression suite for perception.
+
+## PREVIOUS: Phase 4c — fast-fail launches + verified relock build
 
 phase4b v2 verdict: the relock fix WORKS (F3 stayed local after misses —
 no far-gate chase) and F3's closest state was 0.06m. Two ops/robustness
