@@ -336,7 +336,31 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 3j — sink compensation in the structurally blind meter
+## CURRENT TASK: Phase 4a — FIRST PASS ACHIEVED; now chain the track
+
+The first R2 gate pass is in. The mission changes: from "pass a gate"
+to "complete the track". Everything needed for chaining is already in
+the build — on_gate_passed re-arms the pipeline for the next gate, the
+cyan-line prior picks the gate the racing line threads (its moment has
+arrived: with several gates visible after a pass, the line
+disambiguates), the two-gate mock test passes, and retreat/retry covers
+misses per gate.
+
+1. `git pull` (HEAD >= 43ef2b0). SIM LOCK. R2-TRAINING.
+2. 3 flights, slow speed patches, LONGER window:
+   `python scripts/fly_once.py --max-duration 300
+    --patch planner.approach.speed_far_mps=1.2
+    --patch planner.approach.speed_near_mps=0.8
+    --patch planner.commit.speed_mps=1.2
+    --patch safety.flight_timeout_s=300`
+3. Per flight note: gates passed (the race HUD count), what happens
+   AFTER each pass (does it find the next gate? how long does search
+   take?), where the run ends.
+4. Slices around EVERY pass + the 20s after it (the inter-gate segment
+   is the new unknown — that data drives the next code cycle).
+5. Collect `--label phase4a-r2training-chain`, notes.md, push, VERIFY.
+
+## PREVIOUS: Phase 3j — sink compensation in the structurally blind meter
 
 phase3i taught the geometry lesson: the +0.3m aim floor pushed the ring
 out of the FOV bottom at 3.7-4.3m (vs 0.9m in 3h) — flying higher costs
