@@ -121,3 +121,9 @@ Raw detections (for autopsy only). Looking for |ty|>=2 m. Frames matched by dete
 - `report.md`, `summary.json`, `miss_table.csv`
 - `plots/miss_scatter.png`
 - `pnp_outliers/` annotated frames
+
+---
+
+## Extension (2026-07-16 milestone)
+
+phase3i + phase3j-rerun + PASS star: see `analysis/2026-07-16-milestone-autopsy/report.md`.

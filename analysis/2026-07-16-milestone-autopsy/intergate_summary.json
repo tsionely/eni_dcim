@@ -1,0 +1,309 @@
+{
+  "flight_id": "20260716T131137-2ca531c3",
+  "result": {
+    "finished": false,
+    "aborted": true,
+    "abort_reason": "environment collision (impulse=15.5)",
+    "gates_passed": 1,
+    "lap_time_s": null,
+    "gate_clips": 0,
+    "env_hits": 1,
+    "duration_s": 38.864026300027035,
+    "loop_overrun_frac": 0.0,
+    "loop_stats": {
+      "ticks": 9716,
+      "overruns": 0,
+      "overrun_frac": 0.0,
+      "max_late_us": 0
+    },
+    "flight_id": "20260716T131137-2ca531c3",
+    "log_dir": "logs\\20260716T131137-2ca531c3"
+  },
+  "pass_t_agi": 26.370874,
+  "closest_at_pass": {
+    "t": 26.2251324,
+    "dist": 0.10285874582309801,
+    "tx": 0.0056548536181750455,
+    "ty": 0.10024239287190073,
+    "tz": 0.02234741359023908,
+    "age": 1.081753008,
+    "phase": "commit"
+  },
+  "commit_retreat_window": [
+    [
+      32.4854292,
+      "commit"
+    ],
+    [
+      32.6850963,
+      "retreat"
+    ],
+    [
+      34.7055027,
+      "approach"
+    ],
+    [
+      35.3454404,
+      "search"
+    ],
+    [
+      35.4255074,
+      "approach"
+    ]
+  ],
+  "collisions": [
+    {
+      "t": 39.7866504,
+      "impulse": 15.537909507751465,
+      "collision_id": 1002,
+      "threat_level": 2
+    }
+  ],
+  "intergate_age_mean": 0.4103572022515723,
+  "intergate_age_max": 1.488557856,
+  "n_intergate_samples": 636,
+  "phase_changes": [
+    [
+      0.9290469,
+      "hover"
+    ],
+    [
+      22.6254746,
+      "takeoff"
+    ],
+    [
+      24.1254979,
+      "approach"
+    ],
+    [
+      25.6051276,
+      "commit"
+    ],
+    [
+      26.3858223,
+      "approach"
+    ],
+    [
+      32.4854292,
+      "commit"
+    ],
+    [
+      32.6850963,
+      "retreat"
+    ],
+    [
+      34.7055027,
+      "approach"
+    ],
+    [
+      35.3454404,
+      "search"
+    ],
+    [
+      35.4255074,
+      "approach"
+    ]
+  ],
+  "events": [
+    {
+      "t": 22.6134697,
+      "kind": "fsm",
+      "detail": "THROTTLE_DOWN\u2192TAKEOFF (race GO)"
+    },
+    {
+      "t": 22.6254746,
+      "kind": "phase",
+      "detail": "takeoff"
+    },
+    {
+      "t": 24.1170399,
+      "kind": "fsm",
+      "detail": "TAKEOFF\u2192RACING (takeoff complete)"
+    },
+    {
+      "t": 24.1254979,
+      "kind": "phase",
+      "detail": "approach"
+    },
+    {
+      "t": 25.6051276,
+      "kind": "phase",
+      "detail": "commit"
+    },
+    {
+      "t": 26.3858223,
+      "kind": "phase",
+      "detail": "approach"
+    },
+    {
+      "t": 32.4854292,
+      "kind": "phase",
+      "detail": "commit"
+    },
+    {
+      "t": 32.6850963,
+      "kind": "phase",
+      "detail": "retreat"
+    },
+    {
+      "t": 34.7055027,
+      "kind": "phase",
+      "detail": "approach"
+    },
+    {
+      "t": 35.3454404,
+      "kind": "phase",
+      "detail": "search"
+    },
+    {
+      "t": 35.4255074,
+      "kind": "phase",
+      "detail": "approach"
+    },
+    {
+      "t": 39.7866504,
+      "kind": "collision",
+      "detail": "impulse=15.537909507751465 id=1002"
+    },
+    {
+      "t": 39.7889585,
+      "kind": "fsm",
+      "detail": "RACING\u2192ABORTED (environment collision (impulse=15.5))"
+    },
+    {
+      "t": 39.7889804,
+      "kind": "fsm",
+      "detail": "ABORTED\u2192DONE (flight over)"
+    }
+  ],
+  "vision_meta": {
+    "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+    "n_assembled_frames": 4512,
+    "rec_duration_s": 22.2347633,
+    "flight_t_first": 17.7544988,
+    "flight_t_last": 39.9892621,
+    "covers_pass": true,
+    "covers_collision": true
+  },
+  "frame_notes": [
+    {
+      "file": "f4_start.jpg",
+      "source": "operator_screen",
+      "shape": [
+        450,
+        800,
+        3
+      ],
+      "mean_bgr": [
+        32.65318611111111,
+        35.453113888888886,
+        36.665333333333336
+      ]
+    },
+    {
+      "file": "f4_mid.jpg",
+      "source": "operator_screen",
+      "shape": [
+        450,
+        800,
+        3
+      ],
+      "mean_bgr": [
+        20.33430277777778,
+        21.6615,
+        21.62543611111111
+      ]
+    },
+    {
+      "file": "f4_late.jpg",
+      "source": "operator_screen",
+      "shape": [
+        450,
+        800,
+        3
+      ],
+      "mean_bgr": [
+        17.865830555555554,
+        47.05913888888889,
+        107.80399444444444
+      ]
+    },
+    {
+      "file": "f4_end.jpg",
+      "source": "operator_screen",
+      "shape": [
+        450,
+        800,
+        3
+      ],
+      "mean_bgr": [
+        17.829058333333332,
+        17.47711388888889,
+        16.572519444444445
+      ]
+    },
+    {
+      "file": "near_collision_t39.5.jpg",
+      "source": "vision.aigprec",
+      "t": 39.4868266,
+      "err_s": 0.00017619999999851643,
+      "cyan_frac": 0.0
+    },
+    {
+      "file": "at_collision_t39.8.jpg",
+      "source": "vision.aigprec",
+      "t": 39.7884771,
+      "err_s": 0.0018267000000022904,
+      "cyan_frac": 0.0
+    },
+    {
+      "file": "just_after_pass_t26.9.jpg",
+      "source": "vision.aigprec",
+      "t": 26.8800137,
+      "err_s": 0.00913969999999864,
+      "cyan_frac": 0.013285590277777778
+    },
+    {
+      "file": "mid_intergate_t33.1.jpg",
+      "source": "vision.aigprec",
+      "t": 33.0790118,
+      "err_s": 0.0002496000000036247,
+      "cyan_frac": 0.0
+    },
+    {
+      "file": "pre_retreat_t32.4.jpg",
+      "source": "vision.aigprec",
+      "t": 32.3987214,
+      "err_s": 0.0012785999999991304,
+      "cyan_frac": 0.0
+    }
+  ],
+  "note_times_vs_agents_md": {
+    "agents_said_pass_t": 25.4,
+    "measured_pass_agi_t": 26.370874,
+    "measured_closest_t": 26.2251324,
+    "agents_said_retreat_t": 31.6,
+    "measured_commit_retreat": [
+      [
+        32.4854292,
+        "commit"
+      ],
+      [
+        32.6850963,
+        "retreat"
+      ],
+      [
+        34.7055027,
+        "approach"
+      ],
+      [
+        35.3454404,
+        "search"
+      ],
+      [
+        35.4255074,
+        "approach"
+      ]
+    ]
+  }
+}

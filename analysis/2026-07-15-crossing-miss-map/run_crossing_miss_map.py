@@ -38,6 +38,8 @@ PHASE_DIRS = [
 for tag in ("phase3g", "phase3h", "phase3i"):
     for d in sorted((ROOT / "fixtures").glob(f"*{tag}*")):
         PHASE_DIRS.append((tag, d))
+for d in sorted((ROOT / "fixtures").glob("*phase3j*rerun*")):
+    PHASE_DIRS.append(("phase3j_rerun", d))
 
 PHASE_COLORS = {
     "phase3c": "#d62728",
@@ -47,6 +49,7 @@ PHASE_COLORS = {
     "phase3g": "#9467bd",
     "phase3h": "#8c564b",
     "phase3i": "#e377c2",
+    "phase3j_rerun": "#17becf",
 }
 
 # Planner phases that belong to a gate attempt window.

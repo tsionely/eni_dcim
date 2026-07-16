@@ -1,0 +1,94 @@
+{
+  "bands": {
+    "H": [
+      90,
+      98
+    ],
+    "S_min": 120,
+    "V_min": 120
+  },
+  "recordings": [
+    {
+      "label": "pass_full_local",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+      "frames": 4512,
+      "cyan_present_pct": 53.7677304964539,
+      "mean_frac": 0.007366492209047479,
+      "max_absent_gap_s": 8.015740799999996,
+      "t_lo": null,
+      "t_hi": null
+    },
+    {
+      "label": "pass_intergate",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+      "frames": 2559,
+      "cyan_present_pct": 26.025791324736225,
+      "mean_frac": 0.002175937798510703,
+      "max_absent_gap_s": 7.8073948999999985,
+      "t_lo": 26.370874,
+      "t_hi": 39.7866504
+    },
+    {
+      "label": "pass_pre_pass",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+      "frames": 1687,
+      "cyan_present_pct": 95.4949614700652,
+      "mean_frac": 0.0149492802394125,
+      "max_absent_gap_s": 0.21147849999999835,
+      "t_lo": 18.370874,
+      "t_hi": 26.370874
+    },
+    {
+      "label": "slice_203252-phase3a-r2tr_2_f2_slice_start",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T203252-phase3a-r2training\\r2_f2_slice_start.aigprec",
+      "frames": 111,
+      "cyan_present_pct": 100.0,
+      "mean_frac": 0.0333518674924925,
+      "max_absent_gap_s": 0.0,
+      "t_lo": null,
+      "t_hi": null
+    },
+    {
+      "label": "slice_115732-phase3i-r2tr__r2i_slice_start",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T115732-phase3i-r2training\\20260716T031114-8edfeec4_r2i_slice_start.aigprec",
+      "frames": 198,
+      "cyan_present_pct": 100.0,
+      "mean_frac": 0.02916521990740741,
+      "max_absent_gap_s": 0.0,
+      "t_lo": null,
+      "t_hi": null
+    },
+    {
+      "label": "slice_132549-phase3j-r2tr_erun_slice_start",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T130659-8edfeec4_r2j_rerun_slice_start.aigprec",
+      "frames": 290,
+      "cyan_present_pct": 100.0,
+      "mean_frac": 0.03430346024904214,
+      "max_absent_gap_s": 0.0,
+      "t_lo": null,
+      "t_hi": null
+    }
+  ],
+  "operator_screens": [
+    {
+      "screen": "f4_mid.jpg",
+      "cyan_frac": 0.0,
+      "present": false
+    },
+    {
+      "screen": "f4_late.jpg",
+      "cyan_frac": 0.0013055555555555555,
+      "present": false
+    },
+    {
+      "screen": "f4_end.jpg",
+      "cyan_frac": 0.0002666666666666667,
+      "present": false
+    }
+  ],
+  "verdict_inputs": {
+    "local_vision": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+    "pass_t": 26.370874,
+    "collision_t": 39.7866504
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "pass_flight": "20260716T131137-2ca531c3",
+  "n_attempts": 48,
+  "intergate": {
+    "pass_t_agi": 26.370874,
+    "closest_at_pass": {
+      "t": 26.2251324,
+      "dist": 0.10285874582309801,
+      "tx": 0.0056548536181750455,
+      "ty": 0.10024239287190073,
+      "tz": 0.02234741359023908,
+      "age": 1.081753008,
+      "phase": "commit"
+    },
+    "commit_retreat_window": [
+      [
+        32.4854292,
+        "commit"
+      ],
+      [
+        32.6850963,
+        "retreat"
+      ],
+      [
+        34.7055027,
+        "approach"
+      ],
+      [
+        35.3454404,
+        "search"
+      ],
+      [
+        35.4255074,
+        "approach"
+      ]
+    ],
+    "collisions": [
+      {
+        "t": 39.7866504,
+        "impulse": 15.537909507751465,
+        "collision_id": 1002,
+        "threat_level": 2
+      }
+    ],
+    "vision_meta": {
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+      "n_assembled_frames": 4512,
+      "rec_duration_s": 22.2347633,
+      "flight_t_first": 17.7544988,
+      "flight_t_last": 39.9892621,
+      "covers_pass": true,
+      "covers_collision": true
+    }
+  },
+  "cyan_labels": [
+    "pass_full_local",
+    "pass_intergate",
+    "pass_pre_pass",
+    "slice_203252-phase3a-r2tr_2_f2_slice_start",
+    "slice_115732-phase3i-r2tr__r2i_slice_start",
+    "slice_132549-phase3j-r2tr_erun_slice_start"
+  ]
+}
