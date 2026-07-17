@@ -498,6 +498,25 @@ no-arm rule for blind-coast compensations.
    (R·quad_width_px) AND the row-consistency check (believed ty
    +0.31 at 1.67m predicts an opening-center row the actual mask
    must violently disagree with if truth was -0.95).
+6. ROUND-4 pack (advisory-4 asks — priority order):
+   (A2/R1 — HIGHEST-VALUE MEASUREMENT IN THE PROGRAM) cyan-ribbon
+   availability in the last 2m of ALL committed takeoff->end slices
+   (phase5c + phase5d), split by image row vs the attitude-compensated
+   horizon row (180 + 320·tan(11°+pitch)): presence %, row-offset
+   distribution, per flight. Why decisive: in our measured LOW
+   geometry the ribbon rides ~0.45m ABOVE the camera => ~30px above
+   the horizon row — in frame and glowing exactly when the ring is
+   gone. This gates the closed-loop vertical reference (V1).
+   (A1) label the three adversarial segments as the standing
+   false-accept-zero suite, frame-id ranges per slice, committed as a
+   manifest: F2 banner-fiction (t≈7.0-7.5 of 20260716T212408), the
+   phase5d F2 post-retreat ceiling view, and the phase5b F3
+   next-gate-steal (t≈6.9-7.3 of 20260717T091239).
+   (A4) physical bar width w_bar in meters — one measurement from any
+   far frame with a trusted fix.
+   (A5) minimum inter-gate spacing on R2-TRAINING from any wide frame
+   with two trusted fixes (pins the next-gate scale margin for the
+   side-pair certificate).
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
