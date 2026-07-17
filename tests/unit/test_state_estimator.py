@@ -162,6 +162,26 @@ def test_tracker_fixes_update_position_not_velocity():
     assert float(np.linalg.norm(est_trk.v_world)) < 0.05
 
 
+def test_collision_drops_gate_lock():
+    """F3: after a gate clip the dead-reckoned lock became fiction (9.5m
+    believed vs 1.6m measured) and then REJECTED reality. A collision
+    must clear the lock so re-acquisition starts clean."""
+    est = make_estimator()
+    ts = 0
+    for i in range(30):
+        ts = int(i * 0.02e9)
+        _tick(est, ts)
+        est.update_vision(_det(ts, [0.0, 0.0, 2.0]))
+    assert est.state.gate_rel is not None
+    est.on_collision()
+    assert est.state.gate_rel is None
+    # Fresh fix after the impact is accepted immediately (no stale gate).
+    ts += int(0.02e9)
+    _tick(est, ts)
+    est.update_vision(_det(ts, [0.5, 0.0, 3.0]))
+    assert est.state.gate_rel is not None
+
+
 def test_relock_escape_hatch_is_time_based():
     """If only far candidates exist, the TIME-based hatch (2.5s) re-locks —
     but not sooner: a count-based hatch opened in 0.11s at the real sim's

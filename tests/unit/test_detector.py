@@ -125,6 +125,26 @@ def test_exact_quad_wins_over_fallback(detector):
     assert det is not None and det.confidence == 1.0
 
 
+def test_terminal_ownership_prior_beats_cyan_boosted_far_gate(detector):
+    """F3 autopsy: at terminal range the NEXT gate shows through the near
+    gate's opening with the racing line threading it — pure area/cyan
+    scoring hands the frame to the far gate, the lock follows, and the
+    drone clips the near frame. With a close prior, the near candidate
+    must win even against a cyan-boosted far one."""
+    # Near gate: big ring left-of-center. Far gate: small ring dead ahead
+    # with cyan through its opening (score x3).
+    img = render_gate_ring(cx=200, cy=180, size=200, thickness=22)
+    far = render_gate_ring(cx=430, cy=170, size=56, thickness=8)
+    m = far.sum(axis=2) > 200
+    img[m] = far[m]
+    cv2.line(img, (430, 250), (430, 150), (200, 200, 40), 6)   # cyan streak
+    # Acquisition mode (no prior): either choice is defensible.
+    # Terminal mode: prior says our gate is ~2.1m away -> near MUST win.
+    det = detector.detect(CameraFrame(1, 0, img), prior_range_m=2.1)
+    assert det is not None
+    assert abs(det.center_px[0] - 200) < 30, "far gate stole the terminal lock"
+
+
 def test_scale_gate_rejects_narrow_substructure_pose():
     """F2 autopsy (D5): the detector locked a narrow sub-structure and PnP
     invented a pose — R·max(w,h)px ran at a third of fx·gate_w. Such a

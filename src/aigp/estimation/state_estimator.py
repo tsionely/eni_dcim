@@ -163,6 +163,14 @@ class StateEstimator:
 
     def on_collision(self) -> None:
         self.zero_velocity()
+        # The gate lock is fiction after an impact: F3's post-clip state
+        # dead-reckoned to 9.5m/28m while honest fixes said 1.6m, and the
+        # lock then rejected reality. Drop the target and re-acquire clean.
+        self._gate_rel = None
+        self._gate_rel_ts_ns = None
+        self._fix_history.clear()
+        self._last_lock_dist = None
+        self._relock_reject_since_ns = None
 
     def reset(self) -> None:
         self.attitude.reset()

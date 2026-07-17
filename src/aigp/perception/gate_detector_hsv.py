@@ -100,6 +100,10 @@ class HsvGateDetector(GateDetector):
                                           default=True))
         self.scale_min = float(params.get("perception.detector.scale_min", default=0.65))
         self.scale_max = float(params.get("perception.detector.scale_max", default=1.5))
+        self.prior_boost = float(params.get("perception.detector.prior_boost",
+                                            default=4.0))
+        self.prior_boost_max_range = float(params.get(
+            "perception.detector.prior_boost_max_range", default=6.0))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _mask(self, img: np.ndarray) -> np.ndarray:
@@ -130,10 +134,29 @@ class HsvGateDetector(GateDetector):
         """The gate-color mask (mode-aware) — shared with the close tracker."""
         return self._mask(img)
 
-    def detect(self, frame: CameraFrame) -> GateDetection | None:
+    def detect(self, frame: CameraFrame,
+               prior_range_m: float | None = None) -> GateDetection | None:
         img = frame.image
         h, w = img.shape[:2]
         image_area = float(h * w)
+        # Terminal ownership (F3 autopsy): when a locked gate is believed
+        # close, candidates whose size-implied range matches the prior get
+        # a boost STRONGER than the cyan prior — the near gate owns the
+        # frame; the next gate (seen through its opening, threaded by the
+        # racing line) must not steal the candidate contest mid-commit.
+        prior = None
+        if (prior_range_m is not None and self.prior_boost > 1.0
+                and 0.3 < prior_range_m < self.prior_boost_max_range):
+            prior = float(prior_range_m)
+        fx = self.camera.matrix(w, h)[0, 0]
+
+        def prior_score(base: float, size_px: float) -> float:
+            if prior is None or size_px <= 1.0:
+                return base
+            implied_r = fx * self.gate_w / size_px
+            if abs(implied_r - prior) <= 0.4 * prior:
+                return base * self.prior_boost
+            return base
 
         mask = cv2.morphologyEx(self._mask(img), cv2.MORPH_CLOSE, self._kernel)
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -179,6 +202,7 @@ class HsvGateDetector(GateDetector):
             # NEXT gate's opening, so a candidate with cyan inside its
             # opening outranks a merely-bigger one.
             score = cyan_score(area, approx)
+            score = prior_score(score, max(bw, bh))
             if best is None or score > best[0]:
                 best = (score, approx, 1.0)
 
@@ -211,6 +235,7 @@ class HsvGateDetector(GateDetector):
                     continue
                 box = cv2.boxPoints(rect)
                 score = cyan_score(box_area, box)
+                score = prior_score(score, max(bw, bh))
                 if best is None or score > best[0]:
                     best = (score, box, 0.6)
 

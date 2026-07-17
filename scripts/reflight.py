@@ -151,7 +151,11 @@ def main(argv=None):
         else:
             fid, sim_ns, img = payload
             cf = CameraFrame(frame_id=fid, ts_ns=sim_ns, image=img)
-            det = detector.detect(cf)
+            prior = None
+            gr = est.state.gate_rel
+            if gr is not None and est.state.gate_rel_age_s < 1.0:
+                prior = float(np.linalg.norm(gr.t))
+            det = detector.detect(cf, prior)
             if det is None and tracker is not None and tracker.enabled \
                     and last_full_mono is not None \
                     and (mono - last_full_mono) / 1e9 <= tracker.max_solo_s \

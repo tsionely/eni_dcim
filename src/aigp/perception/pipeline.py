@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import time
 
+import numpy as np
+
 from aigp.core.agent import Agent
 from aigp.core.bus import Bus
 from aigp.core.messages import Topic
@@ -47,7 +49,12 @@ class PerceptionAgent(Agent):
                 continue
             frame, last_seq = fresh
             self.frames_seen += 1
-            detection = self.detector.detect(frame)
+            state, _ = state_cell.get()
+            prior = None
+            if state is not None and state.gate_rel is not None \
+                    and state.gate_rel_age_s < 1.0:
+                prior = float(np.linalg.norm(state.gate_rel.t))
+            detection = self.detector.detect(frame, prior)
             if detection is not None:
                 self.detections += 1
                 if detection.confidence >= 0.55:   # exact quad or box fallback

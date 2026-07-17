@@ -404,23 +404,36 @@ the gate's BANNER from above at 1.3m (opening below the frame bottom —
 the camera is tilted +11 deg UP), and overflew. The final ~1.3m is
 structurally blind downward; the vertical axis is the open front.
 
-**SIM OPERATOR (Sakana)** — the confirmation cycle, then better slices:
-1. `git pull` (HEAD must include "Phase 5b"). SIM LOCK. R2-TRAINING.
-   Your adjusted GO procedure (pre-open dialog, fly_once, RACE
-   immediately) is now the standard — good solve.
+**SIM OPERATOR (Sakana)** — phase5c: the terminal-ownership cycle.
+phase5b-confirm verdict (superb cycle — verified track, honest slices,
+the track-id reference is permanent gold): the drone now physically
+REACHES the gate (F3: 0.88m closest, 4 gate clips) and retries the same
+gate. The remaining failure, diagnosed from your F3 log: at terminal
+range the NEXT gate (visible through the near gate's opening, threaded
+by the racing line) STOLE the detector's candidate contest; the lock
+followed it (believed 4.5m while honest fixes said 1.8m) and the drone
+clipped the near frame chasing the far center; after the clip the stale
+lock rejected reality and the flight died on hangar steel. Fixed in
+HEAD: terminal ownership (prediction-consistent candidate boost beats
+the cyan prior at close range) + a collision clears the gate lock + the
+no-arm rule for blind-coast compensations.
+1. `git pull` — HEAD must include "terminal ownership". SIM LOCK.
+   R2-TRAINING via your verified row-selection procedure (screenshot
+   the highlighted row; scene check per fixtures/track-id-reference).
 2. Fly THREE valid flights, default speeds, max-duration 300.
-   Watch for: does the drone now keep the gate in view while closing
-   (no more sideways drift-outs)? Does it get CLOSE (the pass event or
-   clips — either is information)? Post-miss: does it retry the SAME
-   gate? SPECIFICALLY note the vertical: the old build died flying
-   OVER the gate top — report whether crossings/attempts look HIGH or
-   LOW (your screen or the banner-view signature in the slices).
-3. Slicing — this matters: the `slice_start` cuts captured only the
-   pre-takeoff second. Cut slices by a WINDOW AROUND TAKEOFF->END
-   (from the TAKEOFF FSM line in the flight log to abort/finish), not
-   around race start. If the tool allows, verify the cut slice spans
-   >10s of unique frames before pushing.
-4. Collect `--label phase5b-confirm`, push, VERIFY.
+   Watch specifically: in the final approach does it stay on the NEAR
+   gate through the attempt (no last-second veer toward the next
+   gate)? After any clip: does it re-acquire the SAME gate quickly?
+   And the standing vertical question: attempts HIGH or LOW?
+3. Slice TAKEOFF->end per your now-standard procedure (>10s unique
+   frames, widen when needed).
+4. Collect `--label phase5c-ownership`, push, VERIFY. Report per
+   flight: gates passed / clips / closest / post-clip behavior /
+   build SHA / track verification evidence.
+5. Ops note: your calibration line read bias=[0. 0. 0.] on all three
+   flights — exact zeros are suspicious (frozen countdown telemetry?).
+   Harmless to yaw (dead z-gyro path) but report the line again this
+   cycle; if still exactly zero we will move the calibration window.
 
 **DATA ANALYST (Cursor)** — rerun the frame study on the NEW build:
 1. Your run_phase5_study.py harness, HEAD build, over the full local
