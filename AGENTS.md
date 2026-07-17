@@ -539,6 +539,20 @@ no-arm rule for blind-coast compensations.
    (A4 — PRIORITY BUMPED) bar width w_bar: now an executioner for the
    banner-edge impostor class (separation ratio 1.25 passes the scale
    gate; bar-ness is what kills it).
+8. POST-PACK FOLLOW-UPS (your advisory-4 pack processed — R1 verdict:
+   ribbon DEMOTED to opportunistic per the 60% bar, 3/6 only):
+   (A4-side) your w_bar=0.81m was the TOP structure (banner-merged
+   depth), not a bar: re-measure the SIDE bar width specifically (the
+   certificate's bar-ness constant needs it), same method on a left or
+   right bar at a far trusted fix.
+   (A6-sharpened) the 0.81m top depth implies the red top mass reaches
+   ~opening center — reopening branch A with an even deeper banner.
+   M1 re-scored with the implied aperture center (-0.4): 4/6 phase5c/5d
+   arrivals were INSIDE the geometric aperture, with zero gate clips —
+   consistent with 'vertical mostly fine, stopped short along-track'.
+   A6(i-iii) is now the geometry keystone: banner-bottom height vs a
+   side-bar-midpoint center reference, 2-3 far frames, plus the ~2m
+   annotated frame and the solidity check.
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
