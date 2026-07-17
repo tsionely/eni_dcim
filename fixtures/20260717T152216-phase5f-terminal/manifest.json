@@ -1,0 +1,360 @@
+{
+  "label": "phase5f-terminal",
+  "created_utc": "20260717T152216",
+  "code_commit": "1fc11fcad058a96c1ed3754cfc7d37d397cf1d01",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase5f_terminal_report.txt",
+      "file": "report.txt",
+      "bytes": 40258
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T151717-e179e097\\flight.jsonl",
+      "file": "20260717T151717-e179e097-flight.jsonl",
+      "bytes": 1275289
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T151717-e179e097\\result.json",
+      "file": "20260717T151717-e179e097-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T151717-e179e097\\params.json",
+      "file": "20260717T151717-e179e097-params.json",
+      "bytes": 2912
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T151717-e179e097\\vision.aigprec",
+      "reason": "539 MB > limit; upload to Drive"
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T151002-a9753343_takeoff_to_end_wide0p5.aigprec",
+      "bytes": 16145847
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T151126-a9753343_takeoff_to_end.aigprec",
+      "bytes": 20749319
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T151254-e179e097_takeoff_to_end_wide3p0.aigprec",
+      "bytes": 17198273
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T151717-e179e097_takeoff_to_end_wide1p5.aigprec",
+      "bytes": 16313371
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T151002-a9753343-flight.jsonl",
+      "bytes": 1346471
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T151126-a9753343-flight.jsonl",
+      "bytes": 1697986
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T151254-e179e097-flight.jsonl",
+      "bytes": 1133051
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T151002-a9753343-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T151126-a9753343-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T151254-e179e097-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T151717-e179e097-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T151002-a9753343-params.json",
+      "bytes": 2913
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T151126-a9753343-params.json",
+      "bytes": 2913
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T151254-e179e097-params.json",
+      "bytes": 2912
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T151717-e179e097-params.json",
+      "bytes": 2912
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_000.jpg",
+      "bytes": 58710
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_002.jpg",
+      "bytes": 59419
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_006.jpg",
+      "bytes": 35079
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_009.jpg",
+      "bytes": 60294
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_eventlist.jpg",
+      "bytes": 60603
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_race.json",
+      "bytes": 223
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_race_dialog.jpg",
+      "bytes": 26752
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_row_highlight.jpg",
+      "bytes": 67680
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_select.json",
+      "bytes": 1040
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F1_try1_verify_after_race.jpg",
+      "bytes": 58588
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_000.jpg",
+      "bytes": 59214
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_002.jpg",
+      "bytes": 59426
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_006.jpg",
+      "bytes": 67108
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_009.jpg",
+      "bytes": 68589
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_eventlist.jpg",
+      "bytes": 67892
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_race.json",
+      "bytes": 223
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_race_dialog.jpg",
+      "bytes": 26566
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_row_highlight.jpg",
+      "bytes": 74878
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_select.json",
+      "bytes": 1044
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_baseline_F2_try2_verify_after_race.jpg",
+      "bytes": 58895
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_000.jpg",
+      "bytes": 58806
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_002.jpg",
+      "bytes": 60392
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_006.jpg",
+      "bytes": 61872
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_eventlist.jpg",
+      "bytes": 68184
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_race.json",
+      "bytes": 233
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_race_dialog.jpg",
+      "bytes": 26351
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_row_highlight.jpg",
+      "bytes": 74670
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_select.json",
+      "bytes": 1074
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F3_try3_verify_after_race.jpg",
+      "bytes": 58880
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_000.jpg",
+      "bytes": 59291
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_002.jpg",
+      "bytes": 61027
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_006.jpg",
+      "bytes": 55391
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_eventlist.jpg",
+      "bytes": 73797
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_race.json",
+      "bytes": 243
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_race_dialog.jpg",
+      "bytes": 26451
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_row_highlight.jpg",
+      "bytes": 79855
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_select.json",
+      "bytes": 1104
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5f_terminal_live_F4_repl_try5_verify_after_race.jpg",
+      "bytes": 59056
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 6106
+    }
+  ]
+}
