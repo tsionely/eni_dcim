@@ -128,7 +128,13 @@ class GateCloseTracker:
                     rows_a.append(n2 @ dpi @ self._derot_to_opt)
                     rows_b.append(off)
                     edge_ids.append(e)
-            if len(rows_b) < self.min_support or len(set(edge_ids)) < 2:
+            # Range-scaled support: in the terminal zone (<2.5m) fewer
+            # edges are geometrically visible; the certificate carries
+            # the identity safety, and the SVD truncation + step cap
+            # bound a sparse solve — demanding far-range support there
+            # is what starved terminal density (release-bar measurement).
+            need = self.min_support if t[2] > 2.5 else max(5, self.min_support // 2)
+            if len(rows_b) < need or len(set(edge_ids)) < 2:
                 return None
             a = np.asarray(rows_a)
             b = np.asarray(rows_b, dtype=np.float64)

@@ -55,7 +55,7 @@ class PerceptionAgent(Agent):
                     and state.gate_rel_age_s < 1.0:
                 prior = float(np.linalg.norm(state.gate_rel.t))
             detection = self.detector.detect(frame, prior)
-            if detection is not None:
+            if detection is not None and detection.rel_pose is not None:
                 self.detections += 1
                 if detection.confidence >= 0.55:   # exact quad or box fallback
                     last_full_fix = time.monotonic()
@@ -70,6 +70,14 @@ class PerceptionAgent(Agent):
                         self.tracker.certificate.on_full_quad(detection.ts_ns)
                 self.bus.publish_latest(Topic.DETECTION, detection)
                 continue
+            if detection is not None:
+                # Center-only detection (pose rejected by the sanity
+                # gates): publish for the yaw servo, but DO run the
+                # tracker below — a metric fix may still be extractable
+                # from partial edges, and this is exactly the terminal
+                # regime where density decides certification (release-bar
+                # measurement: 1-7 fix frames below 2.5m per approach).
+                self.bus.publish_latest(Topic.DETECTION, detection)
             if self.tracker is None or not self.tracker.enabled:
                 continue
             if last_full_fix is None or \

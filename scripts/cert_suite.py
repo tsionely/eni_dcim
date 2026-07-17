@@ -70,6 +70,8 @@ def main(argv=None):
         det = detector.detect(cf, prior)
         state = "none"
         src = "miss"
+        if det is not None and det.rel_pose is None:
+            det = None               # center-only: fall through to tracker
         if det is not None and det.confidence >= 0.55:
             last_full_mono = mono
             src = "detector"
