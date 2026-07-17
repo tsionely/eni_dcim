@@ -107,6 +107,22 @@ def test_sides_only_stays_bounded():
     assert -0.08 <= t[1] <= p[1] + 0.05    # bounded by (truth, prior)
 
 
+def test_side_bar_separation_recovers_absolute_range():
+    """Advisory-3 H5: the side bars' separation is the deepest ABSOLUTE
+    range source (valid to ~0.8m) — the SVD truncation must keep the
+    separation direction, not discard it. Range-off prior, sides only:
+    Z must be recovered. (Capture basin is bounded by search_px: a range
+    error beyond ~0.4m at 2m puts the predicted edges outside the ROI
+    and the tracker returns None — graceful, never wrong.)"""
+    tr = make_tracker()
+    truth = [0.0, 0.0, 2.0]
+    frame = CameraFrame(1, 0, render_gate(truth, only_sides=True))
+    det = tr.track(frame, prior([0.05, 0.0, 2.3]))
+    assert det is not None
+    assert abs(det.rel_pose.t[2] - 2.0) < 0.1
+    assert abs(det.rel_pose.t[0]) < 0.1
+
+
 def test_single_bar_is_rejected():
     """One visible bar = one edge direction: rank-deficient, no fix."""
     tr = make_tracker()

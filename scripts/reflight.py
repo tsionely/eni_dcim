@@ -89,7 +89,10 @@ def load_frames(slice_path: str, frame_monos: dict[int, int] | None = None):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--slice", required=True)
+    ap.add_argument("--slice", required=True, action="append",
+                    help="repeatable: consecutive slices of the SAME flight "
+                         "are chained on the log timeline (warm-start the "
+                         "estimator with the earlier slice's vision)")
     ap.add_argument("--log", required=True)
     ap.add_argument("--params", default="config/params_default.json")
     ap.add_argument("--patch", action="append", default=[])
@@ -112,7 +115,15 @@ def main(argv=None):
     tracker = None if args.no_tracker else GateCloseTracker(params, detector)
 
     imu = load_imu(args.log)
-    frames = load_frames(args.slice, load_frame_monos(args.log))
+    monos = load_frame_monos(args.log)
+    frames = []
+    seen_ids: set[int] = set()
+    for slc in args.slice:
+        for f in load_frames(slc, monos):
+            if f[1] not in seen_ids:
+                seen_ids.add(f[1])
+                frames.append(f)
+    frames.sort(key=lambda f: f[0])
     print(f"imu samples: {len(imu)}, unique frames: {len(frames)}")
     if not frames or not imu:
         return 1

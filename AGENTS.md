@@ -469,7 +469,18 @@ structurally blind downward; the vertical axis is the open front.
    displacement via W·y_T/l_T - d* (see src/aigp/planning/
    vertical_terminal.py for the oracle + conventions) and score
    against the full-pose reference: bars are median bias <0.05m,
-   P90 <0.15m, sign accuracy >99% when |ref|>0.15m.
+   P90 <0.15m, sign accuracy >99% when |ref|>0.15m;
+   (g) H3 census (think-tank round 4): per-frame visible-edge
+   identity (left/right/top/bottom/banner) over the last 1.5m of F1
+   and F2 — fixes the true source-transition order for the crossing-
+   time filter AND doubles as V2 validation (last-surviving structure
+   vs vertical state: banner-last ⇒ HIGH, F1's final second);
+   (h) T3 kill test on the full F1 log: replay under HEAD's no-arm
+   rule and confirm the double climb is structurally unreachable;
+   (i) F2 arbitration pair, both one-liners: the 512 px·m product
+   (R·quad_width_px) AND the row-consistency check (believed ty
+   +0.31 at 1.67m predicts an opening-center row the actual mask
+   must violently disagree with if truth was -0.95).
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —

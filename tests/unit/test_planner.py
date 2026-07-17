@@ -5,14 +5,14 @@ from aigp.core.params import ParamSet
 from aigp.planning.race_planner import RacePlanner
 
 
-def make_state(gate_t=None, center_px=None):
+def make_state(gate_t=None, center_px=None, age_s=0.0):
     rel = None
     if gate_t is not None:
         rel = RelPose(t=np.array(gate_t, dtype=float),
                       normal=np.array([0.0, 0.0, -1.0]))
     return StateEstimate(
         ts_ns=0, q_att=np.array([1.0, 0, 0, 0]), omega=np.zeros(3),
-        v_world=np.zeros(3), gate_rel=rel, gate_rel_age_s=0.0,
+        v_world=np.zeros(3), gate_rel=rel, gate_rel_age_s=age_s,
         gate_center_px=center_px, image_size=(640, 360), healthy=True,
     )
 
@@ -111,6 +111,38 @@ def test_retreat_keeps_camera_on_gate():
     p2.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
     sp2 = p2.plan(int(5e9), "race", make_state(), None)
     assert sp2.phase == "retreat" and sp2.yaw_rate == 0.0
+
+
+def test_no_arm_rule_vetoes_double_climb():
+    """F1's +1m overfly: altitude hold already climbing from a believed
+    LOW when vision drops out, then the sink insurance ARMED mid-coast
+    on top of it. Under the no-arm rule the insurance decision is taken
+    once at gap entry and the measured climb VETOES it."""
+    p = planner()
+    # Enter commit with the gate ABOVE us (cam +y is down): hold climbs.
+    low = [0.0, -0.5, 1.8]
+    assert p.plan(0, "race", make_state(gate_t=low, center_px=(320, 140)),
+                  None).phase == "commit"
+    sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=low, age_s=0.0), None)
+    # Gap: dead-reckoned gate, growing age. Insurance must NOT stack.
+    sp_blind = p.plan(int(0.2e9), "race", make_state(gate_t=low, age_s=0.5), None)
+    assert sp_blind.phase == "commit"
+    assert sp_blind.v_body[2] >= sp_seen.v_body[2] - 1e-6, \
+        "blind coast ADDED climb on top of an already-climbing hold"
+
+
+def test_no_arm_rule_arms_insurance_when_vertical_neutral():
+    """When the hold is NOT climbing at gap entry, the sink insurance
+    still arms (the phase3h sink class remains covered)."""
+    p = planner()
+    # Gate slightly below aim: hold is ~neutral/descending at entry.
+    neutral = [0.0, 0.35, 1.8]
+    assert p.plan(0, "race", make_state(gate_t=neutral, center_px=(320, 220)),
+                  None).phase == "commit"
+    sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=neutral, age_s=0.0), None)
+    sp_blind = p.plan(int(0.2e9), "race", make_state(gate_t=neutral, age_s=0.5), None)
+    assert sp_blind.v_body[2] < sp_seen.v_body[2] - 0.05, \
+        "sink insurance failed to arm on a non-climbing gap entry"
 
 
 def test_collision_triggers_recover_brake():

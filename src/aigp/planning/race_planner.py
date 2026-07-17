@@ -40,19 +40,18 @@ class RacePlanner:
         self.aim_up_m = float(p.get("planner.approach.aim_up_m", default=0.25))
         self.aim_up_floor_m = float(p.get("planner.approach.aim_up_floor_m",
                                           default=0.0))
-        # The final ~1.4m is STRUCTURALLY blind (the full ring exceeds the
-        # FOV below that range) and the drone sinks ~0.5m during the blind
-        # dead-reckoned stretch (phase3h/3i: +0.3 above aim at 4m ->
-        # -0.2 below center at the bar). Counter the known sink with a
-        # climb bias only while commit flies TRULY blind. Vertical-axis
-        # study (2026-07-17): with continuous close fixes the old 0.2 bias
-        # armed at age>0.4 became a double-compensation on top of the
-        # altitude hold and overflew F1 ~1m HIGH — the bias is now smaller
-        # and arms later, and retreat keeps its own (phase4a ground-scrape)
-        # compensation separately.
+        # The final stretch can go blind and the drone historically sank
+        # through it (phase3h/3i). But the F1 overfly showed the inverse
+        # failure: sink insurance ARMING mid-coast on top of an altitude
+        # hold already climbing = double compensation, +1m HIGH. The rule
+        # that deletes the class (think-tank adv.3 T3): NO compensation
+        # may arm during blind coast — the arming decision is taken ONCE
+        # at gap entry from the last measured state, which can veto it,
+        # and then holds frozen. Retreat keeps its own (phase4a
+        # ground-scrape) compensation separately.
         self.blind_climb_bias = float(p.get("planner.commit.blind_climb_bias_mps",
                                             default=0.1))
-        self.blind_age_s = float(p.get("planner.commit.blind_age_s", default=0.7))
+        self.blind_age_s = float(p.get("planner.commit.blind_age_s", default=0.3))
         self.retreat_climb_bias = float(p.get("planner.retreat.climb_bias_mps",
                                               default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
@@ -83,6 +82,7 @@ class RacePlanner:
         self._retreat_until_ns: int | None = None
         self._abort_breach = 0
         self._last_seen_side = 1.0   # search toward the last known bearing
+        self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
 
     def reset(self) -> None:
         self._commit_until_ns = None
@@ -91,6 +91,7 @@ class RacePlanner:
         self._retreat_until_ns = None
         self._abort_breach = 0
         self._last_seen_side = 1.0
+        self._gap_bias = None
 
     # -- external events ------------------------------------------------------
 
@@ -98,6 +99,7 @@ class RacePlanner:
         self._commit_until_ns = None
         self._commit_v_body = None
         self._retreat_until_ns = None
+        self._gap_bias = None
 
     def on_collision(self, now_ns: int) -> None:
         self._recover_until_ns = now_ns + int(self.recover_brake_s * 1e9)
@@ -204,8 +206,18 @@ class RacePlanner:
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
                         gate, state.q_att, au, self.alt_gain)
-                    if state.gate_rel_age_s > self.blind_age_s:
-                        extra[2] -= self.blind_climb_bias   # blind-phase sink
+                    # No-arm rule: the sink insurance is decided ONCE, at
+                    # gap entry, by the state the last fixes left behind —
+                    # if the altitude hold is already commanding a climb
+                    # there, insurance is VETOED (F1's +1m overfly was
+                    # exactly hold-climb + insurance-climb stacking blind).
+                    if state.gate_rel_age_s <= self.blind_age_s:
+                        self._gap_bias = None            # seeing: disarmed
+                    elif self._gap_bias is None:
+                        climbing = extra[2] < -0.05      # NED: -z is up
+                        self._gap_bias = 0.0 if climbing else self.blind_climb_bias
+                    if self._gap_bias:
+                        extra[2] -= self._gap_bias
                     self._commit_v_body = direction * self.commit_speed + extra
                 yaw = 0.0
                 if gate is not None and gate.t[2] > 0.3:
