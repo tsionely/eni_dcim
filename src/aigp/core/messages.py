@@ -157,7 +157,7 @@ class StateEstimate:
 
 @dataclass(frozen=True, slots=True)
 class Setpoint:
-    phase: str                 # "idle" | "takeoff" | "search" | "approach" | "commit" | "retreat" | "recover" | "hover"
+    phase: str                 # "idle" | "takeoff" | "search" | "approach" | "align" | "commit" | "retreat" | "recover" | "hover"
     v_body: np.ndarray         # desired velocity, body frame [m/s], shape (3,)
     yaw_rate: float            # desired yaw rate [rad/s]
 

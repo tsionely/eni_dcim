@@ -356,7 +356,48 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 5b — BLOOM-PROOF DETECTOR IS IN; the story changed
+## CURRENT TASK: Phase 6b — ALIGN-THEN-DASH (the height deficit is measured)
+
+Phase6a forensics (all four flights, hundreds of pad samples, tight spread):
+**the gate-1 opening center is 3.11m above the pad camera** while takeoff
+climbed only 1.5m — every commit started ~1.6m LOW, and the in-commit
+altitude hold (0.8 m/s cap over a 2.5s window) mathematically cannot close
+that. dash-F2 reached R=0.88m still 0.61m LOW and never registered the
+pass; dash-F1's fixed 2.5s window expired at believed z=+1.09m (BEFORE the
+plane) and retreat yanked a centered dash back; dash-F2 then relocked the
+NEXT gate at 7m mid-commit and kept flying on the stale timer.
+
+The new build (this commit) turns those three findings into behavior:
+
+- **ALIGN phase**: commit entry is forbidden while the world-frame height
+  error exceeds 0.5m — the planner climbs first (1.2 m/s cap, creeping
+  forward 0.4 m/s, yaw on the gate), then dashes level. 4s budget, then it
+  commits anyway.
+- **Physics-correct commit window**: duration = max(2.5s, dist/speed + 1s)
+  so the timer can never expire before the crossing at commit speed.
+- **Relock guard**: a believed-z jump UP >2m mid-commit ends the attempt
+  (retreat) instead of chasing the next gate on the old timer.
+- Defaults changed: `takeoff.duration_s` 1.5→2.5 (top out ~2.5m, near the
+  measured 3.1m), `commit.distance_m` 2.0→6.5 (the dash IS the strategy —
+  gate 1 is naturally aligned), `aim_up_floor_m` 0.25 (phase3h low-bias).
+
+Run this cycle (NO --patch overrides — fly the defaults, they encode the
+whole strategy):
+
+1. `git pull` (verify HEAD is the phase6b commit), take the SIM LOCK.
+2. Three counted verified-R2 flights:
+   `python scripts/fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300`
+3. Per flight note: gates passed, clips, closest direct fix + center px,
+   which phases appeared (expect takeoff → align → commit), and whether
+   ALIGN visibly climbed before the dash (the drone should rise ~0.6-1m
+   while barely advancing, THEN surge forward).
+4. TAKEOFF→end slices (>10s unique guard as before), notes.md, commit
+   `[sim-run] phase6b aligned dash r2`, push.
+
+The question this cycle answers: does closing the measured 1.6m height
+deficit BEFORE the dash turn dash-F2's 0.88m near-miss into a pass?
+
+## PREVIOUS: Phase 5b — BLOOM-PROOF DETECTOR IS IN; the story changed
 
 The phase5 studies landed (thank you — both were decisive) and together
 with the frames they OVERTURNED the working theory. Established facts:

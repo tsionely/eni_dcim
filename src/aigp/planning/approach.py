@@ -13,6 +13,11 @@ from aigp.estimation.attitude_filter import quat_rotate
 from aigp.perception.camera import cam_to_body
 
 
+def gate_world_dz(rel: RelPose, q_att: np.ndarray) -> float:
+    """World-vertical offset of the gate center (+ = gate BELOW me, NED)."""
+    return float(quat_rotate(q_att, cam_to_body(rel.t))[2])
+
+
 def altitude_hold_velocity(rel: RelPose, q_att: np.ndarray, aim_up_m: float,
                            gain: float, cap_mps: float = 0.8) -> float:
     """Vertical velocity command from the ABSOLUTE gate-relative height.
@@ -23,7 +28,7 @@ def altitude_hold_velocity(rel: RelPose, q_att: np.ndarray, aim_up_m: float,
     the gate vector to world and hold "gate aim_up_m below me". Returns a
     body-z (NED, down-positive) velocity addition.
     """
-    world_dz = float(quat_rotate(q_att, cam_to_body(rel.t))[2])   # +: gate below me
+    world_dz = gate_world_dz(rel, q_att)
     return float(np.clip(gain * (world_dz - aim_up_m), -cap_mps, cap_mps))
 
 

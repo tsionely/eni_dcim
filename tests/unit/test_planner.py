@@ -120,7 +120,9 @@ def test_no_arm_rule_vetoes_double_climb():
     once at gap entry and the measured climb VETOES it."""
     p = planner()
     # Enter commit with the gate ABOVE us (cam +y is down): hold climbs.
-    low = [0.0, -0.5, 1.8]
+    # (0.2m: big enough to drive a strong climb, small enough that the
+    # phase6b vertical pre-alignment gate still allows commit entry.)
+    low = [0.0, -0.2, 1.8]
     assert p.plan(0, "race", make_state(gate_t=low, center_px=(320, 140)),
                   None).phase == "commit"
     sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=low, age_s=0.0), None)
@@ -152,7 +154,7 @@ def test_no_arm_rule_tops_up_weak_climb():
     strong climb (0.7) still gets zero."""
     p = planner()
     # Gate a hair above the aim point: hold climbs weakly (~0.05) at entry.
-    weak = [0.0, 0.05, 1.8]
+    weak = [0.0, 0.19, 1.8]
     assert p.plan(0, "race", make_state(gate_t=weak, center_px=(320, 150)),
                   None).phase == "commit"
     sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=weak, age_s=0.0), None)
@@ -161,6 +163,74 @@ def test_no_arm_rule_tops_up_weak_climb():
     blind_climb = -sp_blind.v_body[2]
     assert blind_climb > seen_climb + 0.01, "no top-up on a weak climb"
     assert blind_climb - seen_climb <= 0.11, "top-up exceeded the insured rate"
+
+
+def test_align_gates_commit_on_vertical_deficit():
+    """Phase6a keystone: the opening center is 3.11m above the pad camera
+    while takeoff tops out ~1.6m lower — committing with that deficit is
+    how every dash arrived LOW. Commit entry must first close the height
+    gap in an ALIGN phase (climb replaces the 0.8-capped hold), then dash."""
+    p = planner()
+    # Gate 5m ahead and 1.6m ABOVE (cam +y down): inside commit range,
+    # badly misaligned vertically.
+    low = make_state(gate_t=[0.0, -1.6, 5.0], center_px=(320, 80))
+    sp = p.plan(0, "race", low, None)
+    assert sp.phase == "align"
+    assert sp.v_body[2] < -0.8              # climbing faster than the hold cap
+    assert 0.0 < sp.v_body[0] < 1.0         # creeping forward, not dashing
+    # Height gap closed -> the same planner enters commit.
+    ok = make_state(gate_t=[0.0, 0.1, 4.5], center_px=(320, 190))
+    sp2 = p.plan(int(1.5e9), "race", ok, None)
+    assert sp2.phase == "commit"
+
+
+def test_align_budget_expires_into_commit():
+    """A capped attempt beats hovering out the flight clock: if the gap
+    will not close within align.max_s, commit anyway."""
+    p = planner()
+    low = make_state(gate_t=[0.0, -1.6, 5.0], center_px=(320, 80))
+    assert p.plan(0, "race", low, None).phase == "align"
+    assert p.plan(int(2e9), "race", low, None).phase == "align"
+    sp = p.plan(int(4.5e9), "race", low, None)
+    assert sp.phase == "commit"
+
+
+def test_commit_window_scales_with_entry_distance():
+    """Phase6a dash-F1: the fixed 2.5s window expired at believed
+    z=+1.09m — BEFORE the plane — and retreat yanked a centered dash
+    back. The window must outlive the crossing at commit speed."""
+    p = planner()
+    state = make_state(gate_t=[0.0, 0.0, 6.4], center_px=(320, 180))
+    assert p.plan(0, "race", state, None).phase == "commit"
+    # 6.4m at 2.5 m/s = 2.56s > the 2.5s base; with the +1s margin the
+    # window must still be open at 3.4s...
+    sp = p.plan(int(3.4e9), "race", make_state(), None)
+    assert sp.phase == "commit"
+    # ...and expired by 3.7s.
+    sp2 = p.plan(int(3.7e9), "race", make_state(), None)
+    assert sp2.phase == "retreat"
+
+
+def test_midcommit_relock_jump_terminates_attempt():
+    """Phase6a dash-F2: after slipping past gate 1 the estimator
+    relocked the NEXT gate at 7m while commit kept flying on the old
+    timer. A believed-z jump UP of >2m mid-commit ends the attempt."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    sp = p.plan(int(0.3e9), "race",
+                make_state(gate_t=[0.5, 0.0, 7.0], center_px=(400, 180)), None)
+    assert sp.phase == "retreat"
+    # Normal in-commit range progress must NOT trip the guard.
+    p2 = planner()
+    assert p2.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                         center_px=(320, 180)),
+                   None).phase == "commit"
+    sp2 = p2.plan(int(0.3e9), "race",
+                  make_state(gate_t=[0.0, 0.0, 1.4], center_px=(320, 180)),
+                  None)
+    assert sp2.phase == "commit"
 
 
 def test_collision_triggers_recover_brake():
