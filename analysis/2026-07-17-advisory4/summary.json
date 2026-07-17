@@ -1,0 +1,457 @@
+{
+  "a2_r1": [
+    {
+      "fid": "20260717T095722-a560c093",
+      "phase": "phase5c",
+      "flight": "F1",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        7.1137658,
+        12.453103700000002
+      ],
+      "n_frames_last2m": 73,
+      "cyan_present_frames": 41,
+      "cyan_present_pct": 56.16438356164384,
+      "cyan_above_horizon": 3,
+      "cyan_below_horizon": 38,
+      "above_horizon_pct_of_cyan": 7.317073170731708,
+      "offset_px": {
+        "n": 41,
+        "mean": 50.31594379744968,
+        "median": 54.069835647185414,
+        "std": 32.85094300958154,
+        "p10": 3.564984555301578,
+        "p90": 96.73606839689765
+      },
+      "low_geometry_signature": {
+        "median_offset_px": 54.069835647185414,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.07317073170731707
+      },
+      "v1_gate_bar_ge_60pct": false
+    },
+    {
+      "fid": "20260717T095851-a560c093",
+      "phase": "phase5c",
+      "flight": "F2",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        7.190593,
+        11.2282557
+      ],
+      "n_frames_last2m": 21,
+      "cyan_present_frames": 15,
+      "cyan_present_pct": 71.42857142857143,
+      "cyan_above_horizon": 0,
+      "cyan_below_horizon": 15,
+      "above_horizon_pct_of_cyan": 0.0,
+      "offset_px": {
+        "n": 15,
+        "mean": 114.9640141834411,
+        "median": 113.97298272870799,
+        "std": 5.637734312225344,
+        "p10": 108.19957304144337,
+        "p90": 123.57605284890707
+      },
+      "low_geometry_signature": {
+        "median_offset_px": 113.97298272870799,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.0
+      },
+      "v1_gate_bar_ge_60pct": true
+    },
+    {
+      "fid": "20260717T100017-a560c093",
+      "phase": "phase5c",
+      "flight": "F3",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        7.1752482,
+        13.7462157
+      ],
+      "n_frames_last2m": 37,
+      "cyan_present_frames": 33,
+      "cyan_present_pct": 89.1891891891892,
+      "cyan_above_horizon": 0,
+      "cyan_below_horizon": 33,
+      "above_horizon_pct_of_cyan": 0.0,
+      "offset_px": {
+        "n": 33,
+        "mean": 101.98082587731842,
+        "median": 106.3402212397751,
+        "std": 16.453395867172134,
+        "p10": 77.88379182234073,
+        "p90": 118.32202886451095
+      },
+      "low_geometry_signature": {
+        "median_offset_px": 106.3402212397751,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.0
+      },
+      "v1_gate_bar_ge_60pct": true
+    },
+    {
+      "fid": "20260717T101837-7223cc0c",
+      "phase": "phase5d",
+      "flight": "F1",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        8.314081999999999,
+        9.474381900000001
+      ],
+      "n_frames_last2m": 35,
+      "cyan_present_frames": 21,
+      "cyan_present_pct": 60.0,
+      "cyan_above_horizon": 15,
+      "cyan_below_horizon": 6,
+      "above_horizon_pct_of_cyan": 71.42857142857143,
+      "offset_px": {
+        "n": 21,
+        "mean": -26.32507986080189,
+        "median": -62.3090463356495,
+        "std": 68.02544646659213,
+        "p10": -81.83816418825003,
+        "p90": 88.77671433795024
+      },
+      "low_geometry_signature": {
+        "median_offset_px": -62.3090463356495,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.7142857142857143
+      },
+      "v1_gate_bar_ge_60pct": true
+    },
+    {
+      "fid": "20260717T102007-7223cc0c",
+      "phase": "phase5d",
+      "flight": "F2",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        6.9342756,
+        13.234059400000001
+      ],
+      "n_frames_last2m": 70,
+      "cyan_present_frames": 29,
+      "cyan_present_pct": 41.42857142857143,
+      "cyan_above_horizon": 0,
+      "cyan_below_horizon": 29,
+      "above_horizon_pct_of_cyan": 0.0,
+      "offset_px": {
+        "n": 29,
+        "mean": 120.8569065389002,
+        "median": 120.07982214135396,
+        "std": 8.773960208938362,
+        "p10": 112.540724731795,
+        "p90": 133.07996221836922
+      },
+      "low_geometry_signature": {
+        "median_offset_px": 120.07982214135396,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.0
+      },
+      "v1_gate_bar_ge_60pct": false
+    },
+    {
+      "fid": "20260717T102132-7223cc0c",
+      "phase": "phase5d",
+      "flight": "F3",
+      "mode": "dist_lt_2m",
+      "t_window": [
+        7.352667,
+        17.8524801
+      ],
+      "n_frames_last2m": 52,
+      "cyan_present_frames": 12,
+      "cyan_present_pct": 23.076923076923077,
+      "cyan_above_horizon": 0,
+      "cyan_below_horizon": 12,
+      "above_horizon_pct_of_cyan": 0.0,
+      "offset_px": {
+        "n": 12,
+        "mean": 104.51551614945124,
+        "median": 111.58123065267883,
+        "std": 12.82726826437567,
+        "p10": 86.97523385560196,
+        "p90": 115.7642501433379
+      },
+      "low_geometry_signature": {
+        "median_offset_px": 111.58123065267883,
+        "matches_plus30_above_horizon": false,
+        "frac_above_horizon": 0.0
+      },
+      "v1_gate_bar_ge_60pct": false
+    }
+  ],
+  "a1": {
+    "suite": "standing_false_accept_zero",
+    "n_segments": 3,
+    "segments": [
+      {
+        "id": "A1-banner-fiction-F2",
+        "description": "F2 banner-fiction / scale-inconsistent lock (D5 garbage)",
+        "flight_id": "20260716T212408-2ca531c3",
+        "t_range_s": [
+          7.0,
+          7.5
+        ],
+        "source_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T212408-2ca531c3\\vision.aigprec",
+        "why_adversarial": "R\u00b7w_px \u226a 512; believed ty=+0.31 vs det ty\u2248\u22120.95; row-consistency fails",
+        "fa0_expectation": "certificate / scale-gate must REJECT all poses in this window",
+        "frame_range": {
+          "t_lo": 7.0,
+          "t_hi": 7.5,
+          "n_frames": 15,
+          "frame_id_first": 221,
+          "frame_id_last": 235,
+          "mono_ns_first": 647004199868400,
+          "mono_ns_last": 647004674431600,
+          "frame_ids_head": [
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235
+          ],
+          "frame_ids_tail": [
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235
+          ],
+          "n_frame_ids": 15
+        },
+        "n_dets_in_window": 54
+      },
+      {
+        "id": "A1-phase5d-F2-post-retreat-ceiling",
+        "description": "phase5d F2 post-retreat ceiling / upper-truss view",
+        "flight_id": "20260717T102007-7223cc0c",
+        "t_range_s": [
+          7.8042713,
+          11.3042713
+        ],
+        "source_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T102447-phase5d-vertical\\20260717T102007-7223cc0c_takeoff_to_end.aigprec",
+        "why_adversarial": "Operator notes ceiling/upper-truss after retreat; false-accept risk on grid/lights as gate-like structure",
+        "fa0_expectation": "no CERTIFIED gate pose while looking at ceiling",
+        "frame_range": {
+          "t_lo": 7.8042713,
+          "t_hi": 11.3042713,
+          "n_frames": 105,
+          "frame_id_first": 313,
+          "frame_id_last": 417,
+          "mono_ns_first": 693564194194500,
+          "mono_ns_last": 693567664760300,
+          "frame_ids_head": [
+            313,
+            314,
+            315,
+            316,
+            317,
+            318,
+            319,
+            320,
+            321,
+            322,
+            323,
+            324,
+            325,
+            326,
+            327,
+            328,
+            329,
+            330,
+            331,
+            332
+          ],
+          "frame_ids_tail": [
+            398,
+            399,
+            400,
+            401,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408,
+            409,
+            410,
+            411,
+            412,
+            413,
+            414,
+            415,
+            416,
+            417
+          ],
+          "n_frame_ids": 105
+        }
+      },
+      {
+        "id": "A1-phase5b-F3-next-gate-steal",
+        "description": "phase5b F3 next-gate-steal through near opening",
+        "flight_id": "20260717T091239-debf3ec1",
+        "t_range_s": [
+          6.9,
+          7.3
+        ],
+        "source_recording": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T092008-phase5b-confirm\\20260717T091239-debf3ec1_takeoff_to_end.aigprec",
+        "why_adversarial": "Terminal ownership failure class: far gate visible through near opening steals the candidate contest",
+        "fa0_expectation": "near-gate ownership / prediction-consistent boost must win; far-gate pose must not be CERTIFIED as the active target",
+        "frame_range": {
+          "t_lo": 6.9,
+          "t_hi": 7.3,
+          "n_frames": 12,
+          "frame_id_first": 290,
+          "frame_id_last": 301,
+          "mono_ns_first": 689515557018300,
+          "mono_ns_last": 689515926909800,
+          "frame_ids_head": [
+            290,
+            291,
+            292,
+            293,
+            294,
+            295,
+            296,
+            297,
+            298,
+            299,
+            300,
+            301
+          ],
+          "frame_ids_tail": [
+            290,
+            291,
+            292,
+            293,
+            294,
+            295,
+            296,
+            297,
+            298,
+            299,
+            300,
+            301
+          ],
+          "n_frame_ids": 12
+        }
+      }
+    ]
+  },
+  "a4": {
+    "fid": "20260717T100017-a560c093",
+    "phase": "phase5c",
+    "flight": "F3",
+    "t": 12.4667432,
+    "R": 19.881523445406145,
+    "ty": -8.082692489903557,
+    "quad_width_px": 29.154759474226502,
+    "quad_height_px": 23.53720459187964,
+    "scale_ratio": 1.1321113945937717,
+    "bar_thickness_px": 13.0,
+    "w_bar_m": 0.8076868899696248,
+    "method": "red_mask_top_edge_thickness",
+    "frame_id": 451,
+    "frame": "frames\\a4_bar_width.jpg"
+  },
+  "a5": {
+    "n_pairs": 153,
+    "min_spacing_m": 5.706561036223846,
+    "p10_spacing_m": 8.267517441552185,
+    "median_spacing_m": 10.328132589762355,
+    "best": {
+      "fid": "20260717T102132-7223cc0c",
+      "phase": "phase5d",
+      "flight": "F3",
+      "t": 9.3964029,
+      "frame_id": 344,
+      "spacing_m": 5.706561036223846,
+      "R1": 13.918716050173254,
+      "R2": 16.735243531791703,
+      "du_px": 118.0353889465332,
+      "frame": "frames\\a5_intergate_spacing.jpg"
+    },
+    "top5_smallest": [
+      {
+        "fid": "20260717T102132-7223cc0c",
+        "phase": "phase5d",
+        "flight": "F3",
+        "t": 9.3964029,
+        "frame_id": 344,
+        "spacing_m": 5.706561036223846,
+        "R1": 13.918716050173254,
+        "R2": 16.735243531791703,
+        "du_px": 118.0353889465332,
+        "frame": "frames\\a5_intergate_spacing.jpg"
+      },
+      {
+        "fid": "20260717T102132-7223cc0c",
+        "phase": "phase5d",
+        "flight": "F3",
+        "t": 9.2298051,
+        "frame_id": 339,
+        "spacing_m": 5.945256277782282,
+        "R1": 15.045290358605087,
+        "R2": 17.561455118592907,
+        "du_px": 114.25675964355469,
+        "frame": "frames\\a5_intergate_spacing.jpg"
+      },
+      {
+        "fid": "20260717T101837-7223cc0c",
+        "phase": "phase5d",
+        "flight": "F1",
+        "t": 7.2819409,
+        "frame_id": 310,
+        "spacing_m": 6.032533061520435,
+        "R1": 9.481481481481481,
+        "R2": 15.058823529411764,
+        "du_px": 125.0,
+        "frame": "frames\\a5_intergate_spacing.jpg"
+      },
+      {
+        "fid": "20260717T102132-7223cc0c",
+        "phase": "phase5d",
+        "flight": "F3",
+        "t": 9.9004688,
+        "frame_id": 359,
+        "spacing_m": 6.068708120890462,
+        "R1": 7.829043427045678,
+        "R2": 13.055448418956201,
+        "du_px": 119.48563385009766
+      },
+      {
+        "fid": "20260717T102132-7223cc0c",
+        "phase": "phase5d",
+        "flight": "F3",
+        "t": 9.9004688,
+        "frame_id": 359,
+        "spacing_m": 7.023923918890199,
+        "R1": 6.6403967982607455,
+        "R2": 7.829043427045678,
+        "du_px": 295.73563385009766
+      }
+    ]
+  }
+}
