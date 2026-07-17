@@ -31,6 +31,7 @@ import numpy as np
 from aigp.core.messages import CameraFrame, GateDetection, RelPose
 from aigp.core.params import ParamSet
 from aigp.perception.camera import PinholeCamera
+from aigp.perception.certificate import SidePairCertificate
 from aigp.perception.gate_detector_hsv import HsvGateDetector, order_corners
 
 
@@ -53,6 +54,7 @@ class GateCloseTracker:
             float(p.get("perception.camera.mount_pitch_deg", default=0.0)))
         r = self.camera._mount_rot
         self._derot_to_opt = r.T if r is not None else np.eye(3)
+        self.certificate = SidePairCertificate()
 
     # ----------------------------------------------------------- geometry
 
@@ -94,6 +96,8 @@ class GateCloseTracker:
             center_px = px.mean(axis=0)
             rows_a, rows_b, offsets = [], [], []
             edge_ids = []
+            edge_widths: dict[int, list[float]] = {}
+            edge_offs: dict[int, list[float]] = {}
             for e in range(4):
                 p0, p1 = px[e], px[(e + 1) % 4]
                 edge = p1 - p0
@@ -107,9 +111,12 @@ class GateCloseTracker:
                     n2 = -n2
                 for s in np.linspace(0.12, 0.88, self.samples_per_edge):
                     sp = p0 + s * edge
-                    off = self._edge_offset(mask, sp, n2, w, h)
-                    if off is None:
+                    hit = self._edge_offset(mask, sp, n2, w, h)
+                    if hit is None:
                         continue
+                    off, bar_w = hit
+                    edge_widths.setdefault(e, []).append(bar_w)
+                    edge_offs.setdefault(e, []).append(off)
                     # Jacobian of the pixel along n2 w.r.t. t (derot frame):
                     # P_opt = R^T (t + c); dpx/dP_opt via pinhole; dP_opt/dt = R^T.
                     p_opt = (1 - s) * opt[e] + s * opt[(e + 1) % 4]
@@ -133,6 +140,20 @@ class GateCloseTracker:
 
         if float(np.linalg.norm(t - prior.t)) > self.max_step_m * 1.5:
             return None                       # ran away from the prior
+        # Certificate update from the final iteration's side-pair
+        # measurements (edges: 1=right, 3=left; outward offsets widen).
+        mid_l = (px[3] + px[0]) / 2.0
+        mid_r = (px[1] + px[2]) / 2.0
+        sep_pred = float(np.linalg.norm(mid_r - mid_l))
+        med = lambda v: float(np.median(v)) if v else 0.0
+        sep_meas = sep_pred + med(edge_offs.get(1)) + med(edge_offs.get(3))
+        fx_w = float(k[0, 0]) * self.gate_w
+        n_att = float(self.samples_per_edge)
+        self.certificate.update(
+            frame.ts_ns, float(prior.t[2]), sep_pred, sep_meas, fx_w,
+            edge_widths.get(3, []), edge_widths.get(1, []),
+            len(edge_widths.get(3, [])) / n_att,
+            len(edge_widths.get(1, [])) / n_att)
         corners_derot = self._corners_derot(t)
         px, _ = self._project(corners_derot, k)
         corners = order_corners(px)
@@ -143,16 +164,22 @@ class GateCloseTracker:
             image_size=(w, h),
             rel_pose=RelPose(t=t, normal=np.asarray(prior.normal, dtype=float)),
             confidence=0.5,
+            cert_status=self.certificate.status_at(frame.ts_ns),
         )
 
     def _edge_offset(self, mask: np.ndarray, sp: np.ndarray, n2: np.ndarray,
-                     w: int, h: int) -> float | None:
-        """Signed distance (px, along outward n2) from the predicted edge to
-        the red boundary: scan outside-in, take the first 2-px run of mask.
+                     w: int, h: int) -> tuple[float, float] | None:
+        """Scan outside-in along the outward normal for the red boundary.
+
+        Returns (offset, bar_width_px): offset = signed distance from the
+        predicted edge to the OUTER red boundary; bar_width_px = length of
+        the contiguous red run inward from it (the bar's thickness along
+        the normal — the certificate's bar-ness invariant lives on it: a
+        banner sheet edge or pillar has no bounded red run at bar width).
         """
         r = self.search_px
-        best = None
         run = 0
+        start = None
         for s in range(r, -r - 1, -1):
             x = int(round(sp[0] + n2[0] * s))
             y = int(round(sp[1] + n2[1] * s))
@@ -161,12 +188,15 @@ class GateCloseTracker:
                 continue
             if mask[y, x]:
                 run += 1
-                if run >= 2:
-                    best = float(s + 1)       # first ON of the run
-                    break
+                if run >= 2 and start is None:
+                    start = s + 1             # first ON of the run
             else:
+                if start is not None:
+                    return float(start), float(start - (s + 1))
                 run = 0
-        return best
+        if start is not None:                 # red continues to scan end
+            return float(start), float(start + r)
+        return None
 
     @staticmethod
     def _solve(a: np.ndarray, b: np.ndarray) -> np.ndarray | None:

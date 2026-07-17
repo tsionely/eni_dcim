@@ -275,4 +275,7 @@ class HsvGateDetector(GateDetector):
             image_size=(w, h),
             rel_pose=rel_pose,
             confidence=best[2],
+            # A fully-gated exact quad is the certificate's anchor class.
+            cert_status="certified" if (best[2] >= 1.0 and rel_pose is not None)
+            else "none",
         )

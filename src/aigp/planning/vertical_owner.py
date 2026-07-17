@@ -84,14 +84,17 @@ def decay_trim(trim: float, dt: float, rate: float, saturated: bool) -> float:
 
 def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
                           q_att: np.ndarray, gate_age_s: float,
-                          commit_active: bool, ts_ns: int):
+                          commit_active: bool, ts_ns: int,
+                          certified: bool = False):
     """One non-actuating shadow tick (release-contract step 2).
 
-    Runs the arbiter with certified=False (no certificate exists yet —
-    owner must remain ALT) and round-trips the LEGACY command's world-up
-    component through the adapter: the reconstruction must reproduce the
-    legacy body-z to numerical precision. Returns a ShadowTerminal
-    record for the flight log; touches nothing else.
+    Runs the arbiter on real inputs (certificate state included, once
+    the perception side supplies it) and round-trips the LEGACY
+    command's world-up component through the adapter: the reconstruction
+    must reproduce the legacy body-z to numerical precision. Returns a
+    ShadowTerminal record for the flight log; touches nothing else —
+    even a TERM owner decision here actuates nothing (there is no
+    enable bit yet), it only tells us what WOULD have happened.
     """
     from aigp.core.messages import ShadowTerminal
     from aigp.estimation.attitude_filter import quat_rotate
@@ -101,7 +104,7 @@ def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
     v_bz, ok = body_z_for_world_up(up_legacy, q_att, float(v[0]), float(v[1]))
     delta = float(v[2]) - v_bz if ok else 0.0
     owner = arbiter.tick(commit_active=commit_active, same_gate=True,
-                         certified=False, feature_age_s=gate_age_s,
+                         certified=certified, feature_age_s=gate_age_s,
                          phase="position")
     return ShadowTerminal(ts_ns=ts_ns, owner=owner, up_legacy_mps=up_legacy,
                           adapter_delta_mps=delta, adapter_ok=ok)

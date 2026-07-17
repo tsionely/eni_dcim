@@ -59,6 +59,8 @@ class PerceptionAgent(Agent):
                 self.detections += 1
                 if detection.confidence >= 0.55:   # exact quad or box fallback
                     last_full_fix = time.monotonic()
+                if detection.cert_status == "certified" and self.tracker:
+                    self.tracker.certificate.on_full_quad(detection.ts_ns)
                 self.bus.publish_latest(Topic.DETECTION, detection)
                 continue
             if self.tracker is None or not self.tracker.enabled:

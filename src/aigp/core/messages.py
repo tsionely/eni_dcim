@@ -126,6 +126,11 @@ class GateDetection:
     image_size: tuple[int, int]      # (width, height)
     rel_pose: RelPose | None   # None if PnP was degenerate
     confidence: float          # 0..1
+    # Side-pair identity certificate state riding along with the fix:
+    # "certified" (full servo authority) | "probation" (rate-only) |
+    # "none". Full detector quads are self-certifying anchors; tracker
+    # fixes carry the maintained chain state.
+    cert_status: str = "none"
 
 
 @dataclass(frozen=True, slots=True)

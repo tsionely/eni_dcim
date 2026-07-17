@@ -290,9 +290,14 @@ class App:
                 # ALT (nothing is certified yet) and the adapter must
                 # round-trip the legacy command exactly.
                 if setpoint.phase == "commit":
+                    last_det, _ = det_cell.get()
+                    certified = (last_det is not None
+                                 and last_det.cert_status == "certified")
+                    shadow_arbiter.note_exposure(certified)
                     bus.publish_latest(Topic.SHADOW, shadow_terminal_check(
                         shadow_arbiter, setpoint.v_body, state.q_att,
-                        state.gate_rel_age_s, True, now_ns))
+                        state.gate_rel_age_s, True, now_ns,
+                        certified=certified))
 
             if supervisor.commands_active():
                 backend.update(setpoint, state, dt)

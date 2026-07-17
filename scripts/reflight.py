@@ -165,6 +165,8 @@ def main(argv=None):
                     tracker_ranges.append(float(np.linalg.norm(det.rel_pose.t)))
             elif det is not None and det.confidence >= 0.55:
                 last_full_mono = mono
+                if tracker is not None and det.cert_status == "certified":
+                    tracker.certificate.on_full_quad(det.ts_ns)
             if det is not None and det.rel_pose is not None:
                 rng = float(np.linalg.norm(det.rel_pose.t))
                 if args.blind_last_s > 0 and mono >= blind_from:
