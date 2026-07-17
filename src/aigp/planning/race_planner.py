@@ -44,9 +44,17 @@ class RacePlanner:
         # FOV below that range) and the drone sinks ~0.5m during the blind
         # dead-reckoned stretch (phase3h/3i: +0.3 above aim at 4m ->
         # -0.2 below center at the bar). Counter the known sink with a
-        # climb bias exactly and only while commit flies blind.
+        # climb bias only while commit flies TRULY blind. Vertical-axis
+        # study (2026-07-17): with continuous close fixes the old 0.2 bias
+        # armed at age>0.4 became a double-compensation on top of the
+        # altitude hold and overflew F1 ~1m HIGH — the bias is now smaller
+        # and arms later, and retreat keeps its own (phase4a ground-scrape)
+        # compensation separately.
         self.blind_climb_bias = float(p.get("planner.commit.blind_climb_bias_mps",
-                                            default=0.2))
+                                            default=0.1))
+        self.blind_age_s = float(p.get("planner.commit.blind_age_s", default=0.7))
+        self.retreat_climb_bias = float(p.get("planner.retreat.climb_bias_mps",
+                                              default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
         self.commit_duration_s = float(p.get("planner.commit.duration_s"))
         self.commit_speed = float(p.get("planner.commit.speed_mps"))
@@ -149,9 +157,8 @@ class RacePlanner:
             if now_ns < self._retreat_until_ns:
                 # Retreat is semi-blind (no altitude anchor): phase4a
                 # flights bled height across retry cycles — 8-35 ground
-                # scrapes per flight — until a hard hit ended them. Same
-                # sink compensation as the blind commit stretch.
-                return self._retreat_setpoint(state, self.blind_climb_bias)
+                # scrapes per flight — until a hard hit ended them.
+                return self._retreat_setpoint(state, self.retreat_climb_bias)
             self._retreat_until_ns = None
 
         # -- commit: LIVE-STEERED through-gate window (phase3b flight 1
@@ -197,7 +204,7 @@ class RacePlanner:
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
                         gate, state.q_att, au, self.alt_gain)
-                    if state.gate_rel_age_s > 0.4:
+                    if state.gate_rel_age_s > self.blind_age_s:
                         extra[2] -= self.blind_climb_bias   # blind-phase sink
                     self._commit_v_body = direction * self.commit_speed + extra
                 yaw = 0.0
