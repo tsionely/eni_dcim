@@ -123,7 +123,10 @@ class SidePairCertificate:
         lm = sorted(lw)[len(lw) // 2]
         rm = sorted(rw)[len(rw) // 2]
         for m in (lm, rm):
-            if not (2.0 <= m <= 0.45 * max(sep_px, 1.0)):
+            # w_bar measured 0.188m (analyst A4, corrected) =>
+            # width/separation ~ 0.118; band [2px, 0.30*sep]
+            # keeps margin for bloom while excluding sheets.
+            if not (2.0 <= m <= 0.30 * max(sep_px, 1.0)):
                 return False      # unbounded run (pillar/sheet) or noise
         hi, lo = max(lm, rm), max(min(lm, rm), 1e-6)
         return (hi - lo) / hi <= self.width_agree

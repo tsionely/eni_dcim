@@ -60,7 +60,14 @@ class PerceptionAgent(Agent):
                 if detection.confidence >= 0.55:   # exact quad or box fallback
                     last_full_fix = time.monotonic()
                 if detection.cert_status == "certified" and self.tracker:
-                    self.tracker.certificate.on_full_quad(detection.ts_ns)
+                    # Anchor the certificate ONLY when the fix is
+                    # prediction-consistent with the locked target: in
+                    # the next-gate-steal window a far gate's quad is a
+                    # perfectly valid detection of the WRONG gate, and
+                    # certification is per-target (FA=0 manifest case 3).
+                    r_fix = float(np.linalg.norm(detection.rel_pose.t))
+                    if prior is None or abs(r_fix - prior) <= 0.4 * prior:
+                        self.tracker.certificate.on_full_quad(detection.ts_ns)
                 self.bus.publish_latest(Topic.DETECTION, detection)
                 continue
             if self.tracker is None or not self.tracker.enabled:
