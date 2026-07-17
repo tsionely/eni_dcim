@@ -82,6 +82,31 @@ def decay_trim(trim: float, dt: float, rate: float, saturated: bool) -> float:
     return 0.0
 
 
+def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
+                          q_att: np.ndarray, gate_age_s: float,
+                          commit_active: bool, ts_ns: int):
+    """One non-actuating shadow tick (release-contract step 2).
+
+    Runs the arbiter with certified=False (no certificate exists yet —
+    owner must remain ALT) and round-trips the LEGACY command's world-up
+    component through the adapter: the reconstruction must reproduce the
+    legacy body-z to numerical precision. Returns a ShadowTerminal
+    record for the flight log; touches nothing else.
+    """
+    from aigp.core.messages import ShadowTerminal
+    from aigp.estimation.attitude_filter import quat_rotate
+
+    v = np.asarray(setpoint_v_body, dtype=np.float64)
+    up_legacy = -float(quat_rotate(q_att, v)[2])       # NED: up = -z
+    v_bz, ok = body_z_for_world_up(up_legacy, q_att, float(v[0]), float(v[1]))
+    delta = float(v[2]) - v_bz if ok else 0.0
+    owner = arbiter.tick(commit_active=commit_active, same_gate=True,
+                         certified=False, feature_age_s=gate_age_s,
+                         phase="position")
+    return ShadowTerminal(ts_ns=ts_ns, owner=owner, up_legacy_mps=up_legacy,
+                          adapter_delta_mps=delta, adapter_ok=ok)
+
+
 class VerticalOwnerArbiter:
     """Owner state machine: capture conditions, no-return latch, grace.
 

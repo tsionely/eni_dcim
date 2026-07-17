@@ -117,6 +117,24 @@ def test_identity_loss_in_position_hands_back():
     assert a.tick(True, False, False, 0.3, "position") == ALT_OWNER
 
 
+def test_shadow_check_is_consistent_and_never_captures():
+    """Release-contract step 2: on every shadow tick the adapter must
+    round-trip the legacy command exactly (delta ~ 0) and the owner must
+    stay ALT while nothing is certified — across the attitude envelope."""
+    from aigp.planning.vertical_owner import shadow_terminal_check
+    a = VerticalOwnerArbiter()
+    for _ in range(10):
+        a.note_exposure(True)               # even with healthy exposures
+    for pitch in (-0.35, 0.0, 0.3):
+        q = quat_from_euler(0.1, pitch, -0.7)
+        s = shadow_terminal_check(a, np.array([2.4, -0.5, -0.3]), q,
+                                  gate_age_s=0.05, commit_active=True,
+                                  ts_ns=1)
+        assert s.owner == ALT_OWNER          # certified=False: no capture
+        assert s.adapter_ok
+        assert abs(s.adapter_delta_mps) < 1e-9
+
+
 def test_at_most_one_transition_per_tick():
     """Release contract: a handback tick must not also recapture — even
     with capture conditions instantly perfect again (no same-tick

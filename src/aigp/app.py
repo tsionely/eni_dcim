@@ -34,6 +34,7 @@ from aigp.learning import flight_log
 from aigp.perception.gate_detector_hsv import HsvGateDetector
 from aigp.perception.pipeline import PerceptionAgent
 from aigp.planning.race_planner import RacePlanner
+from aigp.planning.vertical_owner import VerticalOwnerArbiter, shadow_terminal_check
 from aigp.supervisor.race_manager import RaceManager
 from aigp.telemetry.logger import TelemetryLogger
 
@@ -226,6 +227,7 @@ class App:
         # pre-race values into a full-window average (phase2h: +0.14 instead
         # of the true -0.31).
         prev_fsm_state = supervisor.state
+        shadow_arbiter = VerticalOwnerArbiter()   # non-actuating shadow
 
         supervisor.start_flight()
         while not supervisor.done:
@@ -283,6 +285,14 @@ class App:
                 setpoint = planner.plan(now_ns, mode, state, race)
                 bus.publish_latest(Topic.STATE, state)
                 bus.publish_latest(Topic.SETPOINT, setpoint)
+                # Terminal-channel SHADOW (release contract step 2):
+                # computed and logged, never applied — owner must stay
+                # ALT (nothing is certified yet) and the adapter must
+                # round-trip the legacy command exactly.
+                if setpoint.phase == "commit":
+                    bus.publish_latest(Topic.SHADOW, shadow_terminal_check(
+                        shadow_arbiter, setpoint.v_body, state.q_att,
+                        state.gate_rel_age_s, True, now_ns))
 
             if supervisor.commands_active():
                 backend.update(setpoint, state, dt)

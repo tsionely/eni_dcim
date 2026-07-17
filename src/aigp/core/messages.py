@@ -28,6 +28,7 @@ class Topic:
     HEARTBEAT = "heartbeat"
     ACTUATOR = "actuator"
     LOOP_STATS = "loop_stats"
+    SHADOW = "shadow"          # non-actuating terminal-channel shadow
     # Event queues (discrete, every occurrence matters)
     COLLISION = "collision"
     FSM = "fsm"
@@ -173,6 +174,23 @@ class LoopStats:
     ticks: int
     overruns: int
     max_late_us: int
+
+
+@dataclass(frozen=True, slots=True)
+class ShadowTerminal:
+    """Non-actuating terminal-channel shadow (release contract step 2).
+
+    Logged every commit tick so replays can audit the wiring BEFORE the
+    enable bit exists: owner must stay 'alt' while nothing is certified,
+    and adapter_delta (legacy body-z minus the adapter's reconstruction
+    of the same world-up command) must sit at numerical zero — a nonzero
+    delta is a frame-convention bug caught in shadow, not in flight.
+    """
+    ts_ns: int
+    owner: str
+    up_legacy_mps: float       # world-up velocity of the legacy command
+    adapter_delta_mps: float   # legacy v_bz - adapter-reconstructed v_bz
+    adapter_ok: bool           # conditioning guard verdict
 
 
 # ---------------------------------------------------------------------------
