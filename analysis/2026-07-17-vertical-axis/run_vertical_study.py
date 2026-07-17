@@ -168,11 +168,22 @@ def analyze_flight_vertical(flight_id: str) -> LastFixVert | None:
             note="no detections in log",
         )
 
-    # Last fix with range < 10m (final approach)
-    approach_dets = [d for d in dets if d[3] < 10.0]
-    if not approach_dets:
-        approach_dets = dets
-    last = approach_dets[-1]
+    # Last CLOSE fix on the first approach — not a post-retreat far re-lock.
+    # Prefer min-range detection under 5m; else last det under 8m before any
+    # gap where range jumps back above 12m.
+    close = [d for d in dets if d[3] < 5.0]
+    if close:
+        # last close fix (time-ordered); also keep the closest-range one if later far locks exist
+        last_close = close[-1]
+        closest_det = min(close, key=lambda d: d[3])
+        # Use the later of {closest_det, last_close} only if still <5m — prefer last_close
+        last = last_close
+        # If a much closer fix exists within 1s, prefer that (banner/overfly moment)
+        if closest_det[3] < last_close[3] - 0.3 and abs(closest_det[0] - last_close[0]) < 2.0:
+            last = closest_det
+    else:
+        mid = [d for d in dets if d[3] < 8.0]
+        last = mid[-1] if mid else dets[-1]
     t_lf, ty_true, tz, rng, cx, cy = last
     st = nearest_state(states, t_lf, max_dt=0.1)
     if st is None:
