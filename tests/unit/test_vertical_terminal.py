@@ -8,9 +8,14 @@ import numpy as np
 import pytest
 
 from aigp.planning.vertical_terminal import (
+    compute_terminal_guidance,
     crossing_error,
+    crossing_sigma,
     guidance_phase,
+    robust_slope,
     row_only_vertical_error,
+    safe_to_continue,
+    tau_from_span,
     terminal_vz_command,
     top_bar_vertical_error,
 )
@@ -85,3 +90,71 @@ def test_guidance_phase_schedule():
     assert guidance_phase(0.8) == "position"
     assert guidance_phase(0.35) == "damping"
     assert guidance_phase(0.1) == "freeze"
+
+
+def test_guidance_phase_is_monotonic():
+    """TTC noise must never re-arm the position controller after
+    damping/freeze has begun."""
+    assert guidance_phase(0.8, prev_phase="damping") == "damping"
+    assert guidance_phase(0.8, prev_phase="freeze") == "freeze"
+    assert guidance_phase(0.3, prev_phase="freeze") == "freeze"
+    assert guidance_phase(0.1, prev_phase="damping") == "freeze"   # forward ok
+
+
+def test_row_only_uses_axial_depth_semantics():
+    """The parameter is projective depth Z, not slant range: for an
+    off-axis gate the two differ and only Z gives e_z = Z·y − d*."""
+    y = 0.3 / 1.5
+    z = 1.5
+    slant = np.sqrt(1.5**2 + 1.0**2)      # 1m lateral offset
+    assert row_only_vertical_error(y, z, D_STAR) == pytest.approx(-0.5)
+    assert row_only_vertical_error(y, slant, D_STAR) != pytest.approx(-0.5)
+
+
+def test_robust_slope_rejects_duplicate_timestamps():
+    ts = [0.0, 0.0, 0.0, 0.1, 0.1, 0.2]   # only 3 unique -> None
+    assert robust_slope(ts, [1, 1, 1, 2, 2, 3]) is None
+    ts = [0.0, 0.1, 0.2, 0.3]
+    assert robust_slope(ts, [0.0, 0.1, 0.2, 0.3]) == pytest.approx(1.0)
+
+
+def test_tau_from_span_constant_closing_speed():
+    """Z(t) = 3 - 1.5t, span = k/Z: 1/span is linear, the fit must recover
+    time-to-plane exactly. At t=0.4, Z=2.4 -> tau = 1.6s."""
+    k = 512.0
+    times = [0.0, 0.1, 0.2, 0.3, 0.4]
+    spans = [k / (3.0 - 1.5 * t) for t in times]
+    assert tau_from_span(times, spans) == pytest.approx(1.6, abs=0.02)
+
+
+def test_tau_from_span_requires_closing():
+    times = [0.0, 0.1, 0.2, 0.3]
+    opening = [100.0, 95.0, 90.0, 85.0]   # shrinking span = receding
+    assert tau_from_span(times, opening) is None
+
+
+def test_safety_envelope_uses_moments():
+    assert safe_to_continue(0.2, 0.1, margin_m=0.5)          # 0.4 < 0.5
+    assert not safe_to_continue(0.2, 0.2, margin_m=0.5)      # 0.6 >= 0.5
+    assert crossing_sigma(0.1, 0.5, 0.2, 0.5) == pytest.approx(
+        np.sqrt(0.1**2 + 0.1**2))
+
+
+def test_integrated_guidance_freeze_is_zero_correction():
+    g = compute_terminal_guidance(e_z=0.4, sigma_e=0.05, v_z=0.0,
+                                  sigma_v=0.1, tau_s=0.2, margin_m=0.55)
+    assert g["phase"] == "freeze"
+    assert g["az_correction"] == 0.0      # correction, NOT zero thrust
+
+
+def test_integrated_guidance_f1_signature_descends():
+    """High and drifting higher: guidance must command DOWN and flag
+    unsafe when the forecast leaves the envelope."""
+    g = compute_terminal_guidance(e_z=-0.5, sigma_e=0.05, v_z=+0.3,
+                                  sigma_v=0.05, tau_s=0.8, margin_m=0.55,
+                                  prev_phase="position")
+    assert g["phase"] == "position"
+    assert g["vz_cmd"] < 0                # descend
+    assert g["az_correction"] < 0
+    assert g["e_cross"] == pytest.approx(-0.74)
+    assert not g["safe"]                  # forecast outside the envelope
