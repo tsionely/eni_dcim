@@ -110,6 +110,53 @@ def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
                           adapter_delta_mps=delta, adapter_ok=ok)
 
 
+def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
+                      certified: bool, tau_s: float, margin_m: float,
+                      prev_vz_up: float | None, dt: float,
+                      vz_max: float = 1.0, az_max: float = 2.0):
+    """The ONE final-boundary override (enable-bit path).
+
+    Computes the terminal vertical command from the CERTIFIED gate state
+    and, when the arbiter grants TERM ownership, returns the body-z that
+    replaces the legacy vertical — via exactly one limiter and one
+    attitude-aware conversion. Returns (owner, v_bz_or_None, vz_up):
+    v_bz None => legacy keeps the tick (ALT owner, adapter
+    ill-conditioned, or guidance freeze with no held target).
+
+    v1 sources (documented in the design contract): e_z = -ty from the
+    continuously-corrected gate estimate (aim = opening center per the
+    M1 verdict, d* recalibration rides the accumulating certified
+    features); v_z from the world state; tau supplied by the caller.
+    """
+    from aigp.planning.vertical_terminal import compute_terminal_guidance
+    from aigp.perception.camera import cam_to_body
+
+    gr = state.gate_rel
+    phase_hint = "position"
+    owner = arbiter.tick(commit_active=True, same_gate=True,
+                         certified=certified,
+                         feature_age_s=state.gate_rel_age_s,
+                         phase=phase_hint)
+    if owner != TERM_OWNER or gr is None:
+        return owner, None, prev_vz_up
+    e_z = -float(cam_to_body(gr.t)[2])          # body z down -> +up error
+    v_z_up = -float(state.v_world[2])
+    g = compute_terminal_guidance(
+        e_z=e_z, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
+        margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
+    if g["vz_cmd"] is None:                     # freeze: hold applied target
+        vz_goal = prev_vz_up if prev_vz_up is not None else 0.0
+    else:
+        vz_goal = g["vz_cmd"]
+    vz_up = slew_up_velocity(prev_vz_up if prev_vz_up is not None else vz_goal,
+                             vz_goal, dt, az_max, az_max)
+    v = np.asarray(setpoint_v_body, dtype=np.float64)
+    v_bz, ok = body_z_for_world_up(vz_up, state.q_att, float(v[0]), float(v[1]))
+    if not ok:
+        return owner, None, prev_vz_up
+    return owner, float(v_bz), float(vz_up)
+
+
 class VerticalOwnerArbiter:
     """Owner state machine: capture conditions, no-return latch, grace.
 

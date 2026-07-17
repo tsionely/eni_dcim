@@ -135,6 +135,38 @@ def test_shadow_check_is_consistent_and_never_captures():
         assert abs(s.adapter_delta_mps) < 1e-9
 
 
+def test_terminal_override_directions_and_gating():
+    """Enable-bit path: LOW state commands climb (negative body-z), HIGH
+    commands descend; without certification the override yields None."""
+    from aigp.core.messages import RelPose, StateEstimate
+    from aigp.planning.vertical_owner import terminal_override
+
+    def st(ty):
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, ty, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True)
+
+    a = make_arbiter()
+    v_sp = np.array([2.4, 0.0, 0.0])
+    owner, v_bz, vz = terminal_override(a, st(-0.4), v_sp, True, 0.9, 0.55,
+                                        None, 0.016)
+    assert owner == TERM_OWNER and v_bz is not None
+    assert v_bz < 0                     # LOW -> climb (NED body-z negative)
+    # HIGH case with a fresh arbiter:
+    b = make_arbiter()
+    owner, v_bz2, _ = terminal_override(b, st(+0.4), v_sp, True, 0.9, 0.55,
+                                        None, 0.016)
+    assert v_bz2 is not None and v_bz2 > 0    # HIGH -> descend
+    # Uncertified: no capture, legacy keeps the tick.
+    c = VerticalOwnerArbiter()
+    owner, v_bz3, _ = terminal_override(c, st(-0.4), v_sp, False, 0.9, 0.55,
+                                        None, 0.016)
+    assert owner == ALT_OWNER and v_bz3 is None
+
+
 def test_at_most_one_transition_per_tick():
     """Release contract: a handback tick must not also recapture — even
     with capture conditions instantly perfect again (no same-tick

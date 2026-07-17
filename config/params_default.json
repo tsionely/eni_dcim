@@ -49,6 +49,10 @@
       "speed_mps": 2.5,
       "yaw_track_gain": 1.2
     },
+    "terminal": {
+      "enable": false,
+      "margin_m": 0.55
+    },
     "recover": {
       "brake_s": 0.8
     }

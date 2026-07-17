@@ -34,7 +34,9 @@ from aigp.learning import flight_log
 from aigp.perception.gate_detector_hsv import HsvGateDetector
 from aigp.perception.pipeline import PerceptionAgent
 from aigp.planning.race_planner import RacePlanner
-from aigp.planning.vertical_owner import VerticalOwnerArbiter, shadow_terminal_check
+from aigp.planning.vertical_owner import (VerticalOwnerArbiter,
+                                          shadow_terminal_check,
+                                          terminal_override)
 from aigp.supervisor.race_manager import RaceManager
 from aigp.telemetry.logger import TelemetryLogger
 
@@ -228,6 +230,15 @@ class App:
         # of the true -0.31).
         prev_fsm_state = supervisor.state
         shadow_arbiter = VerticalOwnerArbiter()   # non-actuating shadow
+        # THE enable bit (release contract step 7): default OFF; flipped
+        # only by explicit --patch planner.terminal.enable=true once the
+        # kill gates pass. The real arbiter is separate from the shadow.
+        terminal_enable = bool(params.get("planner.terminal.enable",
+                                          default=False))
+        terminal_margin = float(params.get("planner.terminal.margin_m",
+                                           default=0.55))
+        term_arbiter = VerticalOwnerArbiter()
+        term_vz_up = None
 
         supervisor.start_flight()
         while not supervisor.done:
@@ -298,6 +309,22 @@ class App:
                         shadow_arbiter, setpoint.v_body, state.q_att,
                         state.gate_rel_age_s, True, now_ns,
                         certified=certified))
+                    if terminal_enable and state.gate_rel is not None:
+                        # THE enable-bit path: single final-boundary
+                        # override of the vertical channel (contract
+                        # rule — one estimate, one controller, one
+                        # target, one limiter, one conversion).
+                        tau = max(float(state.gate_rel.t[2]), 0.05) / max(
+                            float(np.linalg.norm(setpoint.v_body[:2])), 0.5)
+                        owner, v_bz, term_vz_up = terminal_override(
+                            term_arbiter, state, setpoint.v_body, certified,
+                            tau, terminal_margin, term_vz_up,
+                            planner_div / self.cfg.control_hz)
+                        if v_bz is not None:
+                            setpoint.v_body[2] = v_bz
+                elif terminal_enable:
+                    term_arbiter.tick(False, False, False, 9.0, "position")
+                    term_vz_up = None
 
             if supervisor.commands_active():
                 backend.update(setpoint, state, dt)
