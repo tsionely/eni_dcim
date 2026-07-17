@@ -703,37 +703,53 @@
     "20260716T203450-2ca531c3": {
       "fid": "20260716T203450-2ca531c3",
       "vision_used": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T203450-2ca531c3\\vision.aigprec",
-      "n_frames": 6,
+      "range_source": "state_le_1.5",
+      "n_frames": 18,
       "dist_span": [
-        0.3787644264371387,
+        0.030753529518360436,
         1.491329368855941
       ],
       "presence_rates": {
-        "left": 0.0,
-        "right": 0.0,
-        "top": 0.0,
-        "bottom": 0.3333333333333333,
+        "left": 0.8888888888888888,
+        "right": 0.3333333333333333,
+        "top": 0.05555555555555555,
+        "bottom": 0.9444444444444444,
         "banner": 0.0
       },
       "first_seen_as_range_decreases": {
+        "left": {
+          "dist": 1.491329368855941,
+          "t": 7.2851817
+        },
+        "right": {
+          "dist": 1.491329368855941,
+          "t": 7.2851817
+        },
         "bottom": {
           "dist": 1.491329368855941,
           "t": 7.2851817
+        },
+        "top": {
+          "dist": 1.4759550720632861,
+          "t": 8.3050928
         }
       },
-      "transition_order_near_to_far_keys": [
-        "bottom"
+      "transition_order_far_to_near": [
+        "left",
+        "right",
+        "bottom",
+        "top"
       ],
       "v2": {
         "last_structure": "left",
         "last_rates": {
-          "left": 0.0,
+          "left": 1.0,
           "right": 0.0,
           "top": 0.0,
-          "bottom": 0.0,
+          "bottom": 0.6666666666666666,
           "banner": 0.0
         },
-        "mean_ty_closest": -0.026010502385653438,
+        "mean_ty_closest": 0.01687836914526738,
         "banner_last_implies_HIGH": false,
         "state_says_HIGH": false,
         "v2_consistent": true
@@ -743,10 +759,10 @@
           "t": 7.2851817,
           "dist": 1.491329368855941,
           "ty": -0.3336093751957827,
+          "vis_left": true,
+          "vis_right": true,
           "vis_top": false,
-          "vis_right": false,
           "vis_bottom": true,
-          "vis_left": false,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": true,
@@ -757,10 +773,10 @@
           "t": 7.3457016,
           "dist": 1.3028955760503487,
           "ty": -0.23041134909997238,
+          "vis_left": true,
+          "vis_right": true,
           "vis_top": false,
-          "vis_right": false,
           "vis_bottom": true,
-          "vis_left": false,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": true,
@@ -768,13 +784,27 @@
           "touches_right": false
         },
         {
-          "t": 7.4251307,
-          "dist": 1.063304663715462,
-          "ty": -0.185672196389406,
+          "t": 7.4050259,
+          "dist": 1.1472110388604977,
+          "ty": -0.19246187322810154,
+          "vis_left": true,
+          "vis_right": true,
           "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.4651836,
+          "dist": 0.9627156289044247,
+          "ty": -0.15176887173400344,
+          "vis_left": true,
           "vis_right": false,
-          "vis_bottom": false,
-          "vis_left": false,
+          "vis_top": false,
+          "vis_bottom": true,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": false,
@@ -782,13 +812,13 @@
           "touches_right": false
         },
         {
-          "t": 7.5052495,
-          "dist": 0.8222796169741287,
-          "ty": -0.10655737656019887,
-          "vis_top": false,
+          "t": 7.5249608,
+          "dist": 0.7744569054921466,
+          "ty": -0.11531235171131762,
+          "vis_left": true,
           "vis_right": false,
-          "vis_bottom": false,
-          "vis_left": false,
+          "vis_top": false,
+          "vis_bottom": true,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": false,
@@ -796,13 +826,13 @@
           "touches_right": false
         },
         {
-          "t": 7.5653105,
-          "dist": 0.6598390317291123,
-          "ty": -0.13443359598674381,
-          "vis_top": false,
+          "t": 7.5849864,
+          "dist": 0.5913668934896334,
+          "ty": -0.11611788821759761,
+          "vis_left": true,
           "vis_right": false,
-          "vis_bottom": false,
-          "vis_left": false,
+          "vis_top": false,
+          "vis_bottom": true,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": false,
@@ -813,25 +843,356 @@
           "t": 7.6453712,
           "dist": 0.3787644264371387,
           "ty": -0.026010502385653438,
-          "vis_top": false,
+          "vis_left": true,
           "vis_right": false,
-          "vis_bottom": false,
-          "vis_left": false,
+          "vis_top": false,
+          "vis_bottom": true,
           "vis_banner": false,
           "touches_top": false,
           "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.7051871,
+          "dist": 0.19764463011916072,
+          "ty": -0.014367528996283983,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.7649991,
+          "dist": 0.030753529518360436,
+          "ty": 0.024957294648551145,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": false,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.8251184,
+          "dist": 0.1774514683514237,
+          "ty": 0.04004534178353497,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.8851454,
+          "dist": 0.3643031412247498,
+          "ty": 0.06287304098219931,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.9451422,
+          "dist": 0.534976417101481,
+          "ty": 0.0002744327693119525,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.0051978,
+          "dist": 0.7234856854961581,
+          "ty": -0.03143742912297645,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.0648226,
+          "dist": 0.8825422703983604,
+          "ty": -0.02670805648852328,
+          "vis_left": false,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.1249101,
+          "dist": 1.045097256467521,
+          "ty": -0.004882282227832246,
+          "vis_left": false,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.1848271,
+          "dist": 1.1853809935305017,
+          "ty": 0.010631870833633384,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.2448045,
+          "dist": 1.3575817294097905,
+          "ty": 0.04842724638308852,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 8.3050928,
+          "dist": 1.4759550720632861,
+          "ty": 0.04372989467843095,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": true,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": true,
+          "touches_bottom": true,
           "touches_left": false,
           "touches_right": false
         }
       ]
     },
     "20260716T212408-2ca531c3": {
-      "error": "no states in last 1.5m",
-      "fid": "20260716T212408-2ca531c3"
+      "fid": "20260716T212408-2ca531c3",
+      "vision_used": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T212408-2ca531c3\\vision.aigprec",
+      "range_source": "state_closest_span",
+      "n_frames": 7,
+      "dist_span": [
+        2.101851633717449,
+        3.474403492539824
+      ],
+      "presence_rates": {
+        "left": 0.8571428571428571,
+        "right": 0.7142857142857143,
+        "top": 0.5714285714285714,
+        "bottom": 1.0,
+        "banner": 0.5714285714285714
+      },
+      "first_seen_as_range_decreases": {
+        "left": {
+          "dist": 3.474403492539824,
+          "t": 7.1231878
+        },
+        "bottom": {
+          "dist": 3.474403492539824,
+          "t": 7.1231878
+        },
+        "right": {
+          "dist": 3.016355058341858,
+          "t": 7.2429549
+        },
+        "banner": {
+          "dist": 3.016355058341858,
+          "t": 7.2429549
+        },
+        "top": {
+          "dist": 2.782110095002108,
+          "t": 7.3034683
+        }
+      },
+      "transition_order_far_to_near": [
+        "left",
+        "bottom",
+        "right",
+        "banner",
+        "top"
+      ],
+      "v2": {
+        "last_structure": "left",
+        "last_rates": {
+          "left": 1.0,
+          "right": 1.0,
+          "top": 1.0,
+          "bottom": 1.0,
+          "banner": 0.0
+        },
+        "mean_ty_closest": 0.30017314422002367,
+        "banner_last_implies_HIGH": false,
+        "state_says_HIGH": true,
+        "v2_consistent": true
+      },
+      "rows": [
+        {
+          "t": 7.1231878,
+          "dist": 3.474403492539824,
+          "ty": 0.01825812684657798,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.1835133,
+          "dist": 3.2430563675789172,
+          "ty": 0.15349008394574862,
+          "vis_left": true,
+          "vis_right": false,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.2429549,
+          "dist": 3.016355058341858,
+          "ty": 0.23012670422148837,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": false,
+          "vis_bottom": true,
+          "vis_banner": true,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.3034683,
+          "dist": 2.782110095002108,
+          "ty": 0.31383880041187073,
+          "vis_left": false,
+          "vis_right": true,
+          "vis_top": true,
+          "vis_bottom": true,
+          "vis_banner": true,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.3632437,
+          "dist": 2.558485998955534,
+          "ty": 0.3150039299924631,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": true,
+          "vis_bottom": true,
+          "vis_banner": true,
+          "touches_top": false,
+          "touches_bottom": true,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.4234702,
+          "dist": 2.319443543151513,
+          "ty": 0.3025676063272296,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": true,
+          "vis_bottom": true,
+          "vis_banner": true,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": false,
+          "touches_right": false
+        },
+        {
+          "t": 7.483696,
+          "dist": 2.101851633717449,
+          "ty": 0.30017314422002367,
+          "vis_left": true,
+          "vis_right": true,
+          "vis_top": true,
+          "vis_bottom": true,
+          "vis_banner": false,
+          "touches_top": false,
+          "touches_bottom": false,
+          "touches_left": true,
+          "touches_right": false
+        }
+      ]
     }
   },
   "row_consistency": {
-    "error": "no focus state near 1.67m"
+    "t": 7.3028322,
+    "dist_det": 1.672659584462913,
+    "dist_state": 2.782110095002108,
+    "age_state": 0.722866488,
+    "ty_believed": 0.31383880041187073,
+    "tz_believed_state": 2.75751263904207,
+    "ty_det": -0.9446242102185011,
+    "tz_det": 1.378104088023288,
+    "row_believed_at_det_depth": 252.87433293652745,
+    "row_believed_state_pose": 216.41992958069864,
+    "row_if_det_ty": -39.34464159634089,
+    "row_mask_mid": 182.5,
+    "row_quad_center": 123.25,
+    "row_ref_used": 123.25,
+    "disagree_px_believed_at_1_67": 129.62433293652745,
+    "disagree_px_believed_state": 93.16992958069864,
+    "disagree_px_det": 162.5946415963409,
+    "better_match": "believed_ty",
+    "verdict": "BELIEVED_ROW_DISAGREES",
+    "frame": "frames\\f2_row_consistency.jpg",
+    "vision": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T212408-2ca531c3\\vision.aigprec",
+    "note": "STATE at conflict is ~2.78m DR while det R=1.67m; believed ty=+0.31 at det depth predicts an opening-center row the actual mask/quad violently disagrees with if the image matches det ty=-0.95 (pairs with D5 product\u226a512)."
   },
   "t3": {
     "fid": "20260716T203450-2ca531c3",

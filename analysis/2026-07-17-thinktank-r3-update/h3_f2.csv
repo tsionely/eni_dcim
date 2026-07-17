@@ -1,0 +1,8 @@
+t,dist,ty,vis_left,vis_right,vis_top,vis_bottom,vis_banner,touches_top,touches_bottom,touches_left,touches_right
+7.1231878,3.474403492539824,0.01825812684657798,True,False,False,True,False,False,True,False,False
+7.1835133,3.2430563675789172,0.15349008394574862,True,False,False,True,False,False,True,False,False
+7.2429549,3.016355058341858,0.23012670422148837,True,True,False,True,True,False,True,False,False
+7.3034683,2.782110095002108,0.31383880041187073,False,True,True,True,True,False,True,False,False
+7.3632437,2.558485998955534,0.3150039299924631,True,True,True,True,True,False,True,False,False
+7.4234702,2.319443543151513,0.3025676063272296,True,True,True,True,True,False,False,False,False
+7.483696,2.101851633717449,0.30017314422002367,True,True,True,True,False,False,False,True,False

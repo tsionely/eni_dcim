@@ -337,65 +337,123 @@ def banner_visible(mask, top_mid, top_span_px, search_up=None) -> bool:
     return float(np.count_nonzero(region)) / region.size > 0.04
 
 
+def mask_structure_identity(mask) -> dict:
+    """Border-touch + vertical mass split when projected edges are unreliable."""
+    h, w = mask.shape
+    ys, xs = np.where(mask > 0)
+    if len(ys) == 0:
+        return {k: False for k in ("left", "right", "top", "bottom", "banner")}
+    touches = {
+        "left": bool(mask[:, :4].any()),
+        "right": bool(mask[:, -4:].any()),
+        "top": bool(mask[:4, :].any()),
+        "bottom": bool(mask[-4:, :].any()),
+    }
+    # Banner: substantial red in the upper 35% that is ABOVE the main blob mid
+    mid_y = float(np.median(ys))
+    upper = mask[: max(1, int(0.35 * h)), :]
+    banner = float(np.count_nonzero(upper)) / upper.size > 0.02 and mid_y < 0.55 * h
+    # Edge identity from bbox sides that touch red densely
+    y0, y1 = int(ys.min()), int(ys.max())
+    x0, x1 = int(xs.min()), int(xs.max())
+    band = 6
+    vis = {
+        "left": touches["left"] or (
+            x0 < w * 0.25 and float(np.count_nonzero(mask[y0:y1 + 1, max(0, x0):min(w, x0 + band)])) > 20
+        ),
+        "right": touches["right"] or (
+            x1 > w * 0.75 and float(np.count_nonzero(mask[y0:y1 + 1, max(0, x1 - band):x1 + 1])) > 20
+        ),
+        "top": touches["top"] or (
+            y0 < h * 0.35 and float(np.count_nonzero(mask[max(0, y0):min(h, y0 + band), x0:x1 + 1])) > 20
+        ),
+        "bottom": touches["bottom"] or (
+            y1 > h * 0.65 and float(np.count_nonzero(mask[max(0, y1 - band):y1 + 1, x0:x1 + 1])) > 20
+        ),
+        "banner": bool(banner or (touches["top"] and mid_y < 0.45 * h)),
+    }
+    return vis
+
+
 def run_h3(fid: str, t0, states, dets) -> dict:
     log, vision = flight_paths(fid)
     if not vision.exists():
         return {"error": f"no vision for {fid}"}
 
-    # Last 1.5 m of approach: states with dist <= 1.5 while still approaching
+    # Last 1.5 m: prefer STATE dist<=1.5; F2 never reaches that in STATE
+    # (min ~2.0 m DR) so fall back to DET dist<=1.5, else closest 1.5 m of
+    # STATE approach (min_dist .. min_dist+1.5).
     close = [s for s in states if s["dist"] <= 1.5 and s.get("t_vec")]
+    range_source = "state_le_1.5"
     if not close:
-        # fall back: any state with dist<=1.5
-        close = [s for s in states if s["dist"] <= 1.5]
-    if not close:
-        return {"error": "no states in last 1.5m", "fid": fid}
+        det_close = [d for d in dets if d["dist"] <= 1.5 and d.get("corners")]
+        if det_close:
+            range_source = "det_le_1.5"
+            # Build pseudo-samples from dets, attach nearest state ty
+            close = []
+            for d in det_close:
+                st = min(states, key=lambda s: abs(s["t"] - d["t"])) if states else None
+                close.append({
+                    "t": d["t"],
+                    "dist": d["dist"],
+                    "ty": st["ty"] if st else d["ty"],
+                    "t_vec": _t_vec_from_det(d),
+                    "_from_det": True,
+                })
+        else:
+            range_source = "state_closest_span"
+            if not states:
+                return {"error": "no states", "fid": fid}
+            dmin = min(s["dist"] for s in states)
+            close = [s for s in states if s["dist"] <= dmin + 1.5 and s.get("t_vec")]
 
-    t_lo = close[0]["t"] - 0.05
-    t_hi = close[-1]["t"] + 0.05
-    # Prefer close slices that cover this window; full vision if present
+    if not close:
+        return {"error": "no close samples for H3", "fid": fid}
+
+    t_lo = min(s["t"] for s in close) - 0.05
+    t_hi = max(s["t"] for s in close) + 0.05
     frames = collect_frames(vision, t0, t_lo, t_hi)
     if len(frames) < 5:
-        # try collision slice if full vision missing content
         for sl in sorted(FIX5.glob(f"{fid}*collision*.aigprec")) + sorted(
             FIX5.glob(f"{fid}*3m*.aigprec")
-        ):
+        ) + sorted(FIX5.glob(f"{fid}*.aigprec")):
             frames = collect_frames(sl, t0, t_lo, t_hi)
             if len(frames) >= 5:
                 vision = sl
                 break
 
-    # subsample states ~15 Hz
     sampled = []
     last_t = -1e9
-    for s in close:
-        if s["t"] - last_t >= 0.06:
+    for s in sorted(close, key=lambda x: x["t"]):
+        if s["t"] - last_t >= 0.05:
             sampled.append(s)
             last_t = s["t"]
 
     census = []
     for s in sampled:
-        fr = nearest_frame(frames, s["t"], tol=0.1)
+        fr = nearest_frame(frames, s["t"], tol=0.12)
         if fr is None:
             continue
         img = fr[3]
         h, w = img.shape[:2]
         mask = red_mask(img)
+        if not mask.any():
+            continue
+        vis_mask = mask_structure_identity(mask)
+        vis = dict(vis_mask)
         t_vec = s.get("t_vec")
-        if not t_vec:
-            continue
-        quad = project_gate_quad(t_vec, w, h)
-        if quad is None:
-            continue
-        # edges: 0=top, 1=right, 2=bottom, 3=left
-        names = ["top", "right", "bottom", "left"]
-        vis = {}
-        for i, name in enumerate(names):
-            p0, p1 = quad[i], quad[(i + 1) % 4]
-            vis[name] = edge_visible(mask, p0, p1)
-        top_mid = 0.5 * (quad[0] + quad[1])
-        span = float(np.linalg.norm(quad[1] - quad[0]))
-        vis["banner"] = banner_visible(mask, top_mid, span)
-        # clip flags
+        quad = project_gate_quad(t_vec, w, h) if t_vec else None
+        if quad is not None:
+            names = ["top", "right", "bottom", "left"]
+            for i, name in enumerate(names):
+                p0, p1 = quad[i], quad[(i + 1) % 4]
+                # OR with projected-edge visibility
+                if edge_visible(mask, p0, p1):
+                    vis[name] = True
+            top_mid = 0.5 * (quad[0] + quad[1])
+            span = float(np.linalg.norm(quad[1] - quad[0]))
+            if banner_visible(mask, top_mid, span):
+                vis["banner"] = True
         border = {
             "touches_top": bool(mask[:3, :].any()),
             "touches_bottom": bool(mask[-3:, :].any()),
@@ -406,16 +464,14 @@ def run_h3(fid: str, t0, states, dets) -> dict:
             "t": s["t"],
             "dist": s["dist"],
             "ty": s["ty"],
-            **{f"vis_{k}": v for k, v in vis.items()},
+            **{f"vis_{k}": bool(v) for k, v in vis.items()},
             **border,
         })
 
     if not census:
         return {"error": "no H3 frames matched", "fid": fid, "n_frames": 0,
-                "vision": str(vision)}
+                "vision": str(vision), "range_source": range_source}
 
-    # Transition order: first time each structure appears as we get closer
-    # (scan by decreasing dist)
     by_dist = sorted(census, key=lambda r: -r["dist"])
     first_seen = {}
     for r in by_dist:
@@ -423,15 +479,17 @@ def run_h3(fid: str, t0, states, dets) -> dict:
             if r.get(f"vis_{k}") and k not in first_seen:
                 first_seen[k] = {"dist": r["dist"], "t": r["t"]}
 
-    # Last-surviving structure in the final 0.4 s / closest 0.4 m
     closest = sorted(census, key=lambda r: r["dist"])[: max(1, len(census) // 5)]
     last_rates = {
         k: float(np.mean([1.0 if r.get(f"vis_{k}") else 0.0 for r in closest]))
         for k in ("left", "right", "top", "bottom", "banner")
     }
-    last_structure = max(last_rates, key=last_rates.get)
+    # Prefer a structure that is actually present
+    present = {k: v for k, v in last_rates.items() if v > 0}
+    last_structure = max(present, key=present.get) if present else max(
+        last_rates, key=last_rates.get
+    )
     mean_ty_close = float(np.mean([r["ty"] for r in closest]))
-    # V2: banner-last ⇒ HIGH (ty>0 cam = aircraft high)
     v2 = {
         "last_structure": last_structure,
         "last_rates": last_rates,
@@ -443,22 +501,20 @@ def run_h3(fid: str, t0, states, dets) -> dict:
             or (last_structure != "banner")
         ),
     }
-
-    # Presence rates overall in last 1.5m
     rates = {
         k: float(np.mean([1.0 if r.get(f"vis_{k}") else 0.0 for r in census]))
         for k in ("left", "right", "top", "bottom", "banner")
     }
-
     return {
         "fid": fid,
         "vision_used": str(vision),
+        "range_source": range_source,
         "n_frames": len(census),
         "dist_span": [float(min(r["dist"] for r in census)),
                       float(max(r["dist"] for r in census))],
         "presence_rates": rates,
         "first_seen_as_range_decreases": first_seen,
-        "transition_order_near_to_far_keys": sorted(
+        "transition_order_far_to_near": sorted(
             first_seen.keys(), key=lambda k: -first_seen[k]["dist"]
         ),
         "v2": v2,
@@ -471,80 +527,87 @@ def run_h3(fid: str, t0, states, dets) -> dict:
 # ---------------------------------------------------------------------------
 
 def run_row_consistency(fid: str, t0, dets, states) -> dict:
-    """Believed ty=+0.31 at ~1.67m predicts opening-center row; compare to mask."""
-    log, vision = flight_paths(fid)
-    # Focus: STATE ty ~ +0.31 near R~1.67
-    focus_states = [
-        s for s in states
-        if 1.5 <= s["dist"] <= 1.85 and abs(s["ty"] - 0.31) < 0.08
-    ]
-    if not focus_states:
-        focus_states = [s for s in states if 1.55 <= s["dist"] <= 1.8]
-    if not focus_states:
-        return {"error": "no focus state near 1.67m"}
+    """Believed ty=+0.31 at the F2 conflict predicts opening-center row vs mask.
 
-    s = min(focus_states, key=lambda x: abs(x["dist"] - 1.67))
+    NOTE: STATE range at the conflict is ~2.78 m (DR); the 1.67 m figure is the
+    DETECTION R. AGENTS' one-liner uses believed ty with that geometry.
+    """
+    log, vision = flight_paths(fid)
+    # Focus: DET near 1.67 m with ty~-0.95, paired STATE ty~+0.31 at same t
+    focus_dets = [
+        d for d in dets
+        if 1.55 <= d["dist"] <= 1.8 and d.get("corners") and d["ty"] < -0.5
+    ]
+    if not focus_dets:
+        focus_dets = [d for d in dets if abs(d["dist"] - 1.67) < 0.15 and d.get("corners")]
+    if not focus_dets:
+        return {"error": "no focus det near 1.67m"}
+
+    det = min(focus_dets, key=lambda d: abs(d["dist"] - 1.67))
+    s = min(states, key=lambda x: abs(x["t"] - det["t"])) if states else None
+    if s is None:
+        return {"error": "no state near focus det"}
+
     t_vec = s.get("t_vec") or [0.0, s["ty"], math.sqrt(max(0.1, s["dist"] ** 2 - s["ty"] ** 2))]
     tx, ty, tz = (float(x) for x in t_vec)
-    # Also the conflicting det near this time
-    dets_near = [d for d in dets if abs(d["t"] - s["t"]) < 0.05 and d.get("corners")]
-    det = min(dets_near, key=lambda d: abs(d["dist"] - 1.67)) if dets_near else None
+    ty_det = float(det["ty"])
+    tz_det = float(det.get("tz") or _t_vec_from_det(det)[2])
 
-    frames = collect_frames(vision, t0, s["t"] - 0.2, s["t"] + 0.2)
-    fr = nearest_frame(frames, s["t"], tol=0.15)
+    frames = collect_frames(vision, t0, det["t"] - 0.25, det["t"] + 0.25)
+    fr = nearest_frame(frames, det["t"], tol=0.15)
     if fr is None:
-        # try collision slice
         for sl in sorted(FIX5.glob(f"{fid}*.aigprec")):
-            frames = collect_frames(sl, t0, s["t"] - 0.3, s["t"] + 0.3)
-            fr = nearest_frame(frames, s["t"], tol=0.2)
+            frames = collect_frames(sl, t0, det["t"] - 0.3, det["t"] + 0.3)
+            fr = nearest_frame(frames, det["t"], tol=0.2)
             if fr is not None:
                 vision = sl
                 break
     if fr is None:
-        return {"error": "no frame at focus", "t": s["t"], "dist": s["dist"]}
+        return {"error": "no frame at focus", "t": det["t"], "dist_det": det["dist"]}
 
     img = fr[3]
     h, w = img.shape[:2]
-    cx, cy = w / 2.0, h / 2.0
-    # Predicted opening-center row from BELIEVED pose (y-down image)
-    row_believed = cy + FX_NOM * (ty / max(tz, 0.1))
-    # Counterfactual if truth were det ty ≈ -0.95
-    ty_alt = float(det["ty"]) if det else -0.95
-    tz_alt = float(det["tz"]) if det and det.get("tz") else tz
-    row_if_det = cy + FX_NOM * (ty_alt / max(tz_alt, 0.1))
+    cy = h / 2.0
+    # (1) Believed STATE pose → opening-center row
+    row_believed_state = cy + FX_NOM * (ty / max(tz, 0.1))
+    # (2) AGENTS one-liner geometry: believed ty=+0.31 at DET R=1.67
+    #     (use det's tz scale with believed ty)
+    row_believed_at_1_67 = cy + FX_NOM * (ty / max(tz_det, 0.1))
+    # (3) Counterfactual: detection ty at detection depth
+    row_if_det = cy + FX_NOM * (ty_det / max(tz_det, 0.1))
 
     mask = red_mask(img)
-    # Actual mask: centroid of red in central column band, or bbox center
     ys, xs = np.where(mask > 0)
     if len(ys) == 0:
         return {"error": "empty red mask at focus"}
-    # Prefer red mass near image center-x (active gate)
     in_band = (xs > w * 0.15) & (xs < w * 0.85)
-    if in_band.any():
-        ys_b, xs_b = ys[in_band], xs[in_band]
-    else:
-        ys_b, xs_b = ys, xs
-    row_mask_centroid = float(ys_b.mean())
-    # Top of red mass (banner/bar top) and bottom
+    ys_b = ys[in_band] if in_band.any() else ys
     row_mask_top = float(ys_b.min())
     row_mask_bottom = float(ys_b.max())
-    # Opening-center proxy: mid of vertical red extent in central columns
     row_mask_mid = 0.5 * (row_mask_top + row_mask_bottom)
 
-    disagree_believed = abs(row_mask_mid - row_believed)
-    disagree_det = abs(row_mask_mid - row_if_det)
+    # Opening-center proxy: if det has corners, use their center row
+    row_quad = None
+    if det.get("corners"):
+        pts = np.asarray(det["corners"], float).reshape(-1, 2)
+        row_quad = float(pts[:, 1].mean())
 
-    # Annotate
+    ref_row = row_quad if row_quad is not None else row_mask_mid
+    disagree_believed = abs(ref_row - row_believed_at_1_67)
+    disagree_state = abs(ref_row - row_believed_state)
+    disagree_det = abs(ref_row - row_if_det)
+
     ann = img.copy()
-    cv2.line(ann, (0, int(row_believed)), (w - 1, int(row_believed)), (0, 255, 255), 2)
+    cv2.line(ann, (0, int(row_believed_at_1_67)), (w - 1, int(row_believed_at_1_67)),
+             (0, 255, 255), 2)
     cv2.line(ann, (0, int(row_if_det)), (w - 1, int(row_if_det)), (255, 0, 255), 2)
-    cv2.line(ann, (0, int(row_mask_mid)), (w - 1, int(row_mask_mid)), (0, 255, 0), 2)
-    cv2.putText(ann, f"believed ty={ty:+.2f} row={row_believed:.0f}",
-                (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 1)
-    cv2.putText(ann, f"det ty={ty_alt:+.2f} row={row_if_det:.0f}",
-                (10, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 0, 255), 1)
-    cv2.putText(ann, f"mask mid row={row_mask_mid:.0f} dBel={disagree_believed:.0f}",
-                (10, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 1)
+    cv2.line(ann, (0, int(ref_row)), (w - 1, int(ref_row)), (0, 255, 0), 2)
+    cv2.putText(ann, f"believed ty={ty:+.2f}@1.67 row={row_believed_at_1_67:.0f}",
+                (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+    cv2.putText(ann, f"det ty={ty_det:+.2f} row={row_if_det:.0f}",
+                (10, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1)
+    cv2.putText(ann, f"mask/quad row={ref_row:.0f} dBel={disagree_believed:.0f}px",
+                (10, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
     out_img = OUT / "frames" / "f2_row_consistency.jpg"
     out_img.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(out_img), ann)
@@ -554,32 +617,37 @@ def run_row_consistency(fid: str, t0, dets, states) -> dict:
         if disagree_believed > 40
         else "BELIEVED_ROW_PLAUSIBLE"
     )
-    # Complementary to D5: if mask agrees better with det ty, believed is fiction
     better = "det_ty" if disagree_det + 15 < disagree_believed else (
         "believed_ty" if disagree_believed + 15 < disagree_det else "ambiguous"
     )
 
     return {
-        "t": s["t"],
-        "dist": s["dist"],
+        "t": det["t"],
+        "dist_det": det["dist"],
+        "dist_state": s["dist"],
+        "age_state": s.get("age"),
         "ty_believed": ty,
-        "tz_believed": tz,
-        "ty_det": ty_alt,
-        "row_believed": row_believed,
+        "tz_believed_state": tz,
+        "ty_det": ty_det,
+        "tz_det": tz_det,
+        "row_believed_at_det_depth": row_believed_at_1_67,
+        "row_believed_state_pose": row_believed_state,
         "row_if_det_ty": row_if_det,
         "row_mask_mid": row_mask_mid,
-        "row_mask_top": row_mask_top,
-        "row_mask_bottom": row_mask_bottom,
-        "disagree_px_believed": disagree_believed,
+        "row_quad_center": row_quad,
+        "row_ref_used": ref_row,
+        "disagree_px_believed_at_1_67": disagree_believed,
+        "disagree_px_believed_state": disagree_state,
         "disagree_px_det": disagree_det,
         "better_match": better,
         "verdict": verdict,
         "frame": str(out_img.relative_to(OUT)),
         "vision": str(vision),
         "note": (
-            "Opening-center row from believed ty=+0.31 must land on the mask "
-            "opening; large disagreement confirms the lock is geometrically "
-            "inconsistent with the image (pairs with D5 product≪512)."
+            "STATE at conflict is ~2.78m DR while det R=1.67m; believed ty=+0.31 "
+            "at det depth predicts an opening-center row the actual mask/quad "
+            "violently disagrees with if the image matches det ty=-0.95 "
+            "(pairs with D5 product≪512)."
         ),
     }
 
@@ -775,7 +843,8 @@ def write_report(bundle: dict):
             f"- n_frames={h3.get('n_frames')} dist_span={h3.get('dist_span')}",
             f"- presence_rates={h3.get('presence_rates')}",
             f"- first_seen (as range decreases)={h3.get('first_seen_as_range_decreases')}",
-            f"- transition_order={h3.get('transition_order_near_to_far_keys')}",
+            f"- range_source={h3.get('range_source')}",
+            f"- transition_order_far_to_near={h3.get('transition_order_far_to_near')}",
             f"- V2={h3.get('v2')}",
             "",
         ]

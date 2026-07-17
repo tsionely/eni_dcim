@@ -35,19 +35,47 @@ Order: **(f) Test A RERUN** → **(g) H3** → **(i) row-consistency** → **(h)
 ## (g) H3 — visible-edge census (last 1.5 m)
 
 ### `20260716T203450-2ca531c3`
-- n_frames=6 dist_span=[0.3787644264371387, 1.491329368855941]
-- presence_rates={'left': 0.0, 'right': 0.0, 'top': 0.0, 'bottom': 0.3333333333333333, 'banner': 0.0}
-- first_seen (as range decreases)={'bottom': {'dist': 1.491329368855941, 't': 7.2851817}}
-- transition_order=['bottom']
-- V2={'last_structure': 'left', 'last_rates': {'left': 0.0, 'right': 0.0, 'top': 0.0, 'bottom': 0.0, 'banner': 0.0}, 'mean_ty_closest': -0.026010502385653438, 'banner_last_implies_HIGH': False, 'state_says_HIGH': False, 'v2_consistent': True}
+- n_frames=18 dist_span=[0.030753529518360436, 1.491329368855941]
+- presence_rates={'left': 0.8888888888888888, 'right': 0.3333333333333333, 'top': 0.05555555555555555, 'bottom': 0.9444444444444444, 'banner': 0.0}
+- first_seen (as range decreases)={'left': {'dist': 1.491329368855941, 't': 7.2851817}, 'right': {'dist': 1.491329368855941, 't': 7.2851817}, 'bottom': {'dist': 1.491329368855941, 't': 7.2851817}, 'top': {'dist': 1.4759550720632861, 't': 8.3050928}}
+- range_source=state_le_1.5
+- transition_order_far_to_near=['left', 'right', 'bottom', 'top']
+- V2={'last_structure': 'left', 'last_rates': {'left': 1.0, 'right': 0.0, 'top': 0.0, 'bottom': 0.6666666666666666, 'banner': 0.0}, 'mean_ty_closest': 0.01687836914526738, 'banner_last_implies_HIGH': False, 'state_says_HIGH': False, 'v2_consistent': True}
 
 ### `20260716T212408-2ca531c3`
-- ERROR: no states in last 1.5m
+- n_frames=7 dist_span=[2.101851633717449, 3.474403492539824]
+- presence_rates={'left': 0.8571428571428571, 'right': 0.7142857142857143, 'top': 0.5714285714285714, 'bottom': 1.0, 'banner': 0.5714285714285714}
+- first_seen (as range decreases)={'left': {'dist': 3.474403492539824, 't': 7.1231878}, 'bottom': {'dist': 3.474403492539824, 't': 7.1231878}, 'right': {'dist': 3.016355058341858, 't': 7.2429549}, 'banner': {'dist': 3.016355058341858, 't': 7.2429549}, 'top': {'dist': 2.782110095002108, 't': 7.3034683}}
+- range_source=state_closest_span
+- transition_order_far_to_near=['left', 'bottom', 'right', 'banner', 'top']
+- V2={'last_structure': 'left', 'last_rates': {'left': 1.0, 'right': 1.0, 'top': 1.0, 'bottom': 1.0, 'banner': 0.0}, 'mean_ty_closest': 0.30017314422002367, 'banner_last_implies_HIGH': False, 'state_says_HIGH': True, 'v2_consistent': True}
+
 
 ## (i) F2 ROW-CONSISTENCY
 
 {
-  "error": "no focus state near 1.67m"
+  "t": 7.3028322,
+  "dist_det": 1.672659584462913,
+  "dist_state": 2.782110095002108,
+  "age_state": 0.722866488,
+  "ty_believed": 0.31383880041187073,
+  "tz_believed_state": 2.75751263904207,
+  "ty_det": -0.9446242102185011,
+  "tz_det": 1.378104088023288,
+  "row_believed_at_det_depth": 252.87433293652745,
+  "row_believed_state_pose": 216.41992958069864,
+  "row_if_det_ty": -39.34464159634089,
+  "row_mask_mid": 182.5,
+  "row_quad_center": 123.25,
+  "row_ref_used": 123.25,
+  "disagree_px_believed_at_1_67": 129.62433293652745,
+  "disagree_px_believed_state": 93.16992958069864,
+  "disagree_px_det": 162.5946415963409,
+  "better_match": "believed_ty",
+  "verdict": "BELIEVED_ROW_DISAGREES",
+  "frame": "frames\\f2_row_consistency.jpg",
+  "vision": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T212408-2ca531c3\\vision.aigprec",
+  "note": "STATE at conflict is ~2.78m DR while det R=1.67m; believed ty=+0.31 at det depth predicts an opening-center row the actual mask/quad violently disagrees with if the image matches det ty=-0.95 (pairs with D5 product\u226a512)."
 }
 
 
