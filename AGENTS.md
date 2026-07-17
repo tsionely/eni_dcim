@@ -462,7 +462,14 @@ structurally blind downward; the vertical axis is the open front.
    (d) V6 moments: distribution of (crossing z − aim) across the new
    continuous-fix attempts — mean vs std decides any further bias;
    (e) balloon test: correlate vertical DR error growth with
-   pitch/thrust transients (confirms/kills the blend-lag mechanism).
+   pitch/thrust transients (confirms/kills the blend-lag mechanism);
+   (f) advisory #3 Test A (top-bar-only reconstruction): on full-
+   recording frames with a trusted full pose in the 2.4-1.34m band,
+   mask everything but the top bar + banner, reconstruct vertical
+   displacement via W·y_T/l_T - d* (see src/aigp/planning/
+   vertical_terminal.py for the oracle + conventions) and score
+   against the full-pose reference: bars are median bias <0.05m,
+   P90 <0.15m, sign accuracy >99% when |ref|>0.15m.
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
