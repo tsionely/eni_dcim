@@ -534,16 +534,19 @@ def order_corners(corners):
 
 
 def run_a4(meta_list, loaded) -> dict:
-    """Bar thickness in meters from a far trusted fix (R>=6m, scale-consistent)."""
-    best = None
+    """Bar thickness in meters from a mid/far trusted fix.
+
+    Prefer R in 5–12 m: at R≳20 m a true ~0.1 m tube is ≤2 px and the
+    red-mask 'thickness' collapses into banner/bloom. Physical:
+    w_bar = bar_px * R / fx.
+    """
+    candidates = []
     for meta in meta_list:
         fid = meta["fid"]
         t0, states, dets, _ = loaded[fid]["log"]
         frames = loaded[fid]["frames"]
-        # Far trusted: dist 6-20m, product ratio in [0.65,1.5]
-        cands = []
         for d in dets:
-            if not d.get("corners") or not (6.0 <= d["dist"] <= 20.0):
+            if not d.get("corners") or not (5.0 <= d["dist"] <= 14.0):
                 continue
             pts = order_corners(d["corners"])
             w_px = float(np.linalg.norm(pts[1] - pts[0]))
@@ -552,99 +555,97 @@ def run_a4(meta_list, loaded) -> dict:
             ratio = product / (FX_NOM * GATE_W)
             if not (0.65 <= ratio <= 1.5):
                 continue
-            cands.append((d, pts, w_px, h_px, ratio))
-        if not cands:
-            continue
-        # Prefer farther + higher ratio near 1
-        d, pts, w_px, h_px, ratio = max(cands, key=lambda x: (x[0]["dist"], -abs(x[4] - 1.0)))
-        # Measure bar thickness from red mask along top edge normal
-        fr = min(frames, key=lambda f: abs(f["t"] - d["t"])) if frames else None
-        bar_px = None
-        method = "quad_aspect_proxy"
-        if fr is not None and abs(fr["t"] - d["t"]) < 0.2:
+            if abs(h_px / max(w_px, 1e-6) - 1.0) > 0.45:
+                continue  # reject flat strip / banner quads
+            fr = min(frames, key=lambda f: abs(f["t"] - d["t"])) if frames else None
+            if fr is None or abs(fr["t"] - d["t"]) > 0.15:
+                continue
             img = fr["img"]
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             m1 = cv2.inRange(hsv, (0, 80, 80), (12, 255, 255))
             m2 = cv2.inRange(hsv, (165, 80, 80), (180, 255, 255))
             mask = cv2.bitwise_or(m1, m2)
-            # Sample mid top-bar, search downward for red thickness
-            mid = 0.5 * (pts[0] + pts[1])
-            # Also search upward slightly
+            # Local thickness: at each top-edge sample, count contiguous red
+            # along the inward normal (toward opening) only — max 0.25*h_px
+            max_run = max(3, int(0.25 * h_px))
             thicknesses = []
-            for a in np.linspace(0.2, 0.8, 7):
+            for a in np.linspace(0.25, 0.75, 9):
                 p = pts[0] * (1 - a) + pts[1] * a
-                x = int(round(p[0]))
-                y0 = int(round(p[1]))
-                # vertical run of red around y0
+                # inward = toward bottom of quad
+                inward = pts[3] - pts[0]
+                inward = inward / (np.linalg.norm(inward) + 1e-9)
                 run = 0
-                y = y0
-                h, w = mask.shape
-                while 0 <= y < h and abs(y - y0) < 40:
-                    x0, x1 = max(0, x - 2), min(w, x + 3)
-                    if mask[y, x0:x1].any():
-                        run += 1
-                        y += 1
-                    else:
-                        if run > 0:
-                            break
-                        y += 1
-                y = y0 - 1
-                run_up = 0
-                while 0 <= y < h and abs(y - y0) < 40:
-                    x0, x1 = max(0, x - 2), min(w, x + 3)
-                    if mask[y, x0:x1].any():
-                        run_up += 1
-                        y -= 1
-                    else:
+                for k in range(max_run):
+                    xy = p + inward * k
+                    x, y = int(round(xy[0])), int(round(xy[1]))
+                    if x < 0 or y < 0 or y >= mask.shape[0] or x >= mask.shape[1]:
                         break
-                thicknesses.append(run + run_up)
-            if thicknesses:
-                bar_px = float(np.median(thicknesses))
-                method = "red_mask_top_edge_thickness"
-        if bar_px is None or bar_px < 2:
-            # Fallback: ring tube ≈ opening height deficit vs ideal square
-            # Ideal gate height_px ≈ w_px for square; tube eats into opening.
-            # Use ~6% of gate width as first-order if mask fails — but prefer skip
-            bar_px = max(3.0, 0.08 * w_px)  # weak proxy
-            method = "aspect_proxy_8pct_of_width"
-        # Physical: thickness_m = bar_px * R / fx  (pinhole)
-        w_bar_m = bar_px * d["dist"] / FX_NOM
-        cand = {
-            "fid": fid,
-            "phase": meta["phase"],
-            "flight": meta["flight"],
-            "t": d["t"],
-            "R": d["dist"],
-            "ty": d["ty"],
-            "quad_width_px": w_px,
-            "quad_height_px": h_px,
-            "scale_ratio": ratio,
-            "bar_thickness_px": bar_px,
-            "w_bar_m": w_bar_m,
-            "method": method,
-            "frame_id": fr["frame_id"] if fr is not None else None,
-        }
-        if best is None or cand["R"] > best["R"]:
-            best = cand
-            # save annotated frame
-            if fr is not None:
-                ann = fr["img"].copy()
-                cv2.polylines(ann, [pts.astype(np.int32)], True, (0, 255, 255), 2)
-                cv2.putText(
-                    ann,
-                    f"w_bar={w_bar_m:.3f}m px={bar_px:.1f} R={d['dist']:.1f}",
-                    (10, 28),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.6,
-                    (0, 255, 255),
-                    2,
-                )
-                outp = OUT / "frames" / "a4_bar_width.jpg"
-                outp.parent.mkdir(parents=True, exist_ok=True)
-                cv2.imwrite(str(outp), ann)
-                best["frame"] = str(outp.relative_to(OUT))
+                    if mask[y, x] > 0:
+                        run += 1
+                    elif run > 0:
+                        break
+                if run >= 2:
+                    thicknesses.append(run)
+            if len(thicknesses) < 3:
+                continue
+            bar_px = float(np.median(thicknesses))
+            # Sanity: tube should be << opening height
+            if bar_px > 0.35 * h_px:
+                continue
+            w_bar_m = bar_px * d["dist"] / FX_NOM
+            candidates.append({
+                "fid": fid,
+                "phase": meta["phase"],
+                "flight": meta["flight"],
+                "t": d["t"],
+                "R": d["dist"],
+                "ty": d["ty"],
+                "quad_width_px": w_px,
+                "quad_height_px": h_px,
+                "scale_ratio": ratio,
+                "bar_thickness_px": bar_px,
+                "w_bar_m": w_bar_m,
+                "method": "inward_normal_red_run_midrange",
+                "frame_id": fr["frame_id"],
+                "_fr": fr,
+                "_pts": pts,
+            })
 
-    return best or {"error": "no far trusted fix for A4"}
+    if not candidates:
+        return {"error": "no mid-range trusted bar thickness", "n_tried": "see log"}
+
+    # Prefer a tube-plausible pick near the cohort median (0.05-0.35 m).
+    # R~8 + min bar_px alone still picks bloom-thick frames (~0.4 m).
+    ws = [c["w_bar_m"] for c in candidates]
+    med = float(__import__("numpy").median(ws))
+    plausible = [c for c in candidates if 0.05 <= c["w_bar_m"] <= 0.35]
+    pool = plausible if plausible else candidates
+    best = min(pool, key=lambda c: (abs(c["w_bar_m"] - med), abs(c["R"] - 8.0), c["bar_thickness_px"]))
+    fr = best.pop("_fr")
+    pts = best.pop("_pts")
+    ann = fr["img"].copy()
+    cv2.polylines(ann, [pts.astype(np.int32)], True, (0, 255, 255), 2)
+    cv2.putText(
+        ann,
+        f"w_bar={best['w_bar_m']:.3f}m px={best['bar_thickness_px']:.1f} R={best['R']:.1f}",
+        (10, 28),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (0, 255, 255),
+        2,
+    )
+    outp = OUT / "frames" / "a4_bar_width.jpg"
+    outp.parent.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(outp), ann)
+    best["frame"] = str(outp.relative_to(OUT))
+    best["n_candidates"] = len(candidates)
+    best["candidate_w_bar_m"] = {
+        "median": float(np.median([c["w_bar_m"] for c in candidates])),
+        "p10": float(np.percentile([c["w_bar_m"] for c in candidates], 10)),
+        "p90": float(np.percentile([c["w_bar_m"] for c in candidates], 90)),
+        "n": len(candidates),
+    }
+    return best
 
 
 # ---------------------------------------------------------------------------
