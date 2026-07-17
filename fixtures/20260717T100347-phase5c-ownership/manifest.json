@@ -1,0 +1,270 @@
+{
+  "label": "phase5c-ownership",
+  "created_utc": "20260717T100347",
+  "code_commit": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase5c_ownership_report.txt",
+      "file": "report.txt",
+      "bytes": 23944
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T100017-a560c093\\flight.jsonl",
+      "file": "20260717T100017-a560c093-flight.jsonl",
+      "bytes": 1279593
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T100017-a560c093\\result.json",
+      "file": "20260717T100017-a560c093-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T100017-a560c093\\params.json",
+      "file": "20260717T100017-a560c093-params.json",
+      "bytes": 2814
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T100017-a560c093\\vision.aigprec",
+      "reason": "688 MB > limit; upload to Drive"
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T095722-a560c093_takeoff_to_end.aigprec",
+      "bytes": 13898533
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T095851-a560c093_takeoff_to_end_full.aigprec",
+      "bytes": 15460896
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T100017-a560c093_takeoff_to_end_full.aigprec",
+      "bytes": 21756147
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T095722-a560c093-flight.jsonl",
+      "bytes": 1390937
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T095851-a560c093-flight.jsonl",
+      "bytes": 1044840
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T095722-a560c093-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T095851-a560c093-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T100017-a560c093-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T095722-a560c093-params.json",
+      "bytes": 2814
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T095851-a560c093-params.json",
+      "bytes": 2814
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T100017-a560c093-params.json",
+      "bytes": 2814
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_000.jpg",
+      "bytes": 58809
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_002.jpg",
+      "bytes": 55227
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_006.jpg",
+      "bytes": 35703
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_eventlist.jpg",
+      "bytes": 66049
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_race.json",
+      "bytes": 217
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_race_dialog.jpg",
+      "bytes": 26921
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_row_highlight.jpg",
+      "bytes": 55184
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_select.json",
+      "bytes": 1026
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_1_verify_after_race.jpg",
+      "bytes": 58843
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_000.jpg",
+      "bytes": 58818
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_002.jpg",
+      "bytes": 41763
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_006.jpg",
+      "bytes": 67773
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_eventlist.jpg",
+      "bytes": 69059
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_race.json",
+      "bytes": 218
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_race_dialog.jpg",
+      "bytes": 27063
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_row_highlight.jpg",
+      "bytes": 58611
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_select.json",
+      "bytes": 1026
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_2_verify_after_race.jpg",
+      "bytes": 60829
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_000.jpg",
+      "bytes": 58951
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_002.jpg",
+      "bytes": 72907
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_006.jpg",
+      "bytes": 31082
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_eventlist.jpg",
+      "bytes": 67672
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_race.json",
+      "bytes": 218
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_race_dialog.jpg",
+      "bytes": 27047
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_row_highlight.jpg",
+      "bytes": 68834
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_select.json",
+      "bytes": 1024
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5c_ownership_f_3_verify_after_race.jpg",
+      "bytes": 59977
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 5800
+    }
+  ]
+}
