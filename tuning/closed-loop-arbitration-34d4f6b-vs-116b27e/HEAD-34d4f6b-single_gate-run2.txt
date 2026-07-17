@@ -1,0 +1,57 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________________ test_single_gate_pass ____________________________
+
+sim_and_app = <function sim_and_app.<locals>.factory at 0x0000024FFF4A8180>
+
+    def test_single_gate_pass(sim_and_app):
+        """Full chain: detect the gate, approach, commit, pass -> race finished.
+    
+        The closed-loop flight is ~90% reliable under CI load (it flies with the
+        faithful sensor quirks: inverted+pinned gyro, body-fixed camera, PnP
+        noise); one retry keeps the test about chain regressions, not luck.
+        """
+        gate = Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+                    width=1.6, height=1.6)
+        # Lighter video than default: JPEG encode/decode contention under CI
+        # load inflates vision latency, which is exactly what the closed loop
+        # is sensitive to. Full-fidelity validation lives in the gt harness.
+        sim, app = sim_and_app([gate], image_size=(320, 180), video_hz=20.0)
+    
+        params = base_params().patch({
+            "planner.takeoff.duration_s": 1.6,     # climb to ~gate height
+            "planner.approach.speed_far_mps": 2.0,
+            "safety.flight_timeout_s": 30.0,
+        })
+        result = app.fly(params, max_duration_s=30.0)
+        if result["gates_passed"] < 1:            # one retry (see docstring)
+            app.mavlink.sim_reset()
+            import time
+            time.sleep(1.0)
+            result = app.fly(params, max_duration_s=30.0)
+    
+>       assert result["gates_passed"] >= 1, f"never passed the gate: {result}"
+E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.1)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 1, 'env_hits': 1, 'duration_s': 23.68799999996554, 'loop_overrun_frac': 0.7457713125845737, 'loop_stats': {'ticks': 5912, 'overruns': 4409, 'overrun_frac': 0.7457713125845737, 'max_late_us': 27000}, 'flight_id': '20260717T105144-a4e5c16a', 'log_dir': 'C:\\Temp\\pytest-eni-arb-HEAD-34d4f6b-single_gate-2\\test_single_gate_pass0\\logs\\20260717T105144-a4e5c16a'}
+E       assert 0 >= 1
+
+tests\integration\test_mock_closed_loop.py:142: AssertionError
+---------------------------- Captured stdout call -----------------------------
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [-0.00274433 -0.00285503  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (175 samples): bias=[-0.00148028  0.00116737  0.013     ] level roll=-0.000 pitch=-0.311
+gyro bias calibrated over 64 samples: [ 0.00122531 -0.00052996  0.013     ]; level ref roll=+0.001 pitch=-0.309
+live calibration (166 samples): bias=[-0.00135535  0.00120627  0.013     ] level roll=+0.000 pitch=-0.310
+============================== warnings summary ===============================
+..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path C:\Users\tsion\Projects\eni_dcim_qa\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Users\\tsion\\Projects\\eni_dcim_qa\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:423
+  C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path C:\Users\tsion\Projects\eni_dcim_qa\.pytest_cache\v\cache\lastfailed: [WinError 5] Access is denied: 'C:\\Users\\tsion\\Projects\\eni_dcim_qa\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As...
+1 failed, 2 warnings in 47.61s

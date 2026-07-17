@@ -1354,3 +1354,33 @@ Summary:
 - The table is in `tuning/phase5-reflight-9fe3702/fix-coverage-vs-range.md`; full CSV/JSON are alongside it.
 - Interpretation: the current committed slices confirm the Phase 5 concern. The offline suite sees no close-range detector fixes below 5m on any recent build, so planner tuning cannot address the close-range blind stretch by itself.
 - Pre-push rebase later advanced HEAD to `5e3ada6d11203226c23f40d899871f39f298aea7`; the only intervening file was `docs/thinktank/BRIEF.md`, so code, fixtures, scripts, and the measured reflight inputs remained unchanged from `9fe3702`.
+
+## 2026-07-17 - commit `34d4f6b6b4476162dff0a9d7ee1f798528fe90e0`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --ff-only` advanced the checkout to `34d4f6b6b4476162dff0a9d7ee1f798528fe90e0` (`terminal ownership`).
+- The SIM lock was clear at bootstrap. Later operator locks appeared during the work; QA runs were paused while the lock and/or `FlightSim` were live.
+- The bare `python` and `py` launchers failed with the Windows logon-session error, so the bundled Codex Python runtime was used.
+- First sandboxed CI attempt reached `106 passed, 1 xfailed` but failed during pytest cleanup of `C:\Temp\pytest-eni` with `PermissionError: [WinError 5]`.
+- Elevated CI rerun output is in `tuning/pytest-windows-34d4f6b-basetemp-full.txt`.
+- Elevated CI result: `2 failed, 112 passed, 1 xfailed, 2 warnings in 50.42s`.
+- CI failures: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`, both heartbeat timeouts on `udpin:127.0.0.1:24550`.
+- Solo reruns both passed: `test_single_gate_pass` in `8.09s`, `test_campaign_loop_against_mock` in `53.38s`.
+- Closed-loop arbitration, solo 3x per test: `single_gate` was `1/3` on HEAD and `1/3` on `116b27e`; `first_gate_with_second_visible` was pytest-green `3/3` on both builds, with xfail/xpass details in per-run logs.
+- Reflight matrix with current harness: `9fe3702` had `2706/3233` fixes (`0.837`) and `2407` accepted; HEAD had `2842/3233` fixes (`0.879`) and `2676` accepted. HEAD close tracker contributed `11` fixes.
+- The three full-approach phase5b-confirm slices were included. HEAD accepted counts were `212`, `233`, and `72`; close-tracker fixes were `0`, `7`, and `3`.
+- Hover overrun telemetry on HEAD: `overrun_frac=0.7435043304463691`, `ticks=1501`, `overruns=1116`, `max_late_us=11000`. This is not a material improvement from the prior ~0.74 Windows baseline.
+- Consolidated report: `tuning/phase5b-qa-34d4f6b-summary.md`.

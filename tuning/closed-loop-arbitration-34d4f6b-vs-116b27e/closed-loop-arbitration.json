@@ -1,0 +1,134 @@
+{
+  "builds": [
+    {
+      "label": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0"
+    },
+    {
+      "label": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde"
+    }
+  ],
+  "rows": [
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 1,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-single_gate-run1.txt"
+    },
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 2,
+      "returncode": 1,
+      "passed": false,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-single_gate-run2.txt"
+    },
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 3,
+      "returncode": 1,
+      "passed": false,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-single_gate-run3.txt"
+    },
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 1,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-first_gate_with_second_visible-run1.txt"
+    },
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 2,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-first_gate_with_second_visible-run2.txt"
+    },
+    {
+      "build": "HEAD-34d4f6b",
+      "sha": "34d4f6b6b4476162dff0a9d7ee1f798528fe90e0",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 3,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/HEAD-34d4f6b-first_gate_with_second_visible-run3.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 1,
+      "returncode": 1,
+      "passed": false,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-single_gate-run1.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 2,
+      "returncode": 1,
+      "passed": false,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-single_gate-run2.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "single_gate",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_single_gate_pass",
+      "run": 3,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-single_gate-run3.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 1,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-first_gate_with_second_visible-run1.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 2,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-first_gate_with_second_visible-run2.txt"
+    },
+    {
+      "build": "old-116b27e",
+      "sha": "116b27e6c1fbe4f46da0cf35c9765cd72ca80fde",
+      "test": "first_gate_with_second_visible",
+      "nodeid": "tests/integration/test_mock_closed_loop.py::test_first_gate_pass_with_second_gate_visible",
+      "run": 3,
+      "returncode": 0,
+      "passed": true,
+      "output": "tuning/closed-loop-arbitration-34d4f6b-vs-116b27e/old-116b27e-first_gate_with_second_visible-run3.txt"
+    }
+  ]
+}
