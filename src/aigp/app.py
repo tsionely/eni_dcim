@@ -153,7 +153,7 @@ class App:
         perception.start()
         try:
             result = self._hot_loop(supervisor, estimator, planner, backend,
-                                    max_duration_s)
+                                    max_duration_s, params)
         finally:
             perception.stop()
             self.bus.set_tap(None)
@@ -205,7 +205,8 @@ class App:
     # ---------------------------------------------------------------- hot loop
 
     def _hot_loop(self, supervisor: RaceManager, estimator: StateEstimator,
-                  planner: RacePlanner, backend, max_duration_s: float | None) -> dict:
+                  planner: RacePlanner, backend, max_duration_s: float | None,
+                  params: ParamSet | None = None) -> dict:
         bus = self.bus
         hb_cell = bus.cell(Topic.HEARTBEAT)
         race_cell = bus.cell(Topic.RACE)
@@ -234,9 +235,9 @@ class App:
         # only by explicit --patch planner.terminal.enable=true once the
         # kill gates pass. The real arbiter is separate from the shadow.
         terminal_enable = bool(params.get("planner.terminal.enable",
-                                          default=False))
+                                          default=False)) if params else False
         terminal_margin = float(params.get("planner.terminal.margin_m",
-                                           default=0.55))
+                                           default=0.55)) if params else 0.55
         term_arbiter = VerticalOwnerArbiter()
         term_vz_up = None
 
