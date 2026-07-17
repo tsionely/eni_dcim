@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 
 from aigp.planning.vertical_terminal import (
+    blend_tau,
     compute_terminal_guidance,
     crossing_error,
     crossing_sigma,
@@ -18,6 +19,7 @@ from aigp.planning.vertical_terminal import (
     tau_from_span,
     terminal_vz_command,
     top_bar_vertical_error,
+    top_bar_vertical_sigma,
 )
 
 W = 1.6
@@ -145,6 +147,28 @@ def test_integrated_guidance_freeze_is_zero_correction():
                                   sigma_v=0.1, tau_s=0.2, margin_m=0.55)
     assert g["phase"] == "freeze"
     assert g["az_correction"] == 0.0      # correction, NOT zero thrust
+
+
+def test_tau_from_span_rejects_nonmonotonic_history():
+    """Identity swap / border clipping shows as non-monotonic scale: the
+    fit must refuse rather than average it in."""
+    times = [0.0, 0.1, 0.2, 0.3, 0.4]
+    spans = [100.0, 130.0, 90.0, 140.0, 95.0]      # thrashing
+    assert tau_from_span(times, spans) is None
+
+
+def test_top_bar_sigma_grows_with_row_noise_and_range():
+    # Same pixel noise hurts more when the bar is small (far / short span).
+    near = top_bar_vertical_sigma(0.4, 0.8, W, sigma_y=0.01, sigma_span=0.01)
+    far = top_bar_vertical_sigma(0.1, 0.2, W, sigma_y=0.01, sigma_span=0.01)
+    assert far > near > 0
+
+
+def test_blend_tau_fallbacks():
+    assert blend_tau(None, 0.8) == 0.8
+    assert blend_tau(0.6, None) == 0.6
+    assert blend_tau(0.6, 0.8, scale_weight=0.5) == pytest.approx(0.7)
+    assert blend_tau(None, None) is None
 
 
 def test_integrated_guidance_f1_signature_descends():

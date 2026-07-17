@@ -127,9 +127,15 @@ def tau_from_span(times_s: list[float], spans: list[float]) -> float | None:
     constant closing speed 1/span is LINEAR in t and its zero crossing
     is the crossing instant — fitting 1/span avoids the bias of fitting
     a line to the accelerating span itself (think-tank identity).
-    Returns None unless genuinely closing (negative 1/span slope).
+    Returns None unless genuinely closing (negative 1/span slope) AND the
+    span history is mostly monotonic-growing (a bar/banner identity swap
+    or border clipping shows up as non-monotonic scale — reject rather
+    than average it in; think-tank bundle guard).
     """
     if any(s <= 1e-9 for s in spans):
+        return None
+    grow = sum(1 for a, b in zip(spans, spans[1:]) if b > a)
+    if len(spans) > 1 and grow / (len(spans) - 1) < 0.7:
         return None
     inv = [1.0 / s for s in spans]
     b = robust_slope(times_s, inv)
@@ -145,6 +151,29 @@ def tau_from_span(times_s: list[float], spans: list[float]) -> float | None:
     if value_now <= 0:
         return 0.0
     return float(-value_now / b)
+
+
+def top_bar_vertical_sigma(y_top_norm: float, span_norm: float, gate_w: float,
+                           sigma_y: float, sigma_span: float,
+                           sigma_d_star: float = 0.0) -> float:
+    """First-order sigma of the full-span estimate (think-tank bundle).
+
+    Jacobians of e = W·y/s − d*: ∂e/∂y = W/s, ∂e/∂s = −W·y/s². Feeds
+    crossing_sigma so the envelope decision sees measurement noise."""
+    j_y = gate_w / span_norm
+    j_s = -gate_w * y_top_norm / (span_norm * span_norm)
+    return float(np.sqrt((j_y * sigma_y) ** 2 + (j_s * sigma_span) ** 2
+                         + sigma_d_star ** 2))
+
+
+def blend_tau(scale_tau_s: float | None, range_tau_s: float | None,
+              scale_weight: float = 0.5) -> float | None:
+    """Blend the two TTC sources; fall back to whichever is available."""
+    if scale_tau_s is None:
+        return range_tau_s
+    if range_tau_s is None:
+        return scale_tau_s
+    return scale_weight * scale_tau_s + (1.0 - scale_weight) * range_tau_s
 
 
 def crossing_sigma(sigma_e: float, v_z: float, sigma_v: float,
