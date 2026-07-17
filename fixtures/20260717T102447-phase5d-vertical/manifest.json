@@ -1,0 +1,288 @@
+{
+  "label": "phase5d-vertical",
+  "created_utc": "20260717T102447",
+  "code_commit": "9e640307003ed8bef55d44ac58f21cc850bd733b",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase5d_vertical_report.txt",
+      "file": "report.txt",
+      "bytes": 24572
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T102132-7223cc0c\\flight.jsonl",
+      "file": "20260717T102132-7223cc0c-flight.jsonl",
+      "bytes": 1749829
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T102132-7223cc0c\\result.json",
+      "file": "20260717T102132-7223cc0c-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T102132-7223cc0c\\params.json",
+      "file": "20260717T102132-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T102132-7223cc0c\\vision.aigprec",
+      "reason": "933 MB > limit; upload to Drive"
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T101837-7223cc0c_takeoff_to_end.aigprec",
+      "bytes": 17085301
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T102007-7223cc0c_takeoff_to_end.aigprec",
+      "bytes": 14378384
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T102132-7223cc0c_takeoff_to_end.aigprec",
+      "bytes": 20479879
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T101837-7223cc0c-flight.jsonl",
+      "bytes": 1380617
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T102007-7223cc0c-flight.jsonl",
+      "bytes": 1440662
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T101837-7223cc0c-result.json",
+      "bytes": 492
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T102007-7223cc0c-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T102132-7223cc0c-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T101837-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T102007-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T102132-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_000.jpg",
+      "bytes": 58890
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_002.jpg",
+      "bytes": 59935
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_006.jpg",
+      "bytes": 72597
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_010.jpg",
+      "bytes": 59016
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_eventlist.jpg",
+      "bytes": 68650
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_race.json",
+      "bytes": 215
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_race_dialog.jpg",
+      "bytes": 27019
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_row_highlight.jpg",
+      "bytes": 66059
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_select.json",
+      "bytes": 1019
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_1_verify_after_race.jpg",
+      "bytes": 58821
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_000.jpg",
+      "bytes": 58889
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_002.jpg",
+      "bytes": 32903
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_006.jpg",
+      "bytes": 46671
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_010.jpg",
+      "bytes": 48988
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_eventlist.jpg",
+      "bytes": 68191
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_race.json",
+      "bytes": 216
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_race_dialog.jpg",
+      "bytes": 26998
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_row_highlight.jpg",
+      "bytes": 65590
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_select.json",
+      "bytes": 1017
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_2_verify_after_race.jpg",
+      "bytes": 60332
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_000.jpg",
+      "bytes": 58914
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_002.jpg",
+      "bytes": 56878
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_006.jpg",
+      "bytes": 37590
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_010.jpg",
+      "bytes": 52486
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_eventlist.jpg",
+      "bytes": 68750
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_race.json",
+      "bytes": 215
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_race_dialog.jpg",
+      "bytes": 26912
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_row_highlight.jpg",
+      "bytes": 58648
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_select.json",
+      "bytes": 1019
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5d_vertical_f_3_verify_after_race.jpg",
+      "bytes": 58988
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 5950
+    }
+  ]
+}
