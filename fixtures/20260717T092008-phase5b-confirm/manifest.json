@@ -1,0 +1,270 @@
+{
+  "label": "phase5b-confirm",
+  "created_utc": "20260717T092008",
+  "code_commit": "b66e8ed318f2635d1e598524ccd56edccef178b9",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase5b_confirm_r2_report.txt",
+      "file": "report.txt",
+      "bytes": 24018
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T091239-debf3ec1\\flight.jsonl",
+      "file": "20260717T091239-debf3ec1-flight.jsonl",
+      "bytes": 1369732
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T091239-debf3ec1\\result.json",
+      "file": "20260717T091239-debf3ec1-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T091239-debf3ec1\\params.json",
+      "file": "20260717T091239-debf3ec1-params.json",
+      "bytes": 2672
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T091239-debf3ec1\\vision.aigprec",
+      "reason": "661 MB > limit; upload to Drive"
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped from logs/<flight_id>/vision.aigprec",
+      "file": "20260717T090941-debf3ec1_takeoff_to_end_full.aigprec",
+      "bytes": 16711234
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped from logs/<flight_id>/vision.aigprec",
+      "file": "20260717T091107-debf3ec1_takeoff_to_end_full.aigprec",
+      "bytes": 18444817
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped from logs/<flight_id>/vision.aigprec",
+      "file": "20260717T091239-debf3ec1_takeoff_to_end.aigprec",
+      "bytes": 14049983
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual copy all valid flights",
+      "file": "20260717T090941-debf3ec1-flight.jsonl",
+      "bytes": 1043134
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual copy all valid flights",
+      "file": "20260717T091107-debf3ec1-flight.jsonl",
+      "bytes": 1135149
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual copy all valid flights",
+      "file": "20260717T090941-debf3ec1-result.json",
+      "bytes": 494
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual copy all valid flights",
+      "file": "20260717T091107-debf3ec1-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual copy all valid flights",
+      "file": "20260717T091239-debf3ec1-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual copy all valid flights",
+      "file": "20260717T090941-debf3ec1-params.json",
+      "bytes": 2672
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual copy all valid flights",
+      "file": "20260717T091107-debf3ec1-params.json",
+      "bytes": 2672
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual copy all valid flights",
+      "file": "20260717T091239-debf3ec1-params.json",
+      "bytes": 2672
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_000.jpg",
+      "bytes": 58897
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_002.jpg",
+      "bytes": 45714
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_006.jpg",
+      "bytes": 34192
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_eventlist.jpg",
+      "bytes": 67661
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_race.json",
+      "bytes": 221
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_race_dialog.jpg",
+      "bytes": 26906
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_row_highlight.jpg",
+      "bytes": 54932
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_select.json",
+      "bytes": 1038
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_1_verify_after_race.jpg",
+      "bytes": 58854
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_000.jpg",
+      "bytes": 58912
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_002.jpg",
+      "bytes": 50364
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_006.jpg",
+      "bytes": 67921
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_eventlist.jpg",
+      "bytes": 68046
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_race.json",
+      "bytes": 221
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_race_dialog.jpg",
+      "bytes": 26969
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_row_highlight.jpg",
+      "bytes": 55508
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_select.json",
+      "bytes": 1038
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_2_verify_after_race.jpg",
+      "bytes": 58675
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_000.jpg",
+      "bytes": 59549
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_002.jpg",
+      "bytes": 41057
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_006.jpg",
+      "bytes": 36240
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_eventlist.jpg",
+      "bytes": 60611
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_race.json",
+      "bytes": 221
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_race_dialog.jpg",
+      "bytes": 26528
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_row_highlight.jpg",
+      "bytes": 63484
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_select.json",
+      "bytes": 1036
+    },
+    {
+      "kind": "track_verification",
+      "source": "TEMP/phase5b_r2_shots + status",
+      "file": "track_verification\\phase5b_r2_verified_f_3_verify_after_race.jpg",
+      "bytes": 58825
+    },
+    {
+      "kind": "notes",
+      "source": "operator observations",
+      "file": "notes.md",
+      "bytes": 6658
+    }
+  ]
+}

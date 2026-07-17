@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "event_key": "r2training",
+  "scores": {
+    "r1": 0.9995603561401367,
+    "r2submission": 0.9997430443763733,
+    "r2training": 0.9996551275253296
+  },
+  "boxes": {
+    "r1": [
+      60,
+      206,
+      710,
+      60
+    ],
+    "r2submission": [
+      60,
+      285,
+      710,
+      60
+    ],
+    "r2training": [
+      60,
+      364,
+      710,
+      60
+    ]
+  },
+  "click": [
+    415,
+    394
+  ],
+  "highlight_scores": {
+    "r1": 0.9999801516532898,
+    "r2submission": 0.9999874234199524,
+    "r2training": 0.9824895858764648
+  },
+  "eventlist": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase5b_r2_verified_f_2\\phase5b_r2_verified_f_2_eventlist.png",
+  "highlight": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase5b_r2_verified_f_2\\phase5b_r2_verified_f_2_row_highlight.png",
+  "dialog": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase5b_r2_verified_f_2\\phase5b_r2_verified_f_2_race_dialog.png",
+  "mode": "dialog"
+}
