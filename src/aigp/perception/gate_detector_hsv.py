@@ -104,6 +104,7 @@ class HsvGateDetector(GateDetector):
                                             default=4.0))
         self.prior_boost_max_range = float(params.get(
             "perception.detector.prior_boost_max_range", default=6.0))
+        self.ty_max = float(params.get("perception.detector.ty_max_m", default=6.0))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _mask(self, img: np.ndarray) -> np.ndarray:
@@ -259,8 +260,13 @@ class HsvGateDetector(GateDetector):
             fx = self.camera.matrix(w, h)[0, 0]
             ratio = float(np.linalg.norm(rel_pose.t)) * max(w_px, h_px) \
                 / (fx * self.gate_w)
+            # (c) height plausibility: gates stand ~3m up in a hangar —
+            #     a pose implying the gate 13m above the drone (phase5c
+            #     F3 far fixes) is fiction, and chasing its LOS climbed
+            #     the drone into the ceiling truss at 2.3 m/s.
             if not (self.scale_min <= ratio <= self.scale_max) \
-                    or abs(float(rel_pose.normal[2])) < 0.35:
+                    or abs(float(rel_pose.normal[2])) < 0.35 \
+                    or abs(float(rel_pose.t[1])) > self.ty_max:
                 rel_pose = None      # keep center for yaw; drop the fiction
         return GateDetection(
             ts_ns=frame.ts_ns,

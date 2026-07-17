@@ -214,8 +214,14 @@ class RacePlanner:
                     if state.gate_rel_age_s <= self.blind_age_s:
                         self._gap_bias = None            # seeing: disarmed
                     elif self._gap_bias is None:
-                        climbing = extra[2] < -0.05      # NED: -z is up
-                        self._gap_bias = 0.0 if climbing else self.blind_climb_bias
+                        # TOP-UP, not binary veto (phase5c: the binary
+                        # veto killed insurance whenever the hold climbed
+                        # at all, and all three flights arrived LOW):
+                        # insurance only fills the gap between the hold's
+                        # climb at entry and the insured sink rate. F1's
+                        # overfly case still gets zero (hold -0.72 >> 0.1).
+                        climb = max(0.0, -float(extra[2]))   # NED: -z up
+                        self._gap_bias = max(0.0, self.blind_climb_bias - climb)
                     if self._gap_bias:
                         extra[2] -= self._gap_bias
                     self._commit_v_body = direction * self.commit_speed + extra

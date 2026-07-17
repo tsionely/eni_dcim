@@ -145,6 +145,24 @@ def test_no_arm_rule_arms_insurance_when_vertical_neutral():
         "sink insurance failed to arm on a non-climbing gap entry"
 
 
+def test_no_arm_rule_tops_up_weak_climb():
+    """phase5c: the binary veto killed insurance for ANY climb and all
+    three flights arrived LOW. Insurance now TOPS UP a weak climb to the
+    insured sink rate — a hold climbing 0.03 gets ~0.07 more, while F1's
+    strong climb (0.7) still gets zero."""
+    p = planner()
+    # Gate a hair above the aim point: hold climbs weakly (~0.05) at entry.
+    weak = [0.0, 0.05, 1.8]
+    assert p.plan(0, "race", make_state(gate_t=weak, center_px=(320, 150)),
+                  None).phase == "commit"
+    sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=weak, age_s=0.0), None)
+    sp_blind = p.plan(int(0.2e9), "race", make_state(gate_t=weak, age_s=0.5), None)
+    seen_climb = -sp_seen.v_body[2]
+    blind_climb = -sp_blind.v_body[2]
+    assert blind_climb > seen_climb + 0.01, "no top-up on a weak climb"
+    assert blind_climb - seen_climb <= 0.11, "top-up exceeded the insured rate"
+
+
 def test_collision_triggers_recover_brake():
     p = planner()
     p.on_collision(now_ns=0)
