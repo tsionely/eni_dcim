@@ -57,6 +57,38 @@ in parallel while the terminal channel owns. The open-loop patch line
    release regression set (a low-only set cannot kill an always-push-up
    defect).
 
+## Advisory-5 amendments (aperture question)
+
+- **Branch question OPEN, leaning B**: if banner-bottom is truly +0.15
+  above the OPENING CENTER (branch A), the flyable aperture is
+  [-0.8, +0.15] (center z_ap=-0.325, margin ±0.33) and aim_up=+0.25
+  aims INTO the banner. M1 re-scoring (all six phase5c/5d terminal
+  arrivals, honest last fixes): ty(center) -0.66..-1.29, ty(aperture)
+  -0.34..-0.96 — ALL still low-of-aperture, the branch-A prediction
+  (">=half inside") FAILS => evidence for branch B (reference slip in
+  the R4 measurement; suspected cause: opening_cy_px taken from the
+  banner-merged quad center, displaced upward). A6(i) re-measurement
+  decides; NO aim re-base until it does. Robust-to-branch facts: the
+  LOW arrivals are real, and closed-loop is arithmetically mandatory
+  (blind drift 0.76 vs margin <=0.4 either way).
+- **Certificate invariant 6 (edge identity routing), folded into C1
+  BEFORE implementation**: (6a) a horizontal top-region edge whose
+  support extends laterally beyond the certified side-bar lines is the
+  BANNER BOTTOM (constants: banner width / h_b); one terminating at
+  them is the top inner edge. (6b) a vertical edge supported entirely
+  above the banner-bottom row is a banner side edge — rejected from
+  the pair. New impostor class this kills: the banner's own vertical
+  edges (separation ratio 2.0/1.6=1.25 — INSIDE the [0.65,1.5] scale
+  gate; the separation check cannot catch it; 6b + bar-ness (A4) are
+  the executioners).
+- **GATE_GEOM single source of truth**: all gate geometry constants
+  (opening size, bar width, banner h_b + width, aperture bounds, drone
+  vertical half-extent, ribbon height when measured) live in ONE
+  config block (perception.gate.*) consumed by tracker, certificate,
+  V2 tables and planner aim — the d*-routing bug class dies there.
+  Populated as measurements land (A4/A6/A7/A8); branch-conditional
+  entries marked.
+
 ## Kill-test suite (offline, before any flight with TERM active)
 
 Tank #1 suite: FA=0 on the three adversarial segments (A1 manifest),

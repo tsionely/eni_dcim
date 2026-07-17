@@ -517,6 +517,28 @@ no-arm rule for blind-coast compensations.
    (A5) minimum inter-gate spacing on R2-TRAINING from any wide frame
    with two trusted fixes (pins the next-gate scale margin for the
    side-pair certificate).
+7. ADVISORY-5 pack (aperture question — A6 is DECISIVE, do it first):
+   (A6-i) RE-MEASURE the banner-bottom height reference: your R4
+   number (+0.15 above 'opening_cy_px') is suspected of a reference
+   slip — if opening_cy came from the banner-MERGED quad center it is
+   displaced upward. Re-measure banner-bottom height against the
+   opening center derived from the SIDE-BAR midpoint (or inner
+   opening), on 2-3 independent far frames with trusted fixes. Report
+   which reference the original used. Context: M1 re-scoring already
+   failed the branch-A prediction (all six phase5c/5d terminal
+   arrivals are low even in aperture coordinates), so we lean
+   branch B — but A6-i decides.
+   (A6-ii) one annotated ~2m frame: is a DISTINCT +0.8 top-inner edge
+   observable from flyable heights, separate from the banner bottom?
+   (A6-iii) solidity of the band between banner bottom and opening
+   top (collision mesh evidence or clip-event correlation).
+   (A7) rider on R1: ribbon height relative to the measured aperture
+   center from one trusted fix.
+   (A8) drone vertical half-extent including props (one number, from
+   sim docs/params or clip-geometry inference).
+   (A4 — PRIORITY BUMPED) bar width w_bar: now an executioner for the
+   banner-edge impostor class (separation ratio 1.25 passes the scale
+   gate; bar-ness is what kills it).
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
