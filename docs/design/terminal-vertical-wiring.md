@@ -89,6 +89,49 @@ in parallel while the terminal channel owns. The open-loop patch line
   Populated as measurements land (A4/A6/A7/A8); branch-conditional
   entries marked.
 
+## Release-contract tightenings (tank-2 review, adopted)
+
+Verdict accepted: approved for SHADOW integration only; TERM actuation
+stays blocked until the identity certificate passes FA=0 and the full
+replay suite is green.
+
+1. **Provenance** (per their audit requirement):
+   - src/aigp/planning/vertical_terminal.py — oracle/guidance; test:
+     `python -m pytest tests/unit/test_vertical_terminal.py` (20 tests).
+   - src/aigp/planning/vertical_owner.py — arbiter/limiter/adapter;
+     test: `python -m pytest tests/unit/test_vertical_owner.py` (9).
+   - Hashes = the repo commit history on origin/main (each commit
+     message documents the change; current tip recorded per push).
+2. **FREEZE semantics fixed in code**: compute_terminal_guidance now
+   returns vz_cmd=None in freeze — the ADAPTER holds the previously
+   APPLIED world-up target and recomputes body-z through attitude each
+   tick. 0.0 invited misuse.
+3. **Epoch-bound identity**: every terminal observation will carry
+   exposure id/ts, gate-lock epoch, certificate epoch, mode,
+   covariance, de-rotation timestamp. A relock revokes the
+   certificate; below the ~1.4m floor a revoked certificate can only
+   continue via inheritance/probation, never fresh promotion.
+4. **Row-only 0.5 factor scoped**: scales terminal speed/slew limits
+   ONLY — never e_z, tau, covariance, crossing error, or the envelope.
+5. **Grace clamp**: clamp(0.25·max(tau_eff_at_loss,0), 0, 0.12s);
+   after persistent loss in position the planner FIRST leaves forward
+   commit into retreat, only then bumpless ALT handback (atomic order).
+6. **Saturation priority refined**: preserve feasible vertical AND
+   lateral corridor corrections; reduce pass-axis forward speed first;
+   safety/telemetry always uses the ACHIEVED world-up component.
+7. **Calibration sign pinned**: bias = median(e_oracle − e_reference);
+   d_star_release = d_star_nominal + bias (the measured +0.82 raises
+   d_star by ~0.82). Sign unit test ships with the calibration.
+8. **One ownership transition per tick**, fixed priority: pass/
+   termination > hard failure > persistent-loss retreat > new capture
+   (the arbiter satisfies this by construction — handback returns
+   before any capture check; pinned by test).
+9. **Ship order updated — SHADOW WIRING MOVES UP**: wire owner +
+   limiter + adapter into the planner in non-actuating shadow mode
+   next (TERM decision and final body command computed and logged on
+   every replay; applied command asserted bit-for-bit identical to
+   legacy). Only the enable bit waits for the certificate.
+
 ## Kill-test suite (offline, before any flight with TERM active)
 
 Tank #1 suite: FA=0 on the three adversarial segments (A1 manifest),

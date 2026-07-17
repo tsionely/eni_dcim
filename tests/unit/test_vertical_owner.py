@@ -115,3 +115,20 @@ def test_identity_loss_in_position_hands_back():
     a = make_arbiter()
     assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
     assert a.tick(True, False, False, 0.3, "position") == ALT_OWNER
+
+
+def test_at_most_one_transition_per_tick():
+    """Release contract: a handback tick must not also recapture — even
+    with capture conditions instantly perfect again (no same-tick
+    handback-and-recapture races)."""
+    a = make_arbiter()
+    assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    # Attempt ends while conditions for a fresh capture are all true:
+    # the tick performs ONE transition (handback) and returns.
+    for _ in range(3):
+        a.note_exposure(True)
+    assert a.tick(False, True, True, 0.05, "position") == ALT_OWNER
+    # Capture only happens on the NEXT tick.
+    for _ in range(3):
+        a.note_exposure(True)
+    assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER

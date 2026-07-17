@@ -147,6 +147,10 @@ def test_integrated_guidance_freeze_is_zero_correction():
                                   sigma_v=0.1, tau_s=0.2, margin_m=0.55)
     assert g["phase"] == "freeze"
     assert g["az_correction"] == 0.0      # correction, NOT zero thrust
+    # Release-contract FREEZE semantics: the target is None — the adapter
+    # holds the previously APPLIED world-up target; 0.0 here would read
+    # as "command zero vertical velocity", which FREEZE is not.
+    assert g["vz_cmd"] is None
 
 
 def test_tau_from_span_rejects_nonmonotonic_history():

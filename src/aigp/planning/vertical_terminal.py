@@ -217,7 +217,11 @@ def compute_terminal_guidance(e_z: float, sigma_e: float, v_z: float,
         vz_cmd = 0.0
         az = float(np.clip(kv * (0.0 - v_z), -az_max, az_max))
     else:
-        vz_cmd = 0.0
+        # FREEZE contract (release-contract review): the target is None —
+        # the ADAPTER holds the previously APPLIED world-up target and
+        # recomputes body-z through attitude each tick. Returning 0.0
+        # here invited misuse as "command zero vertical velocity".
+        vz_cmd = None
         az = 0.0
     return {"phase": phase, "tau_eff": tau_eff, "e_cross": e_cross,
             "sigma_cross": sig, "safe": safe, "vz_cmd": vz_cmd,
