@@ -1,0 +1,119 @@
+[
+  {
+    "case": "default-250hz",
+    "control_hz": 250,
+    "aigp_nosleep": "",
+    "result": {
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "env_hits": 0,
+      "gate_clips": 0,
+      "loop_stats": {
+        "ticks": 14994,
+        "overruns": 11172,
+        "overrun_frac": 0.7450980392156863,
+        "max_late_us": 27000
+      }
+    },
+    "profile": {
+      "ticks_profiled": 14994,
+      "profile_elapsed_s": 60.0139847,
+      "achieved_hz": 249.84176729728128,
+      "wait": {
+        "total_s": 40.8065636,
+        "mean_ms": 2.721526183806856,
+        "p50_ms": 0.0089,
+        "p95_ms": 13.206900000000001,
+        "max_ms": 28.9598
+      },
+      "work": {
+        "total_s": 19.2074211,
+        "mean_ms": 1.2810925832054958,
+        "p50_ms": 0.7447,
+        "p95_ms": 3.8738,
+        "max_ms": 14.6864
+      },
+      "wait_pct_of_measured": 0.6799509115081306,
+      "work_pct_of_measured": 0.3200490884918695
+    }
+  },
+  {
+    "case": "nosleep-250hz",
+    "control_hz": 250,
+    "aigp_nosleep": "1",
+    "result": {
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "env_hits": 0,
+      "gate_clips": 0,
+      "loop_stats": {
+        "ticks": 14989,
+        "overruns": 11162,
+        "overrun_frac": 0.744679431583161,
+        "max_late_us": 24000
+      }
+    },
+    "profile": {
+      "ticks_profiled": 14989,
+      "profile_elapsed_s": 60.0128298,
+      "achieved_hz": 249.76325978882602,
+      "wait": {
+        "total_s": 40.9520135,
+        "mean_ms": 2.7321378010541064,
+        "p50_ms": 0.009000000000000001,
+        "p95_ms": 13.068,
+        "max_ms": 27.9147
+      },
+      "work": {
+        "total_s": 19.0608163,
+        "mean_ms": 1.2717384774486256,
+        "p50_ms": 0.8075,
+        "p95_ms": 3.7809,
+        "max_ms": 16.2758
+      },
+      "wait_pct_of_measured": 0.6823876433835486,
+      "work_pct_of_measured": 0.3176123566164514
+    }
+  },
+  {
+    "case": "default-125hz",
+    "control_hz": 125,
+    "aigp_nosleep": "",
+    "result": {
+      "aborted": true,
+      "abort_reason": "max duration",
+      "gates_passed": 0,
+      "env_hits": 0,
+      "gate_clips": 0,
+      "loop_stats": {
+        "ticks": 7501,
+        "overruns": 3663,
+        "overrun_frac": 0.48833488868150915,
+        "max_late_us": 17000
+      }
+    },
+    "profile": {
+      "ticks_profiled": 7501,
+      "profile_elapsed_s": 60.0143527,
+      "achieved_hz": 124.98676837349275,
+      "wait": {
+        "total_s": 48.0477077,
+        "mean_ms": 6.405506959072124,
+        "p50_ms": 7.6337,
+        "p95_ms": 15.0672,
+        "max_ms": 22.281599999999997
+      },
+      "work": {
+        "total_s": 11.966645,
+        "mean_ms": 1.5955526666666666,
+        "p50_ms": 1.2531,
+        "p95_ms": 4.034000000000001,
+        "max_ms": 20.140600000000003
+      },
+      "wait_pct_of_measured": 0.8006036146083435,
+      "work_pct_of_measured": 0.1993963853916565
+    }
+  }
+]

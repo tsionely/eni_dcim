@@ -1,0 +1,43 @@
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 63 samples: [-0.00268941 -0.00274085  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (180 samples): bias=[-0.00122924  0.00126373  0.013     ] level roll=-0.000 pitch=-0.312
+{
+  "case": "default-250hz",
+  "control_hz": 250,
+  "aigp_nosleep": "",
+  "result": {
+    "aborted": true,
+    "abort_reason": "max duration",
+    "gates_passed": 0,
+    "env_hits": 0,
+    "gate_clips": 0,
+    "loop_stats": {
+      "ticks": 14994,
+      "overruns": 11172,
+      "overrun_frac": 0.7450980392156863,
+      "max_late_us": 27000
+    }
+  },
+  "profile": {
+    "ticks_profiled": 14994,
+    "profile_elapsed_s": 60.0139847,
+    "achieved_hz": 249.84176729728128,
+    "wait": {
+      "total_s": 40.8065636,
+      "mean_ms": 2.721526183806856,
+      "p50_ms": 0.0089,
+      "p95_ms": 13.206900000000001,
+      "max_ms": 28.9598
+    },
+    "work": {
+      "total_s": 19.2074211,
+      "mean_ms": 1.2810925832054958,
+      "p50_ms": 0.7447,
+      "p95_ms": 3.8738,
+      "max_ms": 14.6864
+    },
+    "wait_pct_of_measured": 0.6799509115081306,
+    "work_pct_of_measured": 0.3200490884918695
+  }
+}

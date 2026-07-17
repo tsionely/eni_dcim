@@ -1,0 +1,39 @@
+{
+  "case": "nosleep-250hz",
+  "control_hz": 250,
+  "aigp_nosleep": "1",
+  "result": {
+    "aborted": true,
+    "abort_reason": "max duration",
+    "gates_passed": 0,
+    "env_hits": 0,
+    "gate_clips": 0,
+    "loop_stats": {
+      "ticks": 14989,
+      "overruns": 11162,
+      "overrun_frac": 0.744679431583161,
+      "max_late_us": 24000
+    }
+  },
+  "profile": {
+    "ticks_profiled": 14989,
+    "profile_elapsed_s": 60.0128298,
+    "achieved_hz": 249.76325978882602,
+    "wait": {
+      "total_s": 40.9520135,
+      "mean_ms": 2.7321378010541064,
+      "p50_ms": 0.009000000000000001,
+      "p95_ms": 13.068,
+      "max_ms": 27.9147
+    },
+    "work": {
+      "total_s": 19.0608163,
+      "mean_ms": 1.2717384774486256,
+      "p50_ms": 0.8075,
+      "p95_ms": 3.7809,
+      "max_ms": 16.2758
+    },
+    "wait_pct_of_measured": 0.6823876433835486,
+    "work_pct_of_measured": 0.3176123566164514
+  }
+}

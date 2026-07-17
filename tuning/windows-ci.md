@@ -1384,3 +1384,34 @@ Summary:
 - The three full-approach phase5b-confirm slices were included. HEAD accepted counts were `212`, `233`, and `72`; close-tracker fixes were `0`, `7`, and `3`.
 - Hover overrun telemetry on HEAD: `overrun_frac=0.7435043304463691`, `ticks=1501`, `overruns=1116`, `max_late_us=11000`. This is not a material improvement from the prior ~0.74 Windows baseline.
 - Consolidated report: `tuning/phase5b-qa-34d4f6b-summary.md`.
+
+## 2026-07-17 - commit `2afcfc4f6d61b92e91118d1e4216f2f7e0387fe1`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --ff-only` advanced the checkout to release-contract build `2afcfc4f6d61b92e91118d1e4216f2f7e0387fe1`.
+- SIM lock was clear before mock profiling and CI. The real simulator was not launched or controlled.
+- Hover loop profile ran three 60s stationary-hover cases; full report is `tuning/hover-loop-profile-2afcfc4/hover-loop-profile.md`.
+- Default 250Hz: achieved `249.84Hz`, `overrun_frac=0.7451`, wait mean/p95 `2.722/13.207ms`, work mean/p95 `1.281/3.874ms`, no env hits/clips.
+- `AIGP_NOSLEEP=1` 250Hz: achieved `249.76Hz`, `overrun_frac=0.7447`, wait mean/p95 `2.732/13.068ms`, work mean/p95 `1.272/3.781ms`, no env hits/clips.
+- `control_hz=125`: achieved `124.99Hz`, `overrun_frac=0.4883`, wait mean/p95 `6.406/15.067ms`, work mean/p95 `1.596/4.034ms`, no env hits/clips.
+- `control_hz=125` is stable in this stationary-hover probe but is not a recommended-config candidate because overrun is not near zero.
+- Full CI output is in `tuning/pytest-windows-2afcfc4-basetemp-full.txt`.
+- Full CI result: `2 failed, 123 passed, 1 xfailed, 2 warnings in 42.59s`.
+- Full-suite failures: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`, both heartbeat timeouts on `udpin:127.0.0.1:24550`.
+- Solo `test_campaign_loop_against_mock` passed in `55.34s`.
+- Solo `test_single_gate_pass` run 1 failed with pymavlink UDP client-set race: `RuntimeError: Set changed size during iteration`.
+- Solo `test_single_gate_pass` run 2 failed as closed-loop miss after built-in retry: `environment collision (impulse=4.3)`, `gates_passed=0`, `overrun_frac=0.7439`.
+- Consolidated report: `tuning/phase5c-loop-profile-2afcfc4-summary.md`.
