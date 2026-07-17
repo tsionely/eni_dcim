@@ -29,6 +29,7 @@ from aigp.core.params import ParamSet
 from aigp.estimation.state_estimator import StateEstimator
 from aigp.io.udp_tap import read_recording
 from aigp.io.vision_rx import ChunkAssembler
+from aigp.perception.close_tracker import GateCloseTracker
 from aigp.perception.gate_detector_hsv import HsvGateDetector
 from aigp.main import apply_patches
 
@@ -101,11 +102,14 @@ def main(argv=None):
                          "log spans the whole flight and replaying a cold "
                          "estimator through minutes of IMU-only corrupts the "
                          "state the slice window is judged on")
+    ap.add_argument("--no-tracker", action="store_true",
+                    help="disable the GateCloseTracker (A/B baseline)")
     args = ap.parse_args(argv)
 
     params = apply_patches(ParamSet.load(args.params), args.patch)
     detector = HsvGateDetector(params)
     est = StateEstimator(params)
+    tracker = None if args.no_tracker else GateCloseTracker(params, detector)
 
     imu = load_imu(args.log)
     frames = load_frames(args.slice, load_frame_monos(args.log))
@@ -125,15 +129,27 @@ def main(argv=None):
     fix_ranges = []          # ranges at which the detector produced a fix
     coverage = []            # (mono_s, range, accepted?) timeline
     blind = []               # (believed, measured) during the hidden window
+    tracker_ranges = []      # ranges of close-tracker (partial-edge) fixes
     t0 = events[0][1]
     blind_from = frames[-1][0] - int(args.blind_last_s * 1e9)
+    last_full_mono = None
     for kind, mono, payload in events:
         if kind == "imu":
             ts, a, g = payload
             est.predict(ImuSample(ts_ns=ts, accel=a, gyro=g))
         else:
             fid, sim_ns, img = payload
-            det = detector.detect(CameraFrame(frame_id=fid, ts_ns=sim_ns, image=img))
+            cf = CameraFrame(frame_id=fid, ts_ns=sim_ns, image=img)
+            det = detector.detect(cf)
+            if det is None and tracker is not None and tracker.enabled \
+                    and last_full_mono is not None \
+                    and (mono - last_full_mono) / 1e9 <= tracker.max_solo_s \
+                    and est.state.gate_rel is not None:
+                det = tracker.track(cf, est.state.gate_rel)
+                if det is not None and det.rel_pose is not None:
+                    tracker_ranges.append(float(np.linalg.norm(det.rel_pose.t)))
+            elif det is not None and det.confidence >= 0.55:
+                last_full_mono = mono
             if det is not None and det.rel_pose is not None:
                 rng = float(np.linalg.norm(det.rel_pose.t))
                 if args.blind_last_s > 0 and mono >= blind_from:
@@ -167,6 +183,10 @@ def main(argv=None):
         close = [r for _, r, _ in coverage if r < 3.0]
         if close:
             print(f"closest fix range: {min(close):.2f}m")
+    if tracker_ranges:
+        tr = np.array(tracker_ranges)
+        print(f"close-tracker fixes: {len(tr)} "
+              f"(range {tr.min():.2f}-{tr.max():.2f}m, median {np.median(tr):.2f})")
     if blind:
         errs = np.array([b - m for b, m in blind])
         print(f"\nblind window ({args.blind_last_s:.1f}s, {len(blind)} ref frames):"

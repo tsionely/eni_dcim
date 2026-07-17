@@ -137,7 +137,7 @@ class App:
             self.vision.raw_sink = recorder.sink_for(STREAM_VISION)
 
         detector = HsvGateDetector(params)
-        perception = PerceptionAgent(self.bus, detector)
+        perception = PerceptionAgent(self.bus, detector, params)
         estimator = StateEstimator(params)
         planner = RacePlanner(params)
         backend = BACKENDS[params.get("control.backend")](self.mavlink, params)

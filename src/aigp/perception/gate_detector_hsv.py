@@ -116,6 +116,10 @@ class HsvGateDetector(GateDetector):
             mask = cv2.bitwise_or(mask, washed)
         return mask
 
+    def red_mask(self, img: np.ndarray) -> np.ndarray:
+        """The gate-color mask (mode-aware) — shared with the close tracker."""
+        return self._mask(img)
+
     def detect(self, frame: CameraFrame) -> GateDetection | None:
         img = frame.image
         h, w = img.shape[:2]

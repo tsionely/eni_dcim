@@ -460,7 +460,16 @@ structurally blind downward; the vertical axis is the open front.
 2. Windows CI on HEAD. The 3 known-flaky FSM/heartbeat failures under
    load: if they reproduce, run those tests solo and report solo
    verdicts; overrun_frac=0.74 on your box during hover is worth one
-   line of investigation (AIGP_NOSLEEP unset?).
+   line of investigation (AIGP_NOSLEEP unset? — also note HEAD's frame
+   dedupe removes ~90% of vision-path CPU, re-measure overrun on HEAD).
+3. PRIORITY on HEAD with the GateCloseTracker: the cloud container is
+   too saturated to run the 250Hz closed-loop mock reliably (control
+   experiment: the clean previous build also fails 3/3 there), so YOUR
+   machine is the arbiter for closed-loop now. Run
+   tests/integration/test_mock_closed_loop.py solo-per-test 3x each and
+   report pass rates for single_gate and first_gate_with_second_visible
+   on HEAD vs 116b27e. If HEAD is not clearly >= the old build, bisect
+   with --patch perception.close_tracker.enabled=false.
 
 ## PREVIOUS: Phase 4c — fast-fail launches + verified relock build
 

@@ -57,14 +57,14 @@ def test_live_zgyro_bias_subtraction_and_inverted_tracking():
     assert 0.8 < yaw_from_quat(est.attitude.q) < 1.2
 
 
-def _det(ts_ns, t_cam, center=(320.0, 180.0)):
+def _det(ts_ns, t_cam, center=(320.0, 180.0), confidence=1.0):
     from aigp.core.messages import GateDetection, RelPose
     return GateDetection(
         ts_ns=ts_ns, corners_px=np.zeros((4, 2)), center_px=center,
         image_size=(640, 360),
         rel_pose=RelPose(t=np.array(t_cam, dtype=float),
                          normal=np.array([0.0, 0.0, -1.0])),
-        confidence=1.0)
+        confidence=confidence)
 
 
 def _tick(est, ts_ns):
@@ -136,6 +136,30 @@ def test_relock_distance_sanity_rejects_far_gate():
     _tick(est, ts)
     est.update_vision(_det(ts, [1.0, 0.5, 4.0]))
     assert est._gate_rel is not None and np.linalg.norm(est._gate_rel.t) < 6
+
+
+def test_tracker_fixes_update_position_not_velocity():
+    """Close-tracker fixes (confidence 0.5) are derived from the
+    dead-reckoned prior: they must correct gate POSITION but never feed
+    the velocity differentiator (prediction confirming its own
+    derivative). A same-geometry stream of full fixes DOES move v."""
+    def run(confidence):
+        est = make_estimator()
+        ts = 0
+        for i in range(60):                  # gate approaching at ~2 m/s
+            ts = int(i * 0.02e9)
+            _tick(est, ts)
+            est.update_vision(_det(ts, [0.0, 0.0, 6.0 - 0.04 * i],
+                                   confidence=confidence))
+        return est
+    est_full = run(1.0)
+    est_trk = run(0.5)
+    # Position followed the fixes in both cases.
+    assert est_trk.state.gate_rel is not None
+    assert abs(est_trk.state.gate_rel.distance - est_full.state.gate_rel.distance) < 0.3
+    # Velocity moved only for the full-confidence stream.
+    assert float(np.linalg.norm(est_full.v_world)) > 0.5
+    assert float(np.linalg.norm(est_trk.v_world)) < 0.05
 
 
 def test_relock_escape_hatch_is_time_based():

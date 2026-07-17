@@ -81,6 +81,15 @@
       "box_fallback": true,
       "box_min_area_frac": 0.025,
       "box_min_fill": 0.2
+    },
+    "close_tracker": {
+      "enabled": true,
+      "max_range_m": 7.0,
+      "search_px": 20,
+      "samples_per_edge": 12,
+      "max_step_m": 0.6,
+      "min_support": 10,
+      "max_solo_s": 1.0
     }
   },
   "estimation": {

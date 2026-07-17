@@ -349,6 +349,16 @@ class StateEstimator:
             self._relock_reject_since_ns = None
             self._gate_center_px = det.center_px
             q_now = self._attitude_at(self._rebase_det_ts(det.ts_ns))
+            if det.confidence < 0.55:
+                # Close-tracker fix (0.5): derived FROM the dead-reckoned
+                # prior, so it corrects POSITION only. Feeding it to the
+                # velocity differentiator (or the fix history later fixes
+                # difference against) would let the prediction confirm its
+                # own derivative — the circularity trap from the think-tank
+                # round-2 review. Box-fallback fixes (0.6) are INDEPENDENT
+                # image evidence and keep feeding velocity as before.
+                self._apply_position_fix(det)
+                return
             baseline = None
             for ts, t_old, n_old, q_old in self._fix_history:
                 if 0.25e9 <= det.ts_ns - ts <= 0.6e9:
@@ -397,18 +407,21 @@ class StateEstimator:
                     self._vision_yaw_ts_ns = self._rebase_det_ts(det.ts_ns)
             self._fix_history.append((det.ts_ns, t_body, n_body, q_now))
         if det.rel_pose is not None:
-            if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
-                # Blend positions to smooth detector jitter.
-                b = self.vision_blend
-                t = b * det.rel_pose.t + (1.0 - b) * self._gate_rel.t
-                n = b * det.rel_pose.normal + (1.0 - b) * self._gate_rel.normal
-                norm = np.linalg.norm(n)
-                if norm > 1e-9:
-                    n = n / norm
-                self._gate_rel = RelPose(t=t, normal=n)
-            else:
-                self._gate_rel = det.rel_pose
-            self._gate_rel_ts_ns = self._rebase_det_ts(det.ts_ns)
+            self._apply_position_fix(det)
+
+    def _apply_position_fix(self, det: GateDetection) -> None:
+        if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
+            # Blend positions to smooth detector jitter.
+            b = self.vision_blend
+            t = b * det.rel_pose.t + (1.0 - b) * self._gate_rel.t
+            n = b * det.rel_pose.normal + (1.0 - b) * self._gate_rel.normal
+            norm = np.linalg.norm(n)
+            if norm > 1e-9:
+                n = n / norm
+            self._gate_rel = RelPose(t=t, normal=n)
+        else:
+            self._gate_rel = det.rel_pose
+        self._gate_rel_ts_ns = self._rebase_det_ts(det.ts_ns)
 
     def on_gate_passed(self) -> None:
         """Called when active_gate_index increments: current fix is obsolete."""
