@@ -28,7 +28,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from aigp.core.messages import CameraFrame, GateDetection, RelPose
+from aigp.core.messages import (CameraFrame, GateDetection, RelPose,
+                                TerminalFeature)
 from aigp.core.params import ParamSet
 from aigp.perception.camera import PinholeCamera
 from aigp.perception.certificate import SidePairCertificate
@@ -55,6 +56,7 @@ class GateCloseTracker:
         r = self.camera._mount_rot
         self._derot_to_opt = r.T if r is not None else np.eye(3)
         self.certificate = SidePairCertificate()
+        self.last_feature = None          # TerminalFeature of the last frame
 
     # ----------------------------------------------------------- geometry
 
@@ -149,11 +151,27 @@ class GateCloseTracker:
         sep_meas = sep_pred + med(edge_offs.get(1)) + med(edge_offs.get(3))
         fx_w = float(k[0, 0]) * self.gate_w
         n_att = float(self.samples_per_edge)
-        self.certificate.update(
+        cert = self.certificate.update(
             frame.ts_ns, float(prior.t[2]), sep_pred, sep_meas, fx_w,
             edge_widths.get(3, []), edge_widths.get(1, []),
             len(edge_widths.get(3, [])) / n_att,
             len(edge_widths.get(1, [])) / n_att)
+        # Terminal feature (contract step 4, v1): measured top-edge row
+        # + certified pair separation, logged for offline Test-A material
+        # with verified identity. Top edge missing => row-only is not
+        # available either (the pair alone carries no row) => no feature.
+        self.last_feature = None
+        top_offs = edge_offs.get(0, [])
+        if top_offs and sep_meas > 1.0:
+            mid_top = (px[0] + px[1]) / 2.0
+            n_top = px[0] - px[3]
+            n_top = n_top / max(float(np.linalg.norm(n_top)), 1e-9)
+            y_top = float(mid_top[1] + n_top[1] * float(np.median(top_offs)))
+            mode = "BAR_FULL" if len(top_offs) >= 6 else "BAR_ROW_ONLY"
+            self.last_feature = TerminalFeature(
+                ts_ns=frame.ts_ns, y_top_px=y_top, span_px=sep_meas,
+                center_x_px=float((mid_l + mid_r)[0] / 2.0),
+                cert_status=cert, mode=mode)
         corners_derot = self._corners_derot(t)
         px, _ = self._project(corners_derot, k)
         corners = order_corners(px)

@@ -123,6 +123,36 @@ def test_side_bar_separation_recovers_absolute_range():
     assert abs(det.rel_pose.t[0]) < 0.1
 
 
+def test_terminal_feature_extracted_with_certified_pair():
+    """Contract step 4: after a full-quad anchor, a tracked frame with a
+    visible top edge yields a TerminalFeature whose row and span match
+    the rendered geometry, carrying the certificate state."""
+    tr = make_tracker()
+    truth = [0.0, 0.0, 2.5]
+    tr.certificate.on_full_quad(0)
+    frame = CameraFrame(1, int(0.05e9), render_gate(truth))
+    det = tr.track(frame, prior([0.05, 0.0, 2.6]))
+    assert det is not None
+    f = tr.last_feature
+    assert f is not None
+    # Rendered geometry at z=2.5: outer half-size = 320*0.8/2.5 = 102.4px.
+    assert abs(f.y_top_px - (180 - 102.4)) < 8
+    assert abs(f.span_px - 2 * 102.4) < 12
+    assert f.cert_status in ("certified", "probation")
+    assert f.mode == "BAR_FULL"
+
+
+def test_no_feature_without_top_edge():
+    tr = make_tracker()
+    tr.certificate.on_full_quad(0)
+    truth = [0.0, 0.0, 2.5]
+    frame = CameraFrame(1, int(0.05e9), render_gate(truth, only_sides=True))
+    det = tr.track(frame, prior([0.05, 0.0, 2.6]))
+    if det is None:
+        pytest.skip("sides-only rejected")
+    assert tr.last_feature is None
+
+
 def test_single_bar_is_rejected():
     """One visible bar = one edge direction: rank-deficient, no fix."""
     tr = make_tracker()

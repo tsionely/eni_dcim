@@ -29,6 +29,7 @@ class Topic:
     ACTUATOR = "actuator"
     LOOP_STATS = "loop_stats"
     SHADOW = "shadow"          # non-actuating terminal-channel shadow
+    FEATURE = "feature"        # certified terminal vertical feature
     # Event queues (discrete, every occurrence matters)
     COLLISION = "collision"
     FSM = "fsm"
@@ -179,6 +180,27 @@ class LoopStats:
     ticks: int
     overruns: int
     max_late_us: int
+
+
+@dataclass(frozen=True, slots=True)
+class TerminalFeature:
+    """Certified terminal vertical feature (release-contract step 4, v1).
+
+    Raw pixel-space quantities in the mount-derotated camera frame; the
+    consumer (terminal estimator) applies exposure-time attitude
+    de-rotation to the pass frame — the tracker does not know q_att.
+    span_px comes from the CERTIFIED side-pair separation (absolute
+    scale); y_top_px is the measured top-edge row (banner caveat until
+    the A6 geometry decision — identity per certificate invariants).
+    Logged every tracker frame so real flights accumulate Test-A
+    material with verified identity before the servo is ever enabled.
+    """
+    ts_ns: int
+    y_top_px: float            # measured top-edge row (image px, +down)
+    span_px: float             # certified side-pair separation (px)
+    center_x_px: float         # pair midpoint column
+    cert_status: str           # certificate state at this exposure
+    mode: str                  # BAR_FULL | BAR_ROW_ONLY
 
 
 @dataclass(frozen=True, slots=True)

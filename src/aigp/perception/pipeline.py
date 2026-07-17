@@ -75,3 +75,8 @@ class PerceptionAgent(Agent):
             if tracked is not None:
                 self.tracker_fixes += 1
                 self.bus.publish_latest(Topic.DETECTION, tracked)
+                if self.tracker.last_feature is not None:
+                    # Terminal feature -> flight log (offline Test-A
+                    # material with verified identity, pre-servo).
+                    self.bus.publish_latest(Topic.FEATURE,
+                                            self.tracker.last_feature)
