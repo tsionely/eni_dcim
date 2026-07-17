@@ -163,7 +163,8 @@ def main(argv=None):
                         float(np.linalg.norm(gr.t)) if gr is not None else None)
                     if gr is not None and ref_prev is not None \
                             and abs(rng - ref_prev) < 2.0:
-                        blind.append((float(np.linalg.norm(gr.t)), rng))
+                        blind.append((float(np.linalg.norm(gr.t)), rng,
+                                      float(gr.t[1]), float(det.rel_pose.t[1])))
                     continue
                 before = est._gate_rel_ts_ns
                 est.update_vision(det)
@@ -188,10 +189,15 @@ def main(argv=None):
         print(f"close-tracker fixes: {len(tr)} "
               f"(range {tr.min():.2f}-{tr.max():.2f}m, median {np.median(tr):.2f})")
     if blind:
-        errs = np.array([b - m for b, m in blind])
+        errs = np.array([b - m for b, m, _, _ in blind])
+        zerr = np.array([bz - mz for _, _, bz, mz in blind])
         print(f"\nblind window ({args.blind_last_s:.1f}s, {len(blind)} ref frames):"
               f" believed-minus-measured range error"
               f" end={errs[-1]:+.2f}m  max|.|={np.abs(errs).max():.2f}m")
+        # Vertical channel (advisory-2 standing metric): camera-frame ty,
+        # +down — the axis the last real flight actually died on.
+        print(f"  vertical (ty) error end={zerr[-1]:+.2f}m "
+              f" max|.|={np.abs(zerr).max():.2f}m")
     return 0
 
 

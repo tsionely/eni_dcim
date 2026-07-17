@@ -450,6 +450,19 @@ structurally blind downward; the vertical axis is the open front.
    real far gates — we see single-frame 10-21m fixes mid-approach);
    (e) Shi-Tomasi count / blur metric on lower half of close frames;
    (f) fraction of last-5m frames with a second gate visible.
+5. Think-tank ROUND-3 pack (docs/thinktank/RESPONSE3.md — vertical):
+   (a) R1: cyan-ribbon availability in the LAST 2m, split by image row
+   vs the attitude-compensated horizon row (180 + 320·tan(11°+pitch));
+   (b) R4: banner geometry — height band of the banner bottom edge
+   above opening center, one-time from any far frame with a fix;
+   (c) D5 disambiguation, one multiplication: for each single-frame
+   far fix, R_reported·quad_width_px ≈ 512 px·m ⇒ real far gate,
+   ≫512 ⇒ PnP flip/garbage on the near quad — sort F2's last-fix
+   sign conflict (believed +0.31 vs true −0.95 at 1.67m) with it;
+   (d) V6 moments: distribution of (crossing z − aim) across the new
+   continuous-fix attempts — mean vs std decides any further bias;
+   (e) balloon test: correlate vertical DR error growth with
+   pitch/thrust transients (confirms/kills the blend-lag mechanism).
 
 **QA (Codex)** — the regression suite, honest this time:
 1. Pull HEAD; note reflight.py's fix (dedupe + log-based frame times) —
