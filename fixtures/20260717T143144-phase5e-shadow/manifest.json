@@ -1,0 +1,282 @@
+{
+  "label": "phase5e-shadow",
+  "created_utc": "20260717T143144",
+  "code_commit": "698903b5ef99d1b6b57201671b882ec7b5220fe3",
+  "items": [
+    {
+      "kind": "report",
+      "source": "phase5e_shadow_report.txt",
+      "file": "report.txt",
+      "bytes": 36634
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T142546-7223cc0c\\flight.jsonl",
+      "file": "20260717T142546-7223cc0c-flight.jsonl",
+      "bytes": 1213270
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T142546-7223cc0c\\result.json",
+      "file": "20260717T142546-7223cc0c-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_log",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T142546-7223cc0c\\params.json",
+      "file": "20260717T142546-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "recording_skipped",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260717T142546-7223cc0c\\vision.aigprec",
+      "reason": "634 MB > limit; upload to Drive"
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T142306-7223cc0c_takeoff_to_end_full.aigprec",
+      "bytes": 16860297
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T142426-7223cc0c_takeoff_to_end_full.aigprec",
+      "bytes": 18094731
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "deduped vision.aigprec",
+      "file": "20260717T142546-7223cc0c_takeoff_to_end_full.aigprec",
+      "bytes": 20490544
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T142306-7223cc0c-flight.jsonl",
+      "bytes": 1081231
+    },
+    {
+      "kind": "flight_log",
+      "source": "manual",
+      "file": "20260717T142426-7223cc0c-flight.jsonl",
+      "bytes": 1035095
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T142306-7223cc0c-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T142426-7223cc0c-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_result",
+      "source": "manual",
+      "file": "20260717T142546-7223cc0c-result.json",
+      "bytes": 495
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T142306-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T142426-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "flight_params",
+      "source": "manual",
+      "file": "20260717T142546-7223cc0c-params.json",
+      "bytes": 2838
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_000.jpg",
+      "bytes": 58904
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_002.jpg",
+      "bytes": 30753
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_006.jpg",
+      "bytes": 28792
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_009.jpg",
+      "bytes": 41716
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_eventlist.jpg",
+      "bytes": 62617
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_race.json",
+      "bytes": 211
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_race_dialog.jpg",
+      "bytes": 26800
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_row_highlight.jpg",
+      "bytes": 63128
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_select.json",
+      "bytes": 1007
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_3_verify_after_race.jpg",
+      "bytes": 58913
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_000.jpg",
+      "bytes": 58874
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_002.jpg",
+      "bytes": 37085
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_006.jpg",
+      "bytes": 35450
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_eventlist.jpg",
+      "bytes": 65244
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_race.json",
+      "bytes": 212
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_race_dialog.jpg",
+      "bytes": 26903
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_row_highlight.jpg",
+      "bytes": 69140
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_select.json",
+      "bytes": 1008
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_4_verify_after_race.jpg",
+      "bytes": 59301
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_000.jpg",
+      "bytes": 58958
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_002.jpg",
+      "bytes": 53233
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_006.jpg",
+      "bytes": 63120
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_009.jpg",
+      "bytes": 61454
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_eventlist.jpg",
+      "bytes": 65544
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_race.json",
+      "bytes": 211
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_race_dialog.jpg",
+      "bytes": 20070
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_row_highlight.jpg",
+      "bytes": 65100
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_select.json",
+      "bytes": 1008
+    },
+    {
+      "kind": "track_verification",
+      "source": "manual",
+      "file": "track_verification\\phase5e_shadow_f_5_verify_after_race.jpg",
+      "bytes": 59036
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 5903
+    }
+  ]
+}
