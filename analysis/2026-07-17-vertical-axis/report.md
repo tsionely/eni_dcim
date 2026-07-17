@@ -23,13 +23,17 @@ Banner / last-fix frames: `frames/2ca531c3_t8.25_vert.jpg`, `frames/2ca531c3_t8.
 
 ## 2. Where does the vertical error come from?
 
-Mechanisms in the planner (`race_planner` commit path):
+**F1 corrected story:** at the last *close* fix (1.50 m) vision and STATE **agree**: both ty≈**−0.33 m** (aircraft LOW). Δ(bel−true)≈**0**. The overfly is **after** vision drops out.
 
-1. **altitude_hold_velocity** — holds `world_dz ≈ aim_up` using STATE `gate_rel`. If STATE ty is wrong-sign LOW (ty<0) while the aircraft is actually HIGH, `world_dz` looks like 'gate above me' → command is **climb** (vz_cmd < 0 in NED) → drives further HIGH.
-2. **blind_climb_bias** (`extra[2] -= 0.2` when `gate_rel_age_s > 0.4`) — intentional climb during vision dropout. Correct for true sink; **double-compensates** if the aircraft is already HIGH / state already wrong-LOW.
-3. **vision-velocity vz** — blends into `v_world`; a phantom descent in the estimator can bias the outer loop, but altitude-hold was added specifically to stop integrating vz. Primary suspect for HIGH-overfly with LOW state is (1)+(2) acting on a stale inverted vertical state, not raw vz alone.
+Post-fix coast (t=7.29→7.76): STATE races to dist=0.03 m with believed ty≈**+0.025** (near center) while mean **vz_cmd=−0.276** (NED climb) and **~30%** of commit samples have age>0.4 (`blind_climb` armed). Banner-view HIGH at ~1.3 m is the physical outcome — STATE at closest is fiction (centered), not “believed LOW.”
 
-**F1 attribution:** mean vz_cmd after last fix is **-0.276** (NED: negative = climb). That matches altitude-hold and/or blind_climb commanding UP while the aircraft was already HIGH — **blind_climb + altitude-hold on a LOW-believed state** is the smoking gun.
+Mechanisms:
+
+1. **altitude_hold_velocity** — drives toward `aim_up` (~0.3 m above center) using STATE. From a true LOW (−0.33 m) that is the right direction (climb), but without fresh fixes it has no stop when the aircraft crosses the opening into HIGH.
+2. **blind_climb_bias** (−0.2 m/s on body-z when age>0.4) — adds *more* climb during the same blind stretch → **overshoot amplifier** once altitude-hold has already started the correction from LOW. This is the double-compensation: sink insurance fires while the aircraft is already climbing through the opening.
+3. **vision-velocity vz** — secondary; altitude-hold was meant to replace integrating vz. F1’s signed climb command lines up with (1)+(2), not a phantom-vz descent fight.
+
+**F1 attribution (P0):** not a last-fix sign conflict. **Blind-stretch climb (altitude-hold toward aim_up + blind_climb_bias) overshoots a correctly believed LOW into a physical HIGH overfly**, while dead-reckoned STATE reports a false near-center crossing.
 
 ## 3. Detector old (9fe3702) vs new (HEAD bloom-proof) on full recordings
 
