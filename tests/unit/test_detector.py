@@ -123,3 +123,20 @@ def test_exact_quad_wins_over_fallback(detector):
     """When a clean quad exists the exact path must be used (confidence 1)."""
     det = detector.detect(CameraFrame(1, 0, render_gate_ring(size=150)))
     assert det is not None and det.confidence == 1.0
+
+
+def test_scale_gate_rejects_narrow_substructure_pose():
+    """F2 autopsy (D5): the detector locked a narrow sub-structure and PnP
+    invented a pose — R·max(w,h)px ran at a third of fx·gate_w. Such a
+    pose must be dropped (center kept for yaw, rel_pose None), while a
+    proper ring's pose passes the same gate."""
+    from aigp.core.params import ParamSet
+    from aigp.perception.gate_detector_hsv import HsvGateDetector
+    det = HsvGateDetector(ParamSet.load("config/params_default.json"))
+    # A solid narrow red strip forms a clean convex quad.
+    img = np.full((360, 640, 3), 40, dtype=np.uint8)
+    cv2.rectangle(img, (280, 165), (382, 195), (30, 30, 230), -1)
+    d = det.detect(CameraFrame(1, 0, img))
+    assert d is None or d.rel_pose is None
+    ring = det.detect(CameraFrame(1, 0, render_gate_ring()))
+    assert ring is not None and ring.rel_pose is not None

@@ -90,6 +90,16 @@ class HsvGateDetector(GateDetector):
                                                   default=0.025))
         self.box_min_fill = float(params.get("perception.detector.box_min_fill",
                                              default=0.2))
+        # Scale-consistency gate (analyst D5 finding, 2026-07-17): for a
+        # real gate, R·(pixel size) ≈ fx·gate_w on the less-foreshortened
+        # axis. F2's close "fixes" ran at 0.33-0.46 of that — the detector
+        # had locked a narrow sub-structure and PnP invented a pose; the
+        # estimator then flew on fiction. One multiplication rejects the
+        # whole class.
+        self.scale_gate = bool(params.get("perception.detector.scale_gate",
+                                          default=True))
+        self.scale_min = float(params.get("perception.detector.scale_min", default=0.65))
+        self.scale_max = float(params.get("perception.detector.scale_max", default=1.5))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _mask(self, img: np.ndarray) -> np.ndarray:
@@ -210,6 +220,23 @@ class HsvGateDetector(GateDetector):
         corners = order_corners(best[1])
         center = (float(corners[:, 0].mean()), float(corners[:, 1].mean()))
         rel_pose = self.camera.solve_gate_pnp(corners, (w, h), self.gate_w, self.gate_h)
+        if rel_pose is not None and self.scale_gate:
+            # Two ways PnP invents a pose for a non-gate quad, two guards:
+            # (a) F2's class — narrow sub-structure fit at close range:
+            #     R·max(w,h)px ran at a THIRD of fx·gate_w (real gates
+            #     match it; width shrinks with cos(yaw) but height does
+            #     not, hence max).
+            # (b) strip fit as a heavily tilted square (product ~1.0 but
+            #     the plane is near-grazing): we never approach a gate
+            #     edge-on — reject grazing normals.
+            w_px = float(np.linalg.norm(corners[1] - corners[0]))
+            h_px = float(np.linalg.norm(corners[3] - corners[0]))
+            fx = self.camera.matrix(w, h)[0, 0]
+            ratio = float(np.linalg.norm(rel_pose.t)) * max(w_px, h_px) \
+                / (fx * self.gate_w)
+            if not (self.scale_min <= ratio <= self.scale_max) \
+                    or abs(float(rel_pose.normal[2])) < 0.35:
+                rel_pose = None      # keep center for yaw; drop the fiction
         return GateDetection(
             ts_ns=frame.ts_ns,
             corners_px=corners,

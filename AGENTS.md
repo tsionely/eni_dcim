@@ -463,13 +463,17 @@ structurally blind downward; the vertical axis is the open front.
    continuous-fix attempts — mean vs std decides any further bias;
    (e) balloon test: correlate vertical DR error growth with
    pitch/thrust transients (confirms/kills the blend-lag mechanism);
-   (f) advisory #3 Test A (top-bar-only reconstruction): on full-
-   recording frames with a trusted full pose in the 2.4-1.34m band,
-   mask everything but the top bar + banner, reconstruct vertical
-   displacement via W·y_T/l_T - d* (see src/aigp/planning/
-   vertical_terminal.py for the oracle + conventions) and score
-   against the full-pose reference: bars are median bias <0.05m,
-   P90 <0.15m, sign accuracy >99% when |ref|>0.15m;
+   (f) advisory #3 Test A RERUN with the measured geometry (your R4:
+   banner bottom is +0.15m above OPENING CENTER, not ~0.9m — the first
+   run's d*=0.8 was scoring against the wrong structure): split bar vs
+   banner identity explicitly (banner = the wide strip whose bottom
+   edge sits ~0.15m above center; top bar = the ring member above the
+   opening), calibrate d* per structure from R4, then score
+   W·y_T/l_T - d* against the full-pose reference in the 2.4-1.5m
+   band. Bars unchanged: median bias <0.05m, P90 <0.15m, sign acc
+   >99% when |ref|>0.15m. Note HEAD's new detector scale-gate kills
+   flat strip-fit poses — use it to label which frames were bar vs
+   banner (killed = strip-fit);
    (g) H3 census (think-tank round 4): per-frame visible-edge
    identity (left/right/top/bottom/banner) over the last 1.5m of F1
    and F2 — fixes the true source-transition order for the crossing-

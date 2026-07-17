@@ -72,7 +72,36 @@ H2 (harness on F2 + clean pass), H3 (visible-edge identity census over
 the last 1.5m of F1/F2 — also validates V2), H4 (=R4 banner band,
 already assigned), T3 kill test (i) on the full F1 log.
 
-## 6. For your next turn
+## 6. Same-day addendum — the analyst pack landed and one more guard shipped
+
+The analyst's round-3 pack (committed) settled several open threads:
+
+- **D5 verdict on F2: systematic garbage.** Nearly every close F2 fix ran
+  the 512-product at 0.33–0.46 (R·w_px 169–235) — the detector had locked
+  a narrow sub-structure and PnP invented poses; both "believed" and
+  "true" ty in the earlier F2 row were fiction. SHIPPED in response: a
+  scale-consistency gate in the detector (R·max(w,h)px vs fx·W within
+  [0.65, 1.5]) plus a grazing-normal guard (|n_z| ≥ 0.35 — we never
+  approach a gate edge-on). Replay diagnostics show surgical behavior:
+  flat strip-fits (254×33, 408×78 px quads with |n_z| 0.10–0.32) are
+  killed, proper ring quads survive, and the deepest legit fix (1.50 m —
+  the same frame the analyst's vertical study independently chose as the
+  last trusted fix) is preserved.
+- **R4: the banner bottom sits +0.15 m above the OPENING CENTER** — not
+  ~0.9 m. This re-frames V4 entirely: the banner's bottom edge is a
+  near-center reference line visible to ~1 m. It also explains Test A's
+  failure (it was run with the d*≈0.8 top-bar assumption against what
+  was, at least partly, banner structure); Test A reruns with the
+  measured geometry and a bar/banner identity split.
+- **R1: ribbon availability in the last 2 m is 41% (F1) / 62% (F2)**,
+  87–100% of it below the compensated horizon — V1 lands as an
+  opportunistic measurement, not the primary loop, per your own ≥60% bar
+  (borderline).
+- **Balloon test: corr(vertical DR error growth, pitch rate) = 0.81 on
+  F1** — the blend-lag mechanism is real and feeds T1's noise model as
+  you specified.
+
+## 7. For your next turn
 
 T1 is now the critical path and its spec is yours; before we implement,
 one design question: the plane filter's state is (Z, Ż[, Z̈]) with

@@ -80,7 +80,10 @@
       "washed_rg_min": 20,
       "box_fallback": true,
       "box_min_area_frac": 0.025,
-      "box_min_fill": 0.2
+      "box_min_fill": 0.2,
+      "scale_gate": true,
+      "scale_min": 0.65,
+      "scale_max": 1.5
     },
     "close_tracker": {
       "enabled": true,
