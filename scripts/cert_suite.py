@@ -127,6 +127,19 @@ def main(argv=None):
     prob = sum(1 for _, s, _, _ in per_frame if s == "probation")
     print(f"overall: {n} frames, certified {cert} ({100*cert/max(n,1):.0f}%), "
           f"probation {prob} ({100*prob/max(n,1):.0f}%)")
+    # Identity release bars (design contract): certification available
+    # in the terminal approach, achieved at or before 1.6m.
+    zone = [(f, s, r) for f, s, _, r in per_frame
+            if r is not None and r < 2.5]
+    if zone:
+        zcert = [r for _, s, r in zone if s == "certified"]
+        print(f"terminal zone (<2.5m): {len(zone)} fix frames, "
+              f"certified {len(zcert)} "
+              f"({100 * len(zcert) / len(zone):.0f}%)"
+              + (f", certified down to {min(zcert):.2f}m" if zcert else ""))
+        if zcert:
+            print(f"  certified-by-1.6m bar: "
+                  f"{'MET' if min(zcert) <= 1.6 else 'NOT MET'}")
     return 1 if fails else 0
 
 
