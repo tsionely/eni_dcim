@@ -150,3 +150,49 @@ a stop; it never expands the set of gates allowed to take control.
   closure of N0 (a)-(d) — the wash-seeded-fiction prediction stays
   open on the advisory board until (b) and (d) are answered, our 512
   refutation notwithstanding.
+
+## Status-vocabulary pin + pre-registered D7/N-R4 interpretation (8C)
+
+**Vocabulary mapping** (one meaning per token; current fields ->
+pinned names): observer_ready = TermStatus.ready;
+shadow_selected_owner = ShadowTerminal.owner (never adjudicates
+treatment); applied_owner = TermStatus.owner; term_enable = the
+explicit patch; term_command_applied = TermStatus.v_bz_applied is not
+None. MISSING and queued for the next telemetry rider:
+term_source_mode (oracle | hold | decay | neutral) on TermStatus.
+
+**D7 pre-registered output** (P1 spec): error measured vs the FROZEN
+exit vector; report per cone half-width {correct-gate recall,
+wrong-real-gate admissions, MAX contiguous correct-target outage,
+first-certification latency}; select the narrowest width with ZERO
+wrong-gate admissions on the churn fixtures (recall loss acceptable —
+uncertainty brakes, never switches); >12deg required => kill the
+moving-bridge assumption, not the cap.
+
+**N-R4 pre-registered output** (P2 spec): TWO quantities sized
+independently — d_clear = rear envelope + turn sweep + structure
+margin; d_bridge_max = min(0.8m, corridor_lower - d_clear -
+d_stop_pess). Kill conditions => stationary post-clear acquisition:
+d_bridge_max <= 0, or correct candidate cannot certify before stop-by
+onset, or the pessimistic stop leaves the corridor. Either way the
+authority chain is unchanged — the decision is mechanical, not
+architectural.
+
+**A8 expanded** (P4 spec): full envelope extraction — rearward extent,
+rotor/body lateral sweep at bank onset, upper/lower/side contact
+envelope, contact-timing uncertainty, minimum true clearance on the
+SUCCESSFUL passes; combine graze labels with near-clearance
+trajectories, never a single graze point. Sets the erosion margin and
+the turn-sweep term of d_clear; clamp from the MAX.
+
+**Alternating-six outcome set** (final): sim-declared pass rate,
+vertical + lateral crossing dispersion, TERM active-ownership count,
+readiness-WITHOUT-ownership count, source/provenance violations,
+loss/handback anomalies. A TERM anomaly never triggers an
+opportunistic S4 change; a post-pass chase belongs to exit-authority
+analysis, not the gate-1 treatment outcome.
+
+**B1 acceptance is SEQUENCE IDENTITY**: a build that picks a different
+plausible gate and flies smoothly still FAILS. try39's counterfactual
+is narrow: same real gate-2 track retained -> certificate handoff ->
+existing approach continues.
