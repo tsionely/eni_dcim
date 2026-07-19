@@ -1,0 +1,43 @@
+﻿===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	phase6d_fiction_guards_report.txt
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+===== git checkout main =====
+git : Already on 'main'
+At line:153 char:52
++ ... "`n===== git checkout main =====`n" + (git checkout main 2>&1 | Out-S ...
++                                            ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Already on 'main':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Your branch is up to date with 'origin/main'.
+
+===== git pull =====
+git : From https://github.com/tsionely/eni_dcim
+At line:154 char:43
++   $step0 += "`n===== git pull =====`n" + (git pull 2>&1 | Out-String)
++                                           ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   564e98d..2913d6d  main       -> origin/main
+Updating 564e98d..2913d6d
+Fast-forward
+ docs/thinktank/RESPONSE11.md | 64 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 docs/thinktank/RESPONSE11.md
+
+===== git log -1 --oneline =====
+2913d6d RESPONSE 11: the three numbers — warm blind budget 1.27m, P-A confirmed (branch B), h_b in progress
+
+===== git merge-base --is-ancestor 564e98d HEAD && echo OK =====
+OK
+
