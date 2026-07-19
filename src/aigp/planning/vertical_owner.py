@@ -142,19 +142,9 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
 
     gr = state.gate_rel
     phase_hint = "position"
-    owner = arbiter.tick(commit_active=True, same_gate=True,
-                         certified=certified,
-                         feature_age_s=state.gate_rel_age_s,
-                         phase=phase_hint)
-    if owner != TERM_OWNER or gr is None:
-        return owner, None, prev_vz_up
     q_lvl = level_quat(state.level_roll, state.level_pitch)
-    # e_z source ladder (enable build): the PIXEL-ROW oracle owns when a
-    # fresh, identity-held feature exists — phase6e F2 proved the
-    # believed channel carries a +0.3-0.5m bias at the plane (attitude
-    # drift) while the oracle read the graze exactly (e_z -0.56 at a
-    # crossing pixel-truth ~+0.5 high; d*=0.8 validated to ~6cm by that
-    # label). Fallback: the believed TRUE-vertical (still de-tilted).
+    # Measure FIRST (even while ALT owns): the oracle history must
+    # accumulate during the approach so readiness can ever be met.
     e_meas = None
     if (feature is not None and feature_age_s is not None
             and feature_age_s <= 0.15 and feature.span_px > 1.0
@@ -176,6 +166,43 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         # Authority clamp (§1.4): commanded crossing target bounded to
         # the eroded opening (0.8 - half-extent - buffer; A8 inherits).
         e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
+        if oracle is not None:
+            # Unique-exposure history: the source of the VISUAL rate.
+            oracle.observe(float(feature.ts_ns) / 1e9, e_meas)
+    # Source-provenance + admission gate (advisory first-enable
+    # predicate): a NEW capture additionally requires the oracle READY
+    # (>=6 unique exposures, span >=0.15s, no gap >0.12s, finite robust
+    # slope) and the ADMISSION corridor |e_x| + 2*sigma_x + 0.06 <=
+    # 0.30m — the first-enable cycle validates a controller on an
+    # already-plausible arrival, it does not rescue the opening's edge.
+    # Once TERM owns, the latch/loss-grace semantics govern instead.
+    capture_ok = certified
+    if oracle is not None and arbiter.owner != TERM_OWNER:
+        capture_ok = certified and oracle.ready()
+        if capture_ok:
+            from aigp.planning.vertical_terminal import (crossing_error,
+                                                         crossing_sigma)
+            vz_vis = oracle.v_z_visual()
+            e_now = e_meas if e_meas is not None else (
+                oracle._hist[-1][1] if oracle._hist else 0.0)
+            e_x = crossing_error(e_now, vz_vis, tau_s)
+            # Oracle measurement sigmas, MEASURED not assumed: the F2
+            # graze series scattered ~0.02 RMS sample-to-sample; 0.05 /
+            # 0.10 carry a x2.5 margin on that. (The legacy 0.10/0.15
+            # placeholders are the quarantined believed-channel numbers
+            # — with them 2*sigma + 0.06 exceeds the 0.30 corridor at
+            # any tau >= 0.45 and admission can never pass.)
+            s_x = crossing_sigma(0.05, vz_vis, 0.10, tau_s)
+            capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= 0.30
+    owner = arbiter.tick(commit_active=True, same_gate=True,
+                         certified=capture_ok,
+                         feature_age_s=state.gate_rel_age_s,
+                         phase=phase_hint)
+    if owner != TERM_OWNER or gr is None:
+        return owner, None, prev_vz_up
+    # e_z source ladder: the PIXEL-ROW oracle owns when a fresh,
+    # identity-held feature exists (measured above); the believed
+    # channel is the drift-biased fallback for the no-oracle path only.
     if oracle is not None:
         e_z = oracle.update(e_meas, dt, vz_max)
         if e_z is None:
@@ -184,11 +211,18 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # believed source (§3.3: that wire stays cut); command zero
             # correction and let the base profile carry through.
             e_z = 0.0
+        # Source provenance (the advisory's no-go condition): the
+        # crossing-rate input comes from the ORACLE history's robust
+        # slope, never solely from the believed state — that channel
+        # drifts exactly in the final blind interval. No slope =>
+        # neutral rate, never the believed fallback.
+        vz_vis = oracle.v_z_visual()
+        v_z_up = vz_vis if vz_vis is not None else 0.0
     else:
         e_z = e_meas if e_meas is not None else -true_world_dz(
             gr, state.q_att, state.level_roll, state.level_pitch)
-    v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
-                                                  dtype=np.float64))[2])
+        v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
+                                                      dtype=np.float64))[2])
     g = compute_terminal_guidance(
         e_z=e_z, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
@@ -198,11 +232,18 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         vz_goal = g["vz_cmd"]
     vz_up = slew_up_velocity(prev_vz_up if prev_vz_up is not None else vz_goal,
                              vz_goal, dt, az_max, az_max)
-    v = np.asarray(setpoint_v_body, dtype=np.float64)
-    q_true = quat_multiply(q_lvl, np.asarray(state.q_att, dtype=np.float64))
-    v_bz, ok = body_z_for_world_up(vz_up, q_true, float(v[0]), float(v[1]))
-    if not ok:
-        return owner, None, prev_vz_up
+    # Body conversion, LEGACY-CONSISTENT: the geometrically-honest
+    # adapter (q_true with the u·v cross-term) assumes the vehicle
+    # flies its v_body literally along IMU axes — under the co-tuned
+    # legacy cascade it does not (it flies near-horizontal with PID
+    # trims bridging), and the cross-term injects ~+0.55 m/s of
+    # fictitious climb at 1.8 m/s trim (caught by the admission unit
+    # test). The empirically-validated vertical lever is the altitude
+    # hold's own: v_bz ~ -vz_up, scaled by the mount-tilt cosine.
+    # The honest adapter returns with the frame-unification package.
+    scale = max(float(np.cos(state.level_pitch) * np.cos(state.level_roll)),
+                0.5)
+    v_bz = -vz_up / scale
     return owner, float(v_bz), float(vz_up)
 
 
@@ -222,21 +263,74 @@ class TerminalOracle:
     """
 
     def __init__(self, jump_floor_m: float = 0.05, jump_k: int = 3,
-                 hold_s: float = 0.3, decay_s: float = 0.3) -> None:
+                 hold_s: float = 0.3, decay_s: float = 0.3,
+                 min_samples: int = 6, min_span_s: float = 0.15,
+                 max_gap_s: float = 0.12) -> None:
         self.jump_floor = jump_floor_m
         self.jump_k = jump_k
         self.hold_s = hold_s
         self.decay_s = decay_s
+        self.min_samples = int(min_samples)
+        self.min_span_s = float(min_span_s)
+        self.max_gap_s = float(max_gap_s)
         self.e_z: float | None = None
         self.stale_s = 0.0
         self._violations = 0
         self.disarmed = False
+        # Unique-exposure oracle history (ts_s, e_z): source of the
+        # VISUAL vertical rate. The advisory's no-go condition: the
+        # crossing forecast must never take v_z solely from the
+        # believed state — that channel drifts exactly when it matters.
+        self._hist: list[tuple[float, float]] = []
 
     def reset(self) -> None:
         self.e_z = None
         self.stale_s = 0.0
         self._violations = 0
         self.disarmed = False
+        self._hist = []
+
+    def observe(self, ts_s: float, e_meas: float) -> None:
+        """Record one UNIQUE exposure's accepted measurement (caller
+        dedupes by feature timestamp — rebroadcasts overstate evidence
+        ~8-9x)."""
+        if self._hist and ts_s <= self._hist[-1][0]:
+            return
+        self._hist.append((ts_s, e_meas))
+        if len(self._hist) > 40:
+            self._hist = self._hist[-40:]
+
+    def history_stats(self) -> tuple[int, float, float]:
+        """(n_unique, span_s, max_gap_s) of the recent history."""
+        n = len(self._hist)
+        if n < 2:
+            return n, 0.0, float("inf")
+        ts = [t for t, _ in self._hist]
+        gaps = [b - a for a, b in zip(ts, ts[1:])]
+        return n, ts[-1] - ts[0], max(gaps)
+
+    def v_z_visual(self) -> float | None:
+        """Vertical rate from the ORACLE history (Theil-Sen), +up.
+
+        e_z is the +up correction required; the drone climbing shrinks
+        it, so v_z = -d(e_z)/dt."""
+        from aigp.planning.vertical_terminal import robust_slope
+        if len(self._hist) < 4:
+            return None
+        recent = self._hist[-12:]
+        slope = robust_slope([t for t, _ in recent], [e for _, e in recent])
+        if slope is None:
+            return None
+        return -float(slope)
+
+    def ready(self) -> bool:
+        """Advisory first-enable readiness: enough UNIQUE history, a
+        real time span, no long gap, a finite robust slope."""
+        n, span, gap = self.history_stats()
+        return (n >= self.min_samples and span >= self.min_span_s
+                and gap <= self.max_gap_s
+                and self.v_z_visual() is not None
+                and not self.disarmed)
 
     def update(self, e_meas: float | None, dt: float,
                vz_max: float) -> float | None:

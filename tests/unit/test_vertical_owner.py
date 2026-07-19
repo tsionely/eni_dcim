@@ -274,10 +274,66 @@ def test_oracle_staleness_holds_then_decays_never_believed():
     owner, v_bz, _ = terminal_override(a, st, np.array([1.8, 0.0, 0.0]),
                                        True, 0.9, 0.55, None, 0.016,
                                        oracle=fresh_oracle)
-    assert owner == TERM_OWNER
-    # Neutral: no certified pixel history -> ~no vertical command, and
-    # decidedly NOT the believed climb.
-    assert v_bz is None or abs(v_bz) < 0.05
+    # First-enable predicate: an EMPTY oracle history blocks capture —
+    # 'capture without sufficient unique history' is a stop condition.
+    assert owner == ALT_OWNER and v_bz is None
+
+
+def test_readiness_and_admission_gate_capture():
+    """The advisory's enable predicate end-to-end: capture requires
+    >=6 unique exposures over >=0.15s with no long gap AND the inner
+    admission corridor |e_x| + 2 sigma + 0.06 <= 0.30. v_z comes from
+    the oracle history's Theil-Sen slope, never the believed state."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        # level_pitch matches the REAL rig (-0.311): the trim
+        # compensation is calibrated at pitch_cal=-0.33 and a zero-tilt
+        # test rig would inject a +0.22 phantom into e_meas.
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3),
+            v_world=np.array([0.0, 0.0, 5.0]),   # believed: absurd sink
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    # Feature at exact center-aim: y_top such that e_z ~ 0.
+    # e_z = 1.6*(180 - y)/span - 0.8 = 0  =>  y = 180 - 0.5*span.
+    def feat(ts_ns, span=800.0):
+        return TerminalFeature(ts_ns=ts_ns, y_top_px=180.0 - 0.5 * span,
+                               span_px=span, center_x_px=320.0,
+                               cert_status="certified", mode="BAR_FULL")
+
+    a = make_arbiter()
+    g = TerminalOracle()
+    owner = None
+    # Six unique exposures, 40ms apart: history builds, then capture.
+    for i in range(7):
+        owner, v_bz, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 0.6, 0.55, None,
+            0.04, feature=feat(int(i * 0.04e9)), feature_age_s=0.02,
+            oracle=g)
+    assert owner == TERM_OWNER and v_bz is not None
+    # Centered arrival, flat history: near-zero correction — the
+    # believed 5 m/s sink fiction must NOT leak into the command.
+    assert abs(v_bz) < 0.15
+    # Admission corridor blocks a genuinely-off arrival: e_z ~ -0.45.
+    b = make_arbiter()
+    g2 = TerminalOracle()
+    span = 800.0
+    y_off = 180.0 - (0.45 - 0.8 + 0.8) * span / 1.6 - 0.5 * span  # e~-0.45
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span + 0.45 * span / 1.6,
+                            span_px=span, center_x_px=320.0,
+                            cert_status="certified", mode="BAR_FULL")
+        owner2, v_bz2, _ = terminal_override(
+            b, st(), np.array([1.8, 0.0, 0.0]), True, 0.6, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g2)
+    assert owner2 == ALT_OWNER and v_bz2 is None
 
 
 def test_sign_pin_raw_frame_quads_f2_final_3m():
