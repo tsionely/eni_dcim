@@ -359,3 +359,41 @@ def test_rate_authority_scales_with_window_richness():
     for i in range(13):
         g2.observe(i * 0.04, 0.0)
     assert g2.rate_authority() == 1.0
+
+
+def test_observer_matures_before_ownership_no_maturity_delay():
+    """The permanent rule as a regression: with TERM disabled (control
+    arm), the observer still matures the history; on the first enabled
+    eligible tick, capture happens immediately — no history reset, no
+    maturity delay."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import (TerminalOracle,
+                                              terminal_observe,
+                                              terminal_override)
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def feat(ts, span=800.0):
+        return TerminalFeature(ts_ns=ts, y_top_px=180.0 - 0.5 * span,
+                               span_px=span, center_x_px=320.0,
+                               cert_status="certified", mode="BAR_FULL")
+
+    g = TerminalOracle()
+    # 'Control' phase: observer only, no override calls at all.
+    for i in range(7):
+        terminal_observe(g, st(), feat(int(i * 0.04e9)), 0.02)
+    assert g.ready()
+    # Enable flips: FIRST override tick captures — mature history kept.
+    a = make_arbiter()
+    owner, v_bz, _ = terminal_override(a, st(), np.array([1.8, 0.0, 0.0]),
+                                       True, 0.6, 0.55, None, 0.04,
+                                       feature=feat(int(7 * 0.04e9)),
+                                       feature_age_s=0.02, oracle=g)
+    assert owner == TERM_OWNER and v_bz is not None

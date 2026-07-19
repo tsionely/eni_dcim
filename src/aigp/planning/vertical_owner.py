@@ -110,6 +110,39 @@ def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
                           adapter_delta_mps=delta, adapter_ok=ok)
 
 
+def terminal_observe(oracle: "TerminalOracle", state, feature,
+                     feature_age_s: float | None, d_star: float = 0.8,
+                     gate_w: float = 1.6, pitch_cal_rad: float = -0.33,
+                     e_z_clamp_m: float = 0.45) -> float | None:
+    """OBSERVER step, independent of ownership/enable/phase (advisory
+    permanent rule: measurement and readiness are observer
+    responsibilities; ownership only decides whether an already MATURE
+    estimate may actuate). Runs every commit tick — control arms and
+    out-of-engagement-range ticks included — so the history exists
+    before the authority it gates, by construction."""
+    if (feature is None or feature_age_s is None or feature_age_s > 0.15
+            or feature.span_px <= 1.0
+            or feature.cert_status not in ("certified", "probation")
+            or state.image_size is None):
+        return None
+    cy = state.image_size[1] / 2.0
+    fx = state.image_size[0] / 2.0                # 90deg HFOV pinhole
+    e_meas = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
+    # Trim compensation (advisory-7 SS2.1): the row formula's zero moves
+    # with pitch (~0.018*R/deg); compensate the DELTA from the graze
+    # calibration trim so d*=0.8 carries across speed changes.
+    q = np.asarray(state.q_att, dtype=np.float64)
+    pitch_t = float(np.arcsin(np.clip(
+        2.0 * (q[0] * q[2] - q[3] * q[1]), -1.0, 1.0))) \
+        + float(state.level_pitch)
+    e_meas += gate_w * fx * (np.tan(pitch_t) - np.tan(pitch_cal_rad)) \
+        / feature.span_px
+    # Authority clamp (SS1.4): bounded to the eroded opening (A8 inherits).
+    e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
+    oracle.observe(float(feature.ts_ns) / 1e9, e_meas)
+    return e_meas
+
+
 def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       certified: bool, tau_s: float, margin_m: float,
                       prev_vz_up: float | None, dt: float,
@@ -143,32 +176,15 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     gr = state.gate_rel
     phase_hint = "position"
     q_lvl = level_quat(state.level_roll, state.level_pitch)
-    # Measure FIRST (even while ALT owns): the oracle history must
-    # accumulate during the approach so readiness can ever be met.
-    e_meas = None
-    if (feature is not None and feature_age_s is not None
-            and feature_age_s <= 0.15 and feature.span_px > 1.0
-            and feature.cert_status in ("certified", "probation")
-            and state.image_size is not None):
-        cy = state.image_size[1] / 2.0
-        fx = state.image_size[0] / 2.0            # 90deg HFOV pinhole
-        e_meas = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
-        # Advisory-7 §2.1: the row formula's zero moves with trim pitch
-        # (~0.018·R per degree). d*=0.8 was graze-calibrated at
-        # pitch_cal; compensate the DELTA from that trim per tick so the
-        # calibration carries across the 1.8 m/s speed change.
-        q = np.asarray(state.q_att, dtype=np.float64)
-        pitch_t = float(np.arcsin(np.clip(
-            2.0 * (q[0] * q[2] - q[3] * q[1]), -1.0, 1.0))) \
-            + float(state.level_pitch)
-        e_meas += gate_w * fx * (np.tan(pitch_t) - np.tan(pitch_cal_rad)) \
-            / feature.span_px
-        # Authority clamp (§1.4): commanded crossing target bounded to
-        # the eroded opening (0.8 - half-extent - buffer; A8 inherits).
-        e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
-        if oracle is not None:
-            # Unique-exposure history: the source of the VISUAL rate.
-            oracle.observe(float(feature.ts_ns) / 1e9, e_meas)
+    # Observer step (idempotent per unique exposure: observe() dedupes
+    # by timestamp, so a prior app-level terminal_observe call for the
+    # same exposure is harmless). Without a persistent oracle the
+    # measurement still runs (throwaway history) so a fresh identified
+    # feature always outranks the believed channel.
+    e_meas = terminal_observe(oracle if oracle is not None
+                              else TerminalOracle(),
+                              state, feature, feature_age_s,
+                              d_star, gate_w, pitch_cal_rad, e_z_clamp_m)
     # Source-provenance + admission gate (advisory first-enable
     # predicate): a NEW capture additionally requires the oracle READY
     # (>=6 unique exposures, span >=0.15s, no gap >0.12s, finite robust
@@ -242,9 +258,12 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # test). The empirically-validated vertical lever is the altitude
     # hold's own: v_bz ~ -vz_up, scaled by the mount-tilt cosine.
     # The honest adapter returns with the frame-unification package.
-    scale = max(float(np.cos(state.level_pitch) * np.cos(state.level_roll)),
-                0.5)
-    v_bz = -vz_up / scale
+    cos_tilt = float(np.cos(state.level_pitch) * np.cos(state.level_roll))
+    if cos_tilt < 0.7:
+        # Outside the recorded tilt envelope: vertical_authority_limited
+        # — never amplify the command without bound (advisory SS2).
+        return owner, None, prev_vz_up
+    v_bz = -vz_up / cos_tilt
     return owner, float(v_bz), float(vz_up)
 
 

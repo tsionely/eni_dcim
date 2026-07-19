@@ -36,6 +36,7 @@ from aigp.perception.pipeline import PerceptionAgent
 from aigp.planning.race_planner import RacePlanner
 from aigp.planning.vertical_owner import (TerminalOracle,
                                           VerticalOwnerArbiter,
+                                          terminal_observe,
                                           shadow_terminal_check,
                                           terminal_override)
 from aigp.supervisor.race_manager import RaceManager
@@ -333,6 +334,15 @@ class App:
                         last_feat_mono = time.monotonic()
                     feat_age = (time.monotonic() - last_feat_mono
                                 if last_feat is not None else None)
+                    # OBSERVER runs every commit tick — control arms and
+                    # out-of-engagement ticks included (permanent rule:
+                    # measurement/readiness precede authority in TIME,
+                    # not just privilege; a history that starts at
+                    # handover can never satisfy its own predicate).
+                    terminal_observe(term_oracle, state, last_feat,
+                                     feat_age, terminal_d_star,
+                                     pitch_cal_rad=terminal_pitch_cal,
+                                     e_z_clamp_m=terminal_e_clamp)
                     shadow_arbiter.note_exposure(certified)
                     bus.publish_latest(Topic.SHADOW, shadow_terminal_check(
                         shadow_arbiter, setpoint.v_body, state.q_att,
@@ -365,10 +375,15 @@ class App:
                             e_z_clamp_m=terminal_e_clamp)
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
-                elif terminal_enable:
-                    term_arbiter.tick(False, False, False, 9.0, "position")
+                else:
+                    # Attempt over (non-commit): explicit history reset —
+                    # the ONLY planner-side reset (never on capture,
+                    # handback, or enable toggles).
                     term_oracle.reset()
-                    term_vz_up = None
+                    if terminal_enable:
+                        term_arbiter.tick(False, False, False, 9.0,
+                                          "position")
+                        term_vz_up = None
 
             if supervisor.commands_active():
                 backend.update(setpoint, state, dt)
