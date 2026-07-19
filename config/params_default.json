@@ -42,7 +42,7 @@
       "center_gain": 0.6,
       "yaw_center_gain": 1.5,
       "aim_up_m": 0.3,
-      "aim_up_floor_m": 0.25,
+      "aim_up_floor_m": 0.0,
       "reacquire_window_s": 6.0,
       "reacquire_max_m": 9.0
     },

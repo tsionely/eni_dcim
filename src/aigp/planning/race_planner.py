@@ -203,13 +203,15 @@ class RacePlanner:
                         yaw_rate=yaw)
 
     def _aim_up(self, dist: float) -> float:
-        """Aim-above-center insurance, tapered toward a FLOOR near the gate.
+        """Aim-above-center insurance, tapered to ~zero at the gate.
 
-        Far out it counters the systematic altitude sag. It used to taper to
-        zero at the gate — phase3h then crossed consistently LOW by
-        0.2-0.45m (F1: dead-centered laterally, caught the bottom bar). The
-        floor keeps the crossing ~0.3m above center: safely inside the
-        +/-0.8m opening, clear of the measured low bias.
+        History matters here: phase3h "crossed consistently LOW" and the
+        floor was added to counter it — but the true-vertical audit
+        (0bf8fcd) proved those LOW labels were the tilted-frame phantom
+        (49 of 88 attempts were truly HIGH, 8 truly LOW), and phase6d F1
+        then grazed the TOP bar nine times while laterally dead-centered
+        with the 0.25m floor active. The floor was phantom-era debris;
+        default is now 0 (param retained for tuning).
         """
         floor = float(min(self.aim_up_m, self.aim_up_floor_m))
         return max(floor, self.aim_up_m * float(np.clip(dist / 4.0, 0.0, 1.0)))
