@@ -1,0 +1,1188 @@
+{
+  "protocol_status": "ABORTED/PARTIAL: tooling bug caused control-only retries; no live arm flown",
+  "selected": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "attempt": 1,
+      "fid": "20260719T154704-f170ead6",
+      "label": "phase6h_control_F1_try1",
+      "why": "first protocol flight (control)"
+    },
+    {
+      "slot": 1,
+      "arm": "control",
+      "attempt": 15,
+      "fid": "20260719T160537-f170ead6",
+      "label": "phase6h_control_F1_try15",
+      "why": "first local gate-pass control run during accidental retry loop"
+    },
+    {
+      "slot": 1,
+      "arm": "control",
+      "attempt": 39,
+      "fid": "20260719T163649-f170ead6",
+      "label": "phase6h_control_F1_try39",
+      "why": "second local gate-pass control run during accidental retry loop"
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260719T154704-f170ead6",
+      "topics": {
+        "frame": 802,
+        "imu": 3086,
+        "actuator": 2520,
+        "race": 107,
+        "heartbeat": 265,
+        "fsm": 6,
+        "state": 1285,
+        "setpoint": 1285,
+        "detection": 216,
+        "feature": 85,
+        "shadow": 224,
+        "collision": 1,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=19.8)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 25.692099699983373,
+        "loop_overrun_frac": 0.004203643157403083,
+        "loop_stats": {
+          "ticks": 6423,
+          "overruns": 27,
+          "overrun_frac": 0.004203643157403083,
+          "max_late_us": 7551
+        },
+        "flight_id": "20260719T154704-f170ead6",
+        "log_dir": "logs\\20260719T154704-f170ead6"
+      },
+      "takeoff_mono_ns": 152699102772000,
+      "last_mono_ns": 152721495042800,
+      "unique_frames_after_takeoff": 672,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.296,
+          "t1": 0.003
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.003,
+          "t1": 1.52
+        },
+        {
+          "phase": "approach",
+          "t0": 1.52,
+          "t1": 4.06
+        },
+        {
+          "phase": "commit",
+          "t0": 4.06,
+          "t1": 8.54
+        },
+        {
+          "phase": "retreat",
+          "t0": 8.54,
+          "t1": 10.56
+        },
+        {
+          "phase": "search",
+          "t0": 10.56,
+          "t1": 22.38
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "approach",
+        "commit",
+        "retreat",
+        "search"
+      ],
+      "closest_direct": {
+        "range_m": 4.064,
+        "t_rel_s": 4.992,
+        "t": [
+          -0.3912550408372067,
+          -0.26700362128850136,
+          4.036619931551524
+        ],
+        "center_px": [
+          284.0,
+          335.75
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.676,
+        "t_rel_s": 6.48,
+        "t": [
+          0.06230742810153534,
+          -0.15225399261501218,
+          0.6559573115760062
+        ],
+        "age_s": 1.490162,
+        "center_px": [
+          350.39584534028177,
+          105.72492633743813
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 3.997,
+        "t_rel_s": 5.0,
+        "age_s": 0.0113,
+        "center_px": [
+          284.0,
+          335.75
+        ]
+      },
+      "owner_histogram": {
+        "alt": 224
+      },
+      "first_term": null,
+      "collisions_count": 1,
+      "collisions": [
+        {
+          "t_rel_s": 22.391,
+          "impulse": 19.769390106201172,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.3,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.2,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 22.392,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=19.8)"
+        },
+        {
+          "t_rel_s": 22.392,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T160537-f170ead6",
+      "topics": {
+        "imu": 1642,
+        "frame": 426,
+        "actuator": 1342,
+        "heartbeat": 140,
+        "race": 56,
+        "fsm": 6,
+        "state": 659,
+        "setpoint": 659,
+        "detection": 340,
+        "feature": 250,
+        "shadow": 293,
+        "collision": 3,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=5.2)",
+        "gates_passed": 1,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 3,
+        "duration_s": 13.160178299993277,
+        "loop_overrun_frac": 0.028875379939209727,
+        "loop_stats": {
+          "ticks": 3290,
+          "overruns": 95,
+          "overrun_frac": 0.028875379939209727,
+          "max_late_us": 9831
+        },
+        "flight_id": "20260719T160537-f170ead6",
+        "log_dir": "logs\\20260719T160537-f170ead6"
+      },
+      "takeoff_mono_ns": 153811473129400,
+      "last_mono_ns": 153821470958300,
+      "unique_frames_after_takeoff": 300,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.16,
+          "t1": 0.016
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.016,
+          "t1": 1.516
+        },
+        {
+          "phase": "commit",
+          "t0": 1.516,
+          "t1": 3.776
+        },
+        {
+          "phase": "approach",
+          "t0": 3.776,
+          "t1": 4.057
+        },
+        {
+          "phase": "align",
+          "t0": 4.057,
+          "t1": 4.116
+        },
+        {
+          "phase": "approach",
+          "t0": 4.116,
+          "t1": 4.157
+        },
+        {
+          "phase": "align",
+          "t0": 4.157,
+          "t1": 6.156
+        },
+        {
+          "phase": "commit",
+          "t0": 6.156,
+          "t1": 9.756
+        },
+        {
+          "phase": "retreat",
+          "t0": 9.756,
+          "t1": 9.776
+        },
+        {
+          "phase": "recover",
+          "t0": 9.776,
+          "t1": 9.996
+        },
+        {
+          "phase": "hover",
+          "t0": 9.996,
+          "t1": 9.996
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "commit",
+        "approach",
+        "align",
+        "approach",
+        "align",
+        "commit",
+        "retreat",
+        "recover",
+        "hover"
+      ],
+      "closest_direct": {
+        "range_m": 0.687,
+        "t_rel_s": 3.426,
+        "t": [
+          -0.025213181645361217,
+          -0.24347347302593217,
+          0.6422417217703194
+        ],
+        "center_px": [
+          302.4015374076242,
+          527.3483070318533
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.03,
+        "t_rel_s": 3.696,
+        "t": [
+          -0.013106314300851936,
+          0.005951459405063439,
+          0.02663398043617997
+        ],
+        "age_s": 0.280423688,
+        "center_px": [
+          241.96493579581846,
+          173.9880203064816
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 0.638,
+        "t_rel_s": 3.425,
+        "age_s": 0.04093164,
+        "center_px": [
+          338.6073349336215,
+          20.554656449704368
+        ]
+      },
+      "owner_histogram": {
+        "alt": 2,
+        "term": 291
+      },
+      "first_term": {
+        "t_rel_s": 1.556,
+        "range_m": 4.218,
+        "data": {
+          "ts_ns": 1784477142933446000,
+          "owner": "term",
+          "up_legacy_mps": 0.47314583025528323,
+          "adapter_delta_mps": -1.1102230246251565e-16,
+          "adapter_ok": true
+        }
+      },
+      "collisions_count": 3,
+      "collisions": [
+        {
+          "t_rel_s": 9.758,
+          "impulse": 0.035877685993909836,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.994,
+          "impulse": 0.06239546462893486,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.996,
+          "impulse": 5.220639705657959,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.164,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.064,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 9.996,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=5.2)"
+        },
+        {
+          "t_rel_s": 9.996,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T163649-f170ead6",
+      "topics": {
+        "frame": 545,
+        "imu": 2117,
+        "actuator": 1726,
+        "race": 73,
+        "heartbeat": 181,
+        "fsm": 6,
+        "state": 861,
+        "setpoint": 861,
+        "detection": 514,
+        "feature": 286,
+        "shadow": 333,
+        "collision": 3,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=2.4)",
+        "gates_passed": 1,
+        "lap_time_s": null,
+        "gate_clips": 2,
+        "env_hits": 1,
+        "duration_s": 17.204008100001374,
+        "loop_overrun_frac": 0.022087886538014415,
+        "loop_stats": {
+          "ticks": 4301,
+          "overruns": 95,
+          "overrun_frac": 0.022087886538014415,
+          "max_late_us": 15366
+        },
+        "flight_id": "20260719T163649-f170ead6",
+        "log_dir": "logs\\20260719T163649-f170ead6"
+      },
+      "takeoff_mono_ns": 155683742830600,
+      "last_mono_ns": 155697621085500,
+      "unique_frames_after_takeoff": 416,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.324,
+          "t1": 0.012
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.012,
+          "t1": 1.513
+        },
+        {
+          "phase": "commit",
+          "t0": 1.513,
+          "t1": 4.052
+        },
+        {
+          "phase": "recover",
+          "t0": 4.052,
+          "t1": 4.852
+        },
+        {
+          "phase": "commit",
+          "t0": 4.852,
+          "t1": 7.692
+        },
+        {
+          "phase": "retreat",
+          "t0": 7.692,
+          "t1": 9.692
+        },
+        {
+          "phase": "search",
+          "t0": 9.692,
+          "t1": 10.032
+        },
+        {
+          "phase": "approach",
+          "t0": 10.032,
+          "t1": 10.099
+        },
+        {
+          "phase": "align",
+          "t0": 10.099,
+          "t1": 10.313
+        },
+        {
+          "phase": "approach",
+          "t0": 10.313,
+          "t1": 10.512
+        },
+        {
+          "phase": "align",
+          "t0": 10.512,
+          "t1": 11.092
+        },
+        {
+          "phase": "commit",
+          "t0": 11.092,
+          "t1": 12.372
+        },
+        {
+          "phase": "retreat",
+          "t0": 12.372,
+          "t1": 13.872
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "commit",
+        "recover",
+        "commit",
+        "retreat",
+        "search",
+        "approach",
+        "align",
+        "approach",
+        "align",
+        "commit",
+        "retreat"
+      ],
+      "closest_direct": {
+        "range_m": 0.856,
+        "t_rel_s": 3.938,
+        "t": [
+          0.10909602801388402,
+          -0.6316110131938155,
+          0.5675848238719153
+        ],
+        "center_px": [
+          321.0,
+          35.5
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.032,
+        "t_rel_s": 7.512,
+        "t": [
+          -0.028520896815233475,
+          -0.008203410127914807,
+          0.011992548437017152
+        ],
+        "age_s": 0.5501454,
+        "center_px": [
+          201.25,
+          274.25
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 0.283,
+        "t_rel_s": 3.932,
+        "age_s": 0.32489928,
+        "center_px": [
+          344.9755474687745,
+          111.98685257702347
+        ]
+      },
+      "owner_histogram": {
+        "alt": 2,
+        "term": 331
+      },
+      "first_term": {
+        "t_rel_s": 1.552,
+        "range_m": 5.372,
+        "data": {
+          "ts_ns": 1784479015199272950,
+          "owner": "term",
+          "up_legacy_mps": -0.1881168522107153,
+          "adapter_delta_mps": 2.7755575615628914e-17,
+          "adapter_ok": true
+        }
+      },
+      "collisions_count": 3,
+      "collisions": [
+        {
+          "t_rel_s": 4.035,
+          "impulse": 0.7900810241699219,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 4.042,
+          "impulse": 0.6365295052528381,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 13.874,
+          "impulse": 2.395251989364624,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.328,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.228,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 13.876,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=2.4)"
+        },
+        {
+          "t_rel_s": 13.876,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260719T154704-f170ead6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6h_rescue_slices\\20260719T154704-f170ead6_takeoff_to_end.aigprec",
+      "unique_frames": 673,
+      "span_s": 22.399,
+      "bytes": 22728878,
+      "packets": 16413
+    },
+    {
+      "fid": "20260719T160537-f170ead6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6h_rescue_slices\\20260719T160537-f170ead6_takeoff_to_end.aigprec",
+      "unique_frames": 301,
+      "span_s": 9.999,
+      "bytes": 15636453,
+      "packets": 11208
+    },
+    {
+      "fid": "20260719T163649-f170ead6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6h_rescue_slices\\20260719T163649-f170ead6_takeoff_to_end.aigprec",
+      "unique_frames": 417,
+      "span_s": 13.867,
+      "bytes": 22329915,
+      "packets": 16010
+    }
+  ],
+  "all_attempts": [
+    {
+      "fid": "20260719T154704-f170ead6",
+      "duration_s": 25.692099699983373,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=19.8)",
+      "frames_after_takeoff": 672,
+      "detections": 216,
+      "shadows": 224
+    },
+    {
+      "fid": "20260719T154832-f170ead6",
+      "duration_s": 19.240004500024952,
+      "gates": 0,
+      "clips": 3,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=24.2)",
+      "frames_after_takeoff": 477,
+      "detections": 420,
+      "shadows": 220
+    },
+    {
+      "fid": "20260719T154952-f170ead6",
+      "duration_s": 13.892007999995258,
+      "gates": 0,
+      "clips": 1,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=2.3)",
+      "frames_after_takeoff": 320,
+      "detections": 377,
+      "shadows": 243
+    },
+    {
+      "fid": "20260719T155107-f170ead6",
+      "duration_s": 17.096019999997225,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=7.9)",
+      "frames_after_takeoff": 419,
+      "detections": 224,
+      "shadows": 104
+    },
+    {
+      "fid": "20260719T155227-f170ead6",
+      "duration_s": 12.480121700005839,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=1.1)",
+      "frames_after_takeoff": 282,
+      "detections": 214,
+      "shadows": 134
+    },
+    {
+      "fid": "20260719T155339-f170ead6",
+      "duration_s": 8.051998399983859,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=3.3)",
+      "frames_after_takeoff": 141,
+      "detections": 227,
+      "shadows": 41
+    },
+    {
+      "fid": "20260719T155446-f170ead6",
+      "duration_s": 10.415999200020451,
+      "gates": 0,
+      "clips": 1,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=1.3)",
+      "frames_after_takeoff": 215,
+      "detections": 295,
+      "shadows": 111
+    },
+    {
+      "fid": "20260719T155652-f170ead6",
+      "duration_s": 19.808011799992528,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=20.0)",
+      "frames_after_takeoff": 498,
+      "detections": 339,
+      "shadows": 129
+    },
+    {
+      "fid": "20260719T155813-f170ead6",
+      "duration_s": 12.68809660000261,
+      "gates": 0,
+      "clips": 4,
+      "env_hits": 4,
+      "reason": "environment collision (impulse=1.4)",
+      "frames_after_takeoff": 286,
+      "detections": 242,
+      "shadows": 255
+    },
+    {
+      "fid": "20260719T155926-f170ead6",
+      "duration_s": 11.004083399981027,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=2.0)",
+      "frames_after_takeoff": 234,
+      "detections": 274,
+      "shadows": 171
+    },
+    {
+      "fid": "20260719T160039-f170ead6",
+      "duration_s": 13.564019099983852,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=4.0)",
+      "frames_after_takeoff": 311,
+      "detections": 373,
+      "shadows": 206
+    },
+    {
+      "fid": "20260719T160151-f170ead6",
+      "duration_s": 7.484015599999111,
+      "gates": 0,
+      "clips": 11,
+      "env_hits": 0,
+      "reason": "gate clip budget exceeded (11)",
+      "frames_after_takeoff": 124,
+      "detections": 220,
+      "shadows": 98
+    },
+    {
+      "fid": "20260719T160258-f170ead6",
+      "duration_s": 21.500004900008207,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=5.7)",
+      "frames_after_takeoff": 549,
+      "detections": 246,
+      "shadows": 211
+    },
+    {
+      "fid": "20260719T160421-f170ead6",
+      "duration_s": 13.46406559998286,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 4,
+      "reason": "environment collision (impulse=4.0)",
+      "frames_after_takeoff": 311,
+      "detections": 367,
+      "shadows": 321
+    },
+    {
+      "fid": "20260719T160537-f170ead6",
+      "duration_s": 13.160178299993277,
+      "gates": 1,
+      "clips": 0,
+      "env_hits": 3,
+      "reason": "environment collision (impulse=5.2)",
+      "frames_after_takeoff": 300,
+      "detections": 340,
+      "shadows": 293
+    },
+    {
+      "fid": "20260719T160650-f170ead6",
+      "duration_s": 22.944003899989184,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=23.6)",
+      "frames_after_takeoff": 588,
+      "detections": 287,
+      "shadows": 373
+    },
+    {
+      "fid": "20260719T160815-f170ead6",
+      "duration_s": 6.744004800013499,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 11,
+      "reason": "environment collision (impulse=1.5)",
+      "frames_after_takeoff": 106,
+      "detections": 218,
+      "shadows": 57
+    },
+    {
+      "fid": "20260719T160921-f170ead6",
+      "duration_s": 6.744026199972723,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=4.1)",
+      "frames_after_takeoff": 105,
+      "detections": 208,
+      "shadows": 63
+    },
+    {
+      "fid": "20260719T161028-f170ead6",
+      "duration_s": 7.880171700002393,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 2,
+      "reason": "environment collision (impulse=2.5)",
+      "frames_after_takeoff": 144,
+      "detections": 244,
+      "shadows": 98
+    },
+    {
+      "fid": "20260719T161136-f170ead6",
+      "duration_s": 22.696048900019377,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 45,
+      "reason": "environment collision (impulse=1.8)",
+      "frames_after_takeoff": 583,
+      "detections": 280,
+      "shadows": 139
+    },
+    {
+      "fid": "20260719T161259-f170ead6",
+      "duration_s": 13.852035699994303,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 3,
+      "reason": "environment collision (impulse=1.9)",
+      "frames_after_takeoff": 319,
+      "detections": 245,
+      "shadows": 69
+    },
+    {
+      "fid": "20260719T161414-f170ead6",
+      "duration_s": 9.636002000013832,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=5.5)",
+      "frames_after_takeoff": 189,
+      "detections": 287,
+      "shadows": 79
+    },
+    {
+      "fid": "20260719T161523-f170ead6",
+      "duration_s": 11.20821209999849,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 2,
+      "reason": "environment collision (impulse=2.2)",
+      "frames_after_takeoff": 238,
+      "detections": 270,
+      "shadows": 158
+    },
+    {
+      "fid": "20260719T161634-f170ead6",
+      "duration_s": 13.864022600027965,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 15,
+      "reason": "environment collision (impulse=1.6)",
+      "frames_after_takeoff": 321,
+      "detections": 352,
+      "shadows": 188
+    },
+    {
+      "fid": "20260719T161749-f170ead6",
+      "duration_s": 10.924038099998143,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=1.9)",
+      "frames_after_takeoff": 232,
+      "detections": 263,
+      "shadows": 118
+    },
+    {
+      "fid": "20260719T161859-f170ead6",
+      "duration_s": 19.660037499997998,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 100,
+      "reason": "environment collision (impulse=5.4)",
+      "frames_after_takeoff": 497,
+      "detections": 248,
+      "shadows": 198
+    },
+    {
+      "fid": "20260719T162020-f170ead6",
+      "duration_s": 15.580011099984404,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=1.1)",
+      "frames_after_takeoff": 374,
+      "detections": 427,
+      "shadows": 135
+    },
+    {
+      "fid": "20260719T162137-f170ead6",
+      "duration_s": 8.272325900004944,
+      "gates": 0,
+      "clips": 13,
+      "env_hits": 0,
+      "reason": "gate clip budget exceeded (11)",
+      "frames_after_takeoff": 151,
+      "detections": 280,
+      "shadows": 115
+    },
+    {
+      "fid": "20260719T162245-f170ead6",
+      "duration_s": 13.172238600003766,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 2,
+      "reason": "environment collision (impulse=2.9)",
+      "frames_after_takeoff": 302,
+      "detections": 276,
+      "shadows": 155
+    },
+    {
+      "fid": "20260719T162358-f170ead6",
+      "duration_s": 11.756048399984138,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=3.9)",
+      "frames_after_takeoff": 256,
+      "detections": 377,
+      "shadows": 135
+    },
+    {
+      "fid": "20260719T162511-f170ead6",
+      "duration_s": 19.20019420000608,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=9.8)",
+      "frames_after_takeoff": 482,
+      "detections": 242,
+      "shadows": 126
+    },
+    {
+      "fid": "20260719T162631-f170ead6",
+      "duration_s": 15.32401400001254,
+      "gates": 0,
+      "clips": 5,
+      "env_hits": 2,
+      "reason": "environment collision (impulse=4.1)",
+      "frames_after_takeoff": 367,
+      "detections": 419,
+      "shadows": 301
+    },
+    {
+      "fid": "20260719T162747-f170ead6",
+      "duration_s": 6.516036399989389,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=4.2)",
+      "frames_after_takeoff": 98,
+      "detections": 195,
+      "shadows": 85
+    },
+    {
+      "fid": "20260719T162853-f170ead6",
+      "duration_s": 39.30002450000029,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=6.9)",
+      "frames_after_takeoff": 1087,
+      "detections": 424,
+      "shadows": 234
+    },
+    {
+      "fid": "20260719T163035-f170ead6",
+      "duration_s": 15.196017600013874,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=6.9)",
+      "frames_after_takeoff": 355,
+      "detections": 301,
+      "shadows": 121
+    },
+    {
+      "fid": "20260719T163151-f170ead6",
+      "duration_s": 11.532126000005519,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=7.3)",
+      "frames_after_takeoff": 248,
+      "detections": 311,
+      "shadows": 97
+    },
+    {
+      "fid": "20260719T163304-f170ead6",
+      "duration_s": 11.75205549999373,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=2.1)",
+      "frames_after_takeoff": 256,
+      "detections": 285,
+      "shadows": 153
+    },
+    {
+      "fid": "20260719T163416-f170ead6",
+      "duration_s": 7.860013700003037,
+      "gates": 0,
+      "clips": 11,
+      "env_hits": 0,
+      "reason": "gate clip budget exceeded (11)",
+      "frames_after_takeoff": 136,
+      "detections": 232,
+      "shadows": 100
+    },
+    {
+      "fid": "20260719T163525-f170ead6",
+      "duration_s": 23.248019999999087,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 4,
+      "reason": "environment collision (impulse=3.3)",
+      "frames_after_takeoff": 599,
+      "detections": 393,
+      "shadows": 306
+    },
+    {
+      "fid": "20260719T163649-f170ead6",
+      "duration_s": 17.204008100001374,
+      "gates": 1,
+      "clips": 2,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=2.4)",
+      "frames_after_takeoff": 416,
+      "detections": 514,
+      "shadows": 333
+    },
+    {
+      "fid": "20260719T163807-f170ead6",
+      "duration_s": 13.252032500022324,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 3,
+      "reason": "environment collision (impulse=2.0)",
+      "frames_after_takeoff": 298,
+      "detections": 260,
+      "shadows": 152
+    },
+    {
+      "fid": "20260719T163920-f170ead6",
+      "duration_s": 11.3800210999907,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=1.6)",
+      "frames_after_takeoff": 245,
+      "detections": 291,
+      "shadows": 157
+    },
+    {
+      "fid": "20260719T164032-f170ead6",
+      "duration_s": 19.932017200015252,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 1,
+      "reason": "environment collision (impulse=5.0)",
+      "frames_after_takeoff": 500,
+      "detections": 323,
+      "shadows": 139
+    },
+    {
+      "fid": "20260719T164153-f170ead6",
+      "duration_s": 25.344067099998938,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 112,
+      "reason": "environment collision (impulse=8.8)",
+      "frames_after_takeoff": 665,
+      "detections": 621,
+      "shadows": 375
+    },
+    {
+      "fid": "20260719T164321-f170ead6",
+      "duration_s": 11.408008099999279,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 3,
+      "reason": "environment collision (impulse=2.5)",
+      "frames_after_takeoff": 249,
+      "detections": 240,
+      "shadows": 101
+    },
+    {
+      "fid": "20260719T164433-f170ead6",
+      "duration_s": 14.02000930000213,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 3,
+      "reason": "environment collision (impulse=3.9)",
+      "frames_after_takeoff": 328,
+      "detections": 293,
+      "shadows": 158
+    },
+    {
+      "fid": "20260719T164548-f170ead6",
+      "duration_s": 15.880029699997976,
+      "gates": 0,
+      "clips": 0,
+      "env_hits": 9,
+      "reason": "environment collision (impulse=10.2)",
+      "frames_after_takeoff": 381,
+      "detections": 315,
+      "shadows": 136
+    }
+  ]
+}
