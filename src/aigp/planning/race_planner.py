@@ -93,8 +93,20 @@ class RacePlanner:
         # the plane — the drone pitched back and coasted INTO the gate
         # (clip, impulse 4.3) on an arrival that was actually centered.
         # Inside this distance the attempt is committed: carry through.
-        self.abort_min_dist_m = float(p.get("planner.commit.abort_min_dist_m",
-                                            default=1.2))
+        # A FORMULA, not a number (advisory-6): R = v^2/(2a) + t_react*v
+        # moves with commit speed instead of silently going stale. The
+        # default decel reproduces the measured ~1.2m at 2.5 m/s; the
+        # floor param is an absolute lower bound at low speeds. a_brake
+        # awaits direct measurement from retreat-segment kinematics.
+        self.brake_decel = float(p.get("planner.commit.brake_decel_mps2",
+                                       default=2.6))
+        self.brake_react_s = float(p.get("planner.commit.brake_react_s",
+                                         default=0.0))
+        floor = float(p.get("planner.commit.abort_min_dist_m", default=0.8))
+        self.abort_min_dist_m = max(
+            floor,
+            self.commit_speed ** 2 / (2.0 * max(self.brake_decel, 0.1))
+            + self.brake_react_s * self.commit_speed)
         # Post-miss reacquisition discipline (phase6b F1: after the blown
         # attempt the estimator relocked a believed 40m target and the
         # planner chased it across the obstacle field into three hits).
@@ -278,8 +290,14 @@ class RacePlanner:
                                            state.level_roll,
                                            state.level_pitch)
                     off = float(np.hypot(d_body[1], tdz - au))
+                    # No irreversible maneuver on state-only evidence in
+                    # the terminal zone (advisory-6, T3's twin): breaches
+                    # count only while vision is FRESH — a dead-reckoned
+                    # estimate may inform telemetry but must never fire
+                    # the abort (F2's fossil abort ran on age 0.32s).
                     if (self.abort_min_dist_m < dist < 1.5
-                            and off > self.abort_offset_m):
+                            and off > self.abort_offset_m
+                            and state.gate_rel_age_s <= self.blind_age_s):
                         self._abort_breach += 1
                     else:
                         self._abort_breach = 0

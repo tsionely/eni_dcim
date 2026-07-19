@@ -292,6 +292,32 @@ def test_no_retreat_inside_braking_band():
     assert sp.phase == "commit"
 
 
+def test_abort_requires_fresh_vision():
+    """Advisory-6, T3's twin: no irreversible maneuver on state-only
+    evidence in the terminal zone. Off-corridor breaches on a
+    dead-reckoned estimate (age > blind_age_s) must never fire the
+    abort — F2's fossil abort ran on age 0.32s."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    stale = make_state(gate_t=[0.0, -0.397, 1.4], center_px=(320, 120),
+                       age_s=0.5)
+    for i in range(6):
+        sp = p.plan(int((0.1 + 0.05 * i) * 1e9), "race", stale, None)
+    assert sp.phase == "commit", "dead-reckoned evidence fired the abort"
+
+
+def test_no_abort_radius_scales_with_commit_speed():
+    """Advisory-6: the braking band is a formula, not a number. Slower
+    commit speed shrinks the no-abort radius (down to the floor)."""
+    fast = planner()
+    slow = RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.commit.speed_mps": 1.5}))
+    assert fast.abort_min_dist_m == pytest.approx(1.202, abs=0.01)
+    assert slow.abort_min_dist_m == pytest.approx(0.8, abs=0.01)  # floor
+
+
 def test_postmiss_far_target_guard():
     """Phase6b F1: after the blown attempt the estimator relocked a
     believed 40m target and the planner chased it into three env hits.

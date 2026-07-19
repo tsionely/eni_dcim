@@ -9,17 +9,9 @@ from __future__ import annotations
 import numpy as np
 
 from aigp.core.messages import RelPose
-from aigp.estimation.attitude_filter import quat_multiply, quat_rotate
+from aigp.estimation.attitude_filter import (level_quat, quat_multiply,
+                                             quat_rotate)
 from aigp.perception.camera import cam_to_body
-
-
-def level_quat(level_roll: float, level_pitch: float) -> np.ndarray:
-    """Quaternion of the REST attitude (the filter's zero) in true world."""
-    cr, sr = np.cos(level_roll / 2.0), np.sin(level_roll / 2.0)
-    cp, sp = np.cos(level_pitch / 2.0), np.sin(level_pitch / 2.0)
-    qr = np.array([cr, sr, 0.0, 0.0])
-    qp = np.array([cp, 0.0, sp, 0.0])
-    return quat_multiply(qp, qr)
 
 
 def gate_world_dz(rel: RelPose, q_att: np.ndarray) -> float:

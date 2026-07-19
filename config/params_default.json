@@ -59,7 +59,9 @@
       "speed_mps": 2.5,
       "relock_jump_m": 2.0,
       "yaw_track_gain": 1.2,
-      "abort_min_dist_m": 1.2
+      "abort_min_dist_m": 0.8,
+      "brake_decel_mps2": 2.6,
+      "brake_react_s": 0.0
     },
     "terminal": {
       "enable": false,

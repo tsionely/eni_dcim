@@ -208,3 +208,34 @@ def test_relock_escape_hatch_is_time_based():
         _tick(est, ts)
         est.update_vision(_det(ts, [5.0, 0.0, 20.0]))
     assert est._gate_rel is not None and np.linalg.norm(est._gate_rel.t) > 10
+
+
+def test_rest_gravity_residual_with_tilted_mount():
+    """Advisory-6 P1, confirmed on the pad logs: gravity must be stored
+    as the level-referenced vector in FILTER coordinates (~[+3.0, 0,
+    +9.34] on this airframe), not g*z-hat. With g*z-hat, five seconds at
+    rest integrated a -3 m/s^2 x-fiction into v_world — the engine of
+    the along-track runaway. With the fix, rest velocity stays ~zero. (Gated behind
+    estimation.true_gravity: the closed-loop cascade is co-tuned against
+    the residual and must migrate as one designed change.)"""
+    est = StateEstimator(ParamSet.load("config/params_default.json").patch(
+        {"estimation.true_gravity": True}))
+    est.set_level_reference(0.0, -0.311)      # measured rest attitude
+    # Rest accel of a -17.8 deg nose-down IMU: specific force = -g_body.
+    accel = np.array([-GRAVITY * np.sin(0.311), 0.0,
+                      -GRAVITY * np.cos(0.311)])
+    hz, seconds = 200.0, 5.0
+    for i in range(int(seconds * hz)):
+        est.predict(ImuSample(ts_ns=int(i * 1e9 / hz), accel=accel,
+                              gyro=np.zeros(3)))
+    assert float(np.linalg.norm(est.v_world)) < 0.05, \
+        f"rest velocity ran away: {est.v_world}"
+
+
+def test_rest_gravity_level_flat_unchanged():
+    """A flat-mounted IMU (level ref zero) keeps the classic g*z-hat —
+    the fix is a no-op when there is no mount tilt."""
+    est = make_estimator()
+    est.set_level_reference(0.0, 0.0)
+    feed_stationary(est, np.zeros(3), seconds=3.0)
+    assert float(np.linalg.norm(est.v_world)) < 0.05

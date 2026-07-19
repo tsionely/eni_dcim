@@ -51,6 +51,22 @@ def yaw_from_quat(q: np.ndarray) -> float:
                             1.0 - 2.0 * (q[2] ** 2 + q[3] ** 2)))
 
 
+def level_quat(level_roll: float, level_pitch: float) -> np.ndarray:
+    """Quaternion of the REST attitude (the filter's zero) in true world.
+
+    The filter zeroes the drone's tilted rest pose (this airframe's IMU
+    sits ~-17.8 deg nose-down), so its 'world' frame is pitched that far
+    from true level. Composing this quaternion back in converts
+    filter-frame vectors to true-gravity vectors — the single owner of
+    that conversion (the phase6b tilted-frame phantom).
+    """
+    cr, sr = np.cos(level_roll / 2.0), np.sin(level_roll / 2.0)
+    cp, sp = np.cos(level_pitch / 2.0), np.sin(level_pitch / 2.0)
+    qr = np.array([cr, sr, 0.0, 0.0])
+    qp = np.array([cp, 0.0, sp, 0.0])
+    return quat_multiply(qp, qr)
+
+
 class MahonyFilter:
     def __init__(self, kp: float = 2.0) -> None:
         self.kp = kp

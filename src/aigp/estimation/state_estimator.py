@@ -22,7 +22,9 @@ import numpy as np
 
 from aigp.core.messages import GateDetection, ImuSample, RelPose, StateEstimate
 from aigp.core.params import ParamSet
-from aigp.estimation.attitude_filter import MahonyFilter, quat_rotate, quat_rotate_inv
+from aigp.estimation.attitude_filter import (GRAVITY, MahonyFilter,
+                                             level_quat, quat_rotate,
+                                             quat_rotate_inv)
 from aigp.perception.camera import body_to_cam, cam_to_body
 
 
@@ -103,6 +105,20 @@ class StateEstimator:
         self._gyro_bias = np.zeros(3)
         self._level_roll = 0.0
         self._level_pitch = 0.0
+        # Gravity expressed in the FILTER's world frame. The filter zeroes
+        # the tilted rest pose, so true gravity is NOT along its z-hat:
+        # assuming g*z-hat leaves a 3.0 m/s^2 x-residual in every integrated
+        # accel sample (advisory-6 P1; measured on the pad logs) — the
+        # likely engine of the along-track velocity runaway. HOWEVER,
+        # closed-loop mock A/B showed the whole cascade is co-tuned
+        # against that residual (rest-zeroed attitude + level-ref hold +
+        # vel-PID trims): correcting gravity ALONE pitches the ship over
+        # (takeoff dived to -17 deg and dove into the floor). The honest
+        # vector therefore sits behind estimation.true_gravity until the
+        # frame-unification project lands as ONE designed change.
+        self._true_gravity = bool(params.get("estimation.true_gravity",
+                                             default=False))
+        self._g_world = np.array([0.0, 0.0, GRAVITY])
         self._last_imu_ts_ns: int | None = None
         self._gate_rel: RelPose | None = None
         self._gate_rel_ts_ns: int | None = None
@@ -136,9 +152,18 @@ class StateEstimator:
         self._det_offset_ns: float | None = None
 
     def set_level_reference(self, roll: float, pitch: float) -> None:
-        """Resting attitude from the pre-arm accel (IMU mount tilt)."""
+        """Resting attitude from the pre-arm accel (IMU mount tilt).
+
+        Also re-derives gravity in filter-world coordinates: the filter's
+        zero IS this rest pose, so g_filter = R_level^-1 * (0,0,g). On
+        this airframe that is ~[+3.0, 0, +9.34] — using (0,0,g) instead
+        was the P1 bug (rest residual [-3.0, 0, +0.47] m/s^2, verified
+        against the pad accel logs)."""
         self._level_roll = roll
         self._level_pitch = pitch
+        if self._true_gravity:
+            self._g_world = quat_rotate_inv(
+                level_quat(roll, pitch), np.array([0.0, 0.0, GRAVITY]))
 
     def set_gyro_bias(self, bias: np.ndarray) -> None:
         """Gyro bias measured while stationary on the ground (pre-arm)."""
@@ -219,8 +244,9 @@ class StateEstimator:
         self._omega = gyro
         self._att_history.append((imu.ts_ns, q.copy()))
 
-        # Specific force f = a - g  =>  a_world = R*f + g_world.
-        a_world = quat_rotate(q, imu.accel) + np.array([0.0, 0.0, 9.80665])
+        # Specific force f = a - g  =>  a_world = R*f + g_world, with
+        # g_world expressed in the FILTER frame (see set_level_reference).
+        a_world = quat_rotate(q, imu.accel) + self._g_world
         self.v_world = self.v_world + a_world * dt
         # Leak toward zero: bounds unavoidable accelerometer-integration drift.
         self.v_world *= max(0.0, 1.0 - self.vel_leak * dt)
