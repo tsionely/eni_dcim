@@ -100,12 +100,13 @@ class PinholeCamera:
 
 def derot_pixel(u: float, v: float, k: np.ndarray,
                 mount_rot: np.ndarray | None) -> tuple[float, float]:
-    """Re-express a RAW image pixel in the mount-derotated frame.
+    """Re-express a RAW image pixel as a mount-derotated-frame ray pixel.
 
-    The close tracker (and every TerminalFeature it emits) works in the
-    de-rotated camera frame; detector corners are raw image pixels.
-    Mixing the two in one pixel formula is a ~mount-angle (~29 deg,
-    ~185px) error — this is the single conversion point.
+    NOT for TerminalFeature emission: feature pixels are RAW image
+    coordinates in BOTH sources (the tracker's edge search samples the
+    real image; its de-rotation applies to the 3D vector only) — the
+    F2-graze sign test passes in the raw frame and fails derotated.
+    This helper exists for genuine ray-frame conversions elsewhere.
     """
     if mount_rot is None:
         return float(u), float(v)

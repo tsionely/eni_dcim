@@ -18,7 +18,6 @@ from aigp.core.agent import Agent
 from aigp.core.bus import Bus
 from aigp.core.messages import TerminalFeature, Topic
 from aigp.core.params import ParamSet
-from aigp.perception.camera import derot_pixel
 from aigp.perception.close_tracker import GateCloseTracker
 from aigp.perception.interface import GateDetector
 
@@ -72,29 +71,26 @@ class PerceptionAgent(Agent):
                         self.tracker.certificate.on_full_quad(detection.ts_ns)
                         anchored = True
                 self.bus.publish_latest(Topic.DETECTION, detection)
-                if anchored and self.tracker is not None:
+                if anchored:
                     # Pixel-row oracle from the full quad itself (enable
                     # build): the terminal channel's e_z source must not
-                    # wait for the tracker's first partial frame — F2's
-                    # FEATURE stream started 0.4s before the plane while
-                    # full quads had carried the same top-bar row from
-                    # 2.1m in. corners are tl,tr,br,bl RAW image pixels;
-                    # every FEATURE consumer works in the mount-derotated
-                    # frame (advisory-7 pre-arm item: one conversion
-                    # point, never mixed frames).
+                    # wait for the tracker's first partial frame. corners
+                    # are tl,tr,br,bl RAW image pixels — and so are the
+                    # tracker's feature pixels (its edge search samples
+                    # the real image; the mount de-rotation applies to
+                    # its 3D vector, never its pixels). Both FEATURE
+                    # sources therefore share the raw-image frame; the
+                    # §2.3 sign test on the F2 graze passes exactly in
+                    # this frame (0 wrong-sign quads) and FAILS if the
+                    # corners are 'helpfully' derotated first.
                     c = np.asarray(detection.corners_px, dtype=np.float64)
-                    h_, w_ = detection.image_size[1], detection.image_size[0]
-                    k = self.tracker.camera.matrix(w_, h_)
-                    mrot = self.tracker.camera._mount_rot
-                    tl = derot_pixel(c[0][0], c[0][1], k, mrot)
-                    tr = derot_pixel(c[1][0], c[1][1], k, mrot)
-                    span = float(np.hypot(tr[0] - tl[0], tr[1] - tl[1]))
+                    span = float(np.hypot(*(c[1] - c[0])))
                     if span > 1.0:
                         self.bus.publish_latest(Topic.FEATURE, TerminalFeature(
                             ts_ns=detection.ts_ns,
-                            y_top_px=float((tl[1] + tr[1]) / 2.0),
+                            y_top_px=float((c[0][1] + c[1][1]) / 2.0),
                             span_px=span,
-                            center_x_px=float((tl[0] + tr[0]) / 2.0),
+                            center_x_px=float((c[0][0] + c[1][0]) / 2.0),
                             cert_status=detection.cert_status,
                             mode="BAR_FULL"))
                 continue

@@ -278,3 +278,13 @@ def test_oracle_staleness_holds_then_decays_never_believed():
     # Neutral: no certified pixel history -> ~no vertical command, and
     # decidedly NOT the believed climb.
     assert v_bz is None or abs(v_bz) < 0.05
+
+
+def test_sign_pin_raw_frame_quads_f2_final_3m():
+    """Advisory-7 §2.3 sign test, pinned with REAL logged quads from the
+    F2 graze final 3m (drone HIGH throughout -> e_z must be negative).
+    Corners are RAW image pixels; 'helpfully' derotating them flips the
+    verdict to +0.8 wrong-sign — the phase6g-era lesson, frozen here."""
+    for y_top, span in ((158.5, 178.1), (135.0, 218.6), (61.0, 311.1)):
+        e = 1.6 * (180.0 - y_top) / span - 0.8
+        assert e < 0.0, f"wrong sign at y_top={y_top}"

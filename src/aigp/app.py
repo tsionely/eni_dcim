@@ -254,6 +254,9 @@ class App:
         terminal_e_clamp = float(params.get(
             "planner.terminal.e_z_clamp_m",
             default=0.45)) if params else 0.45
+        terminal_engage = float(params.get(
+            "planner.terminal.engage_range_m",
+            default=2.5)) if params else 2.5
         terminal_margin = float(params.get("planner.terminal.margin_m",
                                            default=0.55)) if params else 0.55
         term_arbiter = VerticalOwnerArbiter()
@@ -335,7 +338,16 @@ class App:
                         shadow_arbiter, setpoint.v_body, state.q_att,
                         state.gate_rel_age_s, True, now_ns,
                         certified=certified))
-                    if terminal_enable and state.gate_rel is not None:
+                    if (terminal_enable and state.gate_rel is not None
+                            and float(state.gate_rel.t[2])
+                            <= terminal_engage):
+                        # Engagement range (advisory-7 SS1): TERM owns
+                        # from >=2.5m — NOT from commit entry at 4-5m.
+                        # phase6g flew capture-at-entry: the oracle
+                        # correctly read '0.5 above gate center' from 5m
+                        # out and descended to gate height 5m early —
+                        # 44 floor scrapes. Authority budget needs
+                        # 1.27m at 1.8 m/s; 2.5m is the x2 margin.
                         # THE enable-bit path: single final-boundary
                         # override of the vertical channel (contract
                         # rule — one estimate, one controller, one
