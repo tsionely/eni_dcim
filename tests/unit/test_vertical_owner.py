@@ -229,3 +229,52 @@ def test_terminal_override_prefers_pixel_oracle():
                                          True, 0.5, 0.55, None, 0.016,
                                          feature=feat, feature_age_s=0.5)
     assert v_bz3 is None or abs(v_bz3) < 0.05
+
+
+def test_oracle_guard_jump_disarms_not_magnitude():
+    """Advisory-7 §3: self-consistency disarms, cross-magnitude never.
+    Three consecutive jump violations -> neutral-decay for the rest of
+    the approach; a large but SMOOTH correction is untouched."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    assert g.update(-0.56, 0.02, 0.6) == pytest.approx(-0.56)   # big is fine
+    assert g.update(-0.55, 0.02, 0.6) == pytest.approx(-0.55)   # smooth
+    for _ in range(3):                                          # wild jumps
+        g.update(+0.80, 0.02, 0.6)
+    assert g.disarmed
+    # Post-disarm: held value decays toward zero, never a fresh command.
+    vals = [g.update(-0.56, 0.02, 0.6) for _ in range(70)]
+    assert abs(vals[-1]) < 0.05
+
+
+def test_oracle_staleness_holds_then_decays_never_believed():
+    """§3.3: hold-last <=0.3s, then decay to zero. The believed source
+    stays cut — terminal_override with an oracle and no feature must
+    command ~zero correction even when believed screams 'low'."""
+    from aigp.core.messages import RelPose, StateEstimate
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    g = TerminalOracle()
+    assert g.update(0.30, 0.02, 0.6) == pytest.approx(0.30)
+    for _ in range(10):                       # 0.2s: inside hold window
+        v = g.update(None, 0.02, 0.6)
+    assert v == pytest.approx(0.30)
+    for _ in range(40):                       # decay
+        v = g.update(None, 0.02, 0.6)
+    assert abs(v) < 0.05
+
+    st = StateEstimate(
+        ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+        gate_rel=RelPose(t=np.array([0.0, -0.4, 1.8]),   # believed: LOW
+                         normal=np.array([0.0, 0.0, -1.0])),
+        gate_rel_age_s=0.05, gate_center_px=(320, 180),
+        image_size=(640, 360), healthy=True)
+    a = make_arbiter()
+    fresh_oracle = TerminalOracle()
+    owner, v_bz, _ = terminal_override(a, st, np.array([1.8, 0.0, 0.0]),
+                                       True, 0.9, 0.55, None, 0.016,
+                                       oracle=fresh_oracle)
+    assert owner == TERM_OWNER
+    # Neutral: no certified pixel history -> ~no vertical command, and
+    # decidedly NOT the believed climb.
+    assert v_bz is None or abs(v_bz) < 0.05

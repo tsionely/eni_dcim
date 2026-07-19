@@ -98,6 +98,25 @@ class PinholeCamera:
         return RelPose(t=t, normal=normal)
 
 
+def derot_pixel(u: float, v: float, k: np.ndarray,
+                mount_rot: np.ndarray | None) -> tuple[float, float]:
+    """Re-express a RAW image pixel in the mount-derotated frame.
+
+    The close tracker (and every TerminalFeature it emits) works in the
+    de-rotated camera frame; detector corners are raw image pixels.
+    Mixing the two in one pixel formula is a ~mount-angle (~29 deg,
+    ~185px) error — this is the single conversion point.
+    """
+    if mount_rot is None:
+        return float(u), float(v)
+    ray = np.array([(u - k[0, 2]) / k[0, 0], (v - k[1, 2]) / k[1, 1], 1.0])
+    r = mount_rot @ ray
+    if r[2] <= 1e-6:
+        return float(u), float(v)
+    return (float(k[0, 0] * r[0] / r[2] + k[0, 2]),
+            float(k[1, 1] * r[1] / r[2] + k[1, 2]))
+
+
 def body_to_cam(v_body: np.ndarray) -> np.ndarray:
     """Rotate a body-frame vector (x fwd, y right, z down) into camera axes."""
     return np.array([v_body[1], v_body[2], v_body[0]], dtype=np.float64)

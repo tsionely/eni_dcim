@@ -113,9 +113,12 @@ def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
 def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       certified: bool, tau_s: float, margin_m: float,
                       prev_vz_up: float | None, dt: float,
-                      vz_max: float = 1.0, az_max: float = 2.0,
+                      vz_max: float = 0.6, az_max: float = 2.0,
                       feature=None, feature_age_s: float | None = None,
-                      d_star: float = 0.8, gate_w: float = 1.6):
+                      d_star: float = 0.8, gate_w: float = 1.6,
+                      oracle: "TerminalOracle | None" = None,
+                      pitch_cal_rad: float = -0.33,
+                      e_z_clamp_m: float = 0.45):
     """The ONE final-boundary override (enable-bit path).
 
     Computes the terminal vertical command from the CERTIFIED gate state
@@ -152,16 +155,38 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # drift) while the oracle read the graze exactly (e_z -0.56 at a
     # crossing pixel-truth ~+0.5 high; d*=0.8 validated to ~6cm by that
     # label). Fallback: the believed TRUE-vertical (still de-tilted).
-    e_z = None
+    e_meas = None
     if (feature is not None and feature_age_s is not None
             and feature_age_s <= 0.15 and feature.span_px > 1.0
             and feature.cert_status in ("certified", "probation")
             and state.image_size is not None):
         cy = state.image_size[1] / 2.0
-        e_z = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
-    if e_z is None:
-        e_z = -true_world_dz(gr, state.q_att, state.level_roll,
-                             state.level_pitch)  # +up error, TRUE vertical
+        fx = state.image_size[0] / 2.0            # 90deg HFOV pinhole
+        e_meas = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
+        # Advisory-7 §2.1: the row formula's zero moves with trim pitch
+        # (~0.018·R per degree). d*=0.8 was graze-calibrated at
+        # pitch_cal; compensate the DELTA from that trim per tick so the
+        # calibration carries across the 1.8 m/s speed change.
+        q = np.asarray(state.q_att, dtype=np.float64)
+        pitch_t = float(np.arcsin(np.clip(
+            2.0 * (q[0] * q[2] - q[3] * q[1]), -1.0, 1.0))) \
+            + float(state.level_pitch)
+        e_meas += gate_w * fx * (np.tan(pitch_t) - np.tan(pitch_cal_rad)) \
+            / feature.span_px
+        # Authority clamp (§1.4): commanded crossing target bounded to
+        # the eroded opening (0.8 - half-extent - buffer; A8 inherits).
+        e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
+    if oracle is not None:
+        e_z = oracle.update(e_meas, dt, vz_max)
+        if e_z is None:
+            # Neutral: no certified history this approach — the servo
+            # has nothing honest to act on. e_z NEVER reverts to the
+            # believed source (§3.3: that wire stays cut); command zero
+            # correction and let the base profile carry through.
+            e_z = 0.0
+    else:
+        e_z = e_meas if e_meas is not None else -true_world_dz(
+            gr, state.q_att, state.level_roll, state.level_pitch)
     v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
                                                   dtype=np.float64))[2])
     g = compute_terminal_guidance(
@@ -179,6 +204,70 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     if not ok:
         return owner, None, prev_vz_up
     return owner, float(v_bz), float(vz_up)
+
+
+class TerminalOracle:
+    """Advisory-7 §3 guard state: asymmetric by design.
+
+    - Self-consistency disarms; cross-magnitude (oracle vs believed)
+      only logs — large disagreement with the believed state is the
+      EXPECTED condition, it is the bias this channel corrects.
+    - Jump limit per certified tick: |Δe_z| <= vz_max·Δt + floor;
+      k=3 consecutive violations => disarm to neutral-decay for the
+      rest of the approach.
+    - Staleness: hold-last <= 0.3s, then decay to zero. e_z NEVER
+      reverts to the believed source — that wire stays cut.
+    - Disarm != retreat: neutral means carry-through on the base
+      profile with the correction decaying, nothing irreversible.
+    """
+
+    def __init__(self, jump_floor_m: float = 0.05, jump_k: int = 3,
+                 hold_s: float = 0.3, decay_s: float = 0.3) -> None:
+        self.jump_floor = jump_floor_m
+        self.jump_k = jump_k
+        self.hold_s = hold_s
+        self.decay_s = decay_s
+        self.e_z: float | None = None
+        self.stale_s = 0.0
+        self._violations = 0
+        self.disarmed = False
+
+    def reset(self) -> None:
+        self.e_z = None
+        self.stale_s = 0.0
+        self._violations = 0
+        self.disarmed = False
+
+    def update(self, e_meas: float | None, dt: float,
+               vz_max: float) -> float | None:
+        """Feed one tick; returns the effective e_z or None (neutral)."""
+        if self.disarmed:
+            e_meas = None                     # neutral-decay to the end
+        if e_meas is not None:
+            limit = vz_max * max(dt, 1e-3) + self.jump_floor
+            if self.e_z is not None and abs(e_meas - self.e_z) > limit:
+                self._violations += 1
+                if self._violations >= self.jump_k:
+                    self.disarmed = True      # flagged; neutral-decay
+                    e_meas = None
+                else:
+                    e_meas = self.e_z         # reject the jump, hold
+            else:
+                self._violations = 0
+        if e_meas is not None:
+            self.e_z = float(e_meas)
+            self.stale_s = 0.0
+            return self.e_z
+        # No fresh certified measurement: hold-last, then decay to zero.
+        if self.e_z is None:
+            return None
+        self.stale_s += dt
+        if self.stale_s <= self.hold_s:
+            return self.e_z
+        self.e_z *= max(0.0, 1.0 - dt / self.decay_s)
+        if abs(self.e_z) < 0.02:
+            self.e_z = 0.0
+        return self.e_z
 
 
 class VerticalOwnerArbiter:

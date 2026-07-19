@@ -34,7 +34,8 @@ from aigp.learning import flight_log
 from aigp.perception.gate_detector_hsv import HsvGateDetector
 from aigp.perception.pipeline import PerceptionAgent
 from aigp.planning.race_planner import RacePlanner
-from aigp.planning.vertical_owner import (VerticalOwnerArbiter,
+from aigp.planning.vertical_owner import (TerminalOracle,
+                                          VerticalOwnerArbiter,
                                           shadow_terminal_check,
                                           terminal_override)
 from aigp.supervisor.race_manager import RaceManager
@@ -245,9 +246,18 @@ class App:
                                           default=False)) if params else False
         terminal_d_star = float(params.get("planner.terminal.d_star_m",
                                            default=0.8)) if params else 0.8
+        terminal_vz_max = float(params.get("planner.terminal.vz_max_mps",
+                                           default=0.6)) if params else 0.6
+        terminal_pitch_cal = float(params.get(
+            "planner.terminal.pitch_cal_rad",
+            default=-0.33)) if params else -0.33
+        terminal_e_clamp = float(params.get(
+            "planner.terminal.e_z_clamp_m",
+            default=0.45)) if params else 0.45
         terminal_margin = float(params.get("planner.terminal.margin_m",
                                            default=0.55)) if params else 0.55
         term_arbiter = VerticalOwnerArbiter()
+        term_oracle = TerminalOracle()
         term_vz_up = None
 
         supervisor.start_flight()
@@ -337,11 +347,15 @@ class App:
                             tau, terminal_margin, term_vz_up,
                             planner_div / self.cfg.control_hz,
                             feature=last_feat, feature_age_s=feat_age,
-                            d_star=terminal_d_star)
+                            d_star=terminal_d_star, oracle=term_oracle,
+                            vz_max=terminal_vz_max,
+                            pitch_cal_rad=terminal_pitch_cal,
+                            e_z_clamp_m=terminal_e_clamp)
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
                 elif terminal_enable:
                     term_arbiter.tick(False, False, False, 9.0, "position")
+                    term_oracle.reset()
                     term_vz_up = None
 
             if supervisor.commands_active():
