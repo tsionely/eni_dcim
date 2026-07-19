@@ -387,3 +387,117 @@ depending on t0 — see `note_timebases`.)
 - `summary.json`, `gate_geom.json`
 - `miss_table_true_vertical.csv`, `plots/miss_scatter_old_vs_true.png`
 - `f2_abort_reconstruction.json`, `a6_banner_reference.json`
+
+## M2 add-ons
+
+### 1. Separating regression — phantom vs aperture share
+
+Across the 88 scored arrivals:
+
+\[ y = (\text{believed opening height} - \text{true opening height}) = a + b\, R_{\mathrm{lastfix}} \]
+
+with heights = `−dz` (so `y = true_dz − phantom_dz`).
+
+```json
+{
+  "fit_all_88": {
+    "n": 88,
+    "intercept": 0.11026139526984796,
+    "slope": 0.007199323121798364,
+    "r_squared": 0.046054648071056525,
+    "residual_rmse": 0.34697628224365257,
+    "x_mean": 15.279210896801045,
+    "y_mean": 0.22026137156202125,
+    "definition": "y = (phantom_opening_height \u2212 true_opening_height) = true_dz \u2212 phantom_dz;  x = R_lastfix",
+    "expected_slope": 0.30601081732530144,
+    "expected_intercept_aperture": 0.33,
+    "slope_vs_sin_tilt": 0.29881149420350306
+  },
+  "fit_fresh_age_lt_0_2": {
+    "n": 5,
+    "intercept": -0.25243071206127593,
+    "slope": 0.07151648233264059,
+    "r_squared": 0.2440222121892609,
+    "residual_rmse": 0.4226563462519316,
+    "x_mean": 3.0319729403136355,
+    "y_mean": -0.035594672842291605
+  },
+  "n_arrivals": 88,
+  "interpretation": {
+    "slope_is_phantom_share": false,
+    "intercept_is_aperture_share": true
+  }
+}
+```
+
+- **slope b** (phantom share): **0.007199323121798364** (expect ≈ sin(17.8°) = 0.306)
+- **intercept a** (aperture share): **0.11026139526984796** (expect ≈ 0.33)
+- **R²**: **0.046054648071056525**
+
+Plot: `plots/m2_separating_regression.png` · points: `m2_separating_points.csv`
+
+### 2. P4 — vertical holdout on TRUE-frame axes
+
+Same F1 harness as RESPONSE5 (cold = `range3m_to_collision`; warm = `range5m_to_3m` + collision), `--blind-last-s 0.6`. Vertical now scored with `true_world_dz` (and the 0.95·ty+0.31·tz linearization as a cross-check). Legacy 0.76 m max was on tilted ty.
+
+| condition | vision hist | range err end/max | ty err end/max (tilted) | TRUE dz err end/max | lin err end/max |
+|---|---:|---:|---:|---:|---:|
+| cold | 1.05s | -1.55 / 1.71 | +2.72 / 2.72 | **+2.64 / 2.64** | +2.18 / 2.18 |
+| warm | 2.73s | +1.86 / 1.86 | -1.58 / 1.58 | **-1.27 / 1.27** | -1.11 / 1.11 |
+
+```json
+{
+  "flight": "20260716T203450-2ca531c3",
+  "blind_s": 0.6,
+  "legacy_tilted_table": {
+    "cold": {
+      "range": "+1.77 / 1.77",
+      "vertical_ty": "0.00 / 0.26"
+    },
+    "warm": {
+      "range": "+0.97 / 0.97",
+      "vertical_ty": "\u22120.69 / 0.76"
+    },
+    "source": "docs/thinktank/RESPONSE5.md"
+  },
+  "cold": {
+    "slices": [
+      "20260716T203450-2ca531c3_range3m_to_collision.aigprec"
+    ],
+    "n_frames": 33,
+    "vision_history_s": 1.0532222,
+    "blind_s": 0.6,
+    "n_blind_refs": 2,
+    "range_error_end_m": -1.5458507807436996,
+    "range_error_max_abs_m": 1.7094764169949048,
+    "vertical_ty_error_end_m": 2.720811376078208,
+    "vertical_ty_error_max_abs_m": 2.720811376078208,
+    "vertical_true_dz_error_end_m": 2.6389265179754915,
+    "vertical_true_dz_error_max_abs_m": 2.6389265179754915,
+    "vertical_lin_error_end_m": 2.1846023361812863,
+    "vertical_lin_error_max_abs_m": 2.1846023361812863,
+    "note": "true_dz via true_world_dz(level_pitch); lin = 0.95\u00b7ty+0.31\u00b7tz advisory linearization"
+  },
+  "warm": {
+    "slices": [
+      "20260716T203450-2ca531c3_range5m_to_3m.aigprec",
+      "20260716T203450-2ca531c3_range3m_to_collision.aigprec"
+    ],
+    "n_frames": 69,
+    "vision_history_s": 2.7263983,
+    "blind_s": 0.6,
+    "n_blind_refs": 4,
+    "range_error_end_m": 1.8634383640491314,
+    "range_error_max_abs_m": 1.8634383640491314,
+    "vertical_ty_error_end_m": -1.5777717127503712,
+    "vertical_ty_error_max_abs_m": 1.5777717127503712,
+    "vertical_true_dz_error_end_m": -1.2733086487317298,
+    "vertical_true_dz_error_max_abs_m": 1.2733086487317298,
+    "vertical_lin_error_end_m": -1.1104439602587735,
+    "vertical_lin_error_max_abs_m": 1.1104439602587735,
+    "note": "true_dz via true_world_dz(level_pitch); lin = 0.95\u00b7ty+0.31\u00b7tz advisory linearization"
+  }
+}
+```
+
+Legacy tilted warm max |ty| error **0.76 m** → replace with TRUE-frame max |dz| from the warm row above for T1 budget work.

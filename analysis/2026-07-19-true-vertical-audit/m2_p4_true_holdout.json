@@ -1,0 +1,52 @@
+{
+  "flight": "20260716T203450-2ca531c3",
+  "blind_s": 0.6,
+  "legacy_tilted_table": {
+    "cold": {
+      "range": "+1.77 / 1.77",
+      "vertical_ty": "0.00 / 0.26"
+    },
+    "warm": {
+      "range": "+0.97 / 0.97",
+      "vertical_ty": "\u22120.69 / 0.76"
+    },
+    "source": "docs/thinktank/RESPONSE5.md"
+  },
+  "cold": {
+    "slices": [
+      "20260716T203450-2ca531c3_range3m_to_collision.aigprec"
+    ],
+    "n_frames": 33,
+    "vision_history_s": 1.0532222,
+    "blind_s": 0.6,
+    "n_blind_refs": 2,
+    "range_error_end_m": -1.5458507807436996,
+    "range_error_max_abs_m": 1.7094764169949048,
+    "vertical_ty_error_end_m": 2.720811376078208,
+    "vertical_ty_error_max_abs_m": 2.720811376078208,
+    "vertical_true_dz_error_end_m": 2.6389265179754915,
+    "vertical_true_dz_error_max_abs_m": 2.6389265179754915,
+    "vertical_lin_error_end_m": 2.1846023361812863,
+    "vertical_lin_error_max_abs_m": 2.1846023361812863,
+    "note": "true_dz via true_world_dz(level_pitch); lin = 0.95\u00b7ty+0.31\u00b7tz advisory linearization"
+  },
+  "warm": {
+    "slices": [
+      "20260716T203450-2ca531c3_range5m_to_3m.aigprec",
+      "20260716T203450-2ca531c3_range3m_to_collision.aigprec"
+    ],
+    "n_frames": 69,
+    "vision_history_s": 2.7263983,
+    "blind_s": 0.6,
+    "n_blind_refs": 4,
+    "range_error_end_m": 1.8634383640491314,
+    "range_error_max_abs_m": 1.8634383640491314,
+    "vertical_ty_error_end_m": -1.5777717127503712,
+    "vertical_ty_error_max_abs_m": 1.5777717127503712,
+    "vertical_true_dz_error_end_m": -1.2733086487317298,
+    "vertical_true_dz_error_max_abs_m": 1.2733086487317298,
+    "vertical_lin_error_end_m": -1.1104439602587735,
+    "vertical_lin_error_max_abs_m": 1.1104439602587735,
+    "note": "true_dz via true_world_dz(level_pitch); lin = 0.95\u00b7ty+0.31\u00b7tz advisory linearization"
+  }
+}

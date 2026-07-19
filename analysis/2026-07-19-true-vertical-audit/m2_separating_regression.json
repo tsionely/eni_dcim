@@ -1,0 +1,29 @@
+{
+  "fit_all_88": {
+    "n": 88,
+    "intercept": 0.11026139526984796,
+    "slope": 0.007199323121798364,
+    "r_squared": 0.046054648071056525,
+    "residual_rmse": 0.34697628224365257,
+    "x_mean": 15.279210896801045,
+    "y_mean": 0.22026137156202125,
+    "definition": "y = (phantom_opening_height \u2212 true_opening_height) = true_dz \u2212 phantom_dz;  x = R_lastfix",
+    "expected_slope": 0.30601081732530144,
+    "expected_intercept_aperture": 0.33,
+    "slope_vs_sin_tilt": 0.29881149420350306
+  },
+  "fit_fresh_age_lt_0_2": {
+    "n": 5,
+    "intercept": -0.25243071206127593,
+    "slope": 0.07151648233264059,
+    "r_squared": 0.2440222121892609,
+    "residual_rmse": 0.4226563462519316,
+    "x_mean": 3.0319729403136355,
+    "y_mean": -0.035594672842291605
+  },
+  "n_arrivals": 88,
+  "interpretation": {
+    "slope_is_phantom_share": false,
+    "intercept_is_aperture_share": true
+  }
+}
