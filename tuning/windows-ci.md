@@ -1498,3 +1498,35 @@ Mock terminal CEM campaign:
 ```
 
 - The 250Hz-vs-125Hz overrun comparison has already been shipped in `tuning/hover-loop-profile-2afcfc4/hover-loop-profile.md`: 250Hz default `overrun_frac=0.7451`, 250Hz with `AIGP_NOSLEEP=1` `0.7447`, and 125Hz default `0.4883`.
+
+## 2026-07-19 - commit `f10b35cbae8751d02bc08f814ebccaf16b3757e3`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --rebase` advanced the checkout to `f10b35cbae8751d02bc08f814ebccaf16b3757e3`, which includes the unique-exposure capture-wire fix requested for this rerun.
+- SIM guard was respected: waited for `C:\Temp\eni_dcim_sim.lock` to clear and verified no `FlightSim`/`DCGame` before running CI or mock A/B.
+- Full CI output is in `tuning/pytest-windows-f10b35c-basetemp-full.txt`.
+- Full CI result: `2 failed, 159 passed, 1 xfailed, 2 warnings in 52.94s`.
+- CI failures were both mock heartbeat timeouts on `udpin:127.0.0.1:24550`: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock`.
+- Pytest cache warnings persist on this Windows checkout: `.pytest_cache` under the repo is access-denied, but they remained warnings.
+
+Critical terminal mock A/B on the fixed build:
+
+- Report: `tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/summary.md`.
+- Control arm (`--patch planner.commit.speed_mps=1.8`): `7/10` passed and finished (`70.0%`), with no `term_status` rows as expected.
+- Terminal-enabled arm (`--patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true`): `5/10` passed and finished (`50.0%`), but all 10 runs had terminal anomalies.
+- Gatekeeping verdict: `owner=term` appeared in `0/10` live runs and `v_bz_applied` fired in `0/10`; therefore sign correctness could not be validated.
+- Important no-go detail: live runs had certified features in `10/10`, and `6/10` had `engaged+ready` overlap at first range mean `2.465m`, but still `owner=term` stayed `0`. This is not owner chatter; the owner never switched.
+- No wrong-sign `v_bz_applied`, jitter, or readiness-onset transient was observed because the live terminal channel never actuated.
