@@ -92,20 +92,23 @@
   "m2": {
     "separating_regression": {
       "n": 88,
-      "intercept": 0.11026139526984796,
-      "slope": 0.007199323121798364,
-      "r_squared": 0.046054648071056525,
-      "residual_rmse": 0.34697628224365257,
-      "x_mean": 15.279210896801045,
-      "y_mean": 0.22026137156202125,
-      "definition": "y = (phantom_opening_height \u2212 true_opening_height) = true_dz \u2212 phantom_dz;  x = R_lastfix",
+      "intercept": 0.08752649452349369,
+      "slope": 0.22290181658462666,
+      "r_squared": 0.3169410732280079,
+      "residual_rmse": 0.39978446150660496,
+      "x_mean": 3.33318524998179,
+      "y_mean": 0.8304995417575175,
+      "definition": "y = believed_opening_height \u2212 true_opening_height (= true_dz \u2212 phantom_dz) at LAST NEAR fix (R\u22645m); x = R_lastfix. Far-gate flickers excluded.",
       "expected_slope": 0.30601081732530144,
       "expected_intercept_aperture": 0.33,
-      "slope_vs_sin_tilt": 0.29881149420350306
+      "slope_vs_sin_tilt": 0.08310900074067479,
+      "R_lastfix_median": 3.350949090871958,
+      "R_lastfix_mean": 3.33318524998179
     },
     "separating_interpretation": {
-      "slope_is_phantom_share": false,
-      "intercept_is_aperture_share": true
+      "slope_is_phantom_share": true,
+      "intercept_is_aperture_share": true,
+      "prior_bug": "v1 used any last det including 10-40m flickers (R_mean~15m) \u2192 slope collapsed; v2 restricts to near fixes R\u22645m"
     },
     "p4_holdout": {
       "cold": {

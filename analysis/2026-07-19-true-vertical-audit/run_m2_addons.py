@@ -41,7 +41,7 @@ from aigp.estimation.state_estimator import StateEstimator  # noqa: E402
 from aigp.main import apply_patches  # noqa: E402
 from aigp.perception.close_tracker import GateCloseTracker  # noqa: E402
 from aigp.perception.gate_detector_hsv import HsvGateDetector  # noqa: E402
-from aigp.planning.approach import true_world_dz  # noqa: E402
+from aigp.planning.approach import gate_world_dz, true_world_dz  # noqa: E402
 from reflight import load_frame_monos, load_frames, load_imu  # noqa: E402
 
 DEFAULT_LEVEL_PITCH = -0.311
@@ -138,48 +138,68 @@ def run_separating_regression() -> dict:
         for r in csv.DictReader(f):
             fid = r["flight_id"]
             t_c = float(r["t_closest_s"])
-            phantom = float(r["miss_vertical_phantom_dz"])
-            true = float(r["miss_vertical_true_dz"])
-            # Primary gap in HEIGHT-above-camera convention (matches pad pin):
-            # phantom_h − true_h = true_dz − phantom_dz
-            gap_h = true - phantom
-            # Also keep dz gap for reference
-            gap_dz = phantom - true
-
+            R_closest = float(r["closest_dist_m"])
+            age_c = float(r["gate_rel_age_s"])
             log = find_flight_log(fid)
             R_last = None
-            R_closest = float(r["closest_dist_m"])
+            gap_h = None
+            phantom = true = None
+            fix_t = None
+            # Last NEAR trusted fix before closest — reject far-gate flickers.
+            # Cap: within 1.5× closest or absolutely < 5 m.
+            r_cap = max(5.0, R_closest * 1.5) if R_closest < 5.0 else 5.0
             if log and log.exists():
                 states, dets = load_log_dets_states(log)
-                # Last detection at or before closest with finite range
-                prior = [d for d in dets if d["t"] <= t_c + 0.02]
-                if prior:
-                    # Prefer a fresh fix: max t, then that det's R
-                    d_last = max(prior, key=lambda d: d["t"])
+                near = [
+                    d for d in dets
+                    if d["t"] <= t_c + 0.02 and 0.3 <= d["dist"] <= r_cap
+                ]
+                if near:
+                    d_last = max(near, key=lambda d: d["t"])
                     R_last = d_last["dist"]
-                if R_last is None:
-                    # Fall back: state age → R_lastfix ≈ closest when age~0
-                    st = min(states, key=lambda s: abs(s["t"] - t_c)) if states else None
-                    if st is not None and st["age"] < 0.15:
-                        R_last = st["dist"]
-                    elif st is not None:
-                        # Dead-reckoned: approximate last-fix range from age*speed?
-                        # Use det just before gap or closest as proxy
-                        R_last = R_closest
-            if R_last is None:
+                    fix_t = d_last["t"]
+                    st = min(states, key=lambda s: abs(s["t"] - d_last["t"])) if states else None
+                    q = st["q"] if st else [1.0, 0, 0, 0]
+                    lp = st["level_pitch"] if st else DEFAULT_LEVEL_PITCH
+                    lr = st["level_roll"] if st else 0.0
+                    rel = RelPose(
+                        t=np.array(d_last["t_vec"], float),
+                        normal=np.array([0.0, 0.0, -1.0]),
+                    )
+                    qn = np.array(q, float)
+                    phantom = gate_world_dz(rel, qn)
+                    true = true_world_dz(rel, qn, lr, lp)
+                    # Height-above-camera: believed(phantom) − true
+                    gap_h = (-phantom) - (-true)  # = true_dz - phantom_dz? 
+                    # phantom_h = -phantom_dz; true_h = -true_dz
+                    # believed_minus_true height = phantom_h - true_h = true_dz - phantom_dz
+                    gap_h = true - phantom
+                elif age_c < 0.2:
+                    # Fresh lock at closest — use closest state as last fix
+                    R_last = R_closest
+                    phantom = float(r["miss_vertical_phantom_dz"])
+                    true = float(r["miss_vertical_true_dz"])
+                    gap_h = true - phantom
+                    fix_t = t_c
+            if R_last is None or gap_h is None:
+                # Last resort: closest-state gap (may be DR) — still score
                 R_last = R_closest
+                phantom = float(r["miss_vertical_phantom_dz"])
+                true = float(r["miss_vertical_true_dz"])
+                gap_h = true - phantom
+                fix_t = t_c
 
             arrivals.append({
                 "flight_id": fid,
                 "attempt_n": int(r["attempt_n"]),
                 "t_closest_s": t_c,
+                "t_lastfix_s": fix_t,
                 "R_closest_m": R_closest,
                 "R_lastfix_m": R_last,
                 "phantom_dz": phantom,
                 "true_dz": true,
                 "gap_height_believed_minus_true": gap_h,
-                "gap_dz_believed_minus_true": gap_dz,
-                "age_s": float(r["gate_rel_age_s"]),
+                "age_s": age_c,
                 "old_label": r["old_label"],
                 "true_label": r["true_label"],
             })
@@ -188,21 +208,29 @@ def run_separating_regression() -> dict:
     y = np.array([a["gap_height_believed_minus_true"] for a in arrivals])
     fit = ols(x, y)
     fit["definition"] = (
-        "y = (phantom_opening_height − true_opening_height) "
-        "= true_dz − phantom_dz;  x = R_lastfix"
+        "y = believed_opening_height − true_opening_height "
+        "(= true_dz − phantom_dz) at LAST NEAR fix (R≤5m); "
+        "x = R_lastfix. Far-gate flickers excluded."
     )
     fit["expected_slope"] = SIN_TILT
     fit["expected_intercept_aperture"] = 0.33
     fit["slope_vs_sin_tilt"] = (
         abs(fit["slope"] - SIN_TILT) if fit.get("slope") is not None else None
     )
+    fit["R_lastfix_median"] = float(np.median(x))
+    fit["R_lastfix_mean"] = float(np.mean(x))
 
-    # Robust check: also fit on fresh-lock subset (age < 0.2)
-    fresh = [a for a in arrivals if a["age_s"] < 0.2]
+    # Fresh-lock subset + near-range subset (R < 4)
+    fresh = [a for a in arrivals if a["age_s"] < 0.25]
     fit_fresh = ols(
         np.array([a["R_lastfix_m"] for a in fresh]),
         np.array([a["gap_height_believed_minus_true"] for a in fresh]),
-    ) if fresh else {"n": 0}
+    ) if len(fresh) >= 3 else {"n": len(fresh)}
+    near = [a for a in arrivals if a["R_lastfix_m"] <= 4.0]
+    fit_near = ols(
+        np.array([a["R_lastfix_m"] for a in near]),
+        np.array([a["gap_height_believed_minus_true"] for a in near]),
+    ) if len(near) >= 3 else {"n": len(near)}
 
     # Plot
     (OUT / "plots").mkdir(exist_ok=True)
@@ -230,7 +258,8 @@ def run_separating_regression() -> dict:
 
     return {
         "fit_all_88": fit,
-        "fit_fresh_age_lt_0_2": fit_fresh,
+        "fit_fresh_age_lt_0_25": fit_fresh,
+        "fit_R_le_4m": fit_near,
         "n_arrivals": len(arrivals),
         "interpretation": {
             "slope_is_phantom_share": (
@@ -238,6 +267,10 @@ def run_separating_regression() -> dict:
             ),
             "intercept_is_aperture_share": (
                 fit.get("intercept") is not None and abs(fit["intercept"] - 0.33) < 0.25
+            ),
+            "prior_bug": (
+                "v1 used any last det including 10-40m flickers (R_mean~15m) "
+                "→ slope collapsed; v2 restricts to near fixes R≤5m"
             ),
         },
     }
@@ -454,8 +487,16 @@ def main() -> int:
     reg = run_separating_regression()
     fit = reg.get("fit_all_88") or {}
     print(
-        f"  n={fit.get('n')} intercept={fit.get('intercept')} "
-        f"slope={fit.get('slope')} R²={fit.get('r_squared')}",
+        f"  fit_all_88 n={fit.get('n')} intercept={fit.get('intercept')} "
+        f"slope={fit.get('slope')} R2={fit.get('r_squared')} "
+        f"R_lastfix mean={fit.get('R_lastfix_mean')} median={fit.get('R_lastfix_median')}",
+        flush=True,
+    )
+    fit4 = reg.get("fit_R_le_4m") or {}
+    print(
+        f"  fit_R_le_4m n={fit4.get('n')} intercept={fit4.get('intercept')} "
+        f"slope={fit4.get('slope')} R2={fit4.get('r_squared')} "
+        f"R_lastfix x_mean={fit4.get('x_mean')}",
         flush=True,
     )
     (OUT / "m2_separating_regression.json").write_text(
