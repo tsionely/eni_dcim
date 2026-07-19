@@ -395,6 +395,15 @@ Run this cycle (same discipline as your phase6b cycle — it was perfect):
 4. TAKEOFF->end slices, notes.md, collect --label phase6c-true-vertical,
    commit `[sim-run] phase6c true vertical r2`, push, release the lock.
 
+**A6 rider (one extra artifact, after the three counted flights):** the
+banner-geometry keystone is BLOCKED because every committed slice is a
+pad/takeoff window with no far-range frames. From any one flight of this
+cycle, cut ONE additional slice covering the 8-20m approach segment
+(where gate 1 + banner are visible far away, e.g. the search/approach
+stretch), 20-40 MB, into the same fixture as
+`<logid>_a6_far_reference.aigprec`, and note which flight/time-window it
+covers. The analyst's A6 re-measure unblocks on this single artifact.
+
 The question this cycle answers: with the phantom gone, does F2's
 aborted-perfect-approach become the first counted pass?
 
