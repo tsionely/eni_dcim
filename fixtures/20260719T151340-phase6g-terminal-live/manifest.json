@@ -1,0 +1,283 @@
+{
+  "label": "phase6g-terminal-live",
+  "created_utc": "20260719T151340",
+  "code_commit": "d2bb9ec860b1501950cd31a9126d6a40b3f8370f",
+  "items": [
+    {
+      "kind": "report",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\phase6g_terminal_live_report.txt",
+      "file": "report.txt",
+      "bytes": 160062
+    },
+    {
+      "kind": "step0_git_output",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6g_step0_git.txt",
+      "file": "step0-git-output.txt",
+      "bytes": 1771
+    },
+    {
+      "kind": "summary",
+      "source": "generated",
+      "file": "summary.json",
+      "bytes": 44011
+    },
+    {
+      "kind": "flight_flight.jsonl",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T150627-486b0765\\flight.jsonl",
+      "file": "20260719T150627-486b0765-flight.jsonl",
+      "bytes": 1596747
+    },
+    {
+      "kind": "flight_result.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T150627-486b0765\\result.json",
+      "file": "20260719T150627-486b0765-result.json",
+      "bytes": 496
+    },
+    {
+      "kind": "flight_params.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T150627-486b0765\\params.json",
+      "file": "20260719T150627-486b0765-params.json",
+      "bytes": 3360
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6g_slices\\terminal_live\\20260719T150627-486b0765_takeoff_to_end.aigprec",
+      "file": "20260719T150627-486b0765_takeoff_to_end.aigprec",
+      "bytes": 16452375
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_terminal_live_F1_try2_select.json",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_select.json",
+      "bytes": 1073
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_terminal_live_F1_try2_race.json",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_race.json",
+      "bytes": 233
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_eventlist.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_eventlist.jpg",
+      "bytes": 63866
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_row_highlight.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_row_highlight.jpg",
+      "bytes": 67060
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_race_dialog.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_race_dialog.jpg",
+      "bytes": 26894
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_verify_after_race.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_verify_after_race.jpg",
+      "bytes": 59024
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_000_180630.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_000.jpg",
+      "bytes": 58694
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_002_180636.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_002.jpg",
+      "bytes": 56294
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_004_180643.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_004.jpg",
+      "bytes": 29728
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F1_try2\\phase6g_terminal_live_F1_try2_006_180649.png",
+      "file": "track_verification\\phase6g_terminal_live_F1_try2_006.jpg",
+      "bytes": 27118
+    },
+    {
+      "kind": "flight_flight.jsonl",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151000-486b0765\\flight.jsonl",
+      "file": "20260719T151000-486b0765-flight.jsonl",
+      "bytes": 1758327
+    },
+    {
+      "kind": "flight_result.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151000-486b0765\\result.json",
+      "file": "20260719T151000-486b0765-result.json",
+      "bytes": 498
+    },
+    {
+      "kind": "flight_params.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151000-486b0765\\params.json",
+      "file": "20260719T151000-486b0765-params.json",
+      "bytes": 3360
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6g_slices\\terminal_live\\20260719T151000-486b0765_takeoff_to_end.aigprec",
+      "file": "20260719T151000-486b0765_takeoff_to_end.aigprec",
+      "bytes": 19178255
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_terminal_live_F2_try5_select.json",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_select.json",
+      "bytes": 1073
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_terminal_live_F2_try5_race.json",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_race.json",
+      "bytes": 233
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_eventlist.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_eventlist.jpg",
+      "bytes": 67771
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_row_highlight.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_row_highlight.jpg",
+      "bytes": 54825
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_race_dialog.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_race_dialog.jpg",
+      "bytes": 26986
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_verify_after_race.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_verify_after_race.jpg",
+      "bytes": 59019
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_000_181002.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_000.jpg",
+      "bytes": 60386
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_002_181009.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_002.jpg",
+      "bytes": 59461
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_004_181015.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_004.jpg",
+      "bytes": 40552
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_terminal_live_F2_try5\\phase6g_terminal_live_F2_try5_006_181022.png",
+      "file": "track_verification\\phase6g_terminal_live_F2_try5_006.jpg",
+      "bytes": 41678
+    },
+    {
+      "kind": "flight_flight.jsonl",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151227-49448448\\flight.jsonl",
+      "file": "20260719T151227-49448448-flight.jsonl",
+      "bytes": 1598142
+    },
+    {
+      "kind": "flight_result.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151227-49448448\\result.json",
+      "file": "20260719T151227-49448448-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_params.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T151227-49448448\\params.json",
+      "file": "20260719T151227-49448448-params.json",
+      "bytes": 3361
+    },
+    {
+      "kind": "takeoff_window_slice",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6g_slices\\terminal_live\\20260719T151227-49448448_takeoff_to_end.aigprec",
+      "file": "20260719T151227-49448448_takeoff_to_end.aigprec",
+      "bytes": 17378974
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_control_F3_try7_select.json",
+      "file": "track_verification\\phase6g_control_F3_try7_select.json",
+      "bytes": 1035
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6g_control_F3_try7_race.json",
+      "file": "track_verification\\phase6g_control_F3_try7_race.json",
+      "bytes": 221
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_eventlist.png",
+      "file": "track_verification\\phase6g_control_F3_try7_eventlist.jpg",
+      "bytes": 68723
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_row_highlight.png",
+      "file": "track_verification\\phase6g_control_F3_try7_row_highlight.jpg",
+      "bytes": 63093
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_race_dialog.png",
+      "file": "track_verification\\phase6g_control_F3_try7_race_dialog.jpg",
+      "bytes": 26998
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_verify_after_race.png",
+      "file": "track_verification\\phase6g_control_F3_try7_verify_after_race.jpg",
+      "bytes": 58997
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_000_181230.png",
+      "file": "track_verification\\phase6g_control_F3_try7_000.jpg",
+      "bytes": 59195
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_002_181236.png",
+      "file": "track_verification\\phase6g_control_F3_try7_002.jpg",
+      "bytes": 63296
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_004_181243.png",
+      "file": "track_verification\\phase6g_control_F3_try7_004.jpg",
+      "bytes": 46377
+    },
+    {
+      "kind": "track_verification",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6g_control_F3_try7\\phase6g_control_F3_try7_006_181249.png",
+      "file": "track_verification\\phase6g_control_F3_try7_006.jpg",
+      "bytes": 20872
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 4860
+    }
+  ]
+}
