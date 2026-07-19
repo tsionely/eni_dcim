@@ -80,6 +80,20 @@ class RacePlanner:
         self.align_climb_cap = float(p.get("planner.align.climb_cap_mps",
                                            default=1.2))
         self.align_max_s = float(p.get("planner.align.max_s", default=4.0))
+        # Fiction guard (phase6c F2): after a blown attempt the believed
+        # target read "4.9m above me" and ALIGN dutifully climbed into
+        # the ceiling (impulse 6.1). No R2 gate ever legitimately needs
+        # more than ~2m of pre-commit height closure — a bigger reading
+        # is attitude/estimator fiction, and climbing on it is the one
+        # thing align must never do.
+        self.align_sane_max = float(p.get("planner.align.sane_max_m",
+                                          default=2.0))
+        # Entry freshness (phase6c F3): re-commits entered on 1.2s-old
+        # dead-reckoned estimates after collisions — attitude fiction
+        # steered them into floor-scrape loops. Committing/aligning is
+        # an aggressive act; it requires a recent view of the target.
+        self.entry_max_age_s = float(p.get("planner.commit.entry_max_age_s",
+                                           default=0.6))
         # Miss-recovery (phase3g): per-attempt pass probability is finally
         # meaningful, so multiply attempts instead of demanding a perfect
         # first arrow. If the opening escapes the corridor mid-commit,
@@ -384,15 +398,35 @@ class RacePlanner:
         if abs(direction[1]) > 0.05:
             self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:
-            # Vertical pre-alignment (phase6a keystone): the opening
-            # center sits 3.11m above the pad camera while takeoff tops
-            # out ~1.6m lower, and the in-commit hold (0.8 m/s cap over
-            # the window) cannot close that — dash-F2 reached R=0.88m
-            # still 0.61m LOW and never registered the pass. Close the
-            # height gap FIRST, creeping forward, then dash level.
+            # Entering the through-gate pipeline (align or commit) is an
+            # aggressive act: it requires a RECENT view of the target.
+            # Stale dead-reckoned estimates keep flying the gentler
+            # approach until the detector refreshes (phase6c F3's
+            # post-collision re-commits ran on 1.2s-old fiction).
+            if state.gate_rel_age_s > self.entry_max_age_s \
+                    and self._commit_until_ns is None:
+                speed = ap.approach_speed(dist, self.speed_far,
+                                          self.speed_near, self.near_distance)
+                yaw_rate = 0.0
+                if state.gate_center_px is not None and state.image_size is not None:
+                    yaw_rate = ap.yaw_rate_to_center(
+                        state.gate_center_px, state.image_size,
+                        self.yaw_center_gain)
+                return Setpoint(phase="approach",
+                                v_body=direction * speed + crosstrack,
+                                yaw_rate=yaw_rate)
+            # Vertical pre-alignment: close the TRUE height gap first,
+            # creeping forward, then dash level (the in-commit hold's
+            # 0.8 m/s cap can only trim small residuals in-window).
             world_dz = ap.true_world_dz(gate, state.q_att,
                                         state.level_roll, state.level_pitch)
-            misaligned = abs(world_dz - au) > self.align_dz_max
+            err_dz = abs(world_dz - au)
+            misaligned = self.align_dz_max < err_dz <= self.align_sane_max
+            if err_dz > self.align_sane_max:
+                # Fiction guard (phase6c F2): "the gate is 4.9m above
+                # me" is not a measurement on this track — never climb
+                # on it. Commit proceeds under its own guards instead.
+                misaligned = False
             if misaligned and state.gate_rel_age_s <= 0.5:
                 if self._align_until_ns is None:
                     self._align_until_ns = now_ns + int(self.align_max_s * 1e9)

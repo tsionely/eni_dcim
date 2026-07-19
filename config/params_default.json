@@ -51,7 +51,8 @@
       "forward_mps": 0.4,
       "climb_gain": 1.0,
       "climb_cap_mps": 1.2,
-      "max_s": 4.0
+      "max_s": 4.0,
+      "sane_max_m": 2.0
     },
     "commit": {
       "distance_m": 6.5,
@@ -61,7 +62,8 @@
       "yaw_track_gain": 1.2,
       "abort_min_dist_m": 0.8,
       "brake_decel_mps2": 2.6,
-      "brake_react_s": 0.0
+      "brake_react_s": 0.0,
+      "entry_max_age_s": 0.6
     },
     "terminal": {
       "enable": false,

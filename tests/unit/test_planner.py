@@ -348,3 +348,26 @@ def test_collision_triggers_recover_brake():
     sp2 = p.plan(int(2e9), "race", make_state(gate_t=[0.0, 0.0, 8.0],
                                               center_px=(320, 180)), None)
     assert sp2.phase == "approach"
+
+
+def test_align_refuses_fiction_vertical():
+    """Phase6c F2: post-miss believed read 'gate 4.9m above me' and
+    ALIGN climbed into the ceiling (impulse 6.1). No R2 gate needs >2m
+    of height closure — bigger readings are fiction; never climb on
+    them. Commit proceeds under its own guards instead."""
+    p = planner()
+    fiction = make_state(gate_t=[0.0, -4.0, 3.0], center_px=(320, 40))
+    sp = p.plan(0, "race", fiction, None)
+    assert sp.phase == "commit"          # not align — and no 1.2 m/s climb
+
+
+def test_commit_entry_requires_fresh_fix():
+    """Phase6c F3: post-collision re-commits entered on 1.2s-old
+    dead-reckoned fiction and floor-scraped. Entering align/commit
+    requires a recent view; stale estimates keep flying approach."""
+    p = planner()
+    stale = make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180),
+                       age_s=1.0)
+    assert p.plan(0, "race", stale, None).phase == "approach"
+    fresh = make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180))
+    assert p.plan(int(0.1e9), "race", fresh, None).phase == "commit"
