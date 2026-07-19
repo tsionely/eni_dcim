@@ -1,0 +1,764 @@
+{
+  "valid": [
+    {
+      "attempt": 1,
+      "fid": "20260719T134326-2477345e",
+      "label": "phase6d_fiction_guards_F1_try1",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134326-2477345e_takeoff_to_end.aigprec",
+      "far_detection_count": 47
+    },
+    {
+      "attempt": 2,
+      "fid": "20260719T134446-2477345e",
+      "label": "phase6d_fiction_guards_F2_try2",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134446-2477345e_takeoff_to_end.aigprec",
+      "far_detection_count": 62
+    },
+    {
+      "attempt": 4,
+      "fid": "20260719T134714-2477345e",
+      "label": "phase6d_fiction_guards_F3_try4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134714-2477345e_takeoff_to_end.aigprec",
+      "far_detection_count": 50
+    }
+  ],
+  "rejected": {
+    "attempt": 3,
+    "fid": "20260719T134604-2477345e",
+    "label": "phase6d_fiction_guards_F3_try3",
+    "reason": "r2ok=True unique=211 (need >300)",
+    "duration_s": 10.09238380001625,
+    "unique_frames": 211,
+    "r2_ok": true
+  },
+  "metrics": [
+    {
+      "flight_id": "20260719T134326-2477345e",
+      "topics": {
+        "frame": 585,
+        "actuator": 1849,
+        "imu": 2265,
+        "race": 78,
+        "heartbeat": 193,
+        "fsm": 6,
+        "state": 925,
+        "setpoint": 925,
+        "detection": 455,
+        "feature": 24,
+        "shadow": 258,
+        "collision": 10,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=4.8)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 9,
+        "env_hits": 1,
+        "duration_s": 18.4960834000085,
+        "loop_overrun_frac": 0.019463667820069204,
+        "loop_stats": {
+          "ticks": 4624,
+          "overruns": 90,
+          "overrun_frac": 0.019463667820069204,
+          "max_late_us": 12855
+        },
+        "flight_id": "20260719T134326-2477345e",
+        "log_dir": "logs\\20260719T134326-2477345e"
+      },
+      "first_mono_ns": 145276746256200,
+      "last_mono_ns": 145296248675600,
+      "takeoff_mono_ns": 145281036470400,
+      "unique_frames_all": 585,
+      "unique_frames_after_takeoff": 457,
+      "far_detection_count": 47,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.28,
+          "t1": 0.016
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.016,
+          "t1": 1.516
+        },
+        {
+          "phase": "align",
+          "t0": 1.516,
+          "t1": 2.096
+        },
+        {
+          "phase": "commit",
+          "t0": 2.096,
+          "t1": 3.956
+        },
+        {
+          "phase": "retreat",
+          "t0": 3.956,
+          "t1": 5.956
+        },
+        {
+          "phase": "align",
+          "t0": 5.956,
+          "t1": 6.196
+        },
+        {
+          "phase": "commit",
+          "t0": 6.196,
+          "t1": 7.896
+        },
+        {
+          "phase": "recover",
+          "t0": 7.896,
+          "t1": 8.736
+        },
+        {
+          "phase": "commit",
+          "t0": 8.736,
+          "t1": 10.336
+        },
+        {
+          "phase": "retreat",
+          "t0": 10.336,
+          "t1": 12.336
+        },
+        {
+          "phase": "search",
+          "t0": 12.336,
+          "t1": 15.196
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "align",
+        "commit",
+        "recover",
+        "commit",
+        "retreat",
+        "search"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          -0.3373580864248663,
+          0.9405475839475812
+        ],
+        "commit": [
+          2.43070222211495,
+          -0.7100472392716921,
+          0.08740194353640068
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "recover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 0.736,
+        "t_rel_s": 7.771,
+        "t": [
+          0.0006332578284478427,
+          -0.20296935639648478,
+          0.7078949915215371
+        ],
+        "center_px": [
+          320.3989815167148,
+          522.6665730764963
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.184,
+        "t_rel_s": 10.156,
+        "t": [
+          -0.007933623099262379,
+          0.17888539366521214,
+          0.042575316494115195
+        ],
+        "age_s": 0.440058624,
+        "center_px": [
+          242.51258211169966,
+          1065.6525797898653
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 15.211,
+        "impulse": 4.773,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 7.885,
+          "impulse": 0.3817649781703949,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.892,
+          "impulse": 0.8577589988708496,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.904,
+          "impulse": 0.8469246625900269,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.904,
+          "impulse": 0.3792891502380371,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.906,
+          "impulse": 0.11864551901817322,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.914,
+          "impulse": 0.0808098316192627,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.92,
+          "impulse": 0.07361356914043427,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.934,
+          "impulse": 0.13775797188282013,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.935,
+          "impulse": 0.024638736620545387,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 15.211,
+          "impulse": 4.772554397583008,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.284,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.188,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 15.212,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=4.8)"
+        },
+        {
+          "t_rel_s": 15.212,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T134446-2477345e",
+      "topics": {
+        "frame": 569,
+        "imu": 2194,
+        "actuator": 1788,
+        "heartbeat": 187,
+        "race": 75,
+        "fsm": 6,
+        "state": 895,
+        "setpoint": 895,
+        "detection": 266,
+        "feature": 11,
+        "shadow": 118,
+        "collision": 2,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=6.5)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 2,
+        "duration_s": 17.89602359998389,
+        "loop_overrun_frac": 0.00581135449262405,
+        "loop_stats": {
+          "ticks": 4474,
+          "overruns": 26,
+          "overrun_frac": 0.00581135449262405,
+          "max_late_us": 9655
+        },
+        "flight_id": "20260719T134446-2477345e",
+        "log_dir": "logs\\20260719T134446-2477345e"
+      },
+      "first_mono_ns": 145356413859300,
+      "last_mono_ns": 145375315567100,
+      "takeoff_mono_ns": 145360602953300,
+      "unique_frames_all": 569,
+      "unique_frames_after_takeoff": 442,
+      "far_detection_count": 62,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.18,
+          "t1": 0.016
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.016,
+          "t1": 1.516
+        },
+        {
+          "phase": "align",
+          "t0": 1.516,
+          "t1": 2.176
+        },
+        {
+          "phase": "commit",
+          "t0": 2.176,
+          "t1": 4.276
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.276,
+          "t1": 6.276
+        },
+        {
+          "phase": "search",
+          "t0": 6.276,
+          "t1": 14.456
+        },
+        {
+          "phase": "commit",
+          "t0": 14.456,
+          "t1": 14.702
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "search",
+        "commit"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          0.3452146365508862,
+          0.9595471303535386
+        ],
+        "commit": [
+          2.442387850273045,
+          0.4949075864830617,
+          -0.002783964396896932
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 1.16,
+        "t_rel_s": 14.654,
+        "t": [
+          -0.1280001519470043,
+          -0.9003043370416214,
+          0.7205114613914223
+        ],
+        "center_px": [
+          246.0,
+          112.5
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.245,
+        "t_rel_s": 4.116,
+        "t": [
+          -0.008409000898807006,
+          0.21813743166240712,
+          0.1115430656831841
+        ],
+        "age_s": 1.36853048,
+        "center_px": [
+          295.8758621960315,
+          805.802937228161
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 14.711,
+        "impulse": 6.54,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 14.704,
+          "impulse": 0.46742919087409973,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.711,
+          "impulse": 6.54026460647583,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.184,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.084,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 14.712,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=6.5)"
+        },
+        {
+          "t_rel_s": 14.712,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T134714-2477345e",
+      "topics": {
+        "frame": 1878,
+        "imu": 7314,
+        "actuator": 5961,
+        "heartbeat": 627,
+        "race": 251,
+        "fsm": 6,
+        "state": 3104,
+        "setpoint": 3104,
+        "detection": 281,
+        "shadow": 283,
+        "feature": 2,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "stale channels: frame",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 0,
+        "duration_s": 62.064022100006696,
+        "loop_overrun_frac": 0.004253673627223511,
+        "loop_stats": {
+          "ticks": 15516,
+          "overruns": 66,
+          "overrun_frac": 0.004253673627223511,
+          "max_late_us": 10230
+        },
+        "flight_id": "20260719T134714-2477345e",
+        "log_dir": "logs\\20260719T134714-2477345e"
+      },
+      "first_mono_ns": 145504675518800,
+      "last_mono_ns": 145567743938000,
+      "takeoff_mono_ns": 145508927532600,
+      "unique_frames_all": 1878,
+      "unique_frames_after_takeoff": 1750,
+      "far_detection_count": 50,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.244,
+          "t1": 0.012
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.012,
+          "t1": 1.512
+        },
+        {
+          "phase": "approach",
+          "t0": 1.512,
+          "t1": 3.692
+        },
+        {
+          "phase": "commit",
+          "t0": 3.692,
+          "t1": 5.892
+        },
+        {
+          "phase": "retreat",
+          "t0": 5.892,
+          "t1": 7.892
+        },
+        {
+          "phase": "approach",
+          "t0": 7.892,
+          "t1": 8.372
+        },
+        {
+          "phase": "search",
+          "t0": 8.372,
+          "t1": 8.392
+        },
+        {
+          "phase": "commit",
+          "t0": 8.392,
+          "t1": 11.852
+        },
+        {
+          "phase": "retreat",
+          "t0": 11.852,
+          "t1": 13.872
+        },
+        {
+          "phase": "search",
+          "t0": 13.872,
+          "t1": 58.812
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "approach",
+        "commit",
+        "retreat",
+        "approach",
+        "search",
+        "commit",
+        "retreat",
+        "search"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "approach": [
+          2.949829428994526,
+          0.18825274016582097,
+          0.2561178460548996
+        ],
+        "commit": [
+          2.4360662494643885,
+          0.1747032194587777,
+          -0.2521335127953072
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 3.747,
+        "t_rel_s": 4.617,
+        "t": [
+          -0.18615197686620333,
+          -0.9047582741245833,
+          3.6310176290943033
+        ],
+        "center_px": [
+          311.0328025817871,
+          266.71533203125
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.358,
+        "t_rel_s": 5.872,
+        "t": [
+          -0.00011511862675790566,
+          0.0633752797830065,
+          0.3525881729691496
+        ],
+        "age_s": 1.186540952,
+        "center_px": [
+          319.8955212812378,
+          237.5177816084504
+        ]
+      },
+      "biggest_collision": null,
+      "collisions": [],
+      "fsm": [
+        {
+          "t_rel_s": -3.248,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.148,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 58.816,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "stale channels: frame"
+        },
+        {
+          "t_rel_s": 58.816,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260719T134326-2477345e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134326-2477345e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 145281036470400,
+      "end_mono_ns": 145296248675600,
+      "unique_frames": 458,
+      "span_s": 15.235,
+      "approx_s_at30": 15.27,
+      "bytes": 22652247,
+      "packets": 16257
+    },
+    {
+      "fid": "20260719T134446-2477345e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134446-2477345e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 145360602953300,
+      "end_mono_ns": 145375315567100,
+      "unique_frames": 443,
+      "span_s": 14.734,
+      "approx_s_at30": 14.77,
+      "bytes": 16119170,
+      "packets": 11628
+    },
+    {
+      "fid": "20260719T134714-2477345e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134714-2477345e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 145508927532600,
+      "end_mono_ns": 145567743938000,
+      "unique_frames": 1751,
+      "span_s": 58.339,
+      "approx_s_at30": 58.37,
+      "bytes": 58529443,
+      "packets": 42232
+    }
+  ],
+  "a6_far_reference": {
+    "fid": "20260719T134446-2477345e",
+    "ok": true,
+    "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134446-2477345e_a6_far_reference.aigprec",
+    "w0": 145361295806300,
+    "w1": 145364866716600,
+    "span_s": 3.571,
+    "range_min_m": 9.57,
+    "range_max_m": 19.61,
+    "far_detections": 62,
+    "unique_frames": 108,
+    "bytes": 6016661
+  }
+}

@@ -1,0 +1,301 @@
+﻿{
+    "label":  "phase6d-fiction-guards",
+    "created_utc":  "20260719T134835",
+    "code_commit":  "31f7da5cfa75061221de24d078f3ddd4ab7d3e20",
+    "items":  [
+                  {
+                      "kind":  "report",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\phase6d_fiction_guards_report.txt",
+                      "file":  "report.txt",
+                      "bytes":  74726
+                  },
+                  {
+                      "kind":  "step0_git_output",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_step0_git.txt",
+                      "file":  "step0-git-output.txt",
+                      "bytes":  7937
+                  },
+                  {
+                      "kind":  "summary",
+                      "source":  "generated",
+                      "file":  "summary.json",
+                      "bytes":  18627
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134326-2477345e\\flight.jsonl",
+                      "file":  "20260719T134326-2477345e-flight.jsonl",
+                      "bytes":  1912817
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134326-2477345e\\result.json",
+                      "file":  "20260719T134326-2477345e-result.json",
+                      "bytes":  494
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134326-2477345e\\params.json",
+                      "file":  "20260719T134326-2477345e-params.json",
+                      "bytes":  3338
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134326-2477345e_takeoff_to_end.aigprec",
+                      "file":  "20260719T134326-2477345e_takeoff_to_end.aigprec",
+                      "bytes":  22652247
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F1_try1_select.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_select.json",
+                      "bytes":  1079
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F1_try1_race.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_race.json",
+                      "bytes":  235
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_eventlist.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_eventlist.jpg",
+                      "bytes":  68479
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_row_highlight.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_row_highlight.jpg",
+                      "bytes":  64980
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_race_dialog.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_race_dialog.jpg",
+                      "bytes":  26918
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_verify_after_race.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_verify_after_race.jpg",
+                      "bytes":  58990
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_000_164329.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_000.jpg",
+                      "bytes":  59038
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_002_164336.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_002.jpg",
+                      "bytes":  71753
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_004_164342.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_004.jpg",
+                      "bytes":  36425
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F1_try1\\phase6d_fiction_guards_F1_try1_006_164348.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F1_try1_006.jpg",
+                      "bytes":  24143
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134446-2477345e\\flight.jsonl",
+                      "file":  "20260719T134446-2477345e-flight.jsonl",
+                      "bytes":  1689364
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134446-2477345e\\result.json",
+                      "file":  "20260719T134446-2477345e-result.json",
+                      "bytes":  492
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134446-2477345e\\params.json",
+                      "file":  "20260719T134446-2477345e-params.json",
+                      "bytes":  3338
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134446-2477345e_takeoff_to_end.aigprec",
+                      "file":  "20260719T134446-2477345e_takeoff_to_end.aigprec",
+                      "bytes":  16119170
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F2_try2_select.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_select.json",
+                      "bytes":  1080
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F2_try2_race.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_race.json",
+                      "bytes":  235
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_eventlist.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_eventlist.jpg",
+                      "bytes":  66445
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_row_highlight.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_row_highlight.jpg",
+                      "bytes":  58873
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_race_dialog.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_race_dialog.jpg",
+                      "bytes":  27058
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_verify_after_race.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_verify_after_race.jpg",
+                      "bytes":  59009
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_000_164449.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_000.jpg",
+                      "bytes":  60698
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_002_164455.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_002.jpg",
+                      "bytes":  38867
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_004_164501.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_004.jpg",
+                      "bytes":  28432
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F2_try2\\phase6d_fiction_guards_F2_try2_006_164508.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F2_try2_006.jpg",
+                      "bytes":  38375
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134714-2477345e\\flight.jsonl",
+                      "file":  "20260719T134714-2477345e-flight.jsonl",
+                      "bytes":  5277085
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134714-2477345e\\result.json",
+                      "file":  "20260719T134714-2477345e-result.json",
+                      "bytes":  483
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T134714-2477345e\\params.json",
+                      "file":  "20260719T134714-2477345e-params.json",
+                      "bytes":  3338
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134714-2477345e_takeoff_to_end.aigprec",
+                      "file":  "20260719T134714-2477345e_takeoff_to_end.aigprec",
+                      "bytes":  58529443
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F3_try4_select.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_select.json",
+                      "bytes":  1079
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6d_fiction_guards_F3_try4_race.json",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_race.json",
+                      "bytes":  235
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_eventlist.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_eventlist.jpg",
+                      "bytes":  65543
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_row_highlight.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_row_highlight.jpg",
+                      "bytes":  66872
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_race_dialog.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_race_dialog.jpg",
+                      "bytes":  27547
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_verify_after_race.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_verify_after_race.jpg",
+                      "bytes":  57294
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_000_164717.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_000.jpg",
+                      "bytes":  58566
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_002_164724.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_002.jpg",
+                      "bytes":  56258
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_004_164730.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_004.jpg",
+                      "bytes":  29018
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_006_164736.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_006.jpg",
+                      "bytes":  31456
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_009_164746.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_009.jpg",
+                      "bytes":  23456
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6d_fiction_guards_F3_try4\\phase6d_fiction_guards_F3_try4_012_164756.png",
+                      "file":  "track_verification\\phase6d_fiction_guards_F3_try4_012.jpg",
+                      "bytes":  24864
+                  },
+                  {
+                      "kind":  "a6_far_reference_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6d_slices\\fiction_guards\\20260719T134446-2477345e_a6_far_reference.aigprec",
+                      "file":  "20260719T134446-2477345e_a6_far_reference.aigprec",
+                      "bytes":  6016661
+                  },
+                  {
+                      "kind":  "notes",
+                      "source":  "manual",
+                      "file":  "notes.md",
+                      "bytes":  10780
+                  }
+              ]
+}
