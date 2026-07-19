@@ -160,3 +160,57 @@ def test_single_bar_is_rejected():
     cv2.rectangle(img, (300, 100), (318, 260), (30, 30, 230), -1)  # one bar
     det = tr.track(CameraFrame(1, 0, img), prior([0.0, 0.0, 3.0]))
     assert det is None
+
+
+def certify(tr, ts_ns=0):
+    """Force a held identity (the F3 partial-hold precondition)."""
+    tr.certificate.on_full_quad(ts_ns)
+    assert tr.certificate.status_at(ts_ns) == "certified"
+
+
+def test_partial_single_edge_held_identity_gives_fix():
+    """Phase6c F3: in the terminal zone the detector's pose dies on the
+    sanity gates and most edges leave the FOV. With identity HELD by
+    the certificate, one surviving edge must still produce a bounded
+    fix (its normal direction) instead of starving to solo-timeout."""
+    tr = make_tracker()
+    certify(tr)
+    truth = [0.0, 0.0, 1.8]
+    # Only the LEFT bar survives in frame (right/top/bottom clipped).
+    img = np.full((H, W, 3), 30, dtype=np.uint8)
+    cx = FX * truth[0] / truth[2] + W / 2.0
+    half = FX * (1.6 / 2.0) / truth[2]
+    x0 = int(cx - half)
+    cv2.rectangle(img, (x0, 0), (x0 + 18, H - 1), (30, 30, 230), -1)
+    det = tr.track(CameraFrame(1, 0, img), prior([0.1, 0.0, 1.8]))
+    assert det is not None
+    # The visible (left-bar) lateral direction moved toward truth.
+    assert abs(det.rel_pose.t[0]) < 0.1
+    # Without identity, the same scene stays rejected (rank safety).
+    tr2 = make_tracker()
+    det2 = tr2.track(CameraFrame(1, 0, img), prior([0.1, 0.0, 1.8]))
+    assert det2 is None
+
+
+def test_center_hint_reanchors_stale_prior():
+    """Phase6c F3: the believed pose staled and mis-projected the model,
+    so the edge search found nothing. A pose-rejected detection's center
+    must snap the model back onto the observed ring before searching."""
+    truth = [0.4, 0.0, 2.0]
+    frame = CameraFrame(1, 0, render_gate(truth))
+    stale = prior([-0.35, 0.0, 2.0])          # 0.75m lateral error
+    # Without the hint the projected model misses the ring's edges badly
+    # enough that any fix stays far from truth (or None). Separate
+    # tracker: a failed search must not consume the certified chain.
+    tr_no = make_tracker()
+    certify(tr_no)
+    det_no = tr_no.track(frame, stale)
+    tr = make_tracker()
+    certify(tr)
+    hint = (FX * truth[0] / truth[2] + W / 2.0, FX * truth[1] / truth[2] + H / 2.0)
+    det = tr.track(frame, stale, center_hint_px=hint)
+    assert det is not None
+    assert abs(det.rel_pose.t[0] - truth[0]) < 0.15
+    if det_no is not None:
+        assert abs(det.rel_pose.t[0] - truth[0]) <= \
+            abs(det_no.rel_pose.t[0] - truth[0]) + 1e-6

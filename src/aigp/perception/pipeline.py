@@ -86,7 +86,12 @@ class PerceptionAgent(Agent):
             state, _ = state_cell.get()
             if state is None or state.gate_rel is None:
                 continue
-            tracked = self.tracker.track(frame, state.gate_rel)
+            # A pose-rejected detection still carries the observed ring
+            # center — hand it to the tracker as a re-anchor hint so a
+            # staling believed pose cannot blind the edge search (F3).
+            hint = detection.center_px if detection is not None else None
+            tracked = self.tracker.track(frame, state.gate_rel,
+                                         center_hint_px=hint)
             if tracked is not None:
                 self.tracker_fixes += 1
                 self.bus.publish_latest(Topic.DETECTION, tracked)

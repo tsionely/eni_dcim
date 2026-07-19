@@ -46,6 +46,14 @@ class GateCloseTracker:
                                           default=12))
         self.max_step_m = float(p.get("perception.close_tracker.max_step_m", default=0.6))
         self.min_support = int(p.get("perception.close_tracker.min_support", default=10))
+        # Terminal partial-structure floor (phase6c F3 autopsy): with
+        # identity held by the certificate, even ONE surviving edge
+        # constrains its normal direction — the SVD truncation zeroes
+        # what it cannot see and the step cap bounds the solve.
+        # Starving to None instead is what turned a 22-frame FOV clip
+        # into a 1.25s terminal blackout.
+        self.partial_min = int(p.get("perception.close_tracker.partial_min_support",
+                                     default=3))
         self.max_solo_s = float(p.get("perception.close_tracker.max_solo_s", default=1.0))
         self.gate_w = float(p.get("perception.gate.width_m"))
         self.gate_h = float(p.get("perception.gate.height_m"))
@@ -75,7 +83,8 @@ class GateCloseTracker:
 
     # ------------------------------------------------------------ tracking
 
-    def track(self, frame: CameraFrame, prior: RelPose) -> GateDetection | None:
+    def track(self, frame: CameraFrame, prior: RelPose,
+              center_hint_px=None) -> GateDetection | None:
         if not self.enabled:
             return None
         t = np.asarray(prior.t, dtype=np.float64).copy()
@@ -89,6 +98,29 @@ class GateCloseTracker:
         mask = self.detector.red_mask(img)
         if not mask.any():
             return None
+
+        # Center re-anchor (phase6c F3 autopsy): near the plane the
+        # detector keeps finding the ring but its PnP dies on the
+        # scale/grazing gates — those rejections still carry a center.
+        # A staling believed pose then mis-projects the model and the
+        # edge search finds nothing (low_support 0 x13 in F3). Snap the
+        # model onto the OBSERVED center (least-norm in the observable
+        # image plane, step-capped) before searching — identity must
+        # already be held by the certificate.
+        if (center_hint_px is not None
+                and self.certificate.status_at(frame.ts_ns) != "none"):
+            c_px, c_opt = self._project(t.reshape(1, 3), k)
+            x, y, z = c_opt[0]
+            if z > 0.1:
+                dpi = np.array([[k[0, 0] / z, 0.0, -k[0, 0] * x / z / z],
+                                [0.0, k[1, 1] / z, -k[1, 1] * y / z / z]])
+                j = dpi @ self._derot_to_opt
+                r = np.asarray(center_hint_px, dtype=np.float64) - c_px[0]
+                delta, *_ = np.linalg.lstsq(j, r, rcond=None)
+                step = float(np.linalg.norm(delta))
+                if step > self.max_step_m:
+                    delta = delta * (self.max_step_m / step)
+                t = t + delta
 
         for _ in range(2):                      # measure -> solve, twice
             corners_derot = self._corners_derot(t)
@@ -134,7 +166,16 @@ class GateCloseTracker:
             # bound a sparse solve — demanding far-range support there
             # is what starved terminal density (release-bar measurement).
             need = self.min_support if t[2] > 2.5 else max(5, self.min_support // 2)
-            if len(rows_b) < need or len(set(edge_ids)) < 2:
+            min_edges = 2
+            if (t[2] <= 2.5 and self.certificate.status_at(frame.ts_ns)
+                    in ("certified", "probation")):
+                # Terminal partial-structure hold: identity is carried
+                # by the certificate, so a single surviving edge still
+                # buys its normal direction (truncated solve + step cap
+                # bound the rest). This is the F3-blackout fix.
+                need = min(need, max(3, self.partial_min))
+                min_edges = 1
+            if len(rows_b) < need or len(set(edge_ids)) < min_edges:
                 return None
             a = np.asarray(rows_a)
             b = np.asarray(rows_b, dtype=np.float64)
