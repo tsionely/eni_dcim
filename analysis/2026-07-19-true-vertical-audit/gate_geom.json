@@ -1,0 +1,243 @@
+{
+  "unit_pin": {
+    "t_vec": [
+      0.015,
+      -3.217,
+      5.525
+    ],
+    "phantom_dz": -3.217,
+    "true_dz": -1.3719644233017538,
+    "opening_height_above_cam_m": 1.3719644233017538,
+    "claim_approx_1_3m": true
+  },
+  "pad_summary": {
+    "label": "pad_rest_like",
+    "n": 8867,
+    "median_m": 1.349913517532631,
+    "mean_m": 1.2263787737446408,
+    "p10_m": 1.2334256618651263,
+    "p90_m": 1.3724642766077109,
+    "std_m": 0.4625074643772247
+  },
+  "inflight_summary": {
+    "label": "inflight_1.5_12m",
+    "n": 89313,
+    "median_m": 1.4258111261288773,
+    "mean_m": 1.0026432795182445,
+    "p10_m": -1.623064097500902,
+    "p90_m": 3.2174475801768256,
+    "std_m": 1.9581143004623667
+  },
+  "pin_flights": [
+    {
+      "fid": "20260717T153903-d946830d",
+      "t_vec": [
+        0.014897532500995014,
+        -3.217097252580509,
+        5.524948194341941
+      ],
+      "R": 6.393355083146716,
+      "phantom_dz": -3.217097252580509,
+      "true_dz": -1.3739999908830383,
+      "opening_height_above_cam_m": 1.3739999908830383,
+      "claim_1_3m": true,
+      "unit_pin_target": -1.372
+    }
+  ],
+  "gate2_plus": {
+    "n": 608,
+    "summary": {
+      "label": "gate2_plus_candidates",
+      "n": 608,
+      "median_m": -1.4788339720285362,
+      "mean_m": -3.1706086901151607,
+      "p10_m": -9.566547233517946,
+      "p90_m": 0.06007128635236306,
+      "std_m": 3.9472716544546236
+    },
+    "samples": [
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.2681509,
+        "R": 19.69028448902565,
+        "opening_height_above_cam_m": -3.6448325420807177,
+        "true_dz": 3.6448325420807177,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.2786433,
+        "R": 19.69028448902565,
+        "opening_height_above_cam_m": -3.6348810142386965,
+        "true_dz": 3.6348810142386965,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.2829884,
+        "R": 19.69028448902565,
+        "opening_height_above_cam_m": -3.6348810142386965,
+        "true_dz": 3.6348810142386965,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.2945073,
+        "R": 19.023503590418407,
+        "opening_height_above_cam_m": -3.485939367229994,
+        "true_dz": 3.485939367229994,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3109815,
+        "R": 19.023503590418407,
+        "opening_height_above_cam_m": -3.458372490760865,
+        "true_dz": 3.458372490760865,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3223336,
+        "R": 18.22224879492035,
+        "opening_height_above_cam_m": -3.275766827791006,
+        "true_dz": 3.275766827791006,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3306139,
+        "R": 18.22224879492035,
+        "opening_height_above_cam_m": -3.275766827791006,
+        "true_dz": 3.275766827791006,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3388435,
+        "R": 18.22224879492035,
+        "opening_height_above_cam_m": -3.266148307409564,
+        "true_dz": 3.266148307409564,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.351029,
+        "R": 18.22224879492035,
+        "opening_height_above_cam_m": -3.266148307409564,
+        "true_dz": 3.266148307409564,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3679886,
+        "R": 17.655185869172033,
+        "opening_height_above_cam_m": -3.1358412868937604,
+        "true_dz": 3.1358412868937604,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3799502,
+        "R": 17.655185869172033,
+        "opening_height_above_cam_m": -3.609170856572168,
+        "true_dz": 3.609170856572168,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.3927244,
+        "R": 17.92935046672763,
+        "opening_height_above_cam_m": -3.673091985499762,
+        "true_dz": 3.673091985499762,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4034703,
+        "R": 17.92935046672763,
+        "opening_height_above_cam_m": -4.41560792482104,
+        "true_dz": 4.41560792482104,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4127241,
+        "R": 17.92935046672763,
+        "opening_height_above_cam_m": -4.41560792482104,
+        "true_dz": 4.41560792482104,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.428244,
+        "R": 18.929319317270657,
+        "opening_height_above_cam_m": -4.498599219181668,
+        "true_dz": 4.498599219181668,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4402187,
+        "R": 18.929319317270657,
+        "opening_height_above_cam_m": -5.621481534569831,
+        "true_dz": 5.621481534569831,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4594927,
+        "R": 18.929319317270657,
+        "opening_height_above_cam_m": -6.088713933142193,
+        "true_dz": 6.088713933142193,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4879979,
+        "R": 8.354024566759158,
+        "opening_height_above_cam_m": -0.2275936858354637,
+        "true_dz": 0.2275936858354637,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.4948356,
+        "R": 8.354024566759158,
+        "opening_height_above_cam_m": -0.2275936858354637,
+        "true_dz": 0.2275936858354637,
+        "note": "post-close far lock (possible next gate)"
+      },
+      {
+        "fid": "20260716T131137-2ca531c3",
+        "phase": "20260716T132549-phase3j-r2training-rerun",
+        "t": 26.5053837,
+        "R": 8.354024566759158,
+        "opening_height_above_cam_m": -0.20649965943792736,
+        "true_dz": 0.20649965943792736,
+        "note": "post-close far lock (possible next gate)"
+      }
+    ]
+  },
+  "pad_sample_n": 8867,
+  "GATE_GEOM_gate1_opening_above_pad_cam_m": 1.349913517532631
+}

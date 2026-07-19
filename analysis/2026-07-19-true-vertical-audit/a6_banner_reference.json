@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED",
+  "blocked_by": "far trusted dets exist in logs, but paired slices lack overlapping far-range frames (most takeoff\u2192end / pad slices), or red banner band not separable \u2014 20260714T210518-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260714T210844-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260714T211404-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260715T045100-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260715T045458-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+  "original_R4_m": 0.147,
+  "attempted_visions": 69,
+  "blockers": [
+    "20260714T210518-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260714T210844-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260714T211404-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T045100-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T045458-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T051458-6092dbc0_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T121747-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T122040-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T122352-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "20260715T184758-8e6cf1f5_r2e_slice_start.aigprec: no frames in far window (slice may be takeoff-only)"
+  ]
+}

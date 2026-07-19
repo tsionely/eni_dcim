@@ -1,0 +1,21 @@
+{
+  "n_attempts": 88,
+  "n_reattributed": 27,
+  "reattributed_pct": 30.681818181818183,
+  "old_LOW_became_not_LOW": 11,
+  "old_HIGH_became_not_HIGH": 1,
+  "true_HIGH_count": 49,
+  "true_LOW_count": 8,
+  "true_CENTERED_count": 31,
+  "median_phantom_delta_m": -0.11934794461906306,
+  "suspicion": {
+    "many_LOW_were_phantom": true,
+    "several_HIGH_were_real": true
+  },
+  "reattr_breakdown": {
+    "LOW->HIGH": 7,
+    "CENTERED->HIGH": 15,
+    "LOW->CENTERED": 4,
+    "HIGH->LOW": 1
+  }
+}

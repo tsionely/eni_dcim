@@ -1,0 +1,92 @@
+{
+  "geom": {
+    "GATE_GEOM_m": 1.349913517532631,
+    "unit_pin": {
+      "t_vec": [
+        0.015,
+        -3.217,
+        5.525
+      ],
+      "phantom_dz": -3.217,
+      "true_dz": -1.3719644233017538,
+      "opening_height_above_cam_m": 1.3719644233017538,
+      "claim_approx_1_3m": true
+    },
+    "pad_summary": {
+      "label": "pad_rest_like",
+      "n": 8867,
+      "median_m": 1.349913517532631,
+      "mean_m": 1.2263787737446408,
+      "p10_m": 1.2334256618651263,
+      "p90_m": 1.3724642766077109,
+      "std_m": 0.4625074643772247
+    },
+    "gate2_plus_n": 608
+  },
+  "miss": {
+    "n_attempts": 88,
+    "n_reattributed": 27,
+    "reattributed_pct": 30.681818181818183,
+    "old_LOW_became_not_LOW": 11,
+    "old_HIGH_became_not_HIGH": 1,
+    "true_HIGH_count": 49,
+    "true_LOW_count": 8,
+    "true_CENTERED_count": 31,
+    "median_phantom_delta_m": -0.11934794461906306,
+    "suspicion": {
+      "many_LOW_were_phantom": true,
+      "several_HIGH_were_real": true
+    },
+    "reattr_breakdown": {
+      "LOW->HIGH": 7,
+      "CENTERED->HIGH": 15,
+      "LOW->CENTERED": 4,
+      "HIGH->LOW": 1
+    }
+  },
+  "f2": {
+    "verdict": "WOULD_HAVE_CLEARED",
+    "retreat_t_s": 7.8834977,
+    "counterfactual": {
+      "t_to_plane_s": 0.5450000000000004,
+      "body_at_plane": [
+        0.04943077310980398,
+        0.02451817652324647,
+        0.46875920461615306
+      ],
+      "lateral_m": 0.02451817652324647,
+      "vertical_body_z_m": 0.46875920461615306,
+      "vertical_true_dz_m": 0.4386756656099094,
+      "vertical_phantom_dz_m": 0.46431491103075445,
+      "inside_opening_lateral": true,
+      "inside_opening_vertical_body": true,
+      "inside_opening_vertical_true": true,
+      "inside_opening": true
+    },
+    "claim_check": {
+      "ROUND5_phantom_0_58": true,
+      "phantom_delta_at_retreat": -0.40140912382908067,
+      "abort_threshold_0_45": true,
+      "phantom_would_trip_corridor": false,
+      "true_would_trip_corridor": false
+    }
+  },
+  "a6": {
+    "status": "BLOCKED",
+    "blocked_by": "far trusted dets exist in logs, but paired slices lack overlapping far-range frames (most takeoff\u2192end / pad slices), or red banner band not separable \u2014 20260714T210518-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260714T210844-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260714T211404-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260715T045100-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only); 20260715T045458-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+    "original_R4_m": 0.147,
+    "attempted_visions": 69,
+    "blockers": [
+      "20260714T210518-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260714T210844-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260714T211404-58cd98ad_r2_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T045100-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T045458-411f3135_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T051458-6092dbc0_r2c_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T121747-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T122040-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T122352-22978559_r2d_slice_start.aigprec: no frames in far window (slice may be takeoff-only)",
+      "20260715T184758-8e6cf1f5_r2e_slice_start.aigprec: no frames in far window (slice may be takeoff-only)"
+    ]
+  }
+}

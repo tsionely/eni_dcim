@@ -1,0 +1,68 @@
+{
+  "flight_id": "20260719T075333-fab49fbf",
+  "note_timebases": "t=0 is first log mono_ns; takeoff setpoint may be later. ROUND5 't~7.88' \u2248 retreat if measured from early hover; retreat_t_log=7.883s from first mono.",
+  "retreat_t_s": 7.8834977,
+  "retreat_state": {
+    "dist": 1.3093740863828598,
+    "t_vec": [
+      -0.09498821139197787,
+      -0.4599758541677471,
+      1.2222356365980143
+    ],
+    "center_px": [
+      295.13063215041075,
+      59.571279934713814
+    ],
+    "age": 0.100108248,
+    "phantom_dz": -0.2798791149786713,
+    "true_dz": 0.12153000885040938,
+    "phantom_minus_true": -0.40140912382908067,
+    "corridor_error_vs_aim0_phantom": 0.2798791149786713,
+    "corridor_error_vs_aim0_true": 0.12153000885040938
+  },
+  "closest_state": {
+    "t": 8.2633924,
+    "dist": 0.8217287598609395,
+    "t_vec": [
+      -0.008075141487040062,
+      -0.5963220026841136,
+      0.5653078948567497
+    ],
+    "center_px": [
+      315.6317219044212,
+      233.4789742344865
+    ],
+    "phantom_dz": -0.5661167573994595,
+    "true_dz": -0.35718581029977964,
+    "pixel_looks_centered": true
+  },
+  "last_commit_v_body": [
+    2.151935529336169,
+    -0.2192777759912385,
+    -1.7041010252915585
+  ],
+  "counterfactual_coast": {
+    "t_to_plane_s": 0.5450000000000004,
+    "body_at_plane": [
+      0.04943077310980398,
+      0.02451817652324647,
+      0.46875920461615306
+    ],
+    "lateral_m": 0.02451817652324647,
+    "vertical_body_z_m": 0.46875920461615306,
+    "vertical_true_dz_m": 0.4386756656099094,
+    "vertical_phantom_dz_m": 0.46431491103075445,
+    "inside_opening_lateral": true,
+    "inside_opening_vertical_body": true,
+    "inside_opening_vertical_true": true,
+    "inside_opening": true
+  },
+  "verdict": "WOULD_HAVE_CLEARED",
+  "claim_check": {
+    "ROUND5_phantom_0_58": true,
+    "phantom_delta_at_retreat": -0.40140912382908067,
+    "abort_threshold_0_45": true,
+    "phantom_would_trip_corridor": false,
+    "true_would_trip_corridor": false
+  }
+}
