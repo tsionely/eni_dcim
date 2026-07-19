@@ -1,0 +1,69 @@
+﻿===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+===== git checkout main =====
+git : Already on 'main'
+At line:148 char:52
++ ... "`n===== git checkout main =====`n" + (git checkout main 2>&1 | Out-S ...
++                                            ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Already on 'main':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Your branch is up to date with 'origin/main'.
+
+===== git pull =====
+git : From https://github.com/tsionely/eni_dcim
+At line:149 char:43
++   $step0 += "`n===== git pull =====`n" + (git pull 2>&1 | Out-String)
++                                           ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   78c8461..7113b1a  main       -> origin/main
+Updating 78c8461..7113b1a
+Fast-forward
+ analysis/2026-07-19-true-vertical-audit.md         | 389 +++++++++
+ .../a6_banner_reference.json                       |  18 +
+ .../f2_abort_reconstruction.json                   |  68 ++
+ .../2026-07-19-true-vertical-audit/gate_geom.json  | 243 ++++++
+ .../miss_summary.json                              |  21 +
+ .../miss_table_true_vertical.csv                   |  89 ++
+ .../plots/miss_scatter_old_vs_true.png             | Bin 0 -> 119243 bytes
+ .../run_true_vertical_audit.py                     | 968 +++++++++++++++++++++
+ .../2026-07-19-true-vertical-audit/summary.json    |  92 ++
+ .../true-vertical-audit.md                         | 389 +++++++++
+ config/params_default.json                         |   4 +-
+ docs/thinktank/RESPONSE9.md                        |  81 ++
+ src/aigp/estimation/attitude_filter.py             |  16 +
+ src/aigp/estimation/state_estimator.py             |  34 +-
+ src/aigp/planning/approach.py                      |  12 +-
+ src/aigp/planning/race_planner.py                  |  24 +-
+ tests/unit/test_planner.py                         |  26 +
+ tests/unit/test_state_estimator.py                 |  31 +
+ 18 files changed, 2487 insertions(+), 18 deletions(-)
+ create mode 100644 analysis/2026-07-19-true-vertical-audit.md
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/a6_banner_reference.json
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/f2_abort_reconstruction.json
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/gate_geom.json
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/miss_summary.json
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/miss_table_true_vertical.csv
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/plots/miss_scatter_old_vs_true.png
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/run_true_vertical_audit.py
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/summary.json
+ create mode 100644 analysis/2026-07-19-true-vertical-audit/true-vertical-audit.md
+ create mode 100644 docs/thinktank/RESPONSE9.md
+
+===== git log -1 --oneline =====
+7113b1a Advisory-6 lands: braking-band formula, fresh-vision-only aborts, honest gravity behind a gate
+
+===== git merge-base --is-ancestor 2c5057a HEAD && echo OK =====
+OK
+

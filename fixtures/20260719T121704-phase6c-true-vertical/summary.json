@@ -1,0 +1,925 @@
+{
+  "valid": [
+    {
+      "attempt": 1,
+      "fid": "20260719T121141-f186c83e",
+      "label": "phase6c_true_vertical_F1_try1",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121141-f186c83e_takeoff_to_end.aigprec"
+    },
+    {
+      "attempt": 2,
+      "fid": "20260719T121258-f186c83e",
+      "label": "phase6c_true_vertical_F2_try2",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121258-f186c83e_takeoff_to_end.aigprec"
+    },
+    {
+      "attempt": 5,
+      "fid": "20260719T121637-f186c83e",
+      "label": "phase6c_true_vertical_F3_try5",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121637-f186c83e_takeoff_to_end.aigprec"
+    }
+  ],
+  "rejected": [
+    {
+      "attempt": 3,
+      "fid": "20260719T121416-f186c83e",
+      "label": "phase6c_true_vertical_F3_try3",
+      "reason": "r2ok=True unique=260 (need >300)",
+      "duration_s": 11.97219000000041,
+      "unique_frames": 260,
+      "r2_ok": true
+    },
+    {
+      "attempt": 4,
+      "fid": "20260719T121528-f186c83e",
+      "label": "phase6c_true_vertical_F3_try4",
+      "reason": "r2ok=True unique=197 (need >300)",
+      "duration_s": 9.73608420000528,
+      "unique_frames": 197,
+      "r2_ok": true
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260719T121141-f186c83e",
+      "topics": {
+        "frame": 508,
+        "imu": 1960,
+        "actuator": 1603,
+        "heartbeat": 167,
+        "race": 67,
+        "fsm": 6,
+        "state": 795,
+        "setpoint": 795,
+        "detection": 327,
+        "shadow": 188,
+        "feature": 14,
+        "collision": 27,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.3)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 27,
+        "duration_s": 15.88000770000508,
+        "loop_overrun_frac": 0.03425692695214106,
+        "loop_stats": {
+          "ticks": 3970,
+          "overruns": 136,
+          "overrun_frac": 0.03425692695214106,
+          "max_late_us": 15694
+        },
+        "flight_id": "20260719T121141-f186c83e",
+        "log_dir": "logs\\20260719T121141-f186c83e"
+      },
+      "first_mono_ns": 139771265831800,
+      "last_mono_ns": 139788150148500,
+      "takeoff_mono_ns": 139775454282400,
+      "unique_frames_all": 508,
+      "unique_frames_after_takeoff": 381,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.18,
+          "t1": 0.016
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.016,
+          "t1": 1.516
+        },
+        {
+          "phase": "align",
+          "t0": 1.516,
+          "t1": 2.257
+        },
+        {
+          "phase": "commit",
+          "t0": 2.257,
+          "t1": 4.016
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.016,
+          "t1": 5.256
+        },
+        {
+          "phase": "recover",
+          "t0": 5.256,
+          "t1": 6.317
+        },
+        {
+          "phase": "commit",
+          "t0": 6.317,
+          "t1": 8.296
+        },
+        {
+          "phase": "retreat",
+          "t0": 8.296,
+          "t1": 10.296
+        },
+        {
+          "phase": "commit",
+          "t0": 10.296,
+          "t1": 10.316
+        },
+        {
+          "phase": "retreat",
+          "t0": 10.316,
+          "t1": 12.336
+        },
+        {
+          "phase": "search",
+          "t0": 12.336,
+          "t1": 12.696
+        },
+        {
+          "phase": "hover",
+          "t0": 12.696,
+          "t1": 12.696
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "recover",
+        "commit",
+        "retreat",
+        "commit",
+        "retreat",
+        "search",
+        "hover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          -0.2521113643356557,
+          0.9973303717370412
+        ],
+        "commit": [
+          2.4178626988875367,
+          -0.19654822888118828,
+          -0.2336409872171975
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "recover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 0.847,
+        "t_rel_s": 9.537,
+        "t": [
+          -0.024335679766411582,
+          -0.6295153311645897,
+          0.5664118043545128
+        ],
+        "center_px": [
+          319.5,
+          125.5
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.193,
+        "t_rel_s": 8.096,
+        "t": [
+          -0.002956606926917892,
+          0.15536549681956416,
+          0.11436685940588258
+        ],
+        "age_s": 0.776093744,
+        "center_px": [
+          311.7273743326639,
+          614.7147350249202
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 12.694,
+        "impulse": 1.335,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 5.239,
+          "impulse": 0.7665550112724304,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.246,
+          "impulse": 0.09666875749826431,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.253,
+          "impulse": 0.7156690955162048,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.27,
+          "impulse": 0.838623046875,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.371,
+          "impulse": 0.04775625467300415,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.378,
+          "impulse": 0.026449818164110184,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.385,
+          "impulse": 0.021063845604658127,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.396,
+          "impulse": 0.01868341490626335,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.397,
+          "impulse": 0.01973336562514305,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.399,
+          "impulse": 0.007586055900901556,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.406,
+          "impulse": 0.027749735862016678,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.413,
+          "impulse": 0.025336861610412598,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.42,
+          "impulse": 0.029156124219298363,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.432,
+          "impulse": 0.02341877669095993,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.432,
+          "impulse": 0.021520478650927544,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.433,
+          "impulse": 0.006200684700161219,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.441,
+          "impulse": 0.018939392641186714,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.448,
+          "impulse": 0.013529066927731037,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.459,
+          "impulse": 0.011204030364751816,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.459,
+          "impulse": 0.009723629802465439,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.461,
+          "impulse": 0.0029687907081097364,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.468,
+          "impulse": 0.010394689626991749,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.475,
+          "impulse": 0.008751288056373596,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.482,
+          "impulse": 0.0056290230713784695,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.497,
+          "impulse": 0.003264608094468713,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 5.497,
+          "impulse": 0.0007503030356019735,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 12.694,
+          "impulse": 1.3352606296539307,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.184,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.088,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 12.696,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=1.3)"
+        },
+        {
+          "t_rel_s": 12.696,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T121258-f186c83e",
+      "topics": {
+        "frame": 555,
+        "imu": 2143,
+        "actuator": 1746,
+        "heartbeat": 184,
+        "race": 74,
+        "fsm": 6,
+        "state": 878,
+        "setpoint": 878,
+        "detection": 235,
+        "shadow": 73,
+        "feature": 1,
+        "collision": 1,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=6.1)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 17.545262899977388,
+        "loop_overrun_frac": 0.008665906499429875,
+        "loop_stats": {
+          "ticks": 4385,
+          "overruns": 38,
+          "overrun_frac": 0.008665906499429875,
+          "max_late_us": 16741
+        },
+        "flight_id": "20260719T121258-f186c83e",
+        "log_dir": "logs\\20260719T121258-f186c83e"
+      },
+      "first_mono_ns": 139848409838700,
+      "last_mono_ns": 139866960311300,
+      "takeoff_mono_ns": 139852594945500,
+      "unique_frames_all": 555,
+      "unique_frames_after_takeoff": 430,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.176,
+          "t1": 0.002
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.002,
+          "t1": 1.501
+        },
+        {
+          "phase": "align",
+          "t0": 1.501,
+          "t1": 2.28
+        },
+        {
+          "phase": "commit",
+          "t0": 2.28,
+          "t1": 3.74
+        },
+        {
+          "phase": "retreat",
+          "t0": 3.74,
+          "t1": 5.74
+        },
+        {
+          "phase": "search",
+          "t0": 5.74,
+          "t1": 14.0
+        },
+        {
+          "phase": "align",
+          "t0": 14.0,
+          "t1": 14.365
+        },
+        {
+          "phase": "hover",
+          "t0": 14.365,
+          "t1": 14.365
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "search",
+        "align",
+        "hover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          -0.35889935374583065,
+          1.055656834850142
+        ],
+        "commit": [
+          2.4487187326618427,
+          0.00475405580752087,
+          -0.11971049649376664
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 3.952,
+        "t_rel_s": 2.286,
+        "t": [
+          -0.08743126731146283,
+          -0.33722036868036015,
+          3.936598840957258
+        ],
+        "center_px": [
+          312.0,
+          318.0
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.919,
+        "t_rel_s": 3.72,
+        "t": [
+          0.012420066905263177,
+          -0.15558099909099593,
+          0.9060043716408437
+        ],
+        "age_s": 1.223592472,
+        "center_px": [
+          324.3867574308568,
+          125.04891889323605
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 14.365,
+        "impulse": 6.14,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 14.365,
+          "impulse": 6.140034198760986,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.18,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.08,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.501,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 14.365,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=6.1)"
+        },
+        {
+          "t_rel_s": 14.365,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T121637-f186c83e",
+      "topics": {
+        "frame": 484,
+        "actuator": 1522,
+        "imu": 1875,
+        "heartbeat": 160,
+        "race": 64,
+        "fsm": 6,
+        "state": 755,
+        "setpoint": 755,
+        "detection": 256,
+        "feature": 4,
+        "shadow": 128,
+        "collision": 12,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.5)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 12,
+        "duration_s": 15.084046400006628,
+        "loop_overrun_frac": 0.005303632988597189,
+        "loop_stats": {
+          "ticks": 3771,
+          "overruns": 20,
+          "overrun_frac": 0.005303632988597189,
+          "max_late_us": 11908
+        },
+        "flight_id": "20260719T121637-f186c83e",
+        "log_dir": "logs\\20260719T121637-f186c83e"
+      },
+      "first_mono_ns": 140067830419900,
+      "last_mono_ns": 140083919283900,
+      "takeoff_mono_ns": 140071965891600,
+      "unique_frames_all": 484,
+      "unique_frames_after_takeoff": 359,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.128,
+          "t1": 0.016
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.016,
+          "t1": 1.508
+        },
+        {
+          "phase": "align",
+          "t0": 1.508,
+          "t1": 2.268
+        },
+        {
+          "phase": "commit",
+          "t0": 2.268,
+          "t1": 4.248
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.248,
+          "t1": 6.268
+        },
+        {
+          "phase": "commit",
+          "t0": 6.268,
+          "t1": 6.488
+        },
+        {
+          "phase": "retreat",
+          "t0": 6.488,
+          "t1": 8.488
+        },
+        {
+          "phase": "search",
+          "t0": 8.488,
+          "t1": 10.868
+        },
+        {
+          "phase": "align",
+          "t0": 10.868,
+          "t1": 11.528
+        },
+        {
+          "phase": "commit",
+          "t0": 11.528,
+          "t1": 11.888
+        },
+        {
+          "phase": "recover",
+          "t0": 11.888,
+          "t1": 11.948
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "commit",
+        "retreat",
+        "search",
+        "align",
+        "commit",
+        "recover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          -0.3403900516376647,
+          1.1397286641223776
+        ],
+        "commit": [
+          2.4372733223035463,
+          -0.7433094310217925,
+          0.28606753188840073
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "recover": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 1.756,
+        "t_rel_s": 11.03,
+        "t": [
+          -0.2154049759211179,
+          -1.2484946363372535,
+          1.2165706812576027
+        ],
+        "center_px": [
+          276.3517632814015,
+          111.18848122008427
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.201,
+        "t_rel_s": 4.088,
+        "t": [
+          0.06364862382374924,
+          0.1823186781934868,
+          0.05461776186983424
+        ],
+        "age_s": 1.097486528,
+        "center_px": [
+          692.9109162718896,
+          1248.1868869134025
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 11.95,
+        "impulse": 1.454,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 11.881,
+          "impulse": 0.002155097434297204,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.888,
+          "impulse": 0.24051472544670105,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.895,
+          "impulse": 0.015042765066027641,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.902,
+          "impulse": 0.023427870124578476,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.915,
+          "impulse": 0.02395685948431492,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.915,
+          "impulse": 0.028997069224715233,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.923,
+          "impulse": 0.03841577097773552,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.93,
+          "impulse": 0.05423644930124283,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.937,
+          "impulse": 0.09719110280275345,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.948,
+          "impulse": 0.0781225934624672,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.948,
+          "impulse": 0.06948404759168625,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 11.95,
+          "impulse": 1.4539294242858887,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.132,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.04,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.503,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 11.952,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=1.5)"
+        },
+        {
+          "t_rel_s": 11.952,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260719T121141-f186c83e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121141-f186c83e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 139775454282400,
+      "end_mono_ns": 139788150148500,
+      "unique_frames": 382,
+      "span_s": 12.699,
+      "approx_s_at30": 12.73,
+      "bytes": 17420078,
+      "packets": 12502
+    },
+    {
+      "fid": "20260719T121258-f186c83e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121258-f186c83e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 139852594945500,
+      "end_mono_ns": 139866960311300,
+      "unique_frames": 431,
+      "span_s": 14.353,
+      "approx_s_at30": 14.37,
+      "bytes": 16740060,
+      "packets": 12064
+    },
+    {
+      "fid": "20260719T121637-f186c83e",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6c_slices\\true_vertical\\20260719T121637-f186c83e_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 140071965891600,
+      "end_mono_ns": 140083919283900,
+      "unique_frames": 360,
+      "span_s": 11.972,
+      "approx_s_at30": 12.0,
+      "bytes": 14637143,
+      "packets": 10525
+    }
+  ]
+}
