@@ -20,7 +20,7 @@ import numpy as np
 
 from aigp.core.bus import Bus
 from aigp.core.clock import SimClock
-from aigp.core.messages import LoopStats, Topic
+from aigp.core.messages import LoopStats, TermStatus, Topic
 from aigp.core.params import ParamSet
 from aigp.core.scheduler import RateLoop
 from aigp.io.mavlink_io import MavlinkIO
@@ -348,9 +348,12 @@ class App:
                         shadow_arbiter, setpoint.v_body, state.q_att,
                         state.gate_rel_age_s, True, now_ns,
                         certified=certified))
-                    if (terminal_enable and state.gate_rel is not None
-                            and float(state.gate_rel.t[2])
-                            <= terminal_engage):
+                    term_engaged = (terminal_enable
+                                    and state.gate_rel is not None
+                                    and float(state.gate_rel.t[2])
+                                    <= terminal_engage)
+                    term_v_bz = None
+                    if term_engaged:
                         # Engagement range (advisory-7 SS1): TERM owns
                         # from >=2.5m — NOT from commit entry at 4-5m.
                         # phase6g flew capture-at-entry: the oracle
@@ -373,8 +376,18 @@ class App:
                             vz_max=terminal_vz_max,
                             pitch_cal_rad=terminal_pitch_cal,
                             e_z_clamp_m=terminal_e_clamp)
+                        term_v_bz = v_bz
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
+                    if terminal_enable:
+                        # Adjudication record: the REAL channel, never
+                        # the shadow (phase6i lesson).
+                        bus.publish_latest(Topic.TERM, TermStatus(
+                            ts_ns=now_ns, owner=term_arbiter.owner,
+                            engaged=term_engaged,
+                            ready=term_oracle.ready(),
+                            e_z=term_oracle.e_z, vz_up=term_vz_up,
+                            v_bz_applied=term_v_bz))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

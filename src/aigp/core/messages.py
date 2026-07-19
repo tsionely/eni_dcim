@@ -29,6 +29,7 @@ class Topic:
     ACTUATOR = "actuator"
     LOOP_STATS = "loop_stats"
     SHADOW = "shadow"          # non-actuating terminal-channel shadow
+    TERM = "term_status"       # ACTUATING terminal channel per-tick record
     FEATURE = "feature"        # certified terminal vertical feature
     # Event queues (discrete, every occurrence matters)
     COLLISION = "collision"
@@ -201,6 +202,24 @@ class TerminalFeature:
     center_x_px: float         # pair midpoint column
     cert_status: str           # certificate state at this exposure
     mode: str                  # BAR_FULL | BAR_ROW_ONLY
+
+
+@dataclass(frozen=True, slots=True)
+class TermStatus:
+    """ACTUATING terminal channel record, one per commit tick (enable
+    path only). Exists because the phase6i live no-go fired on SHADOW
+    telemetry — the shadow arbiter has no engagement gate BY DESIGN and
+    its owner field looks identical on control arms. Adjudication of
+    live arms reads THIS record only: engaged says the 2.5m gate was
+    open, owner is the real arbiter, v_bz_applied is what actually
+    replaced the legacy vertical (None = legacy flew the tick)."""
+    ts_ns: int
+    owner: str                 # real arbiter owner (alt|term)
+    engaged: bool              # inside the engagement range this tick
+    ready: bool                # oracle readiness (history predicate)
+    e_z: float | None          # oracle effective e_z (+up), if any
+    vz_up: float | None        # commanded world-up velocity, if owning
+    v_bz_applied: float | None # body-z actually applied (None = legacy)
 
 
 @dataclass(frozen=True, slots=True)
