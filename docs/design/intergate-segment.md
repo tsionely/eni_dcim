@@ -129,3 +129,24 @@ seventh, adaptive search last).
 
 THE RULE: uncertainty while moving reduces speed and eventually forces
 a stop; it never expands the set of gates allowed to take control.
+
+## Advisory-8B riders (acknowledged, pre-data)
+
+- **Pattern book**: "any token that feeds a pre-registered endpoint
+  must carry exactly one meaning — instrument ambiguity is conclusion
+  ambiguity" (joins GATE_GEOM and frame ownership).
+- **Cohort hygiene**: flights flown under the ambiguous instrument
+  (phase6i F1/F2) are QUARANTINED from Block A's endpoint; the restart
+  is a fresh cohort. The quarantined flights stay usable for anything
+  not reading TermStatus.
+- **A8 convention**: report max AND scatter of (0.8 - true_dz at
+  contact) across the graze samples; the clamp recomputes from the
+  MAX — clearance is a worst-case quantity, props flex.
+- **Drop formats (so each lands one-pass analyzable)**: alternating
+  six => per-flight TermStatus timeline + crossing vs post-hoc pixel
+  truth + oracle residual binned by range (sigma library) + anomaly
+  ledger. Successor-latch vs B1/H1 => per-trigger disposition table
+  (accepted/rejected, clause fired, post-hoc 512 verdict) + formal
+  closure of N0 (a)-(d) — the wash-seeded-fiction prediction stays
+  open on the advisory board until (b) and (d) are answered, our 512
+  refutation notwithstanding.
