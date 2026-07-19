@@ -182,7 +182,7 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         if capture_ok:
             from aigp.planning.vertical_terminal import (crossing_error,
                                                          crossing_sigma)
-            vz_vis = oracle.v_z_visual()
+            vz_vis = oracle.v_z_visual() * oracle.rate_authority()
             e_now = e_meas if e_meas is not None else (
                 oracle._hist[-1][1] if oracle._hist else 0.0)
             e_x = crossing_error(e_now, vz_vis, tau_s)
@@ -217,7 +217,8 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         # drifts exactly in the final blind interval. No slope =>
         # neutral rate, never the believed fallback.
         vz_vis = oracle.v_z_visual()
-        v_z_up = vz_vis if vz_vis is not None else 0.0
+        v_z_up = (vz_vis * oracle.rate_authority()
+                  if vz_vis is not None else 0.0)
     else:
         e_z = e_meas if e_meas is not None else -true_world_dz(
             gr, state.q_att, state.level_roll, state.level_pitch)
@@ -331,6 +332,15 @@ class TerminalOracle:
                 and gap <= self.max_gap_s
                 and self.v_z_visual() is not None
                 and not self.disarmed)
+
+    def rate_authority(self) -> float:
+        """Advisory-7B §1: the barely-ready window's slope is ~4x
+        noisier than a half-second one (sigma ~0.4 vs ~0.1 m/s at the
+        margined per-sample 0.05). The predicate gates WHETHER v_z
+        speaks; this schedule sets HOW LOUDLY — readiness onset must
+        not inject rate jitter at exactly the wrong moment."""
+        n, span, _ = self.history_stats()
+        return float(min(1.0, (span / 0.3) * (n / 10.0)))
 
     def update(self, e_meas: float | None, dt: float,
                vz_max: float) -> float | None:

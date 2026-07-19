@@ -344,3 +344,18 @@ def test_sign_pin_raw_frame_quads_f2_final_3m():
     for y_top, span in ((158.5, 178.1), (135.0, 218.6), (61.0, 311.1)):
         e = 1.6 * (180.0 - y_top) / span - 0.8
         assert e < 0.0, f"wrong sign at y_top={y_top}"
+
+
+def test_rate_authority_scales_with_window_richness():
+    """Advisory-7B: the minimal predicate window (6 samples / 0.15s)
+    speaks at reduced authority (~0.3); a half-second, well-sampled
+    window speaks at full volume."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    for i in range(6):
+        g.observe(i * 0.03, 0.0)
+    assert g.rate_authority() == pytest.approx((0.15 / 0.3) * 0.6, abs=0.01)
+    g2 = TerminalOracle()
+    for i in range(13):
+        g2.observe(i * 0.04, 0.0)
+    assert g2.rate_authority() == 1.0
