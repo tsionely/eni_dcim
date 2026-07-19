@@ -1,0 +1,279 @@
+﻿===== Phase 6i-R RATE A/B restart 2026-07-19T23:03:04.7632354+03:00 =====
+===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+===== git pull =====
+git : From https://github.com/tsionely/eni_dcim
+At line:27 char:43
++   $step0 += "`n===== git pull =====`n" + (git pull 2>&1 | Out-String)
++                                           ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   2c37d61..f10b35c  main       -> origin/main
+Updating 2c37d61..f10b35c
+Fast-forward
+ docs/design/intergate-segment.md | 46 ++++++++++++++++++++++++++++++++++++++++
+ src/aigp/app.py                  |  8 +++++++
+ 2 files changed, 54 insertions(+)
+
+===== git log -1 --oneline =====
+f10b35c The capture wire: the REAL arbiter finally receives its unique-exposure feed
+
+===== git merge-base --is-ancestor 035ab1a HEAD && echo OK =====
+OK
+
+Verified HEAD=f10b35cbae8751d02bc08f814ebccaf16b3757e3 (f10b35c The capture wire: the REAL arbiter finally receives its unique-exposure feed), 035ab1a ancestor OK
+SIM_LOCK_ACQUIRED=Sakana 7952 2026-07-19T23:03:05.0154043+03:00 phase6i-r-rate-ab
+
+
+===== ATTEMPT 1 slot F1 arm=control 2026-07-19T23:03:05.0250364+03:00 =====
+SCORES {"r1": 0.976, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 118 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 8.827988200006075, 'loop_overrun_frac': 0.016311735387403714, 'loop_stats': {'ticks': 2207, 'overruns': 36, 'overrun_frac': 0.016311735387403714, 'max_late_us': 5791}, 'flight_id': '20260719T200347-f170ead6', 'log_dir': 'logs\\20260719T200347-f170ead6'}
+RESULT fid=20260719T200347-f170ead6 arm=control r2ok=True unique=173 gates=0 clips=0 env=2 reason=environment collision (impulse=1.7) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=173
+
+===== ATTEMPT 2 slot F1 arm=control 2026-07-19T23:04:07.3820019+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 7.9201476000016555, 'loop_overrun_frac': 0.0297979797979798, 'loop_stats': {'ticks': 1980, 'overruns': 59, 'overrun_frac': 0.0297979797979798, 'max_late_us': 14231}, 'flight_id': '20260719T200450-f170ead6', 'log_dir': 'logs\\20260719T200450-f170ead6'}
+RESULT fid=20260719T200450-f170ead6 arm=control r2ok=True unique=140 gates=0 clips=0 env=3 reason=environment collision (impulse=3.7) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=140
+
+===== ATTEMPT 3 slot F1 arm=control 2026-07-19T23:05:08.7496453+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=5.8)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 11.588003300013952, 'loop_overrun_frac': 0.00862961684501208, 'loop_stats': {'ticks': 2897, 'overruns': 25, 'overrun_frac': 0.00862961684501208, 'max_late_us': 6890}, 'flight_id': '20260719T200555-f170ead6', 'log_dir': 'logs\\20260719T200555-f170ead6'}
+RESULT fid=20260719T200555-f170ead6 arm=control r2ok=True unique=255 gates=0 clips=0 env=1 reason=environment collision (impulse=5.8) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=255
+
+===== ATTEMPT 4 slot F1 arm=control 2026-07-19T23:06:18.3390893+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=4.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 11.132002600003034, 'loop_overrun_frac': 0.013654329859863456, 'loop_stats': {'ticks': 2783, 'overruns': 38, 'overrun_frac': 0.013654329859863456, 'max_late_us': 13086}, 'flight_id': '20260719T200705-f170ead6', 'log_dir': 'logs\\20260719T200705-f170ead6'}
+RESULT fid=20260719T200705-f170ead6 arm=control r2ok=True unique=237 gates=0 clips=0 env=1 reason=environment collision (impulse=4.6) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=237
+
+===== ATTEMPT 5 slot F1 arm=control 2026-07-19T23:07:27.3066645+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=6.3)', 'gates_passed': 1, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 15.132013800001005, 'loop_overrun_frac': 0.007401533174729051, 'loop_stats': {'ticks': 3783, 'overruns': 28, 'overrun_frac': 0.007401533174729051, 'max_late_us': 4632}, 'flight_id': '20260719T200816-f170ead6', 'log_dir': 'logs\\20260719T200816-f170ead6'}
+RESULT fid=20260719T200816-f170ead6 arm=control r2ok=True unique=360 gates=1 clips=0 env=2 reason=environment collision (impulse=6.3) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+COUNTED_F1 arm=control fid=20260719T200816-f170ead6 gates=1 agi_max=1
+
+===== ATTEMPT 6 slot F2 arm=live 2026-07-19T23:08:42.6661703+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=2.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 7.707989000016823, 'loop_overrun_frac': 0.005189413596263622, 'loop_stats': {'ticks': 1927, 'overruns': 10, 'overrun_frac': 0.005189413596263622, 'max_late_us': 4754}, 'flight_id': '20260719T200931-50f9dcc8', 'log_dir': 'logs\\20260719T200931-50f9dcc8'}
+RESULT fid=20260719T200931-50f9dcc8 arm=live r2ok=True unique=139 gates=0 clips=0 env=1 reason=environment collision (impulse=2.2) | term:eng=58 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=139
+
+===== ATTEMPT 7 slot F2 arm=live 2026-07-19T23:09:49.6880701+03:00 =====
+SCORES {"r1": 0.976, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'stale channels: frame', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 251.41203159998986, 'loop_overrun_frac': 0.0, 'loop_stats': {'ticks': 62853, 'overruns': 0, 'overrun_frac': 0.0, 'max_late_us': 0}, 'flight_id': '20260719T201038-50f9dcc8', 'log_dir': 'logs\\20260719T201038-50f9dcc8'}
+RESULT fid=20260719T201038-50f9dcc8 arm=live r2ok=True unique=7435 gates=0 clips=0 env=0 reason=stale channels: frame | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+COUNTED_F2 arm=live fid=20260719T201038-50f9dcc8 gates=0 agi_max=0
+LIVE arm term_status review: clean (no stop condition).
+
+===== ATTEMPT 8 slot F3 arm=control 2026-07-19T23:15:46.4284795+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=14.1)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 23.69223859999329, 'loop_overrun_frac': 0.025325004220834037, 'loop_stats': {'ticks': 5923, 'overruns': 150, 'overrun_frac': 0.025325004220834037, 'max_late_us': 14451}, 'flight_id': '20260719T201630-f170ead6', 'log_dir': 'logs\\20260719T201630-f170ead6'}
+RESULT fid=20260719T201630-f170ead6 arm=control r2ok=True unique=610 gates=0 clips=0 env=1 reason=environment collision (impulse=14.1) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+COUNTED_F3 arm=control fid=20260719T201630-f170ead6 gates=0 agi_max=0
+
+===== ATTEMPT 9 slot F4 arm=live 2026-07-19T23:17:06.2764444+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'gate clip budget exceeded (11)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 11, 'env_hits': 0, 'duration_s': 7.892029400012689, 'loop_overrun_frac': 0.021794221996958945, 'loop_stats': {'ticks': 1973, 'overruns': 43, 'overrun_frac': 0.021794221996958945, 'max_late_us': 10391}, 'flight_id': '20260719T201749-50f9dcc8', 'log_dir': 'logs\\20260719T201749-50f9dcc8'}
+RESULT fid=20260719T201749-50f9dcc8 arm=live r2ok=True unique=142 gates=0 clips=11 env=0 reason=gate clip budget exceeded (11) | term:eng=55 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=142
+
+===== ATTEMPT 10 slot F4 arm=live 2026-07-19T23:18:08.2130022+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 118 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.3)', 'gates_passed': 1, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 29, 'duration_s': 20.65217539999867, 'loop_overrun_frac': 0.00968429207824908, 'loop_stats': {'ticks': 5163, 'overruns': 50, 'overrun_frac': 0.00968429207824908, 'max_late_us': 7635}, 'flight_id': '20260719T201851-50f9dcc8', 'log_dir': 'logs\\20260719T201851-50f9dcc8'}
+RESULT fid=20260719T201851-50f9dcc8 arm=live r2ok=True unique=523 gates=1 clips=0 env=29 reason=environment collision (impulse=7.3) | term:eng=139 rdy=70 applied=28 first_range=0.759 sameSign=0 oppSign=28
+COUNTED_F4 arm=live fid=20260719T201851-50f9dcc8 gates=1 agi_max=1
+LIVE arm term_status review: clean (no stop condition).
+
+===== ATTEMPT 11 slot F5 arm=control 2026-07-19T23:19:24.3074092+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 118 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=9.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 9, 'duration_s': 12.268422599998303, 'loop_overrun_frac': 0.020215194000652102, 'loop_stats': {'ticks': 3067, 'overruns': 62, 'overrun_frac': 0.020215194000652102, 'max_late_us': 8713}, 'flight_id': '20260719T202007-f170ead6', 'log_dir': 'logs\\20260719T202007-f170ead6'}
+RESULT fid=20260719T202007-f170ead6 arm=control r2ok=True unique=276 gates=0 clips=0 env=9 reason=environment collision (impulse=9.7) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=276
+
+===== ATTEMPT 12 slot F5 arm=control 2026-07-19T23:20:30.6736610+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 16, 'duration_s': 12.420014999981504, 'loop_overrun_frac': 0.015780998389694042, 'loop_stats': {'ticks': 3105, 'overruns': 49, 'overrun_frac': 0.015780998389694042, 'max_late_us': 7603}, 'flight_id': '20260719T202113-f170ead6', 'log_dir': 'logs\\20260719T202113-f170ead6'}
+RESULT fid=20260719T202113-f170ead6 arm=control r2ok=True unique=276 gates=0 clips=0 env=16 reason=environment collision (impulse=7.6) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=276
+
+===== ATTEMPT 13 slot F5 arm=control 2026-07-19T23:21:36.9486110+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=2.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 6.728318900015438, 'loop_overrun_frac': 0.010107015457788348, 'loop_stats': {'ticks': 1682, 'overruns': 17, 'overrun_frac': 0.010107015457788348, 'max_late_us': 5824}, 'flight_id': '20260719T202226-f170ead6', 'log_dir': 'logs\\20260719T202226-f170ead6'}
+RESULT fid=20260719T202226-f170ead6 arm=control r2ok=True unique=105 gates=0 clips=0 env=2 reason=environment collision (impulse=2.4) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=105
+
+===== ATTEMPT 14 slot F5 arm=control 2026-07-19T23:22:43.1486182+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 14, 'duration_s': 12.536001400003443, 'loop_overrun_frac': 0.010848755583918315, 'loop_stats': {'ticks': 3134, 'overruns': 34, 'overrun_frac': 0.010848755583918315, 'max_late_us': 4984}, 'flight_id': '20260719T202332-f170ead6', 'log_dir': 'logs\\20260719T202332-f170ead6'}
+RESULT fid=20260719T202332-f170ead6 arm=control r2ok=True unique=283 gates=0 clips=0 env=14 reason=environment collision (impulse=1.2) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=283
+
+===== ATTEMPT 15 slot F5 arm=control 2026-07-19T23:23:56.2268285+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=10.8)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 21.69599959999323, 'loop_overrun_frac': 0.002028023598820059, 'loop_stats': {'ticks': 5424, 'overruns': 11, 'overrun_frac': 0.002028023598820059, 'max_late_us': 939}, 'flight_id': '20260719T202445-f170ead6', 'log_dir': 'logs\\20260719T202445-f170ead6'}
+RESULT fid=20260719T202445-f170ead6 arm=control r2ok=True unique=559 gates=0 clips=0 env=1 reason=environment collision (impulse=10.8) | term:eng=0 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+COUNTED_F5 arm=control fid=20260719T202445-f170ead6 gates=0 agi_max=0
+
+===== ATTEMPT 16 slot F6 arm=live 2026-07-19T23:25:18.9676136+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 12.836190400004853, 'loop_overrun_frac': 0.005609224057338735, 'loop_stats': {'ticks': 3209, 'overruns': 18, 'overrun_frac': 0.005609224057338735, 'max_late_us': 6380}, 'flight_id': '20260719T202607-50f9dcc8', 'log_dir': 'logs\\20260719T202607-50f9dcc8'}
+RESULT fid=20260719T202607-50f9dcc8 arm=live r2ok=True unique=292 gates=0 clips=0 env=1 reason=environment collision (impulse=1.0) | term:eng=16 rdy=11 applied=0 first_range= sameSign=0 oppSign=0
+REJECT r2ok=True unique=292
+
+===== ATTEMPT 17 slot F6 arm=live 2026-07-19T23:26:31.7347682+03:00 =====
+SCORES {"r1": 1.0, "r2submission": 1.0, "r2training": 1.0} reached True
+SELECT_OK r2training mode dialog
+FLY_COMMAND=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true
+CONNECTED_SEEN=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': True}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=9.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 15.996029100002488, 'loop_overrun_frac': 0.003500875218804701, 'loop_stats': {'ticks': 3999, 'overruns': 14, 'overrun_frac': 0.003500875218804701, 'max_late_us': 7039}, 'flight_id': '20260719T202720-50f9dcc8', 'log_dir': 'logs\\20260719T202720-50f9dcc8'}
+RESULT fid=20260719T202720-50f9dcc8 arm=live r2ok=True unique=389 gates=0 clips=0 env=2 reason=environment collision (impulse=9.5) | term:eng=55 rdy=0 applied=0 first_range= sameSign=0 oppSign=0
+COUNTED_F6 arm=live fid=20260719T202720-50f9dcc8 gates=0 agi_max=0
+LIVE arm term_status review: clean (no stop condition).
+
+===== LOOP DONE counted=6 stop=False reason= 2026-07-19T23:27:48.3261846+03:00 =====
