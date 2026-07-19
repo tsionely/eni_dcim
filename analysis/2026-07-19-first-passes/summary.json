@@ -643,6 +643,7 @@
           "threat": 1,
           "role": "at_or_post_pass",
           "nearby_labels": {},
+          "n_near_Rlt3": 0,
           "nearby": [],
           "winner": null
         },
@@ -653,6 +654,7 @@
           "threat": 1,
           "role": "at_or_post_pass",
           "nearby_labels": {},
+          "n_near_Rlt3": 0,
           "nearby": [],
           "winner": null
         },
@@ -663,6 +665,7 @@
           "threat": 2,
           "role": "at_or_post_pass",
           "nearby_labels": {},
+          "n_near_Rlt3": 0,
           "nearby": [],
           "winner": null
         }
@@ -1613,7 +1616,22 @@
         "admit_ok": null,
         "would_capture": false,
         "n_hist": 40,
-        "verdict": "IDLED \u2014 oracle never READY (no actuation even with enable)"
+        "ready_onset_t_ff": 1.8160605,
+        "ever_ready": true,
+        "ever_captured": false,
+        "last_ready_before_pass": {
+          "t_ff": 3.1161998,
+          "e_meas": -0.45,
+          "vz_cmd_if_term": -0.6,
+          "vz_vis": -0.0,
+          "admit_ok": false,
+          "tz": 1.290922936236828,
+          "owner": "alt"
+        },
+        "ready_ticks_before_pass": 66,
+        "admit_fail_count_while_ready": 66,
+        "ready_and_tz_le_engage": 24,
+        "verdict": "IDLED at crossing \u2014 last READY at t_ff=3.116 with e_meas=-0.45 admit_ok=False tz=1.290922936236828; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt)."
       },
       "shadow_owner_hist_LIVE": {
         "alt": 2,
@@ -1898,70 +1916,10 @@
           "threat": 1,
           "role": "pre_pass",
           "nearby_labels": {
-            "FAR": 5,
             "BOTTOM_bar_vehicle_LOW": 1
           },
+          "n_near_Rlt3": 1,
           "nearby": [
-            {
-              "t_ff": 4.0370459,
-              "R": 8.723085650094497,
-              "t_vec": [
-                3.468098487013262,
-                -2.4935238855715203,
-                7.605711983459876
-              ],
-              "center_px": [
-                463.5,
-                242.5
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 4.0096367,
-              "R": 8.983022617610747,
-              "t_vec": [
-                3.69349066103262,
-                -2.9164873326210152,
-                7.65159615531506
-              ],
-              "center_px": [
-                468.0,
-                226.75
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 4.0731321,
-              "R": 8.3357147635627,
-              "t_vec": [
-                3.450661341460706,
-                -0.84155782236899,
-                7.541144300279323
-              ],
-              "center_px": [
-                480.25,
-                316.0
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 3.9778352,
-              "R": 8.972922261534682,
-              "t_vec": [
-                3.7291541891034665,
-                -3.1086907391408047,
-                7.5460443169793905
-              ],
-              "center_px": [
-                469.25,
-                218.25
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
             {
               "t_ff": 3.9379772,
               "R": 0.8561465689972936,
@@ -1976,24 +1934,9 @@
               ],
               "cert": "certified",
               "label": "BOTTOM_bar_vehicle_LOW"
-            },
-            {
-              "t_ff": 3.9034594,
-              "R": 8.974446530442979,
-              "t_vec": [
-                3.805805281769496,
-                -3.0893740630919346,
-                7.517466633336675
-              ],
-              "center_px": [
-                471.0,
-                216.5
-              ],
-              "cert": "certified",
-              "label": "FAR"
             }
           ],
-          "winner": "FAR"
+          "winner": "BOTTOM_bar_vehicle_LOW"
         },
         {
           "t_ff": 4.042205,
@@ -2002,71 +1945,10 @@
           "threat": 1,
           "role": "pre_pass",
           "nearby_labels": {
-            "FAR": 4,
-            "BOTTOM_bar_vehicle_LOW": 1,
-            "RIGHT": 1
+            "BOTTOM_bar_vehicle_LOW": 1
           },
+          "n_near_Rlt3": 1,
           "nearby": [
-            {
-              "t_ff": 4.0370459,
-              "R": 8.723085650094497,
-              "t_vec": [
-                3.468098487013262,
-                -2.4935238855715203,
-                7.605711983459876
-              ],
-              "center_px": [
-                463.5,
-                242.5
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 4.0731321,
-              "R": 8.3357147635627,
-              "t_vec": [
-                3.450661341460706,
-                -0.84155782236899,
-                7.541144300279323
-              ],
-              "center_px": [
-                480.25,
-                316.0
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 4.0096367,
-              "R": 8.983022617610747,
-              "t_vec": [
-                3.69349066103262,
-                -2.9164873326210152,
-                7.65159615531506
-              ],
-              "center_px": [
-                468.0,
-                226.75
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
-            {
-              "t_ff": 3.9778352,
-              "R": 8.972922261534682,
-              "t_vec": [
-                3.7291541891034665,
-                -3.1086907391408047,
-                7.5460443169793905
-              ],
-              "center_px": [
-                469.25,
-                218.25
-              ],
-              "cert": "certified",
-              "label": "FAR"
-            },
             {
               "t_ff": 3.9379772,
               "R": 0.8561465689972936,
@@ -2081,24 +1963,9 @@
               ],
               "cert": "certified",
               "label": "BOTTOM_bar_vehicle_LOW"
-            },
-            {
-              "t_ff": 4.1783469,
-              "R": 7.019976898469865,
-              "t_vec": [
-                2.799098522100335,
-                -2.160674986008806,
-                6.064371915001764
-              ],
-              "center_px": [
-                462.9205322265625,
-                231.53233337402344
-              ],
-              "cert": "none",
-              "label": "RIGHT"
             }
           ],
-          "winner": "FAR"
+          "winner": "BOTTOM_bar_vehicle_LOW"
         },
         {
           "t_ff": 13.8743804,
@@ -2107,6 +1974,7 @@
           "threat": 2,
           "role": "at_or_post_pass",
           "nearby_labels": {},
+          "n_near_Rlt3": 0,
           "nearby": [],
           "winner": null
         }
@@ -3057,7 +2925,22 @@
         "admit_ok": null,
         "would_capture": false,
         "n_hist": 40,
-        "verdict": "IDLED \u2014 oracle never READY (no actuation even with enable)"
+        "ready_onset_t_ff": 1.6925552,
+        "ever_ready": true,
+        "ever_captured": false,
+        "last_ready_before_pass": {
+          "t_ff": 3.5923128,
+          "e_meas": -0.45,
+          "vz_cmd_if_term": -0.6,
+          "vz_vis": -0.0,
+          "admit_ok": false,
+          "tz": 1.0669171626478289,
+          "owner": "alt"
+        },
+        "ready_ticks_before_pass": 96,
+        "admit_fail_count_while_ready": 96,
+        "ready_and_tz_le_engage": 30,
+        "verdict": "IDLED at crossing \u2014 last READY at t_ff=3.592 with e_meas=-0.45 admit_ok=False tz=1.0669171626478289; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt)."
       },
       "shadow_owner_hist_LIVE": {
         "alt": 2,

@@ -59,9 +59,11 @@ _Live SHADOW owner=term uses certified-det without the readiness/admission predi
 - max unique oracle hist: 40
 - ready ticks: 66
 
-**At crossing:** `{"t_ff": 3.7559282, "ready": false, "owner": "alt", "e_meas": null, "vz_cmd_if_term": null, "vz_vis": -0.0, "admit_ok": null, "would_capture": false, "n_hist": 40, "verdict": "IDLED \u2014 oracle never READY (no actuation even with enable)"}`
+- ready ticks before pass: 66; admit fails while ready: 66; ready∧tz≤2.5: 24
+- last READY before pass: `{'t_ff': 3.1161998, 'e_meas': -0.45, 'vz_cmd_if_term': -0.6, 'vz_vis': -0.0, 'admit_ok': False, 'tz': 1.290922936236828, 'owner': 'alt'}`
+- tick nearest crossing: `{"t_ff": 3.7559282, "ready": false, "owner": "alt", "e_meas": null, "admit_ok": null, "tz": null, "n_hist": 40, "vz_cmd_if_term": null}`
 
-**TERM verdict: IDLED — oracle never READY (no actuation even with enable)**
+**TERM verdict: IDLED at crossing — last READY at t_ff=3.116 with e_meas=-0.45 admit_ok=False tz=1.290922936236828; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt).**
 
 ### Post-pass autopsy → death
 
@@ -98,8 +100,8 @@ Sample table (live dets near pass):
 
 ### try39 clip attribution
 
-- t_ff=4.035 (t_rel=8.367) impulse=0.7900810241699219 threat=1 → **FAR** `{'FAR': 5, 'BOTTOM_bar_vehicle_LOW': 1}`
-- t_ff=4.042 (t_rel=8.374) impulse=0.6365295052528381 threat=1 → **FAR** `{'FAR': 4, 'BOTTOM_bar_vehicle_LOW': 1, 'RIGHT': 1}`
+- t_ff=4.035 (t_rel=8.367) impulse=0.7900810241699219 threat=1 n_near(R<3)=1 → **BOTTOM_bar_vehicle_LOW** `{'BOTTOM_bar_vehicle_LOW': 1}`
+- t_ff=4.042 (t_rel=8.374) impulse=0.6365295052528381 threat=1 n_near(R<3)=1 → **BOTTOM_bar_vehicle_LOW** `{'BOTTOM_bar_vehicle_LOW': 1}`
 
 ### Deterministic readiness backfill
 
@@ -112,9 +114,11 @@ _Live SHADOW owner=term uses certified-det without the readiness/admission predi
 - max unique oracle hist: 40
 - ready ticks: 168
 
-**At crossing:** `{"t_ff": 4.032039, "ready": false, "owner": "alt", "e_meas": null, "vz_cmd_if_term": null, "vz_vis": -0.0, "admit_ok": null, "would_capture": false, "n_hist": 40, "verdict": "IDLED \u2014 oracle never READY (no actuation even with enable)"}`
+- ready ticks before pass: 96; admit fails while ready: 96; ready∧tz≤2.5: 30
+- last READY before pass: `{'t_ff': 3.5923128, 'e_meas': -0.45, 'vz_cmd_if_term': -0.6, 'vz_vis': -0.0, 'admit_ok': False, 'tz': 1.0669171626478289, 'owner': 'alt'}`
+- tick nearest crossing: `{"t_ff": 4.032039, "ready": false, "owner": "alt", "e_meas": null, "admit_ok": null, "tz": null, "n_hist": 40, "vz_cmd_if_term": null}`
 
-**TERM verdict: IDLED — oracle never READY (no actuation even with enable)**
+**TERM verdict: IDLED at crossing — last READY at t_ff=3.592 with e_meas=-0.45 admit_ok=False tz=1.0669171626478289; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt).**
 
 ### Post-pass autopsy → death
 
@@ -127,8 +131,8 @@ _Live SHADOW owner=term uses certified-det without the readiness/admission predi
 
 ## Synthesis — did TERM help, hurt, or idle?
 
-- **F_CLEAN**: IDLED — oracle never READY (no actuation even with enable)
-- **F_CLIP**: IDLED — oracle never READY (no actuation even with enable)
+- **F_CLEAN**: IDLED at crossing — last READY at t_ff=3.116 with e_meas=-0.45 admit_ok=False tz=1.290922936236828; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt).
+- **F_CLIP**: IDLED at crossing — last READY at t_ff=3.592 with e_meas=-0.45 admit_ok=False tz=1.0669171626478289; never CAPTURED. Enable would NOT have actuated on this pass (neither helped nor hurt).
 
 Live shadow `owner=term` counts are **not** readiness evidence (shadow path omits the oracle READY + admission corridor). The backfill is the enable-gate answer.
 

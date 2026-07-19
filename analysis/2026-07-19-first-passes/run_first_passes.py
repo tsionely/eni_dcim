@@ -302,28 +302,37 @@ def bar_label(det: dict) -> str:
 
 
 def clip_attribution(collisions, dets, t_pass_ff: float) -> list[dict]:
-    """Attribute pre-pass clips to a bar."""
+    """Attribute pre-pass clips to a bar.
+
+    Prefer NEAR detections (R<3m) in a ±0.35s window — far-gate
+    certified flicker at clip time must not steal the vote.
+    """
     out = []
     for c in collisions:
-        if c["t_ff"] >= t_pass_ff - 0.05:
-            # keep only clearly pre-pass or mark
-            role = "pre_pass" if c["t_ff"] < t_pass_ff else "at_or_post_pass"
-        else:
-            role = "pre_pass"
-        near = [d for d in dets if abs(d["t_ff"] - c["t_ff"]) < 0.25]
-        near = sorted(near, key=lambda d: abs(d["t_ff"] - c["t_ff"]))[:6]
-        labels = Counter(bar_label(d) for d in near)
+        role = "pre_pass" if c["t_ff"] < t_pass_ff else "at_or_post_pass"
+        win = [d for d in dets if abs(d["t_ff"] - c["t_ff"]) < 0.35]
+        near = [d for d in win if d["R"] < 3.0]
+        pool = near if near else [d for d in win if d["R"] < 6.0]
+        if not pool:
+            pool = sorted(win, key=lambda d: d["R"])[:4]
+        pool = sorted(pool, key=lambda d: (d["R"], abs(d["t_ff"] - c["t_ff"])))[:8]
+        labels = Counter(bar_label(d) for d in pool)
+        # Winner among non-FAR if any near structure vote exists
+        structural = {k: v for k, v in labels.items() if k != "FAR"}
+        winner = (max(structural, key=structural.get) if structural
+                  else (max(labels, key=labels.get) if labels else None))
         out.append({
             "t_ff": c["t_ff"], "t_rel": c["t_rel"],
             "impulse": c.get("impulse"), "threat": c.get("threat_level"),
             "role": role,
             "nearby_labels": dict(labels),
+            "n_near_Rlt3": len(near),
             "nearby": [{
                 "t_ff": d["t_ff"], "R": d["R"], "t_vec": d["t_vec"],
                 "center_px": d.get("center_px"), "cert": d.get("cert_status"),
                 "label": bar_label(d),
-            } for d in near],
-            "winner": (max(labels, key=labels.get) if labels else None),
+            } for d in pool],
+            "winner": winner,
         })
     return out
 
@@ -523,12 +532,21 @@ def command_at_crossing(backfill: dict, t_pass_ff: float) -> dict:
     ticks = backfill.get("all_ticks") or []
     if not ticks:
         return {"status": "no_ticks"}
-    near = [t for t in ticks if abs(t["t_ff"] - t_pass_ff) < 0.5]
+    before = [t for t in ticks if t["t_ff"] <= t_pass_ff + 0.05]
+    near = [t for t in before if abs(t["t_ff"] - t_pass_ff) < 0.6]
     if not near:
-        # last ready before pass
-        before = [t for t in ticks if t["t_ff"] <= t_pass_ff]
         near = before[-5:] if before else ticks[:5]
     last = near[-1]
+    last_ready = None
+    for t in reversed(before):
+        if t.get("ready"):
+            last_ready = t
+            break
+    # Why not captured despite ready ticks?
+    ready_before = [t for t in before if t.get("ready")]
+    admit_fails = sum(1 for t in ready_before if t.get("admit_ok") is False)
+    in_range_ready = sum(1 for t in ready_before
+                         if t.get("tz") is not None and t["tz"] <= ENGAGE_Z)
     return {
         "t_ff": last["t_ff"],
         "ready": last["ready"],
@@ -539,22 +557,55 @@ def command_at_crossing(backfill: dict, t_pass_ff: float) -> dict:
         "admit_ok": last["admit_ok"],
         "would_capture": last["would_capture"],
         "n_hist": last["n_hist"],
-        "verdict": _term_verdict(last),
+        "ready_onset_t_ff": backfill.get("ready_onset_t_ff"),
+        "ever_ready": backfill.get("ever_ready"),
+        "ever_captured": backfill.get("ever_captured"),
+        "last_ready_before_pass": ({
+            "t_ff": last_ready["t_ff"],
+            "e_meas": last_ready["e_meas"],
+            "vz_cmd_if_term": last_ready["vz_cmd_if_term"],
+            "vz_vis": last_ready["vz_vis"],
+            "admit_ok": last_ready["admit_ok"],
+            "tz": last_ready["tz"],
+            "owner": last_ready["owner"],
+        } if last_ready else None),
+        "ready_ticks_before_pass": len(ready_before),
+        "admit_fail_count_while_ready": admit_fails,
+        "ready_and_tz_le_engage": in_range_ready,
+        "verdict": _term_verdict(last, last_ready, backfill),
     }
 
 
-def _term_verdict(t: dict) -> str:
-    if not t.get("ready"):
-        return "IDLED — oracle never READY (no actuation even with enable)"
-    if t.get("owner") != TERM_OWNER and not t.get("would_capture"):
-        return "READY but NOT captured (admission/cert/range failed)"
-    e = t.get("e_meas")
-    vz = t.get("vz_cmd_if_term")
-    if e is None or (isinstance(e, float) and abs(e) < 0.05):
-        return "CAPTURED/READY — near-zero correction (would IDLE harmlessly)"
-    if e < -0.05:
-        return f"CAPTURED/READY — would DESCEND (e_meas={e:.3f}, vz≈{vz})"
-    return f"CAPTURED/READY — would CLIMB (e_meas={e:.3f}, vz≈{vz})"
+def _term_verdict(t: dict, last_ready: dict | None, backfill: dict) -> str:
+    """Settle help / hurt / idle for a PASSING approach."""
+    if backfill.get("ever_captured"):
+        e = (last_ready or t).get("e_meas")
+        vz = (last_ready or t).get("vz_cmd_if_term")
+        if e is None or abs(float(e)) < 0.05:
+            return "CAPTURED — near-zero correction (IDLE harmlessly on a centered pass)"
+        if float(e) < 0:
+            return (f"CAPTURED — would DESCEND (e≈{e:.3f}, vz≈{vz}) — "
+                    "HURT risk on a centered pass" if abs(float(e)) > 0.15
+                    else f"CAPTURED — small descend (e≈{e:.3f})")
+        return f"CAPTURED — would CLIMB (e≈{e:.3f}, vz≈{vz})"
+    if not backfill.get("ever_ready"):
+        return "IDLED — oracle never READY on any commit (enable would not actuate)"
+    # Ready somewhere, but never captured
+    lr = last_ready
+    if lr is None:
+        return ("IDLED at crossing — was READY earlier this attempt but "
+                "history dropped before the plane; never CAPTURED "
+                "(admission/cert/range). Enable would NOT have actuated.")
+    if t.get("ready"):
+        return ("READY at crossing but NOT CAPTURED "
+                f"(admit_ok={t.get('admit_ok')}, tz={t.get('tz')}) — "
+                "IDLED (no ownership). Enable would NOT have actuated.")
+    return (
+        f"IDLED at crossing — last READY at t_ff={lr['t_ff']:.3f} "
+        f"with e_meas={lr.get('e_meas')} admit_ok={lr.get('admit_ok')} "
+        f"tz={lr.get('tz')}; never CAPTURED. Enable would NOT have "
+        f"actuated on this pass (neither helped nor hurt)."
+    )
 
 
 def post_pass_autopsy(log: dict, t_pass_ff: float, t_death_ff: float) -> dict:
@@ -883,6 +934,7 @@ def render_report(bundle: dict) -> str:
                 lines.append(
                     f"- t_ff={c['t_ff']:.3f} (t_rel={c['t_rel']:.3f}) "
                     f"impulse={c.get('impulse')} threat={c.get('threat')} "
+                    f"n_near(R<3)={c.get('n_near_Rlt3')} "
                     f"→ **{c.get('winner')}** `{c.get('nearby_labels')}`"
                 )
             lines.append("")
@@ -902,7 +954,15 @@ def render_report(bundle: dict) -> str:
         lines.append(f"- ready ticks: {r['n_ready_ticks']}")
         ac = f["at_crossing_command"]
         lines.append("")
-        lines.append(f"**At crossing:** `{json.dumps(ac, default=str)}`")
+        lines.append(
+            f"- ready ticks before pass: {ac.get('ready_ticks_before_pass')}; "
+            f"admit fails while ready: {ac.get('admit_fail_count_while_ready')}; "
+            f"ready∧tz≤{ENGAGE_Z}: {ac.get('ready_and_tz_le_engage')}"
+        )
+        lines.append(f"- last READY before pass: "
+                     f"`{ac.get('last_ready_before_pass')}`")
+        lines.append(f"- tick nearest crossing: "
+                     f"`{json.dumps({k: ac.get(k) for k in ('t_ff','ready','owner','e_meas','admit_ok','tz','n_hist','vz_cmd_if_term')}, default=str)}`")
         lines.append("")
         lines.append(f"**TERM verdict: {ac.get('verdict')}**")
         lines.append("")
