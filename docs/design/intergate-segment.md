@@ -58,3 +58,74 @@ clearance statistic), N-R5 (gate-2 truth labels at crossing), A8
   adapter + source-frame migration lands and 2.5 m/s is restored, the
   retired ~0.25m residual must either be explained by the package or
   reappear on cue; its silent absence is itself a finding.
+
+## S4 exit-maneuver design — ADOPTED (tank-2 answer to B2/B3)
+
+Failure class re-named: successor-target ARBITRATION failure among
+multiple valid gates. The fix is a one-way authority chain, not
+detector scoring:
+
+    pass event -> physically clear gate 1 -> choose ONE successor in a
+    FROZEN exit frame -> latch -> acquire only inside its predicted
+    tube -> hand THAT tracklet to the proven approach pipeline -> stop
+    rather than switch while moving.
+
+State machine: PASS_LATCH -> EXIT_CLEAR -> BANK_SELECT ->
+BANK_BRIDGE -> TRANSIT_LOCKED (existing machinery), with BRAKE_SEARCH
+on ambiguity/loss and retrace-not-explore escalation. The retired gate
+never regains authority within the epoch.
+
+Key decisions, verbatim-adopted:
+1. **Clearance is DISTANCE-based** (s_lb integral of max(0, v_par -
+   m_v) >= d_clear; 0.9m provisional until N-R4), time only a watchdog
+   (0.8s -> brake/hold, never assume clearance). Frozen TRAVEL
+   DIRECTION during EXIT_CLEAR (not frozen attitude). Suppress
+   candidate AUTHORITY, not perception — tracklets accumulate in
+   shadow through the wash.
+2. **Bank selection: angularly nearest eligible tracklet to the
+   FROZEN gate-1 exit vector** — never current heading (positive-
+   feedback churn: slight turn toward A makes A nearest). Exit frame
+   frozen at pass: x_E = exit vector (median of final ~0.15s travel),
+   z_E = true up. Eligibility: robust range 3-12m, forward half-space,
+   >=3 unique exposures over >=0.10s, bearing+scale continuity, not
+   the retired track. Winner margin required; D7-band ties resolved by
+   ribbon vote or BRAKE. Range is a plausibility gate, never sequence
+   truth.
+3. **Latch**: banked_candidate_id + epoch; while moving no re-ranking,
+   no runner-up switch, no score-based steal. Released only by pass /
+   termination / persistent-contradiction-then-full-stop / explicit
+   retrace.
+4. **Acquisition = predicted TUBE, not static cone**: bearing cone
+   Q99(D7 bank-bearing error)+2deg, hard max +/-12 (if D7 needs more,
+   kill the bank predictor, not the cap); range tube propagated
+   R_pred(t) = R_B - s_par(t) ∩ [3,9]m; apparent-scale consistency
+   l_pred ~ l_B * R_B/R_pred. NO widening while moving (uncertainty
+   while moving reduces speed, never expands the candidate set);
+   widening only during the stationary BRAKE_SEARCH sweep, sector
+   centered on the banked exit-frame vector. No fresh promotion below
+   3m.
+5. **Bridge budget exists only after a candidate is banked** (no
+   banked candidate at clear -> budget 0, brake). STOP-BY the cap
+   (0.8s/0.8m, whichever first): brake when remaining budget equals
+   pessimistic stopping distance. Bridge speed ~1.0 m/s, not the 1.8
+   crossing speed. Candidate loss starts deceleration next cycle.
+6. **Handoff to the EXACT banked tracklet only** (ID + epoch +
+   continuity + tube + certificate + entry range); seed the approach
+   controller, common slew limiter, retire the selector, no re-ranking
+   until gate-2 pass/miss/reset. Post-handoff loss: existing approach
+   rules; persistent loss -> hover, keep identity epoch, one bounded
+   sweep, reacquire-or-retrace. Never the runner-up while moving.
+7. **Ribbon: bounded tie-breaker only** in build 1 (chooses among
+   D7-band ties; cannot bypass range/scale/persistence; zero-hijack
+   doctrine). Promote to bounded score term only if D7 shows the true
+   successor is ever not the angularly-nearest eligible tracklet.
+
+Kill tests C1 (clearance), B1 (successor selection incl.
+frozen-vs-current-heading A/B and adversarial ribbon), A1 (tube: the
+-20deg/17m hop rejected by construction), L1 (bounded bridge), H1
+(authority/handoff; try39 must replay as select-retain-handoff with
+zero hops). Implementation order 1-8 as ranked (latch first, ribbon
+seventh, adaptive search last).
+
+THE RULE: uncertainty while moving reduces speed and eventually forces
+a stop; it never expands the set of gates allowed to take control.
