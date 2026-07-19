@@ -158,3 +158,66 @@ no phase regression), E (bumpless assertions incl. hidden-trim), F
 (authority/saturation with a pessimistic fitted response model), G
 (TTC final-sample corruption), H (leave-one-flight-out calibration +
 low/high/clean directional regression).
+
+## Round-5 field disposition (tank-2) — adopted decisions
+
+THE LAW (highest-impact policy of the round): a gate attempt must not
+become irrevocable before the sensing mode needed to finish it has
+been certified. The terminal controller is never asked to rescue an
+attempt that began without terminal observability.
+
+1. **Commit-permission gate** (plumbing next build, behind
+   planner.commit.require_terminal_ready, default false until the V3
+   counterfactual passes): new commit entry requires frame package
+   accepted + same lock epoch + structure CERTIFIED before the
+   late-capture boundary + latest unique feature age <= 0.10s + owner
+   capture permitted + crossing tube inside the usable opening + no
+   vertical-authority limitation. If unmet while holding/retreat is
+   still safe: decelerate, hold acquisition distance, keep certifying.
+   V3 release bar: F1 (healthy certificate) must NOT be blocked; F3
+   must NOT enter its unobservable commit; no readiness chatter; no
+   capture from rebroadcast copies; no late first capture.
+2. **Frame-package acceptance replay**: rotated-basis, INTEGRATED —
+   compares estimator outputs, discrete planner transitions,
+   vertical-controller state incl. integrals/init, body commands, and
+   abort decisions after re-expression to one physical frame. Bar:
+   identical discrete transitions + command agreement within fp/test
+   tolerance. (The gravity-only A/B is the failure this must catch.)
+3. **Terminal sigmas**: scalar is adequate this release, but
+   stratified by mode and age — FULL / ROW_ONLY / RATE_ONLY / LOST —
+   never one sigma for all conditions. Fit in the corrected frame.
+4. **Feature ladder** (one estimator, graceful degradation, never a
+   second controller): STRUCTURE_METRIC (side-pair range + top-bar
+   row, or full row/span) -> VERTICAL_PAIR (certified top bar +
+   certified banner-bottom: Z = (d_T - d_B)/(y_T - y_B), closed form
+   as replay oracle only; separate corrected-frame d_star_top and
+   d_star_banner; coplanarity verified; zero identity swaps = release
+   requirement) -> ROW_WITH_RANGE -> RATE_ONLY -> LOST (bounded
+   prediction + no-return salvage). Border-clipped span is never
+   metric scale.
+5. **F3 autopsy decides the branch** (before any controller tuning):
+   Case A (structure in image, software reports no fix) -> identity/
+   tracker fixes, do NOT touch blind-coast limits. Case B (structure
+   truly leaves the image) -> visibility-preserving braking (earlier,
+   lower pitch demand; predicted top-bar/banner row constrained to a
+   usable band; NO late pitch-up pulse) — slower speed at the same
+   loss range only lengthens the blind interval. Case C (vertical
+   survives, miss was lateral) -> vertical channel necessary but
+   insufficient; a surviving side bar supplies a one-sided lateral
+   constraint.
+6. **Kill tests V1-V6** adopted verbatim: raw-vs-software visibility
+   (>5% usable-structure-reported-LOST kills enable), axis-of-miss
+   decomposition, commit-permission counterfactual, identity
+   inheritance under artificial occlusion (any confident structural
+   swap kills), counterfactual braking visibility (ship only if raw
+   feature loss is materially delayed without worse passage error),
+   post-miss atomic reset (rejecting a fiction measurement is
+   insufficient if a command derived from it keeps executing).
+7. **Ship order**: (1) integrated acceptance replay; (2) F3
+   raw-visibility + axis-of-miss timeline; (3) projected identity
+   stage + terminal-ready commit gate; (4) banner-bottom sibling
+   measurement; (5) d*/sigma refit in corrected frame; (6) full-stack
+   TERM shadow replay low/high/clean/F1-F3; (7) enable TERM at
+   conservative speed after the suite passes; (8) if raw structure
+   truly leaves the image, change braking geometry before adding dead
+   reckoning.
