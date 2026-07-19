@@ -1,0 +1,15 @@
+{
+  "params": {
+    "control.att_rate.hover_thrust": 0.5258991716951618,
+    "control.att_rate.tilt_max_rad": 0.49944947002516443,
+    "control.att_rate.vel_i": 0.3,
+    "control.att_rate.vel_p": 0.3851484587233263,
+    "control.att_rate.vz_i": 0.37196477372065484,
+    "control.att_rate.vz_p": 0.6488330126616222,
+    "planner.align.max_dz_m": 0.362046374486566,
+    "planner.approach.reacquire_max_m": 12.0,
+    "planner.commit.abort_min_dist_m": 1.2128510597530548
+  },
+  "score": 189.484,
+  "seed": 20260719
+}

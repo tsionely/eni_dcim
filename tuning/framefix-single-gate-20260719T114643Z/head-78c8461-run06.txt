@@ -1,0 +1,47 @@
+﻿F                                                                        [100%]
+================================== FAILURES ===================================
+____________________________ test_single_gate_pass ____________________________
+
+sim_and_app = <function sim_and_app.<locals>.factory at 0x0000019E7C5F71A0>
+
+    def test_single_gate_pass(sim_and_app):
+        """Full chain: detect the gate, approach, commit, pass -> race finished.
+
+        The closed-loop flight is ~90% reliable under CI load (it flies with the
+        faithful sensor quirks: inverted+pinned gyro, body-fixed camera, PnP
+        noise); one retry keeps the test about chain regressions, not luck.
+        """
+        gate = Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+                    width=1.6, height=1.6)
+        # Lighter video than default: JPEG encode/decode contention under CI
+        # load inflates vision latency, which is exactly what the closed loop
+        # is sensitive to. Full-fidelity validation lives in the gt harness.
+        sim, app = sim_and_app([gate], image_size=(320, 180), video_hz=20.0)
+
+        params = base_params().patch({
+            "planner.takeoff.duration_s": 1.6,     # climb to ~gate height
+            "planner.approach.speed_far_mps": 2.0,
+            "safety.flight_timeout_s": 30.0,
+        })
+        result = app.fly(params, max_duration_s=30.0)
+        if result["gates_passed"] < 1:            # one retry (see docstring)
+            app.mavlink.sim_reset()
+            import time
+            time.sleep(1.0)
+            result = app.fly(params, max_duration_s=30.0)
+
+>       assert result["gates_passed"] >= 1, f"never passed the gate: {result}"
+E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 10.875, 'loop_overrun_frac': 0.7473979183346677, 'loop_stats': {'ticks': 2498, 'overruns': 1867, 'overrun_frac': 0.7473979183346677, 'max_late_us': 55000}, 'flight_id': '20260719T114945-c6c67bc3', 'log_dir': 'C:\\Temp\\pytest-eni-single-head-78c8461-06\\test_single_gate_pass0\\logs\\20260719T114945-c6c67bc3'}
+E       assert 0 >= 1
+
+tests\integration\test_mock_closed_loop.py:142: AssertionError
+---------------------------- Captured stdout call -----------------------------
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 63 samples: [-0.00268941 -0.00274085  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (180 samples): bias=[-0.00132211  0.00141243  0.013     ] level roll=-0.000 pitch=-0.311
+gyro bias calibrated over 64 samples: [-0.00122886 -0.00018739  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (174 samples): bias=[-0.00068347 -0.00049584  0.013     ] level roll=-0.000 pitch=-0.310
+=========================== short test summary info ===========================
+FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As...
+1 failed in 37.41s

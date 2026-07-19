@@ -1,0 +1,223 @@
+{
+  "frame_fix": "2c5057ad68e8a556c81b32fe7c899ff36b8c26e6",
+  "head": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+  "pre_fix": "79d9f769338020ae549d4211342701ab419601d3",
+  "rows": [
+    {
+      "build": "head-78c8461",
+      "duration_s": 11.006,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run01.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 1,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 10.64s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 37.268,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run02.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 2,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=6.9)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 16.96799999999348, 'loop_overrun_frac': 0.7443840151336013, 'loop_stats': {'ticks': 4229, 'overruns': 3148, 'overrun_frac': 0.7443840151336013, 'max_late_us': 27000}, 'flight_id': '20260719T114715-c6c67bc3', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-head-78c8461-02\\\\test_single_gate_pass0\\\\logs\\\\20260719T114715-c6c67bc3'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 36.94s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 43.074,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run03.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 3,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 42.71s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 31.324,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run04.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 4,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=10.8)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 18.25, 'loop_overrun_frac': 0.7448169386854874, 'loop_stats': {'ticks': 4534, 'overruns': 3377, 'overrun_frac': 0.7448169386854874, 'max_late_us': 29000}, 'flight_id': '20260719T114830-c6c67bc3', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-head-78c8461-04\\\\test_single_gate_pass0\\\\logs\\\\20260719T114830-c6c67bc3'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 30.93s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 27.665,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run05.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 5,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 27.30s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 37.83,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run06.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 6,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 10.875, 'loop_overrun_frac': 0.7473979183346677, 'loop_stats': {'ticks': 2498, 'overruns': 1867, 'overrun_frac': 0.7473979183346677, 'max_late_us': 55000}, 'flight_id': '20260719T114945-c6c67bc3', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-head-78c8461-06\\\\test_single_gate_pass0\\\\logs\\\\20260719T114945-c6c67bc3'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 37.41s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 11.245,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run07.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 7,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 10.92s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 10.81,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run08.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 8,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 10.44s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 23.368,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run09.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 9,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 23.07s"
+    },
+    {
+      "build": "head-78c8461",
+      "duration_s": 11.067,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\head-78c8461-run10.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 10,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+      "summary": "1 passed in 10.70s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 21.386,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run01.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 1,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 21.08s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 64.472,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run02.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 2,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 30.01600000000326, 'loop_overrun_frac': 0.7467059153350154, 'loop_stats': {'ticks': 7134, 'overruns': 5327, 'overrun_frac': 0.7467059153350154, 'max_late_us': 70000}, 'flight_id': '20260719T115154-eda859d8', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-pre-fix-79d9f76-02\\\\test_single_gate_pass0\\\\logs\\\\20260719T115154-eda859d8'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 64.09s (0:01:04)"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 10.653,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run03.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 3,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 10.28s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 58.152,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run04.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 4,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=12.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 1, 'env_hits': 1, 'duration_s': 27.21899999998277, 'loop_overrun_frac': 0.7455463182897862, 'loop_stats': {'ticks': 6736, 'overruns': 5022, 'overrun_frac': 0.7455463182897862, 'max_late_us': 89000}, 'flight_id': '20260719T115308-eda859d8', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-pre-fix-79d9f76-04\\\\test_single_gate_pass0\\\\logs\\\\20260719T115308-eda859d8'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 57.81s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 56.981,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run05.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 5,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 1, 'env_hits': 3, 'duration_s': 22.45299999997951, 'loop_overrun_frac': 0.7454350161117078, 'loop_stats': {'ticks': 5586, 'overruns': 4164, 'overrun_frac': 0.7454350161117078, 'max_late_us': 46000}, 'flight_id': '20260719T115411-eda859d8', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-pre-fix-79d9f76-05\\\\test_single_gate_pass0\\\\logs\\\\20260719T115411-eda859d8'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 56.66s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 31.035,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run06.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 6,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 30.63s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 50.776,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run07.txt",
+      "pass": false,
+      "returncode": 1,
+      "run": 7,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "        if result[\"gates_passed\"] < 1:            # one retry (see docstring) | >       assert result[\"gates_passed\"] >= 1, f\"never passed the gate: {result}\" | E       AssertionError: never passed the gate: {'finished': False, 'aborted': True, 'abort_reason': 'flight timeout', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 0, 'duration_s': 30.01500000001397, 'loop_overrun_frac': 0.7490657439446367, 'loop_stats': {'ticks': 7225, 'overruns': 5412, 'overrun_frac': 0.7490657439446367, 'max_late_us': 54000}, 'flight_id': '20260719T115527-eda859d8', 'log_dir': 'C:\\\\Temp\\\\pytest-eni-single-pre-fix-79d9f76-07\\\\test_single_gate_pass0\\\\logs\\\\20260719T115527-eda859d8'} | tests\\integration\\test_mock_closed_loop.py:142: AssertionError | FAILED tests/integration/test_mock_closed_loop.py::test_single_gate_pass - As... | 1 failed in 50.39s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 23.931,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run08.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 8,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 23.58s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 41.853,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run09.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 9,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 41.49s"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "duration_s": 37.759,
+      "log": "tuning\\framefix-single-gate-20260719T114643Z\\pre-fix-79d9f76-run10.txt",
+      "pass": true,
+      "returncode": 0,
+      "run": 10,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3",
+      "summary": "1 passed in 37.39s"
+    }
+  ],
+  "summary": [
+    {
+      "build": "head-78c8461",
+      "pass_rate": 0.7,
+      "passes": 7,
+      "runs": 10,
+      "sha": "78c84617815541c73e1b84ebf81b6f5f6c7a7808"
+    },
+    {
+      "build": "pre-fix-79d9f76",
+      "pass_rate": 0.6,
+      "passes": 6,
+      "runs": 10,
+      "sha": "79d9f769338020ae549d4211342701ab419601d3"
+    }
+  ]
+}

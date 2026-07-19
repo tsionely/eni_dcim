@@ -1,0 +1,102 @@
+{
+  "best_params": {
+    "control.att_rate.hover_thrust": 0.4872553517555112,
+    "control.att_rate.tilt_max_rad": 0.4919919446274588,
+    "control.att_rate.vel_i": 0.1971306369154902,
+    "control.att_rate.vel_p": 0.31122594064937564,
+    "control.att_rate.vz_i": 0.41338897812125247,
+    "control.att_rate.vz_p": 1.2184746417650334,
+    "planner.align.max_dz_m": 0.46834367747348,
+    "planner.approach.reacquire_max_m": 9.885819024819634,
+    "planner.commit.abort_min_dist_m": 1.1618975201387252
+  },
+  "best_score": 189.781,
+  "bounds": {
+    "control.att_rate.hover_thrust": [
+      0.35,
+      0.65
+    ],
+    "control.att_rate.tilt_max_rad": [
+      0.2,
+      0.6
+    ],
+    "control.att_rate.vel_i": [
+      0.02,
+      0.3
+    ],
+    "control.att_rate.vel_p": [
+      0.15,
+      0.6
+    ],
+    "control.att_rate.vz_i": [
+      0.1,
+      0.8
+    ],
+    "control.att_rate.vz_p": [
+      0.4,
+      1.5
+    ],
+    "planner.align.max_dz_m": [
+      0.3,
+      0.8
+    ],
+    "planner.approach.reacquire_max_m": [
+      6.0,
+      12.0
+    ],
+    "planner.commit.abort_min_dist_m": [
+      0.8,
+      1.5
+    ]
+  },
+  "commit": "78c84617815541c73e1b84ebf81b6f5f6c7a7808",
+  "flights_per_seed": 40,
+  "overall": {
+    "aborted": 76,
+    "avg_score": -199.14264624999993,
+    "best_score": 189.781,
+    "finish_rate": 0.05,
+    "finished": 4,
+    "flights": 80,
+    "max_gates": 2,
+    "pass_rate_ge_1": 0.1125,
+    "passes_ge_1": 9,
+    "stale_imu": 0,
+    "total_gates": 13
+  },
+  "per_seed": [
+    {
+      "aborted": 39,
+      "avg_score": -212.60596999999993,
+      "best_score": 189.484,
+      "finish_rate": 0.025,
+      "finished": 1,
+      "flights": 40,
+      "max_gates": 2,
+      "pass_rate_ge_1": 0.05,
+      "passes_ge_1": 2,
+      "seed": 20260719,
+      "stale_imu": 0,
+      "total_gates": 3
+    },
+    {
+      "aborted": 37,
+      "avg_score": -185.6793224999999,
+      "best_score": 189.781,
+      "finish_rate": 0.075,
+      "finished": 3,
+      "flights": 40,
+      "max_gates": 2,
+      "pass_rate_ge_1": 0.175,
+      "passes_ge_1": 7,
+      "seed": 20260720,
+      "stale_imu": 0,
+      "total_gates": 10
+    }
+  ],
+  "sakana_patch": "--patch planner.align.max_dz_m=0.46834367747348 --patch planner.commit.abort_min_dist_m=1.1618975201387252 --patch planner.approach.reacquire_max_m=9.885819024819634 --patch control.att_rate.vel_p=0.31122594064937564 --patch control.att_rate.vel_i=0.1971306369154902 --patch control.att_rate.vz_p=1.2184746417650334 --patch control.att_rate.vz_i=0.41338897812125247 --patch control.att_rate.tilt_max_rad=0.4919919446274588 --patch control.att_rate.hover_thrust=0.4872553517555112",
+  "seeds": [
+    20260719,
+    20260720
+  ]
+}

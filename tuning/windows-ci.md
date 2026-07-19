@@ -1415,3 +1415,41 @@ Summary:
 - Solo `test_single_gate_pass` run 1 failed with pymavlink UDP client-set race: `RuntimeError: Set changed size during iteration`.
 - Solo `test_single_gate_pass` run 2 failed as closed-loop miss after built-in retry: `environment collision (impulse=4.3)`, `gates_passed=0`, `overrun_frac=0.7439`.
 - Consolidated report: `tuning/phase5c-loop-profile-2afcfc4-summary.md`.
+
+## 2026-07-19 - commit `78c84617815541c73e1b84ebf81b6f5f6c7a7808`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --rebase` advanced the checkout to `78c84617815541c73e1b84ebf81b6f5f6c7a7808`, which is newer than requested frame-fix commit `2c5057a`.
+- A temporary venv was created at `C:\Temp\eni_dcim_venv` because the bundled Codex Python had no `pytest` and the local `py` launcher failed in this session.
+- Pre-run guard was clear for CI and the first mock runs: no `C:\Temp\eni_dcim_sim.lock` and no `FlightSim`/`DCGame`.
+- Full CI output is in `tuning/pytest-windows-78c8461-basetemp-full.txt`.
+- Full CI result: `4 failed, 141 passed, 1 xfailed, 2 warnings in 63.14s`.
+- CI failures: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock` both timed out waiting for mock heartbeat on `udpin:127.0.0.1:24550`; `tests/unit/test_fsm.py::test_happy_path` stayed in `THROTTLE_DOWN`; `tests/unit/test_fsm.py::test_gate_clips_tolerated_up_to_budget` did not abort after the 11th gate clip.
+- Pytest cache warnings are still present on this Windows checkout: `.pytest_cache` under the repo is access-denied, but the full suite itself continued past those as warnings.
+- Single-gate reliability report is `tuning/framefix-single-gate-20260719T114643Z/summary.md`.
+- Single-gate 10x on HEAD `78c8461`: `7/10` passed.
+- Single-gate 10x on pre-fix `79d9f76` (`2c5057a^`): `6/10` passed.
+- Mock CEM campaign report is `tuning/campaigns/2026-07-19-framefix-78c8461-20260719T115958Z/summary.md`.
+- Campaign bounds were supplied by the tuning runner under `tuning/`; no project config file was edited.
+- Campaign seed sweep completed after respecting a live SIM lock: seed `20260719` ran 40/40, then Sakana acquired `C:\Temp\eni_dcim_sim.lock` for `phase6c-true-vertical`; the campaign paused and resumed after the lock cleared to run seed `20260720`.
+- Campaign totals: `80` mock flights, `9/80` with at least one gate, `13` total gates, `4/80` finished, `0` stale-IMU aborts, best score `189.781`.
+- Best campaign patch for Sakana:
+
+```powershell
+--patch planner.align.max_dz_m=0.46834367747348 --patch planner.commit.abort_min_dist_m=1.1618975201387252 --patch planner.approach.reacquire_max_m=9.885819024819634 --patch control.att_rate.vel_p=0.31122594064937564 --patch control.att_rate.vel_i=0.1971306369154902 --patch control.att_rate.vz_p=1.2184746417650334 --patch control.att_rate.vz_i=0.41338897812125247 --patch control.att_rate.tilt_max_rad=0.4919919446274588 --patch control.att_rate.hover_thrust=0.4872553517555112
+```
+
+- Existing 250Hz vs 125Hz hover profile from `tuning/hover-loop-profile-2afcfc4/hover-loop-profile.md` is shipped with this tuning history: default 250Hz `overrun_frac=0.7451`, `AIGP_NOSLEEP=1` 250Hz `0.7447`, default 125Hz `0.4883`. The 125Hz case improved overrun but was still not clean enough to call a recommended loop-rate change from hover alone.
