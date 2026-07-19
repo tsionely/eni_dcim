@@ -113,7 +113,9 @@ def shadow_terminal_check(arbiter: "VerticalOwnerArbiter", setpoint_v_body,
 def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       certified: bool, tau_s: float, margin_m: float,
                       prev_vz_up: float | None, dt: float,
-                      vz_max: float = 1.0, az_max: float = 2.0):
+                      vz_max: float = 1.0, az_max: float = 2.0,
+                      feature=None, feature_age_s: float | None = None,
+                      d_star: float = 0.8, gate_w: float = 1.6):
     """The ONE final-boundary override (enable-bit path).
 
     Computes the terminal vertical command from the CERTIFIED gate state
@@ -144,8 +146,22 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     if owner != TERM_OWNER or gr is None:
         return owner, None, prev_vz_up
     q_lvl = level_quat(state.level_roll, state.level_pitch)
-    e_z = -true_world_dz(gr, state.q_att, state.level_roll,
-                         state.level_pitch)     # +up error, TRUE vertical
+    # e_z source ladder (enable build): the PIXEL-ROW oracle owns when a
+    # fresh, identity-held feature exists — phase6e F2 proved the
+    # believed channel carries a +0.3-0.5m bias at the plane (attitude
+    # drift) while the oracle read the graze exactly (e_z -0.56 at a
+    # crossing pixel-truth ~+0.5 high; d*=0.8 validated to ~6cm by that
+    # label). Fallback: the believed TRUE-vertical (still de-tilted).
+    e_z = None
+    if (feature is not None and feature_age_s is not None
+            and feature_age_s <= 0.15 and feature.span_px > 1.0
+            and feature.cert_status in ("certified", "probation")
+            and state.image_size is not None):
+        cy = state.image_size[1] / 2.0
+        e_z = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
+    if e_z is None:
+        e_z = -true_world_dz(gr, state.q_att, state.level_roll,
+                             state.level_pitch)  # +up error, TRUE vertical
     v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
                                                   dtype=np.float64))[2])
     g = compute_terminal_guidance(

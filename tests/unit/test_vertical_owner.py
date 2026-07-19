@@ -182,3 +182,50 @@ def test_at_most_one_transition_per_tick():
     for _ in range(3):
         a.note_exposure(True)
     assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
+
+
+def test_pixel_oracle_formula_pins_f2_graze():
+    """The enable-build oracle formula against the REAL logged FEATURE
+    records of the phase6e F2 graze (fixture 20260719T143556). Cursor's
+    independent computation gave e_z = -0.554/-0.561/-0.591; the
+    crossing's pixel-truth was ~+0.5 high — d*=0.8 validated to ~6cm
+    by the label. e_z = W*(cy - y_top)/span - d*."""
+    for y, s, expect in ((0.4, 1169.1, -0.554), (0.0, 1203.8, -0.561),
+                         (-0.5, 1381.5, -0.591)):
+        e = 1.6 * (180.0 - y) / s - 0.8
+        assert e == pytest.approx(expect, abs=0.005)
+
+
+def test_terminal_override_prefers_pixel_oracle():
+    """Phase6e F2: believed said 'centered' while the pixel oracle read
+    -0.56 (HIGH). With a fresh identity-held feature the override must
+    command DESCEND from the oracle, ignoring the biased believed."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import terminal_override
+
+    st = StateEstimate(
+        ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+        gate_rel=RelPose(t=np.array([0.0, 0.0, 0.6]),      # believed: centered
+                         normal=np.array([0.0, 0.0, -1.0])),
+        gate_rel_age_s=0.05, gate_center_px=(320, 180),
+        image_size=(640, 360), healthy=True)
+    feat = TerminalFeature(ts_ns=0, y_top_px=0.0, span_px=1203.8,
+                           center_x_px=320.0, cert_status="certified",
+                           mode="BAR_FULL")
+    a = make_arbiter()
+    owner, v_bz, _ = terminal_override(a, st, np.array([2.0, 0.0, 0.0]),
+                                       True, 0.5, 0.55, None, 0.016,
+                                       feature=feat, feature_age_s=0.05)
+    assert owner == TERM_OWNER and v_bz is not None
+    assert v_bz > 0.05          # descend (NED body-z positive) — oracle wins
+    # Same state WITHOUT the feature: believed-centered -> ~no descend.
+    b = make_arbiter()
+    owner2, v_bz2, _ = terminal_override(b, st, np.array([2.0, 0.0, 0.0]),
+                                         True, 0.5, 0.55, None, 0.016)
+    assert v_bz2 is None or abs(v_bz2) < 0.05
+    # Stale feature -> falls back to believed.
+    c = make_arbiter()
+    owner3, v_bz3, _ = terminal_override(c, st, np.array([2.0, 0.0, 0.0]),
+                                         True, 0.5, 0.55, None, 0.016,
+                                         feature=feat, feature_age_s=0.5)
+    assert v_bz3 is None or abs(v_bz3) < 0.05

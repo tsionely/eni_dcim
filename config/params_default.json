@@ -67,7 +67,8 @@
     },
     "terminal": {
       "enable": false,
-      "margin_m": 0.55
+      "margin_m": 0.55,
+      "d_star_m": 0.8
     },
     "recover": {
       "brake_s": 0.8

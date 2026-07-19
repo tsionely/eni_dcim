@@ -16,7 +16,7 @@ import numpy as np
 
 from aigp.core.agent import Agent
 from aigp.core.bus import Bus
-from aigp.core.messages import Topic
+from aigp.core.messages import TerminalFeature, Topic
 from aigp.core.params import ParamSet
 from aigp.perception.close_tracker import GateCloseTracker
 from aigp.perception.interface import GateDetector
@@ -59,6 +59,7 @@ class PerceptionAgent(Agent):
                 self.detections += 1
                 if detection.confidence >= 0.55:   # exact quad or box fallback
                     last_full_fix = time.monotonic()
+                anchored = False
                 if detection.cert_status == "certified" and self.tracker:
                     # Anchor the certificate ONLY when the fix is
                     # prediction-consistent with the locked target: in
@@ -68,7 +69,25 @@ class PerceptionAgent(Agent):
                     r_fix = float(np.linalg.norm(detection.rel_pose.t))
                     if prior is None or abs(r_fix - prior) <= 0.4 * prior:
                         self.tracker.certificate.on_full_quad(detection.ts_ns)
+                        anchored = True
                 self.bus.publish_latest(Topic.DETECTION, detection)
+                if anchored:
+                    # Pixel-row oracle from the full quad itself (enable
+                    # build): the terminal channel's e_z source must not
+                    # wait for the tracker's first partial frame — F2's
+                    # FEATURE stream started 0.4s before the plane while
+                    # full quads had carried the same top-bar row from
+                    # 2.1m in. corners are tl,tr,br,bl.
+                    c = np.asarray(detection.corners_px, dtype=np.float64)
+                    span = float(np.hypot(*(c[1] - c[0])))
+                    if span > 1.0:
+                        self.bus.publish_latest(Topic.FEATURE, TerminalFeature(
+                            ts_ns=detection.ts_ns,
+                            y_top_px=float((c[0][1] + c[1][1]) / 2.0),
+                            span_px=span,
+                            center_x_px=float((c[0][0] + c[1][0]) / 2.0),
+                            cert_status=detection.cert_status,
+                            mode="BAR_FULL"))
                 continue
             if detection is not None:
                 # Center-only detection (pose rejected by the sanity

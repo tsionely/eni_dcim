@@ -212,12 +212,19 @@ class App:
         race_cell = bus.cell(Topic.RACE)
         imu_cell = bus.cell(Topic.IMU)
         det_cell = bus.cell(Topic.DETECTION)
+        feat_cell = bus.cell(Topic.FEATURE)
         frame_cell = bus.cell(Topic.FRAME)
         collision_q = bus.events(Topic.COLLISION)
 
         loop = RateLoop(self.cfg.control_hz)
         planner_div = self.cfg.planner_div
         imu_seq = det_seq = frame_seq = 0
+        # Terminal pixel-oracle feature: age is tracked on the MONO clock
+        # at receipt (feature ts_ns is epoch-domain — the det-vs-imu clock
+        # split; never mix domains for freshness).
+        feat_seq = 0
+        last_feat = None
+        last_feat_mono = 0.0
         setpoint = None
         state = estimator.state
         t_start = time.monotonic()
@@ -236,6 +243,8 @@ class App:
         # kill gates pass. The real arbiter is separate from the shadow.
         terminal_enable = bool(params.get("planner.terminal.enable",
                                           default=False)) if params else False
+        terminal_d_star = float(params.get("planner.terminal.d_star_m",
+                                           default=0.8)) if params else 0.8
         terminal_margin = float(params.get("planner.terminal.margin_m",
                                            default=0.55)) if params else 0.55
         term_arbiter = VerticalOwnerArbiter()
@@ -305,6 +314,12 @@ class App:
                     last_det, _ = det_cell.get()
                     certified = (last_det is not None
                                  and last_det.cert_status == "certified")
+                    ffresh = feat_cell.get_if_newer(feat_seq)
+                    if ffresh is not None:
+                        last_feat, feat_seq = ffresh
+                        last_feat_mono = time.monotonic()
+                    feat_age = (time.monotonic() - last_feat_mono
+                                if last_feat is not None else None)
                     shadow_arbiter.note_exposure(certified)
                     bus.publish_latest(Topic.SHADOW, shadow_terminal_check(
                         shadow_arbiter, setpoint.v_body, state.q_att,
@@ -320,7 +335,9 @@ class App:
                         owner, v_bz, term_vz_up = terminal_override(
                             term_arbiter, state, setpoint.v_body, certified,
                             tau, terminal_margin, term_vz_up,
-                            planner_div / self.cfg.control_hz)
+                            planner_div / self.cfg.control_hz,
+                            feature=last_feat, feature_age_s=feat_age,
+                            d_star=terminal_d_star)
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
                 elif terminal_enable:
