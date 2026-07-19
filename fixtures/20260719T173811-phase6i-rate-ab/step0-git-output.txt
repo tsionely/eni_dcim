@@ -1,0 +1,42 @@
+﻿===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+===== git checkout main =====
+git : Already on 'main'
+At line:27 char:52
++ ... "`n===== git checkout main =====`n" + (git checkout main 2>&1 | Out-S ...
++                                            ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Already on 'main':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Your branch is up to date with 'origin/main'.
+
+===== git pull =====
+git : From https://github.com/tsionely/eni_dcim
+At line:28 char:43
++   $step0 += "`n===== git pull =====`n" + (git pull 2>&1 | Out-String)
++                                           ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   02e4dd3..fd6c3ef  main       -> origin/main
+Updating 02e4dd3..fd6c3ef
+Fast-forward
+ docs/design/intergate-segment.md | 60 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 docs/design/intergate-segment.md
+
+===== git log -1 --oneline =====
+fd6c3ef N0 autopsy: prediction refuted — the chase deaths are REAL-gate acquisition churn; N2 promoted to critical path
+
+===== git merge-base --is-ancestor 20395de HEAD && echo OK =====
+OK
+

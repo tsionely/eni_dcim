@@ -1,0 +1,364 @@
+{
+  "protocol_status": "PARTIAL: live arm no-go per protocol",
+  "no_go_reason": "first term ownership at 4.1m (>2.5m); env contact with term-dominant ownership (term=292 alt=5)",
+  "valid": [
+    {
+      "attempt": 2,
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260719T173050-f170ead6",
+      "label": "phase6i_control_F1_try2",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6i_slices\\rate_ab\\20260719T173050-f170ead6_takeoff_to_end.aigprec"
+    },
+    {
+      "attempt": 5,
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260719T173427-50f9dcc8",
+      "label": "phase6i_live_F2_try5",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6i_slices\\rate_ab\\20260719T173427-50f9dcc8_takeoff_to_end.aigprec"
+    }
+  ],
+  "rejected": [
+    {
+      "attempt": 1,
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260719T172942-f170ead6",
+      "reason": "r2ok=True unique=145",
+      "gates": 0
+    },
+    {
+      "attempt": 3,
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260719T173205-50f9dcc8",
+      "reason": "r2ok=True unique=255",
+      "gates": 0
+    },
+    {
+      "attempt": 4,
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260719T173316-50f9dcc8",
+      "reason": "r2ok=True unique=243",
+      "gates": 0
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260719T173050-f170ead6",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=17.0)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 14.612009100004798,
+        "loop_overrun_frac": 0.009033670955379141,
+        "loop_stats": {
+          "ticks": 3653,
+          "overruns": 33,
+          "overrun_frac": 0.009033670955379141,
+          "max_late_us": 17587
+        },
+        "flight_id": "20260719T173050-f170ead6",
+        "log_dir": "logs\\20260719T173050-f170ead6"
+      },
+      "takeoff_mono_ns": 158924481231200,
+      "last_mono_ns": 158935940097400,
+      "unique_frames_after_takeoff": 344,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.152,
+          "t1": 0.004
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.004,
+          "t1": 1.504
+        },
+        {
+          "phase": "commit",
+          "t0": 1.504,
+          "t1": 3.764
+        },
+        {
+          "phase": "retreat",
+          "t0": 3.764,
+          "t1": 5.764
+        },
+        {
+          "phase": "search",
+          "t0": 5.764,
+          "t1": 9.764
+        },
+        {
+          "phase": "approach",
+          "t0": 9.764,
+          "t1": 9.844
+        },
+        {
+          "phase": "search",
+          "t0": 9.844,
+          "t1": 11.444
+        },
+        {
+          "phase": "align",
+          "t0": 11.444,
+          "t1": 11.444
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "commit",
+        "retreat",
+        "search",
+        "approach",
+        "search",
+        "align"
+      ],
+      "closest_direct": {
+        "range_m": 1.388,
+        "t_rel_s": 3.82,
+        "t": [
+          0.6639449821656417,
+          -0.6895346869275919,
+          1.005003691905887
+        ],
+        "center_px": [
+          515.0435921275811,
+          211.67489149607678
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.541,
+        "t_rel_s": 4.564,
+        "t": [
+          0.45149043655884935,
+          -0.2972545718991833,
+          -0.022769640916818178
+        ],
+        "age_s": 0.760128016,
+        "center_px": [
+          3008.6177716058323,
+          -1745.9513109734878
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 1.393,
+        "t_rel_s": 3.824,
+        "age_s": 0.010438016,
+        "center_px": [
+          515.0435921275811,
+          211.67489149607678
+        ]
+      },
+      "owner_histogram": {
+        "alt": 2,
+        "term": 111
+      },
+      "owner_transitions": 1,
+      "first_term": {
+        "t_rel_s": 1.545,
+        "range_m": 5.162,
+        "up_legacy_mps": -0.1053965833350693,
+        "adapter_delta_mps": -2.7755575615628914e-17
+      },
+      "agi_first": 0,
+      "agi_max": 0,
+      "gate2_segment": null,
+      "death": {
+        "t_rel_s": 11.456,
+        "reason": "environment collision (impulse=17.0)"
+      },
+      "biggest_collision": {
+        "t_rel_s": 11.453,
+        "impulse": 17.046,
+        "threat_level": 2
+      }
+    },
+    {
+      "flight_id": "20260719T173427-50f9dcc8",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.8)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 4,
+        "duration_s": 16.664014400012093,
+        "loop_overrun_frac": 0.034325492078732596,
+        "loop_stats": {
+          "ticks": 4166,
+          "overruns": 143,
+          "overrun_frac": 0.034325492078732596,
+          "max_late_us": 16543
+        },
+        "flight_id": "20260719T173427-50f9dcc8",
+        "log_dir": "logs\\20260719T173427-50f9dcc8"
+      },
+      "takeoff_mono_ns": 159142212013100,
+      "last_mono_ns": 159155576137700,
+      "unique_frames_after_takeoff": 401,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.296,
+          "t1": 0.003
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.003,
+          "t1": 1.52
+        },
+        {
+          "phase": "align",
+          "t0": 1.52,
+          "t1": 2.5
+        },
+        {
+          "phase": "commit",
+          "t0": 2.5,
+          "t1": 4.44
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.44,
+          "t1": 6.46
+        },
+        {
+          "phase": "align",
+          "t0": 6.46,
+          "t1": 7.021
+        },
+        {
+          "phase": "commit",
+          "t0": 7.021,
+          "t1": 8.48
+        },
+        {
+          "phase": "retreat",
+          "t0": 8.48,
+          "t1": 10.5
+        },
+        {
+          "phase": "align",
+          "t0": 10.5,
+          "t1": 10.52
+        },
+        {
+          "phase": "commit",
+          "t0": 10.52,
+          "t1": 13.06
+        },
+        {
+          "phase": "retreat",
+          "t0": 13.06,
+          "t1": 13.36
+        },
+        {
+          "phase": "recover",
+          "t0": 13.36,
+          "t1": 13.36
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "align",
+        "commit",
+        "retreat",
+        "align",
+        "commit",
+        "retreat",
+        "recover"
+      ],
+      "closest_direct": {
+        "range_m": 1.611,
+        "t_rel_s": 12.144,
+        "t": [
+          0.2700367090766405,
+          -0.26675690032211224,
+          1.5652675803001805
+        ],
+        "center_px": [
+          381.8134006623723,
+          341.76045341125314
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.068,
+        "t_rel_s": 8.3,
+        "t": [
+          0.04200685848342542,
+          -0.05345794852836276,
+          -0.006811581415289192
+        ],
+        "age_s": 1.05649152,
+        "center_px": [
+          495.1728211331256,
+          -122.76352384527576
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 1.653,
+        "t_rel_s": 12.144,
+        "age_s": 1.200600176,
+        "center_px": [
+          364.54048106078403,
+          132.62082974780088
+        ]
+      },
+      "owner_histogram": {
+        "alt": 5,
+        "term": 292
+      },
+      "owner_transitions": 1,
+      "first_term": {
+        "t_rel_s": 2.601,
+        "range_m": 4.1,
+        "up_legacy_mps": -0.8155507191128664,
+        "adapter_delta_mps": -1.7867651802561113e-16
+      },
+      "agi_first": 0,
+      "agi_max": 0,
+      "gate2_segment": null,
+      "death": {
+        "t_rel_s": 13.364,
+        "reason": "environment collision (impulse=1.8)"
+      },
+      "biggest_collision": {
+        "t_rel_s": 13.363,
+        "impulse": 1.786,
+        "threat_level": 2
+      }
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260719T173050-f170ead6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6i_slices\\rate_ab\\20260719T173050-f170ead6_takeoff_to_end.aigprec",
+      "unique_frames": 345,
+      "span_s": 11.463,
+      "bytes": 15374554,
+      "packets": 11042
+    },
+    {
+      "fid": "20260719T173427-50f9dcc8",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6i_slices\\rate_ab\\20260719T173427-50f9dcc8_takeoff_to_end.aigprec",
+      "unique_frames": 402,
+      "span_s": 13.367,
+      "bytes": 24209490,
+      "packets": 17335
+    }
+  ]
+}
