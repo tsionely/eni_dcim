@@ -1453,3 +1453,48 @@ Summary:
 ```
 
 - Existing 250Hz vs 125Hz hover profile from `tuning/hover-loop-profile-2afcfc4/hover-loop-profile.md` is shipped with this tuning history: default 250Hz `overrun_frac=0.7451`, `AIGP_NOSLEEP=1` 250Hz `0.7447`, default 125Hz `0.4883`. The 125Hz case improved overrun but was still not clean enough to call a recommended loop-rate change from hover alone.
+
+## 2026-07-19 - commit `23813aaa9d6aa32cb5e4464ce995a6eb782d526b`
+
+Role: QA & MOCK-TUNER.
+
+Checkout: `C:\Users\tsion\Projects\eni_dcim_qa` (outside OneDrive).
+
+Requested command:
+
+```powershell
+python -m pytest tests -q --basetemp=C:\Temp\pytest-eni
+```
+
+Result: FAIL.
+
+Summary:
+
+- `git pull --rebase` advanced the checkout to `23813aaa9d6aa32cb5e4464ce995a6eb782d526b`.
+- Pre-run guard was clear: no `C:\Temp\eni_dcim_sim.lock` and no `FlightSim`/`DCGame`.
+- Full CI output is in `tuning/pytest-windows-23813aa-basetemp-full.txt`.
+- Full CI result: `2 failed, 159 passed, 1 xfailed, 2 warnings in 52.27s`.
+- The terminal/readiness unit coverage is green in this run; failures were both integration heartbeat timeouts: `tests/integration/test_mock_closed_loop.py::test_single_gate_pass` and `tests/integration/test_mock_closed_loop.py::test_campaign_loop_against_mock` timed out waiting for mock heartbeat on `udpin:127.0.0.1:24550`.
+- Pytest cache warnings persist on this Windows checkout: `.pytest_cache` under the repo is access-denied, but they remained warnings.
+
+Mock terminal A/B at `planner.commit.speed_mps=1.8`:
+
+- Report: `tuning/terminal-ab-23813aa-20260719T190107Z/summary.md`.
+- Control arm: `7/10` passed and finished (`70.0%`), no `term_status` rows, as expected.
+- Terminal-enabled arm: `4/10` passed and finished (`40.0%`), one anomaly run where the channel was engaged but the oracle never became ready.
+- Important terminal authority finding: terminal-enabled runs produced `term_status` rows and often reached `engaged`/`ready`, but `owner=term` and `v_bz_applied` stayed zero in all 10 runs. The terminal channel was observed in telemetry but did not take vertical authority.
+
+Mock terminal CEM campaign:
+
+- Report: `tuning/campaigns/2026-07-19-terminal-23813aa-20260719T190817Z/summary.md`.
+- Base patch: `planner.commit.speed_mps=1.8`, `planner.terminal.enable=true`, `safety.imu_stale_s=0.25`.
+- Bounds: `planner.terminal.margin_m [0.4,0.7]`, `planner.terminal.engage_range_m [2.0,3.5]`, `planner.align.max_dz_m [0.3,0.8]`, plus att_rate `vel_p`, `vel_i`, `vz_p`, `vz_i`, `tilt_max_rad`, `hover_thrust`.
+- Campaign totals: `40` mock flights, `14/40` with at least one gate (`35.0%`), `16` total gates, `2/40` finished (`5.0%`), best score `189.797`.
+- Terminal authority stayed inactive here as well: no flight had terminal applied while not ready, but `owner=term` and `v_bz_applied` stayed zero across the campaign.
+- Best campaign patch for Sakana:
+
+```powershell
+--patch safety.imu_stale_s=0.25 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true --patch planner.terminal.margin_m=0.467747228306376 --patch planner.terminal.engage_range_m=2.45141347066278 --patch planner.align.max_dz_m=0.4855650970120281 --patch control.att_rate.vel_p=0.5860590512868975 --patch control.att_rate.vel_i=0.1355089905524141 --patch control.att_rate.vz_p=0.7029585629358039 --patch control.att_rate.vz_i=0.8 --patch control.att_rate.tilt_max_rad=0.5489551774887438 --patch control.att_rate.hover_thrust=0.513245487740746
+```
+
+- The 250Hz-vs-125Hz overrun comparison has already been shipped in `tuning/hover-loop-profile-2afcfc4/hover-loop-profile.md`: 250Hz default `overrun_frac=0.7451`, 250Hz with `AIGP_NOSLEEP=1` `0.7447`, and 125Hz default `0.4883`.

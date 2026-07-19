@@ -1,0 +1,65 @@
+﻿Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 62 samples: [1.57099525e-04 2.26549098e-06 1.30000003e-02]; level ref roll=+0.000 pitch=-0.310
+live calibration (167 samples): bias=[-3.58704691e-04 -4.36174494e-05  1.30000003e-02] level roll=+0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 1/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [0.00204391 0.00058963 0.013     ]; level ref roll=-0.001 pitch=-0.312
+live calibration (164 samples): bias=[-0.00087521  0.00040209  0.013     ] level roll=+0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 2/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [-0.001542    0.00185506  0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (167 samples): bias=[-0.00137545  0.00019407  0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 3/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 61 samples: [-0.00065531  0.00032487  0.013     ]; level ref roll=-0.001 pitch=-0.310
+live calibration (180 samples): bias=[0.00068387 0.00222016 0.013     ] level roll=+0.000 pitch=-0.310
+[terminal-ab control_speed1p8] 4/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [ 0.0001764  -0.00054489  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (175 samples): bias=[ 0.00056815 -0.0009544   0.013     ] level roll=+0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 5/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [ 0.00229516 -0.00157236  0.013     ]; level ref roll=-0.000 pitch=-0.310
+live calibration (166 samples): bias=[-0.00124155 -0.00060748  0.013     ] level roll=+0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 6/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [1.44691265e-03 3.43890224e-06 1.30000003e-02]; level ref roll=+0.001 pitch=-0.311
+live calibration (167 samples): bias=[ 0.00036819 -0.00019684  0.013     ] level roll=-0.000 pitch=-0.310
+[terminal-ab control_speed1p8] 7/10 gates=1 finished=True term_rows=0 anomalies=
+gyro bias calibrated over 64 samples: [1.21726547e-03 9.77523706e-06 1.30000003e-02]; level ref roll=-0.000 pitch=-0.310
+live calibration (170 samples): bias=[-0.0008392  -0.00136666  0.013     ] level roll=-0.000 pitch=-0.312
+[terminal-ab control_speed1p8] 8/10 gates=0 finished=False term_rows=0 anomalies=
+gyro bias calibrated over 63 samples: [ 0.00210264 -0.00052832  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (174 samples): bias=[-0.00035631  0.00060365  0.013     ] level roll=-0.001 pitch=-0.311
+[terminal-ab control_speed1p8] 9/10 gates=0 finished=False term_rows=0 anomalies=
+gyro bias calibrated over 59 samples: [-0.00110316 -0.00058976  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (175 samples): bias=[-0.00134111  0.00039705  0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab control_speed1p8] 10/10 gates=0 finished=False term_rows=0 anomalies=
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 64 samples: [0.00097414 0.00252327 0.013     ]; level ref roll=+0.000 pitch=-0.310
+live calibration (173 samples): bias=[ 4.94750361e-05 -1.11943010e-03  1.30000003e-02] level roll=+0.000 pitch=-0.311
+[terminal-ab terminal_speed1p8] 1/10 gates=0 finished=False term_rows=103 anomalies=engaged but oracle never ready
+gyro bias calibrated over 64 samples: [-6.66923691e-05 -3.93505751e-04  1.30000003e-02]; level ref roll=+0.001 pitch=-0.311
+live calibration (171 samples): bias=[-0.00047302 -0.00095765  0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab terminal_speed1p8] 2/10 gates=1 finished=True term_rows=124 anomalies=
+gyro bias calibrated over 64 samples: [-0.00085666 -0.0005262   0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (174 samples): bias=[-3.18565037e-05 -7.07916429e-04  1.30000003e-02] level roll=-0.001 pitch=-0.310
+[terminal-ab terminal_speed1p8] 3/10 gates=0 finished=False term_rows=143 anomalies=
+gyro bias calibrated over 64 samples: [ 0.00169409 -0.00108269  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (171 samples): bias=[0.00113933 0.00082456 0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab terminal_speed1p8] 4/10 gates=1 finished=True term_rows=134 anomalies=
+gyro bias calibrated over 63 samples: [-0.00105289 -0.00016492  0.013     ]; level ref roll=+0.000 pitch=-0.310
+live calibration (171 samples): bias=[-8.56856156e-05  8.60913914e-04  1.30000003e-02] level roll=+0.001 pitch=-0.310
+[terminal-ab terminal_speed1p8] 5/10 gates=1 finished=True term_rows=125 anomalies=
+gyro bias calibrated over 65 samples: [ 0.00112479 -0.00234164  0.013     ]; level ref roll=+0.000 pitch=-0.311
+live calibration (166 samples): bias=[-0.00089377 -0.00046572  0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab terminal_speed1p8] 6/10 gates=0 finished=False term_rows=177 anomalies=
+gyro bias calibrated over 64 samples: [0.0002658  0.00109228 0.013     ]; level ref roll=-0.000 pitch=-0.311
+live calibration (166 samples): bias=[-0.00051313  0.00048808  0.013     ] level roll=-0.000 pitch=-0.311
+[terminal-ab terminal_speed1p8] 7/10 gates=0 finished=False term_rows=153 anomalies=
+gyro bias calibrated over 64 samples: [0.00074422 0.00108147 0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (165 samples): bias=[0.00073512 0.00070093 0.013     ] level roll=-0.000 pitch=-0.310
+[terminal-ab terminal_speed1p8] 8/10 gates=0 finished=False term_rows=180 anomalies=
+gyro bias calibrated over 64 samples: [-1.00793045e-03  8.00175302e-05  1.30000003e-02]; level ref roll=-0.001 pitch=-0.311
+live calibration (168 samples): bias=[ 0.00069047 -0.00059169  0.013     ] level roll=-0.000 pitch=-0.310
+[terminal-ab terminal_speed1p8] 9/10 gates=1 finished=True term_rows=131 anomalies=
+gyro bias calibrated over 64 samples: [-0.00169942 -0.00157311  0.013     ]; level ref roll=-0.001 pitch=-0.311
+live calibration (166 samples): bias=[-0.00075439 -0.00014835  0.013     ] level roll=+0.001 pitch=-0.310
+[terminal-ab terminal_speed1p8] 10/10 gates=0 finished=False term_rows=119 anomalies=
+[terminal-ab] report=C:\Users\tsion\Projects\eni_dcim_qa\tuning\terminal-ab-23813aa-20260719T190107Z\summary.md

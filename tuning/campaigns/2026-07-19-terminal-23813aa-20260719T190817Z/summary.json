@@ -1,0 +1,73 @@
+{
+  "base_patch": {
+    "planner.commit.speed_mps": 1.8,
+    "planner.terminal.enable": true,
+    "safety.imu_stale_s": 0.25
+  },
+  "best_params": {
+    "control.att_rate.hover_thrust": 0.513245487740746,
+    "control.att_rate.tilt_max_rad": 0.5489551774887438,
+    "control.att_rate.vel_i": 0.1355089905524141,
+    "control.att_rate.vel_p": 0.5860590512868975,
+    "control.att_rate.vz_i": 0.8,
+    "control.att_rate.vz_p": 0.7029585629358039,
+    "planner.align.max_dz_m": 0.4855650970120281,
+    "planner.terminal.engage_range_m": 2.45141347066278,
+    "planner.terminal.margin_m": 0.467747228306376
+  },
+  "best_score": 189.7969999999999,
+  "bounds": {
+    "control.att_rate.hover_thrust": [
+      0.35,
+      0.65
+    ],
+    "control.att_rate.tilt_max_rad": [
+      0.2,
+      0.6
+    ],
+    "control.att_rate.vel_i": [
+      0.02,
+      0.3
+    ],
+    "control.att_rate.vel_p": [
+      0.15,
+      0.6
+    ],
+    "control.att_rate.vz_i": [
+      0.1,
+      0.8
+    ],
+    "control.att_rate.vz_p": [
+      0.4,
+      1.5
+    ],
+    "planner.align.max_dz_m": [
+      0.3,
+      0.8
+    ],
+    "planner.terminal.engage_range_m": [
+      2.0,
+      3.5
+    ],
+    "planner.terminal.margin_m": [
+      0.4,
+      0.7
+    ]
+  },
+  "commit": "23813aaa9d6aa32cb5e4464ce995a6eb782d526b",
+  "sakana_patch": "--patch safety.imu_stale_s=0.25 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true --patch planner.terminal.margin_m=0.467747228306376 --patch planner.terminal.engage_range_m=2.45141347066278 --patch planner.align.max_dz_m=0.4855650970120281 --patch control.att_rate.vel_p=0.5860590512868975 --patch control.att_rate.vel_i=0.1355089905524141 --patch control.att_rate.vz_p=0.7029585629358039 --patch control.att_rate.vz_i=0.8 --patch control.att_rate.tilt_max_rad=0.5489551774887438 --patch control.att_rate.hover_thrust=0.513245487740746",
+  "seed": 20260719,
+  "summary": {
+    "aborted": 38,
+    "avg_score": -182.68406250000007,
+    "best_score": 189.7969999999999,
+    "finish_rate": 0.05,
+    "finished": 2,
+    "flights": 40,
+    "max_gates": 2,
+    "pass_rate_ge_1": 0.35,
+    "passes_ge_1": 14,
+    "term_anomaly_rows": 0,
+    "total_gates": 16
+  }
+}
