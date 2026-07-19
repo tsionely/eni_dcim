@@ -51,11 +51,25 @@ in parallel while the terminal channel owns. The open-loop patch line
 7. Bumpless transfer: trim b0 = prev_applied - new_raw, decayed under
    slew budget, NEVER decayed while saturated; inactive controller in
    tracking/anti-windup mode.
-8. d* calibration: absorb the measured pure offset (F2 +0.82 signature)
-   into d_star via leave-one-flight-out fitting — never a downstream
-   command bias. High-overfly and clean-pass recordings stay in the
-   release regression set (a low-only set cannot kill an always-push-up
+8. d* calibration: absorb the measured pure offset into d_star via
+   leave-one-flight-out fitting — never a downstream command bias.
+   High-overfly and clean-pass recordings stay in the release
+   regression set (a low-only set cannot kill an always-push-up
    defect).
+   **QUARANTINE (round-5, both tanks):** the original "F2 +0.82
+   signature" was measured while every vertical interpretation lived in
+   the tilted rest frame (the phantom). It may contain the frame-tilt
+   range term, lever-arm geometry, top-bar identity bias, banner
+   substitution, and a smaller true constant — in unknown proportions.
+   It is NOT carried into release. d* is re-fitted from scratch on
+   corrected-frame replays only, after the frame-fix release gates
+   (range-slope |b| < 0.03 m/m, pad-geometry agreement, F2
+   counterfactual ~0) pass. Subtracting the phantom once through the
+   frame transform and again through d* is the double-compensation
+   class this note exists to prevent. The terminal sigmas (currently
+   scalar 0.10/0.15) are likewise re-measured in the true frame at
+   that point — a corrected mean with a tilted-frame sigma leaves the
+   |mu|+k*sigma envelope internally inconsistent.
 
 ## Advisory-5 amendments (aperture question)
 
