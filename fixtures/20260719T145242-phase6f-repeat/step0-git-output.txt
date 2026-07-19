@@ -1,0 +1,30 @@
+﻿===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+===== git checkout main =====
+git : Already on 'main'
+At line:152 char:52
++ ... "`n===== git checkout main =====`n" + (git checkout main 2>&1 | Out-S ...
++                                            ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Already on 'main':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Your branch is up to date with 'origin/main'.
+
+===== git pull =====
+Already up to date.
+
+===== git log -1 --oneline =====
+adddf6a [sim-run] phase6e aim center + terminal feature r2
+
+===== git merge-base --is-ancestor 564e98d HEAD && echo OK =====
+OK
+

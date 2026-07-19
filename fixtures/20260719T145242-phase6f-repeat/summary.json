@@ -1,0 +1,3008 @@
+{
+  "valid": [
+    {
+      "attempt": 1,
+      "fid": "20260719T144540-a76247fb",
+      "label": "phase6f_repeat_F1_try1",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T144540-a76247fb_takeoff_to_end.aigprec"
+    },
+    {
+      "attempt": 4,
+      "fid": "20260719T144941-a76247fb",
+      "label": "phase6f_repeat_F2_try4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T144941-a76247fb_takeoff_to_end.aigprec"
+    },
+    {
+      "attempt": 5,
+      "fid": "20260719T145122-a76247fb",
+      "label": "phase6f_repeat_F3_try5",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T145122-a76247fb_takeoff_to_end.aigprec"
+    }
+  ],
+  "rejected": [
+    {
+      "attempt": 2,
+      "fid": "20260719T144715-a76247fb",
+      "reason": "r2ok=True unique=274 (need >300)"
+    },
+    {
+      "attempt": 3,
+      "fid": "20260719T144828-a76247fb",
+      "reason": "r2ok=True unique=269 (need >300)"
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260719T144540-a76247fb",
+      "topics": {
+        "frame": 993,
+        "imu": 3902,
+        "actuator": 3183,
+        "heartbeat": 334,
+        "race": 134,
+        "fsm": 6,
+        "state": 1632,
+        "setpoint": 1632,
+        "detection": 255,
+        "feature": 4,
+        "shadow": 169,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "stale channels: frame",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 0,
+        "duration_s": 32.62002110001049,
+        "loop_overrun_frac": 0.0158185162477008,
+        "loop_stats": {
+          "ticks": 8155,
+          "overruns": 129,
+          "overrun_frac": 0.0158185162477008,
+          "max_late_us": 12926
+        },
+        "flight_id": "20260719T144540-a76247fb",
+        "log_dir": "logs\\20260719T144540-a76247fb"
+      },
+      "first_mono_ns": 149010583199300,
+      "last_mono_ns": 149044208856100,
+      "takeoff_mono_ns": 149014840823500,
+      "unique_frames_all": 993,
+      "unique_frames_after_takeoff": 866,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.248,
+          "t1": 0.008
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.008,
+          "t1": 1.508
+        },
+        {
+          "phase": "approach",
+          "t0": 1.508,
+          "t1": 2.988
+        },
+        {
+          "phase": "align",
+          "t0": 2.988,
+          "t1": 3.249
+        },
+        {
+          "phase": "commit",
+          "t0": 3.249,
+          "t1": 4.988
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.988,
+          "t1": 6.988
+        },
+        {
+          "phase": "commit",
+          "t0": 6.988,
+          "t1": 8.628
+        },
+        {
+          "phase": "retreat",
+          "t0": 8.628,
+          "t1": 10.628
+        },
+        {
+          "phase": "search",
+          "t0": 10.628,
+          "t1": 29.368
+        },
+        {
+          "phase": "hover",
+          "t0": 29.368,
+          "t1": 29.368
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "approach",
+        "align",
+        "commit",
+        "retreat",
+        "commit",
+        "retreat",
+        "search",
+        "hover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "approach": [
+          2.951241945911566,
+          0.17148362916679594,
+          0.2633634827817469
+        ],
+        "align": [
+          0.4,
+          -0.1292939414761161,
+          1.0286622245278287
+        ],
+        "commit": [
+          2.453963091398042,
+          -0.4087652977258813,
+          -0.051451839432549495
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          -0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          -0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 3.118,
+        "t_rel_s": 7.434,
+        "t": [
+          -0.1772430542160488,
+          -0.28570259044843976,
+          3.09950890791771
+        ],
+        "center_px": [
+          299.0,
+          312.5
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.054,
+        "t_rel_s": 8.488,
+        "t": [
+          -0.003792516588345846,
+          0.0475540431902294,
+          0.025125356918442705
+        ],
+        "age_s": 1.033881552,
+        "center_px": [
+          316.8574491944416,
+          421.2353837936647
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 3.487,
+        "t_rel_s": 7.428,
+        "age_s": 0.00486188,
+        "center_px": [
+          306.6493485428306,
+          159.9195122366415
+        ]
+      },
+      "biggest_collision": null,
+      "collisions": [],
+      "fsm": [
+        {
+          "t_rel_s": -3.252,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.152,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 29.368,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "stale channels: frame"
+        },
+        {
+          "t_rel_s": 29.368,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T144941-a76247fb",
+      "topics": {
+        "imu": 2893,
+        "frame": 754,
+        "actuator": 2360,
+        "heartbeat": 249,
+        "race": 100,
+        "fsm": 6,
+        "state": 1206,
+        "setpoint": 1206,
+        "detection": 487,
+        "shadow": 325,
+        "feature": 12,
+        "collision": 303,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=5.6)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 303,
+        "duration_s": 24.108149200008484,
+        "loop_overrun_frac": 0.025717604114816658,
+        "loop_stats": {
+          "ticks": 6027,
+          "overruns": 155,
+          "overrun_frac": 0.025717604114816658,
+          "max_late_us": 17107
+        },
+        "flight_id": "20260719T144941-a76247fb",
+        "log_dir": "logs\\20260719T144941-a76247fb"
+      },
+      "first_mono_ns": 149251552324900,
+      "last_mono_ns": 149276664467700,
+      "takeoff_mono_ns": 149255764428300,
+      "unique_frames_all": 754,
+      "unique_frames_after_takeoff": 627,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.204,
+          "t1": 0.012
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.012,
+          "t1": 1.512
+        },
+        {
+          "phase": "align",
+          "t0": 1.512,
+          "t1": 2.192
+        },
+        {
+          "phase": "commit",
+          "t0": 2.192,
+          "t1": 4.312
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.312,
+          "t1": 6.312
+        },
+        {
+          "phase": "search",
+          "t0": 6.312,
+          "t1": 6.992
+        },
+        {
+          "phase": "approach",
+          "t0": 6.992,
+          "t1": 8.792
+        },
+        {
+          "phase": "commit",
+          "t0": 8.792,
+          "t1": 12.332
+        },
+        {
+          "phase": "retreat",
+          "t0": 12.332,
+          "t1": 14.292
+        },
+        {
+          "phase": "recover",
+          "t0": 14.292,
+          "t1": 15.192
+        },
+        {
+          "phase": "search",
+          "t0": 15.192,
+          "t1": 17.772
+        },
+        {
+          "phase": "commit",
+          "t0": 17.772,
+          "t1": 18.612
+        },
+        {
+          "phase": "retreat",
+          "t0": 18.612,
+          "t1": 18.832
+        },
+        {
+          "phase": "recover",
+          "t0": 18.832,
+          "t1": 20.892
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "search",
+        "approach",
+        "commit",
+        "retreat",
+        "recover",
+        "search",
+        "commit",
+        "retreat",
+        "recover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          0.222748544072437,
+          0.8646481320394515
+        ],
+        "commit": [
+          2.4383697417424974,
+          -0.13241661165641475,
+          -0.15587606704147888
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          -0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "approach": [
+          2.448785922051292,
+          2.282125981261366,
+          -1.2170128189023575
+        ],
+        "recover": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "closest_direct": {
+        "range_m": 0.658,
+        "t_rel_s": 19.065,
+        "t": [
+          -0.031579257573404476,
+          -0.20907682103454622,
+          0.6232339282528192
+        ],
+        "center_px": [
+          295.5768563473274,
+          596.9178776678318
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.06,
+        "t_rel_s": 4.152,
+        "t": [
+          -0.024620371746010544,
+          0.05062310448839194,
+          0.020014370400513466
+        ],
+        "age_s": 0.386770688,
+        "center_px": [
+          178.98123767443997,
+          352.0257545553536
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 0.696,
+        "t_rel_s": 19.073,
+        "age_s": 0.025143872,
+        "center_px": [
+          309.3900433845096,
+          87.53185355007065
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 20.898,
+        "impulse": 5.628,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 14.275,
+          "impulse": 0.03847561404109001,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.281,
+          "impulse": 0.8738957047462463,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.323,
+          "impulse": 0.0007234516669996083,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.33,
+          "impulse": 0.24413374066352844,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.337,
+          "impulse": 0.08981344103813171,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.344,
+          "impulse": 0.07538560032844543,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.357,
+          "impulse": 0.0609511062502861,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.357,
+          "impulse": 0.05760508030653,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.359,
+          "impulse": 0.012398351915180683,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.364,
+          "impulse": 0.04490507021546364,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.371,
+          "impulse": 0.04274176433682442,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 14.378,
+          "impulse": 0.011074092239141464,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.815,
+          "impulse": 0.12190888077020645,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.827,
+          "impulse": 0.5177516937255859,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.827,
+          "impulse": 0.17507359385490417,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.829,
+          "impulse": 0.015528339892625809,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.836,
+          "impulse": 0.009154052473604679,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.843,
+          "impulse": 0.026796506717801094,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.853,
+          "impulse": 0.01262014452368021,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.853,
+          "impulse": 0.007762651890516281,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.857,
+          "impulse": 0.0023992315400391817,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.864,
+          "impulse": 0.006573496386408806,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.871,
+          "impulse": 0.002489893464371562,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.976,
+          "impulse": 0.19122031331062317,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.977,
+          "impulse": 0.1340317577123642,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 18.99,
+          "impulse": 0.1070660650730133,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.012,
+          "impulse": 0.003114396007731557,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.024,
+          "impulse": 0.0183480866253376,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.024,
+          "impulse": 0.009038048796355724,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.026,
+          "impulse": 0.0028859637677669525,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.114,
+          "impulse": 0.1385158896446228,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.128,
+          "impulse": 0.10706336796283722,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.128,
+          "impulse": 0.06740155816078186,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.128,
+          "impulse": 0.052532270550727844,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.135,
+          "impulse": 0.03784670680761337,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.141,
+          "impulse": 0.07148285210132599,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.148,
+          "impulse": 0.08055412024259567,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.164,
+          "impulse": 0.05697194114327431,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.164,
+          "impulse": 0.039856165647506714,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.165,
+          "impulse": 0.003752577817067504,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.169,
+          "impulse": 0.013089618645608425,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.176,
+          "impulse": 0.006003533490002155,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.405,
+          "impulse": 0.18245147168636322,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.413,
+          "impulse": 0.19494310021400452,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.424,
+          "impulse": 0.05400930717587471,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.424,
+          "impulse": 0.013233388774096966,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.433,
+          "impulse": 0.022851236164569855,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.44,
+          "impulse": 0.026292942464351654,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.447,
+          "impulse": 0.02370559610426426,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.458,
+          "impulse": 0.007397021632641554,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.458,
+          "impulse": 0.009723627008497715,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.461,
+          "impulse": 0.005978403612971306,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.468,
+          "impulse": 0.01418244931846857,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.475,
+          "impulse": 0.008329051546752453,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.483,
+          "impulse": 0.009722870774567127,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.493,
+          "impulse": 0.006844378542155027,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.493,
+          "impulse": 0.008118647150695324,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.496,
+          "impulse": 0.002053790958598256,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.503,
+          "impulse": 0.00732711935415864,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.51,
+          "impulse": 0.0089004160836339,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.524,
+          "impulse": 0.009758392348885536,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.524,
+          "impulse": 0.011605133302509785,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.525,
+          "impulse": 0.0022475621663033962,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.531,
+          "impulse": 0.009071185253560543,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.538,
+          "impulse": 0.016769343987107277,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.545,
+          "impulse": 0.019197655841708183,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.557,
+          "impulse": 0.018211113288998604,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.557,
+          "impulse": 0.017897067591547966,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.559,
+          "impulse": 0.00974652823060751,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.565,
+          "impulse": 0.013455869629979134,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.573,
+          "impulse": 0.01770399883389473,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.579,
+          "impulse": 0.014917225576937199,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.59,
+          "impulse": 0.01128697581589222,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.591,
+          "impulse": 0.010246267542243004,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.593,
+          "impulse": 0.004811376798897982,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.6,
+          "impulse": 0.011690233834087849,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.607,
+          "impulse": 0.012000910006463528,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.614,
+          "impulse": 0.013750715181231499,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.625,
+          "impulse": 0.011388816870748997,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.625,
+          "impulse": 0.011254229582846165,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.628,
+          "impulse": 0.006224216893315315,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.634,
+          "impulse": 0.01259246189147234,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.641,
+          "impulse": 0.01508265733718872,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.649,
+          "impulse": 0.017075562849640846,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.66,
+          "impulse": 0.013399316929280758,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.66,
+          "impulse": 0.013073816895484924,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.662,
+          "impulse": 0.007858984172344208,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.669,
+          "impulse": 0.012218932621181011,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.676,
+          "impulse": 0.01415314618498087,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.688,
+          "impulse": 0.013564804568886757,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.688,
+          "impulse": 0.013142744079232216,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.69,
+          "impulse": 0.006717246491461992,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.697,
+          "impulse": 0.010821906849741936,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.704,
+          "impulse": 0.014863135293126106,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.711,
+          "impulse": 0.012944635935127735,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.722,
+          "impulse": 0.00904347375035286,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.722,
+          "impulse": 0.008586591109633446,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.725,
+          "impulse": 0.005116077605634928,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.732,
+          "impulse": 0.009963469579815865,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.738,
+          "impulse": 0.008930629119277,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.746,
+          "impulse": 0.009936748072504997,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.757,
+          "impulse": 0.009581498801708221,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.757,
+          "impulse": 0.009317366406321526,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.759,
+          "impulse": 0.004721897654235363,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.766,
+          "impulse": 0.009276741184294224,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.773,
+          "impulse": 0.01008943747729063,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.78,
+          "impulse": 0.00981246680021286,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.792,
+          "impulse": 0.009008382447063923,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.792,
+          "impulse": 0.008382733911275864,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.794,
+          "impulse": 0.005322770215570927,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.801,
+          "impulse": 0.00887211225926876,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.808,
+          "impulse": 0.011480114422738552,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.815,
+          "impulse": 0.011836064048111439,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.827,
+          "impulse": 0.011758450418710709,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.828,
+          "impulse": 0.011460542678833008,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.829,
+          "impulse": 0.006948290392756462,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.836,
+          "impulse": 0.00932191964238882,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.843,
+          "impulse": 0.013456955552101135,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.855,
+          "impulse": 0.015032291412353516,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.855,
+          "impulse": 0.013981686905026436,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.857,
+          "impulse": 0.005905432626605034,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.863,
+          "impulse": 0.009359745308756828,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.871,
+          "impulse": 0.01023654080927372,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.877,
+          "impulse": 0.008205433376133442,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.889,
+          "impulse": 0.007157249376177788,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.889,
+          "impulse": 0.007124053779989481,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.891,
+          "impulse": 0.004834937397390604,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.899,
+          "impulse": 0.01061328873038292,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.905,
+          "impulse": 0.01215717289596796,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.913,
+          "impulse": 0.015744827687740326,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.923,
+          "impulse": 0.011818809434771538,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.924,
+          "impulse": 0.01021072082221508,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.926,
+          "impulse": 0.006682019680738449,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.933,
+          "impulse": 0.01117456890642643,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.94,
+          "impulse": 0.014302968978881836,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.947,
+          "impulse": 0.014170842245221138,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.959,
+          "impulse": 0.012394566088914871,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.96,
+          "impulse": 0.01027598138898611,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.961,
+          "impulse": 0.004041652660816908,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.968,
+          "impulse": 0.009423023089766502,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.975,
+          "impulse": 0.009770204313099384,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.982,
+          "impulse": 0.010085932910442352,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.993,
+          "impulse": 0.007920324802398682,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.993,
+          "impulse": 0.008432164788246155,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 19.996,
+          "impulse": 0.004284284543246031,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.003,
+          "impulse": 0.009100008755922318,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.009,
+          "impulse": 0.009410982951521873,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.024,
+          "impulse": 0.00961744412779808,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.024,
+          "impulse": 0.01000163797289133,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.025,
+          "impulse": 0.006052564363926649,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.031,
+          "impulse": 0.005689877085387707,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.038,
+          "impulse": 0.01207737810909748,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.044,
+          "impulse": 0.014086958020925522,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.056,
+          "impulse": 0.011964895762503147,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.056,
+          "impulse": 0.01185526605695486,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.058,
+          "impulse": 0.006578812375664711,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.065,
+          "impulse": 0.012131740339100361,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.072,
+          "impulse": 0.013699192553758621,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.079,
+          "impulse": 0.013558992184698582,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.091,
+          "impulse": 0.010919002816081047,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.091,
+          "impulse": 0.010538172908127308,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.092,
+          "impulse": 0.006132247857749462,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.1,
+          "impulse": 0.009787625633180141,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.107,
+          "impulse": 0.011804211884737015,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.113,
+          "impulse": 0.011461938731372356,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.125,
+          "impulse": 0.009713876992464066,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.125,
+          "impulse": 0.009509384632110596,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.128,
+          "impulse": 0.004300836939364672,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.135,
+          "impulse": 0.01009254902601242,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.141,
+          "impulse": 0.009745976887643337,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.148,
+          "impulse": 0.010239810682833195,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.159,
+          "impulse": 0.007441570051014423,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.16,
+          "impulse": 0.008496719412505627,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.162,
+          "impulse": 0.004802406299859285,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.169,
+          "impulse": 0.00854389276355505,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.176,
+          "impulse": 0.009967515245079994,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.188,
+          "impulse": 0.00851850863546133,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.188,
+          "impulse": 0.008634498342871666,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.19,
+          "impulse": 0.0049858964048326015,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.197,
+          "impulse": 0.009352036751806736,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.204,
+          "impulse": 0.011484780348837376,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.211,
+          "impulse": 0.012284274213016033,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.222,
+          "impulse": 0.011783194728195667,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.222,
+          "impulse": 0.010882174596190453,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.225,
+          "impulse": 0.006003392394632101,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.232,
+          "impulse": 0.01176108606159687,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.238,
+          "impulse": 0.012489131651818752,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.245,
+          "impulse": 0.01267282571643591,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.257,
+          "impulse": 0.010075551457703114,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.257,
+          "impulse": 0.009901470504701138,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.259,
+          "impulse": 0.0038083556573837996,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.266,
+          "impulse": 0.010403258726000786,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.273,
+          "impulse": 0.010139756835997105,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.28,
+          "impulse": 0.009529577568173409,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.293,
+          "impulse": 0.009252147749066353,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.293,
+          "impulse": 0.008146567270159721,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.294,
+          "impulse": 0.003787670051679015,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.301,
+          "impulse": 0.008179747499525547,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.308,
+          "impulse": 0.00931753870099783,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.315,
+          "impulse": 0.009002886712551117,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.326,
+          "impulse": 0.007921022363007069,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.326,
+          "impulse": 0.007870504632592201,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.329,
+          "impulse": 0.0051466962322592735,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.337,
+          "impulse": 0.009176257997751236,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.343,
+          "impulse": 0.012202021665871143,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.355,
+          "impulse": 0.011760160326957703,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.355,
+          "impulse": 0.011725010350346565,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.356,
+          "impulse": 0.005448572337627411,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.364,
+          "impulse": 0.022600574418902397,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.37,
+          "impulse": 0.01560105662792921,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.377,
+          "impulse": 0.003788858186453581,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.389,
+          "impulse": 0.004114923533052206,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.389,
+          "impulse": 0.006484337151050568,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.391,
+          "impulse": 0.004300981294363737,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.398,
+          "impulse": 0.009757722727954388,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.405,
+          "impulse": 0.014029690064489841,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.413,
+          "impulse": 0.013784070499241352,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.423,
+          "impulse": 0.011022564955055714,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.423,
+          "impulse": 0.009359699673950672,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.426,
+          "impulse": 0.00622105086222291,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.433,
+          "impulse": 0.009663471952080727,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.44,
+          "impulse": 0.01392010971903801,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.447,
+          "impulse": 0.013123354874551296,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.459,
+          "impulse": 0.008765801787376404,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.46,
+          "impulse": 0.008058383129537106,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.461,
+          "impulse": 0.004879486281424761,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.468,
+          "impulse": 0.007040195167064667,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.475,
+          "impulse": 0.010628049261868,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.482,
+          "impulse": 0.009220995008945465,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.493,
+          "impulse": 0.008345096372067928,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.493,
+          "impulse": 0.008436559699475765,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.495,
+          "impulse": 0.003736817976459861,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.502,
+          "impulse": 0.00848313607275486,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.509,
+          "impulse": 0.011848989874124527,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.524,
+          "impulse": 0.01100544910877943,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.524,
+          "impulse": 0.01229215320199728,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.525,
+          "impulse": 0.0069740847684443,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.531,
+          "impulse": 0.006429711356759071,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.537,
+          "impulse": 0.011927715502679348,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.544,
+          "impulse": 0.018882479518651962,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.556,
+          "impulse": 0.013114185072481632,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.556,
+          "impulse": 0.010801774449646473,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.558,
+          "impulse": 0.004777710419148207,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.565,
+          "impulse": 0.00996028259396553,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.572,
+          "impulse": 0.010765740647912025,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.579,
+          "impulse": 0.009893749840557575,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.59,
+          "impulse": 0.008728612214326859,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.59,
+          "impulse": 0.007966036908328533,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.593,
+          "impulse": 0.007526711095124483,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.6,
+          "impulse": 0.009907349944114685,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.607,
+          "impulse": 0.011956646107137203,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.613,
+          "impulse": 0.012099266052246094,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.625,
+          "impulse": 0.00816822424530983,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.625,
+          "impulse": 0.008385151624679565,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.627,
+          "impulse": 0.0039750877767801285,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.634,
+          "impulse": 0.008762580342590809,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.641,
+          "impulse": 0.011313683353364468,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.648,
+          "impulse": 0.009410149417817593,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.661,
+          "impulse": 0.008481606841087341,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.661,
+          "impulse": 0.007153205573558807,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.662,
+          "impulse": 0.0038603218272328377,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.669,
+          "impulse": 0.010063405148684978,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.676,
+          "impulse": 0.01126770954579115,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.687,
+          "impulse": 0.009171552024781704,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.687,
+          "impulse": 0.008911920711398125,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.69,
+          "impulse": 0.005268659442663193,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.697,
+          "impulse": 0.006570904050022364,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.704,
+          "impulse": 0.011328079737722874,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.711,
+          "impulse": 0.012175372801721096,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.723,
+          "impulse": 0.010621415451169014,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.723,
+          "impulse": 0.011141403578221798,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.724,
+          "impulse": 0.00596602912992239,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.732,
+          "impulse": 0.00966235063970089,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.738,
+          "impulse": 0.013350045308470726,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.745,
+          "impulse": 0.01374855451285839,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.757,
+          "impulse": 0.009935776703059673,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.757,
+          "impulse": 0.009249667637050152,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.759,
+          "impulse": 0.006217086222022772,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.766,
+          "impulse": 0.005952657200396061,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.773,
+          "impulse": 0.013487489894032478,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.78,
+          "impulse": 0.014652632176876068,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.792,
+          "impulse": 0.014566865749657154,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.793,
+          "impulse": 0.01464367937296629,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.794,
+          "impulse": 0.008840542286634445,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.801,
+          "impulse": 0.007733353413641453,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.808,
+          "impulse": 0.010940291918814182,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.815,
+          "impulse": 0.009618169628083706,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.827,
+          "impulse": 0.007222176529467106,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.827,
+          "impulse": 0.006623269058763981,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.828,
+          "impulse": 0.0036492799408733845,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.835,
+          "impulse": 0.003468551207333803,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.843,
+          "impulse": 0.003753333818167448,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.854,
+          "impulse": 0.011444759555161,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.854,
+          "impulse": 0.012469040229916573,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.856,
+          "impulse": 0.00596768781542778,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.863,
+          "impulse": 0.009149985387921333,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.87,
+          "impulse": 0.008627797476947308,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.878,
+          "impulse": 0.009499277919530869,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.888,
+          "impulse": 0.005709074437618256,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.888,
+          "impulse": 0.00736542372033,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.891,
+          "impulse": 0.0028303004801273346,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 20.898,
+          "impulse": 5.628172397613525,
+          "threat_level": 2
+        },
+        {
+          "t_rel_s": 20.898,
+          "impulse": 2.5098414421081543,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.208,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.112,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.504,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 20.9,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=5.6)"
+        },
+        {
+          "t_rel_s": 20.9,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    },
+    {
+      "flight_id": "20260719T145122-a76247fb",
+      "topics": {
+        "frame": 598,
+        "actuator": 1875,
+        "imu": 2299,
+        "race": 80,
+        "heartbeat": 197,
+        "fsm": 6,
+        "state": 946,
+        "setpoint": 946,
+        "detection": 340,
+        "shadow": 103,
+        "feature": 8,
+        "collision": 142,
+        "loop_stats": 1
+      },
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=4.1)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 142,
+        "duration_s": 18.904122100007953,
+        "loop_overrun_frac": 0.00761743546339399,
+        "loop_stats": {
+          "ticks": 4726,
+          "overruns": 36,
+          "overrun_frac": 0.00761743546339399,
+          "max_late_us": 13625
+        },
+        "flight_id": "20260719T145122-a76247fb",
+        "log_dir": "logs\\20260719T145122-a76247fb"
+      },
+      "first_mono_ns": 149352394619700,
+      "last_mono_ns": 149372303006600,
+      "takeoff_mono_ns": 149356674970200,
+      "unique_frames_all": 598,
+      "unique_frames_after_takeoff": 469,
+      "phase_segments": [
+        {
+          "phase": "hover",
+          "t0": -3.272,
+          "t1": 0.004
+        },
+        {
+          "phase": "takeoff",
+          "t0": 0.004,
+          "t1": 1.504
+        },
+        {
+          "phase": "align",
+          "t0": 1.504,
+          "t1": 2.025
+        },
+        {
+          "phase": "commit",
+          "t0": 2.025,
+          "t1": 4.084
+        },
+        {
+          "phase": "retreat",
+          "t0": 4.084,
+          "t1": 6.104
+        },
+        {
+          "phase": "search",
+          "t0": 6.104,
+          "t1": 6.344
+        },
+        {
+          "phase": "recover",
+          "t0": 6.344,
+          "t1": 8.304
+        },
+        {
+          "phase": "search",
+          "t0": 8.304,
+          "t1": 9.964
+        },
+        {
+          "phase": "recover",
+          "t0": 9.964,
+          "t1": 10.824
+        },
+        {
+          "phase": "search",
+          "t0": 10.824,
+          "t1": 13.624
+        },
+        {
+          "phase": "approach",
+          "t0": 13.624,
+          "t1": 15.624
+        },
+        {
+          "phase": "recover",
+          "t0": 15.624,
+          "t1": 15.624
+        }
+      ],
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "search",
+        "recover",
+        "search",
+        "recover",
+        "search",
+        "approach",
+        "recover"
+      ],
+      "first_phase_v_body": {
+        "hover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "takeoff": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "align": [
+          0.4,
+          0.1448178567514646,
+          0.7634118642053125
+        ],
+        "commit": [
+          2.441722439700585,
+          0.38538760727342525,
+          -0.11302031824906245
+        ],
+        "retreat": [
+          -1.2,
+          0.0,
+          -0.0
+        ],
+        "search": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "recover": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "approach": [
+          2.61223169412494,
+          2.074455049604346,
+          -0.8472004545040589
+        ]
+      },
+      "closest_direct": {
+        "range_m": 0.799,
+        "t_rel_s": 6.351,
+        "t": [
+          0.20985838585077016,
+          -0.44527861602683466,
+          0.6298618399360799
+        ],
+        "center_px": [
+          320.25,
+          106.5
+        ]
+      },
+      "closest_state": {
+        "range_m": 0.014,
+        "t_rel_s": 3.944,
+        "t": [
+          -0.0013104515697722964,
+          0.01300708842862262,
+          -0.00579776861557766
+        ],
+        "age_s": 0.943034296,
+        "center_px": [
+          320.7638393901975,
+          255.88324447054
+        ]
+      },
+      "gate_rel_age_at_closest_direct": {
+        "range_m": 14.186,
+        "t_rel_s": 6.784,
+        "age_s": 0.0,
+        "center_px": [
+          534.75,
+          234.25
+        ]
+      },
+      "biggest_collision": {
+        "t_rel_s": 15.627,
+        "impulse": 4.122,
+        "threat_level": 2
+      },
+      "collisions": [
+        {
+          "t_rel_s": 6.344,
+          "impulse": 0.8169199824333191,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.357,
+          "impulse": 0.8525705337524414,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.364,
+          "impulse": 0.7839202880859375,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.376,
+          "impulse": 0.14169953763484955,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.377,
+          "impulse": 0.09464237838983536,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.378,
+          "impulse": 0.012699974700808525,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.385,
+          "impulse": 0.062384944409132004,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.392,
+          "impulse": 0.1646561175584793,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.403,
+          "impulse": 0.32185542583465576,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.403,
+          "impulse": 0.11584889888763428,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.406,
+          "impulse": 0.07109164446592331,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.413,
+          "impulse": 0.2265939712524414,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.42,
+          "impulse": 0.16039882600307465,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.427,
+          "impulse": 0.16857264935970306,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.439,
+          "impulse": 0.15116186439990997,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.439,
+          "impulse": 0.21733014285564423,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.442,
+          "impulse": 0.2157096415758133,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.448,
+          "impulse": 0.26810958981513977,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.455,
+          "impulse": 0.11739606410264969,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.462,
+          "impulse": 0.2626343369483948,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.473,
+          "impulse": 0.17771831154823303,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.473,
+          "impulse": 0.11667971312999725,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.476,
+          "impulse": 0.08037064224481583,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.482,
+          "impulse": 0.30398398637771606,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.489,
+          "impulse": 0.21079498529434204,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.496,
+          "impulse": 0.15019340813159943,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.507,
+          "impulse": 0.17355789244174957,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.507,
+          "impulse": 0.20070844888687134,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.51,
+          "impulse": 0.08684006333351135,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.518,
+          "impulse": 0.1845701038837433,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.524,
+          "impulse": 0.15885195136070251,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.535,
+          "impulse": 0.13486997783184052,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.535,
+          "impulse": 0.1348072737455368,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.538,
+          "impulse": 0.06840848177671432,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.545,
+          "impulse": 0.17270414531230927,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.552,
+          "impulse": 0.16793248057365417,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.559,
+          "impulse": 0.16882139444351196,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.57,
+          "impulse": 0.1282394528388977,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.57,
+          "impulse": 0.1321226805448532,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.573,
+          "impulse": 0.06091509386897087,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.58,
+          "impulse": 0.1676616072654724,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.587,
+          "impulse": 0.16155774891376495,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.594,
+          "impulse": 0.15636283159255981,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.605,
+          "impulse": 0.12872400879859924,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.605,
+          "impulse": 0.1282404661178589,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.607,
+          "impulse": 0.04263554513454437,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.614,
+          "impulse": 0.16297656297683716,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.621,
+          "impulse": 0.14778146147727966,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.628,
+          "impulse": 0.14264962077140808,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.64,
+          "impulse": 0.029530050233006477,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.64,
+          "impulse": 0.2347172349691391,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.642,
+          "impulse": 0.05584545433521271,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.649,
+          "impulse": 0.14046218991279602,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.656,
+          "impulse": 0.1398121863603592,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.663,
+          "impulse": 0.1418013721704483,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.675,
+          "impulse": 0.11756394803524017,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.675,
+          "impulse": 0.11584248393774033,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.677,
+          "impulse": 0.039708174765110016,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.684,
+          "impulse": 0.14198708534240723,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.691,
+          "impulse": 0.12481456249952316,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.698,
+          "impulse": 0.13962870836257935,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.709,
+          "impulse": 0.12307078391313553,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.709,
+          "impulse": 0.10503529012203217,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.711,
+          "impulse": 0.031574808061122894,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.719,
+          "impulse": 0.13177840411663055,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.726,
+          "impulse": 0.11856026202440262,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.735,
+          "impulse": 0.07897462695837021,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.735,
+          "impulse": 0.08553431183099747,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.739,
+          "impulse": 0.06687317043542862,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.746,
+          "impulse": 0.0993116945028305,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.753,
+          "impulse": 0.09718237817287445,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.76,
+          "impulse": 0.1001114696264267,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.772,
+          "impulse": 0.07245579361915588,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.772,
+          "impulse": 0.06883368641138077,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.774,
+          "impulse": 0.027594950050115585,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.781,
+          "impulse": 0.06888596713542938,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.788,
+          "impulse": 0.046808838844299316,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.795,
+          "impulse": 0.02790149301290512,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.807,
+          "impulse": 0.013353497721254826,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 6.807,
+          "impulse": 0.000788913806900382,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.219,
+          "impulse": 0.0006766451988369226,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.225,
+          "impulse": 0.08498566597700119,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.237,
+          "impulse": 0.03837518393993378,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.237,
+          "impulse": 0.021867910400032997,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.239,
+          "impulse": 0.0048134163953363895,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.246,
+          "impulse": 0.054727621376514435,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.253,
+          "impulse": 0.0662984624505043,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.26,
+          "impulse": 0.08240275830030441,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.27,
+          "impulse": 0.06281399726867676,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.27,
+          "impulse": 0.06770237535238266,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.274,
+          "impulse": 0.04867824539542198,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.281,
+          "impulse": 0.11027240753173828,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.288,
+          "impulse": 0.16815364360809326,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.295,
+          "impulse": 0.15004490315914154,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.306,
+          "impulse": 0.12534664571285248,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.306,
+          "impulse": 0.12473182380199432,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.308,
+          "impulse": 0.053139638155698776,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.316,
+          "impulse": 0.15742072463035583,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.322,
+          "impulse": 0.13950765132904053,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.329,
+          "impulse": 0.13764381408691406,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.339,
+          "impulse": 0.09197592735290527,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.34,
+          "impulse": 0.09264812618494034,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.343,
+          "impulse": 0.07258030027151108,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.35,
+          "impulse": 0.1332874894142151,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.357,
+          "impulse": 0.1253690868616104,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.365,
+          "impulse": 0.13108129799365997,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.376,
+          "impulse": 0.10374446958303452,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.376,
+          "impulse": 0.10546432435512543,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.378,
+          "impulse": 0.0466986745595932,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.385,
+          "impulse": 0.1309104561805725,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.393,
+          "impulse": 0.12661123275756836,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.403,
+          "impulse": 0.10429484397172928,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.403,
+          "impulse": 0.10501469671726227,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.406,
+          "impulse": 0.041890595108270645,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.413,
+          "impulse": 0.12585559487342834,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.42,
+          "impulse": 0.12499169260263443,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.427,
+          "impulse": 0.10574229806661606,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.437,
+          "impulse": 0.0709938257932663,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.437,
+          "impulse": 0.06317310035228729,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.44,
+          "impulse": 0.0408422090113163,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.448,
+          "impulse": 0.06913746893405914,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.454,
+          "impulse": 0.05803617835044861,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.461,
+          "impulse": 0.06316094845533371,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.473,
+          "impulse": 0.02778666652739048,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.473,
+          "impulse": 0.018105994910001755,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.475,
+          "impulse": 0.006290185730904341,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 7.482,
+          "impulse": 0.0056860074400901794,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.947,
+          "impulse": 0.6078404188156128,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.954,
+          "impulse": 0.1873905211687088,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.961,
+          "impulse": 0.046977609395980835,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.972,
+          "impulse": 0.018323475494980812,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.972,
+          "impulse": 0.01713816076517105,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.975,
+          "impulse": 0.0034553941804915667,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.982,
+          "impulse": 0.026164762675762177,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.989,
+          "impulse": 0.02167268469929695,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 9.996,
+          "impulse": 0.016045432537794113,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 10.01,
+          "impulse": 0.02165304683148861,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 10.01,
+          "impulse": 0.1409437209367752,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 10.012,
+          "impulse": 0.04757649824023247,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 10.017,
+          "impulse": 0.20729146897792816,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 15.62,
+          "impulse": 0.10884998738765717,
+          "threat_level": 1
+        },
+        {
+          "t_rel_s": 15.627,
+          "impulse": 4.122165679931641,
+          "threat_level": 2
+        }
+      ],
+      "fsm": [
+        {
+          "t_rel_s": -3.276,
+          "src": "IDLE",
+          "dst": "ARMING",
+          "reason": "flight start"
+        },
+        {
+          "t_rel_s": -3.176,
+          "src": "ARMING",
+          "dst": "THROTTLE_DOWN",
+          "reason": "armed"
+        },
+        {
+          "t_rel_s": 0.0,
+          "src": "THROTTLE_DOWN",
+          "dst": "TAKEOFF",
+          "reason": "race GO"
+        },
+        {
+          "t_rel_s": 1.5,
+          "src": "TAKEOFF",
+          "dst": "RACING",
+          "reason": "takeoff complete"
+        },
+        {
+          "t_rel_s": 15.628,
+          "src": "RACING",
+          "dst": "ABORTED",
+          "reason": "environment collision (impulse=4.1)"
+        },
+        {
+          "t_rel_s": 15.628,
+          "src": "ABORTED",
+          "dst": "DONE",
+          "reason": "flight over"
+        }
+      ]
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260719T144540-a76247fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T144540-a76247fb_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 149014840823500,
+      "end_mono_ns": 149044208856100,
+      "unique_frames": 867,
+      "span_s": 28.873,
+      "approx_s_at30": 28.9,
+      "bytes": 27475640,
+      "packets": 19866
+    },
+    {
+      "fid": "20260719T144941-a76247fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T144941-a76247fb_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 149255764428300,
+      "end_mono_ns": 149276664467700,
+      "unique_frames": 628,
+      "span_s": 20.898,
+      "approx_s_at30": 20.93,
+      "bytes": 23333995,
+      "packets": 16815
+    },
+    {
+      "fid": "20260719T145122-a76247fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6f_slices\\repeat\\20260719T145122-a76247fb_takeoff_to_end.aigprec",
+      "takeoff_mono_ns": 149356674970200,
+      "end_mono_ns": 149372303006600,
+      "unique_frames": 470,
+      "span_s": 15.627,
+      "approx_s_at30": 15.67,
+      "bytes": 19229808,
+      "packets": 13861
+    }
+  ]
+}
