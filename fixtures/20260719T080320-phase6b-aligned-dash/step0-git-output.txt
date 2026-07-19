@@ -1,0 +1,114 @@
+﻿===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-flight.jsonl
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-params.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-result.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf_takeoff_to_end.aigprec
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-flight.jsonl
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-params.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-result.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf_takeoff_to_end.aigprec
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-flight.jsonl
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-params.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-result.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf_takeoff_to_end.aigprec
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/manifest.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/notes.md
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/report.txt
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/summary.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_000.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_002.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_eventlist.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_race.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_race_dialog.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_row_highlight.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_select.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_verify_after_race.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_000.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_002.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_006.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_eventlist.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_race.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_race_dialog.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_row_highlight.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_select.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_verify_after_race.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_000.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_002.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_006.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_eventlist.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_race.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_race_dialog.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_row_highlight.jpg
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_select.json
+	new file:   fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_verify_after_race.jpg
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	phase6b_aligned_dash_report.txt
+	scripts/launch_sim.ps1
+	tests/unit/test_attitude_rate_backend.py
+
+
+===== git checkout main =====
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-flight.jsonl
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-params.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf-result.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070410-fab49fbf_takeoff_to_end.aigprec
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-flight.jsonl
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-params.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf-result.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070844-fab49fbf_takeoff_to_end.aigprec
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-flight.jsonl
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-params.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf-result.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/20260719T070959-fab49fbf_takeoff_to_end.aigprec
+A	fixtures/20260719T072447-phase6b-aligned-dash/manifest.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/notes.md
+A	fixtures/20260719T072447-phase6b-aligned-dash/report.txt
+A	fixtures/20260719T072447-phase6b-aligned-dash/summary.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_000.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_002.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_eventlist.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_race.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_race_dialog.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_row_highlight.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_select.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try3_verify_after_race.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_000.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_002.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_006.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_eventlist.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_race.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_race_dialog.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_row_highlight.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_select.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F1_try7_verify_after_race.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_000.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_002.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_006.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_eventlist.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_race.json
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_race_dialog.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_row_highlight.jpg
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_select.json
+git : Already on 'main'
+At line:8 char:10
++ $out += (git checkout main 2>&1 | Out-String)
++          ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Already on 'main':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+A	fixtures/20260719T072447-phase6b-aligned-dash/track_verification/phase6b_aligned_dash_F2_try8_verify_after_race.jpg
+Your branch is up to date with 'origin/main'.
+
+===== git pull =====
+Already up to date.
+
+===== git log -1 --oneline =====
+93fba45 Align-then-dash: the 1.6m height deficit is measured — close it BEFORE the commit
+

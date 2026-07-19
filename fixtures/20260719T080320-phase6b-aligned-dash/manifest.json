@@ -1,0 +1,283 @@
+﻿{
+    "label":  "phase6b-aligned-dash",
+    "created_utc":  "20260719T080320",
+    "code_commit":  "93fba45830fb5fb991a6fbe8f91e417aab29b36b",
+    "items":  [
+                  {
+                      "kind":  "report",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\phase6b_clean_aligned_dash_report.txt",
+                      "file":  "report.txt",
+                      "bytes":  149304
+                  },
+                  {
+                      "kind":  "step0_git_output",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6b_step0_git.txt",
+                      "file":  "step0-git-output.txt",
+                      "bytes":  9691
+                  },
+                  {
+                      "kind":  "summary",
+                      "source":  "generated",
+                      "file":  "summary.json",
+                      "bytes":  19130
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T074950-fab49fbf\\flight.jsonl",
+                      "file":  "20260719T074950-fab49fbf-flight.jsonl",
+                      "bytes":  2140063
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T074950-fab49fbf\\result.json",
+                      "file":  "20260719T074950-fab49fbf-result.json",
+                      "bytes":  496
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T074950-fab49fbf\\params.json",
+                      "file":  "20260719T074950-fab49fbf-params.json",
+                      "bytes":  3123
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6b_clean_slices\\aligned_dash\\20260719T074950-fab49fbf_takeoff_to_end.aigprec",
+                      "file":  "20260719T074950-fab49fbf_takeoff_to_end.aigprec",
+                      "bytes":  23524267
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F1_try1_select.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_select.json",
+                      "bytes":  1104
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F1_try1_race.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_race.json",
+                      "bytes":  243
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_eventlist.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_eventlist.jpg",
+                      "bytes":  67840
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_row_highlight.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_row_highlight.jpg",
+                      "bytes":  64639
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_race_dialog.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_race_dialog.jpg",
+                      "bytes":  27005
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_verify_after_race.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_verify_after_race.jpg",
+                      "bytes":  59010
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_000_104953.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_000.jpg",
+                      "bytes":  60711
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_002_105000.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_002.jpg",
+                      "bytes":  61736
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_004_105006.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_004.jpg",
+                      "bytes":  43366
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F1_try1\\phase6b_clean_aligned_dash_F1_try1_006_105012.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F1_try1_006.jpg",
+                      "bytes":  34843
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T075333-fab49fbf\\flight.jsonl",
+                      "file":  "20260719T075333-fab49fbf-flight.jsonl",
+                      "bytes":  1405242
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T075333-fab49fbf\\result.json",
+                      "file":  "20260719T075333-fab49fbf-result.json",
+                      "bytes":  497
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T075333-fab49fbf\\params.json",
+                      "file":  "20260719T075333-fab49fbf-params.json",
+                      "bytes":  3123
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6b_clean_slices\\aligned_dash\\20260719T075333-fab49fbf_takeoff_to_end.aigprec",
+                      "file":  "20260719T075333-fab49fbf_takeoff_to_end.aigprec",
+                      "bytes":  14260641
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F2_try4_select.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_select.json",
+                      "bytes":  1104
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F2_try4_race.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_race.json",
+                      "bytes":  243
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_eventlist.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_eventlist.jpg",
+                      "bytes":  65582
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_row_highlight.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_row_highlight.jpg",
+                      "bytes":  69540
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_race_dialog.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_race_dialog.jpg",
+                      "bytes":  26992
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_verify_after_race.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_verify_after_race.jpg",
+                      "bytes":  58952
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_000_105336.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_000.jpg",
+                      "bytes":  59768
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_002_105343.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_002.jpg",
+                      "bytes":  39769
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_004_105349.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_004.jpg",
+                      "bytes":  36179
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F2_try4\\phase6b_clean_aligned_dash_F2_try4_006_105356.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F2_try4_006.jpg",
+                      "bytes":  61609
+                  },
+                  {
+                      "kind":  "flight_flight.jsonl",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T080255-fab49fbf\\flight.jsonl",
+                      "file":  "20260719T080255-fab49fbf-flight.jsonl",
+                      "bytes":  1413897
+                  },
+                  {
+                      "kind":  "flight_result.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T080255-fab49fbf\\result.json",
+                      "file":  "20260719T080255-fab49fbf-result.json",
+                      "bytes":  495
+                  },
+                  {
+                      "kind":  "flight_params.json",
+                      "source":  "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T080255-fab49fbf\\params.json",
+                      "file":  "20260719T080255-fab49fbf-params.json",
+                      "bytes":  3123
+                  },
+                  {
+                      "kind":  "takeoff_window_slice",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6b_clean_slices\\aligned_dash\\20260719T080255-fab49fbf_takeoff_to_end.aigprec",
+                      "file":  "20260719T080255-fab49fbf_takeoff_to_end.aigprec",
+                      "bytes":  16833562
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F3_try12_select.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_select.json",
+                      "bytes":  1110
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase6b_clean_aligned_dash_F3_try12_race.json",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_race.json",
+                      "bytes":  245
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_eventlist.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_eventlist.jpg",
+                      "bytes":  68988
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_row_highlight.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_row_highlight.jpg",
+                      "bytes":  67791
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_race_dialog.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_race_dialog.jpg",
+                      "bytes":  26970
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_verify_after_race.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_verify_after_race.jpg",
+                      "bytes":  58995
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_000_110258.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_000.jpg",
+                      "bytes":  59567
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_002_110304.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_002.jpg",
+                      "bytes":  58786
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_004_110310.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_004.jpg",
+                      "bytes":  43886
+                  },
+                  {
+                      "kind":  "track_verification",
+                      "source":  "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase6b_clean_aligned_dash_F3_try12\\phase6b_clean_aligned_dash_F3_try12_006_110317.png",
+                      "file":  "track_verification\\phase6b_clean_aligned_dash_F3_try12_006.jpg",
+                      "bytes":  57765
+                  },
+                  {
+                      "kind":  "notes",
+                      "source":  "manual",
+                      "file":  "notes.md",
+                      "bytes":  13109
+                  }
+              ]
+}
