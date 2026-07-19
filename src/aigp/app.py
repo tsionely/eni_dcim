@@ -332,6 +332,14 @@ class App:
                     if ffresh is not None:
                         last_feat, feat_seq = ffresh
                         last_feat_mono = time.monotonic()
+                        # THE capture wire (caught by the mock A/B:
+                        # engaged+ready in all 10 runs, owner=term in
+                        # none): the REAL arbiter needs its healthy
+                        # unique-exposure streak fed — only the shadow
+                        # arbiter was being fed. One call per NEW
+                        # feature = per unique exposure, per contract.
+                        term_arbiter.note_exposure(
+                            last_feat.cert_status == "certified")
                     feat_age = (time.monotonic() - last_feat_mono
                                 if last_feat is not None else None)
                     # OBSERVER runs every commit tick — control arms and
