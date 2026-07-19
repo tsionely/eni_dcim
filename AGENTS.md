@@ -356,7 +356,49 @@ pip install -r requirements.txt
    git push
    ```
 
-## CURRENT TASK: Phase 6b — ALIGN-THEN-DASH (the height deficit is measured)
+## CURRENT TASK: Phase 6c — THE TILTED-FRAME PHANTOM IS DEAD (fly it again)
+
+Phase6b forensics found the deepest bug of the campaign. The attitude
+filter zeroes the TILTED rest pose (q=identity on the pad while the IMU
+sits -17.8 deg nose-down), so every "world-vertical" number in the
+planner was computed in a frame pitched 17.8 deg from true level —
+mixing sin(17.8)*range of phantom "gate above" into every judgment:
+
+- The "3.11m opening height" that drove phase6b's tall takeoff was this
+  artifact. TRUE opening center: ~1.3m above the pad camera (pixel
+  cross-check: gate center sits at image center on the pad = 11.2 deg
+  above horizon at 6.1m = 1.19m).
+- **phase6b F2 would have passed gate 1**: at R=0.82m it was centered
+  laterally (px x=316) AND vertically (px y=233 = exactly opening
+  height), but the abort corridor — fed the phantom (+0.31*R reads
+  ~0.42-0.58m of fake 'low' at 1-1.5m, over the 0.45 threshold) —
+  commanded retreat 0.8m out, and momentum carried it INTO the gate
+  (the clip at impulse 4.3).
+
+This build (phase6c): true_world_dz composes the measured rest attitude
+(state.level_*) back into alt-hold, the align gate, the abort corridor,
+and the terminal channel; the corridor no longer aborts inside 1.2m
+(braking distance — retreat there IS the collision); after a missed
+attempt the approach refuses targets beyond 9m for 6s (F1 chased a
+believed 40m relock into three hits); takeoff back to 1.5s (the true
+opening is ~1.3m up, the 2.5s takeoff overshot it).
+
+Run this cycle (same discipline as your phase6b cycle — it was perfect):
+
+1. `git pull`, verify HEAD is the phase6c commit ("The tilted-frame
+   phantom..."), take the SIM LOCK.
+2. EXACTLY THREE counted verified-R2 flights, no strategy patches:
+   `python scripts/fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300`
+3. Per flight: gates, clips, env hits, closest direct fix + center px,
+   phase sequence. Watch for: almost no align (takeoff tops out at the
+   right height now), a level dash, and NO retreat-into-gate.
+4. TAKEOFF->end slices, notes.md, collect --label phase6c-true-vertical,
+   commit `[sim-run] phase6c true vertical r2`, push, release the lock.
+
+The question this cycle answers: with the phantom gone, does F2's
+aborted-perfect-approach become the first counted pass?
+
+## PREVIOUS: Phase 6b — ALIGN-THEN-DASH (the height deficit is measured)
 
 Phase6a forensics (all four flights, hundreds of pad samples, tight spread):
 **the gate-1 opening center is 3.11m above the pad camera** while takeoff

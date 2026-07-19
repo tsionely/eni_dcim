@@ -123,13 +123,17 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     v_bz None => legacy keeps the tick (ALT owner, adapter
     ill-conditioned, or guidance freeze with no held target).
 
-    v1 sources (documented in the design contract): e_z = -ty from the
-    continuously-corrected gate estimate (aim = opening center per the
-    M1 verdict, d* recalibration rides the accumulating certified
-    features); v_z from the world state; tau supplied by the caller.
+    v1 sources (documented in the design contract): e_z = TRUE-vertical
+    offset of the continuously-corrected gate estimate (aim = opening
+    center per the M1 verdict, d* recalibration rides the accumulating
+    certified features); v_z from the world state, de-tilted the same
+    way; tau supplied by the caller. All verticals compose the measured
+    rest attitude (state.level_*) — the raw filter frame is pitched
+    ~17.8 deg from true level (the phase6b phantom).
     """
+    from aigp.estimation.attitude_filter import quat_multiply, quat_rotate
+    from aigp.planning.approach import level_quat, true_world_dz
     from aigp.planning.vertical_terminal import compute_terminal_guidance
-    from aigp.perception.camera import cam_to_body
 
     gr = state.gate_rel
     phase_hint = "position"
@@ -139,8 +143,11 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                          phase=phase_hint)
     if owner != TERM_OWNER or gr is None:
         return owner, None, prev_vz_up
-    e_z = -float(cam_to_body(gr.t)[2])          # body z down -> +up error
-    v_z_up = -float(state.v_world[2])
+    q_lvl = level_quat(state.level_roll, state.level_pitch)
+    e_z = -true_world_dz(gr, state.q_att, state.level_roll,
+                         state.level_pitch)     # +up error, TRUE vertical
+    v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
+                                                  dtype=np.float64))[2])
     g = compute_terminal_guidance(
         e_z=e_z, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
@@ -151,7 +158,8 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     vz_up = slew_up_velocity(prev_vz_up if prev_vz_up is not None else vz_goal,
                              vz_goal, dt, az_max, az_max)
     v = np.asarray(setpoint_v_body, dtype=np.float64)
-    v_bz, ok = body_z_for_world_up(vz_up, state.q_att, float(v[0]), float(v[1]))
+    q_true = quat_multiply(q_lvl, np.asarray(state.q_att, dtype=np.float64))
+    v_bz, ok = body_z_for_world_up(vz_up, q_true, float(v[0]), float(v[1]))
     if not ok:
         return owner, None, prev_vz_up
     return owner, float(v_bz), float(vz_up)

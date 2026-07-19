@@ -9,8 +9,17 @@ from __future__ import annotations
 import numpy as np
 
 from aigp.core.messages import RelPose
-from aigp.estimation.attitude_filter import quat_rotate
+from aigp.estimation.attitude_filter import quat_multiply, quat_rotate
 from aigp.perception.camera import cam_to_body
+
+
+def level_quat(level_roll: float, level_pitch: float) -> np.ndarray:
+    """Quaternion of the REST attitude (the filter's zero) in true world."""
+    cr, sr = np.cos(level_roll / 2.0), np.sin(level_roll / 2.0)
+    cp, sp = np.cos(level_pitch / 2.0), np.sin(level_pitch / 2.0)
+    qr = np.array([cr, sr, 0.0, 0.0])
+    qp = np.array([cp, 0.0, sp, 0.0])
+    return quat_multiply(qp, qr)
 
 
 def gate_world_dz(rel: RelPose, q_att: np.ndarray) -> float:
@@ -18,17 +27,37 @@ def gate_world_dz(rel: RelPose, q_att: np.ndarray) -> float:
     return float(quat_rotate(q_att, cam_to_body(rel.t))[2])
 
 
+def true_world_dz(rel: RelPose, q_att: np.ndarray,
+                  level_roll: float, level_pitch: float) -> float:
+    """TRUE-vertical offset of the gate center (+ = gate below me).
+
+    The attitude filter zeroes the tilted REST pose (level_pitch ~ -17.8
+    deg on this airframe), so quat_rotate(q_att, .) alone lands in a
+    frame pitched that far from true level — mixing sin(17.8deg)*forward
+    ~ 0.31*R of phantom "gate above" into every vertical judgment.
+    Phase6b F2 is the fossil: a vertically-centered arrival (gate center
+    at pixel y=233 at R=0.9m) read +0.58m 'low' through the tilted frame
+    and the abort corridor killed a perfect pass 0.8m before the plane.
+    Composing the measured rest attitude back in gives true vertical.
+    """
+    q_true = quat_multiply(level_quat(level_roll, level_pitch), q_att)
+    return float(quat_rotate(q_true, cam_to_body(rel.t))[2])
+
+
 def altitude_hold_velocity(rel: RelPose, q_att: np.ndarray, aim_up_m: float,
-                           gain: float, cap_mps: float = 0.8) -> float:
+                           gain: float, cap_mps: float = 0.8,
+                           level_roll: float = 0.0,
+                           level_pitch: float = 0.0) -> float:
     """Vertical velocity command from the ABSOLUTE gate-relative height.
 
     vz estimation drifts (no altimeter; at slow approach speeds the
     vision-velocity SNR collapses — phase3e/3f flights sagged into the
     ground). The gate itself is a drift-free altitude reference: rotate
-    the gate vector to world and hold "gate aim_up_m below me". Returns a
+    the gate vector to TRUE world (level_* composes the tilted rest
+    attitude back in) and hold "gate aim_up_m below me". Returns a
     body-z (NED, down-positive) velocity addition.
     """
-    world_dz = gate_world_dz(rel, q_att)
+    world_dz = true_world_dz(rel, q_att, level_roll, level_pitch)
     return float(np.clip(gain * (world_dz - aim_up_m), -cap_mps, cap_mps))
 
 

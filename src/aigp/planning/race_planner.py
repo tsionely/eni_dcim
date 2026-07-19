@@ -64,13 +64,14 @@ class RacePlanner:
         # were 1-2m from — the attempt is over either way.
         self.relock_jump_m = float(p.get("planner.commit.relock_jump_m",
                                          default=2.0))
-        # Vertical pre-alignment gate on commit entry (phase6a keystone:
-        # the opening center is 3.11m above the pad camera, takeoff tops
-        # out ~1.5m lower, and the in-commit altitude hold — capped at
-        # 0.8 m/s over a 2.5s window — mathematically cannot close that.
-        # Entering the dash is therefore FORBIDDEN while the world-frame
-        # height error exceeds align.max_dz_m: close it first, hovering
-        # forward slowly, then commit level.
+        # Vertical pre-alignment gate on commit entry: the dash may not
+        # start while the TRUE height error exceeds align.max_dz_m —
+        # close it first (climb/descend, creeping forward), then commit
+        # level. The in-commit hold (0.8 m/s cap) can only trim small
+        # residuals within the window. (Phase6b note: the original
+        # "3.11m opening" that motivated this was the rest-tilt phantom;
+        # the true opening center is ~1.3m above the pad camera and the
+        # gate matters mainly for overshoot/undershoot after takeoff.)
         self.align_dz_max = float(p.get("planner.align.max_dz_m", default=0.5))
         self.align_forward = float(p.get("planner.align.forward_mps",
                                          default=0.4))
@@ -87,6 +88,20 @@ class RacePlanner:
         # flailing into walls, which is how most R2 flights actually died.
         self.abort_offset_m = float(p.get("planner.commit.abort_offset_m",
                                           default=0.45))
+        # No-retreat braking band (phase6b F2): a retreat commanded at
+        # 1.31m with 2.5 m/s of forward momentum cannot reverse before
+        # the plane — the drone pitched back and coasted INTO the gate
+        # (clip, impulse 4.3) on an arrival that was actually centered.
+        # Inside this distance the attempt is committed: carry through.
+        self.abort_min_dist_m = float(p.get("planner.commit.abort_min_dist_m",
+                                            default=1.2))
+        # Post-miss reacquisition discipline (phase6b F1: after the blown
+        # attempt the estimator relocked a believed 40m target and the
+        # planner chased it across the obstacle field into three hits).
+        self.reacquire_window_s = float(p.get(
+            "planner.approach.reacquire_window_s", default=6.0))
+        self.reacquire_max_m = float(p.get(
+            "planner.approach.reacquire_max_m", default=9.0))
         # Camera-on-target yaw during commit/retreat (phase5 frames: with
         # yaw pinned at 0 the lateral strafe walks the gate out the side
         # of the fixed camera's FOV — edge_clip/no_red at 3-5m).
@@ -107,6 +122,7 @@ class RacePlanner:
         self._abort_breach = 0
         self._last_seen_side = 1.0   # search toward the last known bearing
         self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
+        self._reacquire_until_ns: int | None = None   # post-miss range guard
 
     def reset(self) -> None:
         self._commit_until_ns = None
@@ -118,6 +134,13 @@ class RacePlanner:
         self._abort_breach = 0
         self._last_seen_side = 1.0
         self._gap_bias = None
+        self._reacquire_until_ns = None
+
+    def _note_attempt_failed(self, now_ns: int) -> None:
+        """A commit ended without a pass event: arm the post-miss
+        reacquisition guard so the next approach stays on THIS gate's
+        neighborhood instead of chasing a far relock into steel."""
+        self._reacquire_until_ns = now_ns + int(self.reacquire_window_s * 1e9)
 
     # -- external events ------------------------------------------------------
 
@@ -128,6 +151,7 @@ class RacePlanner:
         self._retreat_until_ns = None
         self._align_until_ns = None
         self._gap_bias = None
+        self._reacquire_until_ns = None
 
     def on_collision(self, now_ns: int) -> None:
         self._recover_until_ns = now_ns + int(self.recover_brake_s * 1e9)
@@ -213,6 +237,7 @@ class RacePlanner:
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
+                    self._note_attempt_failed(now_ns)
                     if self.retreat_enabled:
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                         return self._retreat_setpoint(state)
@@ -232,6 +257,7 @@ class RacePlanner:
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
+                    self._note_attempt_failed(now_ns)
                     if self.retreat_enabled:
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                         return self._retreat_setpoint(state)
@@ -243,8 +269,17 @@ class RacePlanner:
                     # corridor — a frame clip is now certain; retreating
                     # for another pass beats plowing into the bar. Debounced:
                     # a single noisy blend sample must not kill a good run.
-                    off = float(np.hypot(d_body[1], d_body[2] - au))
-                    if dist < 1.5 and off > self.abort_offset_m:
+                    # Measured against TRUE vertical (phase6b F2: the
+                    # rest-tilt phantom pushed a centered arrival over the
+                    # threshold) and only OUTSIDE the braking band — a
+                    # retreat inside abort_min_dist_m cannot reverse the
+                    # momentum and coasts into the gate instead.
+                    tdz = ap.true_world_dz(gate, state.q_att,
+                                           state.level_roll,
+                                           state.level_pitch)
+                    off = float(np.hypot(d_body[1], tdz - au))
+                    if (self.abort_min_dist_m < dist < 1.5
+                            and off > self.abort_offset_m):
                         self._abort_breach += 1
                     else:
                         self._abort_breach = 0
@@ -253,12 +288,15 @@ class RacePlanner:
                         self._commit_until_ns = None
                         self._commit_v_body = None
                         self._commit_prev_z = None
+                        self._note_attempt_failed(now_ns)
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                         return self._retreat_setpoint(state)
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     extra[2] += ap.altitude_hold_velocity(
-                        gate, state.q_att, au, self.alt_gain)
+                        gate, state.q_att, au, self.alt_gain,
+                        level_roll=state.level_roll,
+                        level_pitch=state.level_pitch)
                     # No-arm rule: the sink insurance is decided ONCE, at
                     # gap entry, by the state the last fixes left behind —
                     # if the altitude hold is already commanding a climb
@@ -289,6 +327,7 @@ class RacePlanner:
             self._commit_until_ns = None
             self._commit_v_body = None
             self._commit_prev_z = None
+            self._note_attempt_failed(now_ns)
             if self.retreat_enabled:
                 self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                 return self._retreat_setpoint(state)
@@ -304,11 +343,26 @@ class RacePlanner:
 
         # -- approach
         dist = float(np.linalg.norm(gate.t))
+        # Post-miss reacquisition guard: right after a blown attempt, a
+        # "fresh" far target is almost certainly a relock onto the NEXT
+        # gate (or fiction) seen while tumbling/retreating — phase6b F1
+        # chased a believed 40m gate across the obstacle field into three
+        # env hits. Stay searching until a target in THIS gate's
+        # neighborhood reappears or the window expires.
+        if (self._reacquire_until_ns is not None
+                and now_ns < self._reacquire_until_ns
+                and dist > self.reacquire_max_m):
+            return Setpoint(
+                phase="search",
+                v_body=np.array([0.0, 0.0, -self.search_climb]),
+                yaw_rate=self.search_yaw_rate * self._last_seen_side,
+            )
         au = self._aim_up(dist)
         direction, dist = ap.gate_direction_body(gate, au)
         crosstrack = ap.crosstrack_velocity(gate, au, self.center_gain)
         crosstrack[2] += ap.altitude_hold_velocity(
-            gate, state.q_att, au, self.alt_gain)
+            gate, state.q_att, au, self.alt_gain,
+            level_roll=state.level_roll, level_pitch=state.level_pitch)
         if abs(direction[1]) > 0.05:
             self._last_seen_side = 1.0 if direction[1] > 0 else -1.0
         if dist <= self.commit_distance:
@@ -318,7 +372,8 @@ class RacePlanner:
             # the window) cannot close that — dash-F2 reached R=0.88m
             # still 0.61m LOW and never registered the pass. Close the
             # height gap FIRST, creeping forward, then dash level.
-            world_dz = ap.gate_world_dz(gate, state.q_att)
+            world_dz = ap.true_world_dz(gate, state.q_att,
+                                        state.level_roll, state.level_pitch)
             misaligned = abs(world_dz - au) > self.align_dz_max
             if misaligned and state.gate_rel_age_s <= 0.5:
                 if self._align_until_ns is None:

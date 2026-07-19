@@ -29,7 +29,7 @@
   "planner": {
     "takeoff": {
       "climb_mps": 1.0,
-      "duration_s": 2.5
+      "duration_s": 1.5
     },
     "search": {
       "yaw_rate_rps": 0.6,
@@ -42,7 +42,9 @@
       "center_gain": 0.6,
       "yaw_center_gain": 1.5,
       "aim_up_m": 0.3,
-      "aim_up_floor_m": 0.25
+      "aim_up_floor_m": 0.25,
+      "reacquire_window_s": 6.0,
+      "reacquire_max_m": 9.0
     },
     "align": {
       "max_dz_m": 0.5,
@@ -56,7 +58,8 @@
       "duration_s": 2.5,
       "speed_mps": 2.5,
       "relock_jump_m": 2.0,
-      "yaw_track_gain": 1.2
+      "yaw_track_gain": 1.2,
+      "abort_min_dist_m": 1.2
     },
     "terminal": {
       "enable": false,

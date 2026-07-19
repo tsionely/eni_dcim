@@ -1,11 +1,12 @@
 import numpy as np
+import pytest
 
 from aigp.core.messages import RelPose, StateEstimate
 from aigp.core.params import ParamSet
 from aigp.planning.race_planner import RacePlanner
 
 
-def make_state(gate_t=None, center_px=None, age_s=0.0):
+def make_state(gate_t=None, center_px=None, age_s=0.0, level_pitch=0.0):
     rel = None
     if gate_t is not None:
         rel = RelPose(t=np.array(gate_t, dtype=float),
@@ -14,6 +15,7 @@ def make_state(gate_t=None, center_px=None, age_s=0.0):
         ts_ns=0, q_att=np.array([1.0, 0, 0, 0]), omega=np.zeros(3),
         v_world=np.zeros(3), gate_rel=rel, gate_rel_age_s=age_s,
         gate_center_px=center_px, image_size=(640, 360), healthy=True,
+        level_roll=0.0, level_pitch=level_pitch,
     )
 
 
@@ -231,6 +233,83 @@ def test_midcommit_relock_jump_terminates_attempt():
                   make_state(gate_t=[0.0, 0.0, 1.4], center_px=(320, 180)),
                   None)
     assert sp2.phase == "commit"
+
+
+def test_true_world_dz_untilts_rest_frame():
+    """The phase6b keystone: the attitude filter zeroes the TILTED rest
+    pose (level_pitch=-0.311 on this airframe), so naive world rotation
+    reads the pad-visible gate 3.2m 'above' when the true height is
+    ~1.37m. This pins the level composition forever (real pad numbers
+    from fixture 20260717T153903, first detection)."""
+    from aigp.planning.approach import gate_world_dz, true_world_dz
+    rel = RelPose(t=np.array([0.015, -3.217, 5.525]),
+                  normal=np.array([0.0, 0.0, -1.0]))
+    q = np.array([1.0, 0.0, 0.0, 0.0])          # rest: filter reads identity
+    assert gate_world_dz(rel, q) == pytest.approx(-3.217, abs=0.01)
+    assert true_world_dz(rel, q, 0.0, -0.311) == pytest.approx(-1.372,
+                                                               abs=0.01)
+
+
+def test_abort_corridor_ignores_rest_tilt_phantom():
+    """Phase6b F2: a vertically-centered arrival at R~0.9 read +0.58
+    'low' through the tilted rest frame and the corridor aborted a
+    perfect pass. With the same body-frame numbers, the corridor must
+    hold when the tilt explains the offset — and still abort when it
+    does not (level_pitch=0)."""
+    tilt = -0.311
+    p = planner()
+    entry = make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180),
+                       level_pitch=tilt)
+    assert p.plan(0, "race", entry, None).phase == "commit"
+    # True vertical: ~at aim (off 0.20 < 0.45). Tilted frame: off 0.65.
+    corridor = make_state(gate_t=[0.0, -0.397, 1.4], center_px=(320, 120),
+                          level_pitch=tilt)
+    for i in range(6):
+        sp = p.plan(int((0.1 + 0.05 * i) * 1e9), "race", corridor, None)
+    assert sp.phase == "commit", "phantom vertical aborted a centered pass"
+    # Same body numbers with NO rest tilt: genuinely off -> abort fires.
+    p2 = planner()
+    assert p2.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                         center_px=(320, 180)),
+                   None).phase == "commit"
+    flat = make_state(gate_t=[0.0, -0.397, 1.4], center_px=(320, 120))
+    for i in range(6):
+        sp2 = p2.plan(int((0.1 + 0.05 * i) * 1e9), "race", flat, None)
+    assert sp2.phase == "retreat"
+
+
+def test_no_retreat_inside_braking_band():
+    """Phase6b F2's strike mechanism: retreat commanded at 1.31m with
+    2.5 m/s of forward momentum coasted INTO the gate. Inside
+    abort_min_dist_m the attempt is committed — no corridor abort."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    inside = make_state(gate_t=[0.0, -0.7, 0.9], center_px=(320, 60))
+    for i in range(6):
+        sp = p.plan(int((0.1 + 0.05 * i) * 1e9), "race", inside, None)
+    assert sp.phase == "commit"
+
+
+def test_postmiss_far_target_guard():
+    """Phase6b F1: after the blown attempt the estimator relocked a
+    believed 40m target and the planner chased it into three env hits.
+    Right after a miss, approach refuses far targets and keeps
+    searching; sane-range targets and post-window reacquisition pass."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    assert p.plan(int(5e9), "race", make_state(), None).phase == "retreat"
+    # Retreat window over; a 20m 'gate' appears -> refused, keep searching.
+    far = make_state(gate_t=[0.0, 0.0, 20.0], center_px=(320, 180))
+    assert p.plan(int(7.5e9), "race", far, None).phase == "search"
+    # A sane-range target is accepted immediately.
+    near = make_state(gate_t=[0.0, 0.0, 8.0], center_px=(320, 180))
+    assert p.plan(int(7.6e9), "race", near, None).phase == "approach"
+    # After the reacquire window (5s fail + 6s), even far targets fly.
+    assert p.plan(int(11.5e9), "race", far, None).phase == "approach"
 
 
 def test_collision_triggers_recover_brake():
