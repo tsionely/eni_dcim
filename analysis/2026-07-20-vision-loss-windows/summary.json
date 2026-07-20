@@ -1,0 +1,395 @@
+{
+  "ask": "vision-loss definitional check \u2014 phase6l",
+  "flights": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260720T071008-5b501b4c",
+      "endpoint": {
+        "closest_R": null,
+        "blind": false,
+        "max_age": 0.0,
+        "survived_past_3m_endpoint": false,
+        "why_fail": "no_near_det"
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 0,
+        "min_R": null,
+        "samples": []
+      },
+      "vz_commit": {
+        "std": null
+      },
+      "n_loss_recover_windows": 0,
+      "windows": [],
+      "n_fov_edge_losses": 0,
+      "vision_died_analyzer": false,
+      "loss_mode": "no_commit",
+      "definitional_tension": false
+    },
+    {
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260720T071112-cd18c5fb",
+      "endpoint": {
+        "closest_R": 1.43560134820293,
+        "blind": false,
+        "max_age": 0.0647996,
+        "survived_past_3m_endpoint": true,
+        "why_fail": null
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 5,
+        "min_R": 0.8523589204355237,
+        "samples": [
+          {
+            "t_ff": 4.3993262,
+            "R": 0.9976104578979632,
+            "center_px": [
+              296.50361823472906,
+              115.68194600069816
+            ],
+            "cert": "probation",
+            "age": 0.001410152
+          },
+          {
+            "t_ff": 4.5558826,
+            "R": 0.8979012867126482,
+            "center_px": [
+              319.5,
+              117.0
+            ],
+            "cert": "certified",
+            "age": 0.0
+          },
+          {
+            "t_ff": 4.5911491,
+            "R": 0.8981674980803978,
+            "center_px": [
+              319.5,
+              107.5
+            ],
+            "cert": "certified",
+            "age": 0.002885576
+          },
+          {
+            "t_ff": 4.6177389,
+            "R": 0.8823756189407245,
+            "center_px": [
+              319.5,
+              102.5
+            ],
+            "cert": "certified",
+            "age": 0.0
+          },
+          {
+            "t_ff": 4.6544631,
+            "R": 0.8523589204355237,
+            "center_px": [
+              319.5,
+              114.0
+            ],
+            "cert": "certified",
+            "age": 0.0
+          }
+        ]
+      },
+      "vz_commit": {
+        "n": 101,
+        "std": 0.6067139574479574,
+        "mean": -0.14137158339894515,
+        "ptp": 3.2978276582582247,
+        "damper_band_0p05_0p14": false
+      },
+      "n_loss_recover_windows": 2,
+      "windows": [
+        {
+          "loss_t_ff": 4.5000953,
+          "loss_onset_R": null,
+          "loss_center_px": null,
+          "loss_in_frame": false,
+          "recover_t_ff": 4.5400372,
+          "recover_R": 0.9022562215353882,
+          "recover_center_px": [
+            337.52149830025576,
+            -278.28452730293327
+          ],
+          "gap_s": 0.03994190000000053,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 4.6400519,
+          "loss_onset_R": null,
+          "loss_center_px": null,
+          "loss_in_frame": false,
+          "recover_t_ff": 4.6599807,
+          "recover_R": 0.8523589204355237,
+          "recover_center_px": [
+            319.5,
+            114.0
+          ],
+          "gap_s": 0.019928800000000635,
+          "during_first_commit": true
+        }
+      ],
+      "n_fov_edge_losses": 0,
+      "vision_died_analyzer": true,
+      "loss_mode": "fov_leave",
+      "definitional_tension": false
+    },
+    {
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260720T071220-5b501b4c",
+      "endpoint": {
+        "closest_R": 4.263677534809125,
+        "blind": true,
+        "max_age": 0.609209224,
+        "survived_past_3m_endpoint": false,
+        "why_fail": "blind_budget"
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 0,
+        "min_R": null,
+        "samples": []
+      },
+      "vz_commit": {
+        "n": 37,
+        "std": 0.5650924090008215,
+        "mean": 0.4240445437807945,
+        "ptp": 2.2544491559852555,
+        "damper_band_0p05_0p14": false
+      },
+      "n_loss_recover_windows": 2,
+      "windows": [
+        {
+          "loss_t_ff": 2.3280826,
+          "loss_onset_R": 4.227094780449862,
+          "loss_center_px": [
+            320.7748996113587,
+            140.10259389167584
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": 2.5288525,
+          "recover_R": 4.095558327910189,
+          "recover_center_px": [
+            328.75,
+            299.25
+          ],
+          "gap_s": 0.20076990000000006,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 2.7882115,
+          "loss_onset_R": 3.530801066883713,
+          "loss_center_px": [
+            324.04336219652527,
+            185.07806822009522
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": null,
+          "recover_R": null,
+          "recover_center_px": null,
+          "gap_s": null,
+          "unrecovered": true,
+          "during_first_commit": true
+        }
+      ],
+      "n_fov_edge_losses": 0,
+      "vision_died_analyzer": true,
+      "loss_mode": "fov_leave",
+      "definitional_tension": false
+    },
+    {
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260720T071333-cd18c5fb",
+      "endpoint": {
+        "closest_R": 1.9075132709974922,
+        "blind": true,
+        "max_age": null,
+        "survived_past_3m_endpoint": false,
+        "why_fail": "blind_budget"
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 0,
+        "min_R": null,
+        "samples": []
+      },
+      "vz_commit": {
+        "n": 112,
+        "std": 0.598969105153032,
+        "mean": 0.08175961665538993,
+        "ptp": 3.373807812770597,
+        "damper_band_0p05_0p14": false
+      },
+      "n_loss_recover_windows": 4,
+      "windows": [
+        {
+          "loss_t_ff": 1.6399521,
+          "loss_onset_R": 3.8642501686451145,
+          "loss_center_px": [
+            271.4364287532256,
+            147.64708033669558
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": 1.8000477,
+          "recover_R": 4.070901122891322,
+          "recover_center_px": [
+            295.25,
+            197.5
+          ],
+          "gap_s": 0.1600956,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 2.899972,
+          "loss_onset_R": 2.374395685030095,
+          "loss_center_px": [
+            270.62425289102896,
+            112.42076344040181
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": 3.0000176,
+          "recover_R": 2.1063492206301233,
+          "recover_center_px": [
+            321.5239477843377,
+            312.69319544510586
+          ],
+          "gap_s": 0.10004560000000007,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 3.2400298,
+          "loss_onset_R": 1.511156442182506,
+          "loss_center_px": [
+            305.5593607559336,
+            143.06124157832997
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": 3.4799733,
+          "recover_R": 0.8889028605313976,
+          "recover_center_px": [
+            304.6541955860707,
+            469.3655540936722
+          ],
+          "gap_s": 0.2399435000000003,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 3.8598599,
+          "loss_onset_R": 0.1499271204314396,
+          "loss_center_px": [
+            243.78945212329808,
+            -719.5169686315955
+          ],
+          "loss_in_frame": false,
+          "recover_t_ff": null,
+          "recover_R": null,
+          "recover_center_px": null,
+          "gap_s": null,
+          "unrecovered": true,
+          "during_first_commit": true
+        }
+      ],
+      "n_fov_edge_losses": 1,
+      "vision_died_analyzer": true,
+      "loss_mode": "fov_leave",
+      "definitional_tension": false
+    },
+    {
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260720T071439-5b501b4c",
+      "endpoint": {
+        "closest_R": null,
+        "blind": true,
+        "max_age": 0.62013996,
+        "survived_past_3m_endpoint": false,
+        "why_fail": "no_near_det"
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 0,
+        "min_R": null,
+        "samples": []
+      },
+      "vz_commit": {
+        "n": 5,
+        "std": 0.18694978913183533,
+        "mean": -1.1196529927001986,
+        "ptp": 0.5222941790829249,
+        "damper_band_0p05_0p14": false
+      },
+      "n_loss_recover_windows": 2,
+      "windows": [
+        {
+          "loss_t_ff": 1.4201077,
+          "loss_onset_R": 4.729897679119064,
+          "loss_center_px": [
+            305.394528389666,
+            197.3759408006447
+          ],
+          "loss_in_frame": true,
+          "recover_t_ff": 1.6399598,
+          "recover_R": 5.146747105250545,
+          "recover_center_px": [
+            273.85557965597366,
+            52.83137375732305
+          ],
+          "gap_s": 0.2198521,
+          "during_first_commit": true
+        },
+        {
+          "loss_t_ff": 1.9201487,
+          "loss_onset_R": 5.126539900520659,
+          "loss_center_px": [
+            257.385382993997,
+            324.7086751497676
+          ],
+          "loss_in_frame": false,
+          "recover_t_ff": null,
+          "recover_R": null,
+          "recover_center_px": null,
+          "gap_s": null,
+          "unrecovered": true,
+          "during_first_commit": true
+        }
+      ],
+      "n_fov_edge_losses": 1,
+      "vision_died_analyzer": true,
+      "loss_mode": "fov_leave",
+      "definitional_tension": false
+    },
+    {
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260720T071545-cd18c5fb",
+      "endpoint": {
+        "closest_R": 3.238014172726004,
+        "blind": false,
+        "max_age": 0.057793368,
+        "survived_past_3m_endpoint": false,
+        "why_fail": "closest_R_ge_3"
+      },
+      "fresh_px_lt_1m": {
+        "n_fresh_px_inside_1m": 0,
+        "min_R": null,
+        "samples": []
+      },
+      "vz_commit": {
+        "n": 41,
+        "std": 0.6335020980037668,
+        "mean": -0.09649758760981889,
+        "ptp": 2.50432100889855,
+        "damper_band_0p05_0p14": false
+      },
+      "n_loss_recover_windows": 0,
+      "windows": [],
+      "n_fov_edge_losses": 0,
+      "vision_died_analyzer": true,
+      "loss_mode": "detector_drop_or_lock_reject",
+      "definitional_tension": false
+    }
+  ],
+  "note": "Endpoint 'past 3m' requires closest det R<3 AND not blind in the WHOLE first commit. Fresh px inside 1m can coexist with a prior loss window (age\u22650.25 then recover) \u2014 that is loss-then-recover, not continuous survival."
+}
