@@ -1,0 +1,54 @@
+{
+  "phase6j_landed": false,
+  "protocol": {
+    "h_tail": "min(tau, 0.45)",
+    "predicted_tail_miss": "e_z - h_tail*v_z",
+    "claimed_envelope": "|e_x| + 2*sigma_x + 0.06",
+    "sigma_e": 0.05,
+    "sigma_v": 0.1,
+    "failure_action": "raise sigma_model \u2014 never the corridor"
+  },
+  "warm": {
+    "cohort": "warm_phase6i_r",
+    "n": 77,
+    "containment_rate": 0.935064935064935,
+    "n_miss_small_env": 1,
+    "median_claimed": 0.6445362404707371,
+    "median_abs_obs": 0.4100012710778283,
+    "median_abs_ex": 0.45
+  },
+  "cold": {
+    "cohort": "cold_phase6j",
+    "n": 0,
+    "containment_rate": null,
+    "n_miss_small_env": 0
+  },
+  "flights_warm": [
+    {
+      "fid": "20260719T200816-f170ead6",
+      "cohort": "warm_phase6i_r",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T200816-f170ead6\\flight.jsonl",
+      "t_pass_ff": 4.0068052,
+      "obs_crossing_miss_up": -0.053581572003063356,
+      "n_unique_exposures": 26,
+      "n_scored": 26,
+      "containment_rate": 1.0,
+      "n_miss_with_small_envelope": 0,
+      "n_exp": 26
+    },
+    {
+      "fid": "20260719T201851-50f9dcc8",
+      "cohort": "warm_phase6i_r",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260719T201851-50f9dcc8\\flight.jsonl",
+      "t_pass_ff": 4.5110314,
+      "obs_crossing_miss_up": 0.4100012710778283,
+      "n_unique_exposures": 51,
+      "n_scored": 51,
+      "containment_rate": 0.9019607843137255,
+      "n_miss_with_small_envelope": 1,
+      "n_exp": 51
+    }
+  ],
+  "flights_cold": [],
+  "note": "Cold cohort empty until phase6j lands. Warm numbers are PREP only \u2014 not the registered R5 verdict."
+}
