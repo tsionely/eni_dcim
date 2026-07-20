@@ -25,7 +25,6 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tuning"))
 
-from archive_harvest_release_fit_v21 import BOOTSTRAP_N, BOOTSTRAP_SEED, NU, SIGMA_A_GATE  # noqa: E402
 from run_l1_perception_replay import assert_mock_safe  # noqa: E402
 
 SOURCE_DIR = ROOT / "tuning" / "ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z"
@@ -54,6 +53,10 @@ LEGACY_FORMULA_RECONSTRUCTED = (
     "reconstructs 28/68 scored trace rows"
 )
 NEAR_HOVER_RMS_MPS = 0.05
+BOOTSTRAP_N = 2200
+BOOTSTRAP_SEED = 20260720
+NU = 5.0
+SIGMA_A_GATE = 0.35
 
 CHECKPOINT_FILES = [
     "02_shadow_old_vs_new_release_fit_by_set.csv",
