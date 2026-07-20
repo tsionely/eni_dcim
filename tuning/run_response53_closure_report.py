@@ -32,6 +32,20 @@ FIXTURE_LEVEL_SCOPE = (
     "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, "
     "four correlated variants), not population evidence."
 )
+COPIED_CHECKPOINT_FILES = [
+    "02_shadow_old_vs_new_release_fit_by_set.csv",
+    "02_shadow_b0_exact_maxima.csv",
+    "02_shadow_legacy_discovery_appendix_5_listed_4_analyzable.csv",
+    "02_shadow_old_vs_new_loao_by_set.csv",
+    "02_shadow_old_vs_new_balanced_coverage_by_set.csv",
+    "01_wrong_sign_definition_scorecard.csv",
+    "01_wrong_sign_approach_level_rescore.csv",
+]
+DERIVED_EVENT_SUPPORT_FILES = [
+    "01_wrong_sign_mask_accounting.csv",
+    "01_wrong_sign_approach_level_rescore.csv",
+    "01_wrong_sign_definition_scorecard.csv",
+]
 
 
 def git(*args: str) -> str:
@@ -69,6 +83,23 @@ def digest(path: Path) -> str:
         for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def committed_digest(rel_path: str) -> str:
+    blob = subprocess.check_output(["git", "show", f"HEAD:{rel_path}"], cwd=ROOT)
+    return hashlib.sha256(blob).hexdigest()
+
+
+def write_checkpoint_input_manifest(source_dir: Path, out_dir: Path) -> tuple[Path, str]:
+    rel_files = []
+    for name in [*COPIED_CHECKPOINT_FILES, *DERIVED_EVENT_SUPPORT_FILES]:
+        rel = str((source_dir / name).relative_to(ROOT)).replace("\\", "/")
+        if rel not in rel_files:
+            rel_files.append(rel)
+    rows = [{"path": rel, "sha256": committed_digest(rel)} for rel in rel_files]
+    path = out_dir / "checkpoint_input_manifest.json"
+    path.write_text(json.dumps(rows, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path, digest(path)
 
 
 def add_report_metadata(rows: list[dict[str, str]], head: str, source_dir: Path) -> list[dict[str, Any]]:
@@ -129,6 +160,7 @@ def run(args: argparse.Namespace) -> Path:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out_dir = ROOT / "tuning" / f"{OUT_PREFIX}-{short}-{stamp}"
     out_dir.mkdir(parents=True, exist_ok=False)
+    input_manifest_path, input_manifest_sha = write_checkpoint_input_manifest(source, out_dir)
 
     copied = [
         ("closure_read_shadow_fit_by_set.csv", "02_shadow_old_vs_new_release_fit_by_set.csv"),
@@ -149,6 +181,11 @@ def run(args: argparse.Namespace) -> Path:
             "source_checkpoint_artifact": str(src.relative_to(ROOT)).replace("\\", "/"),
             "output_sha256": digest(dst),
         })
+    manifest_rows.insert(0, {
+        "output_artifact": input_manifest_path.name,
+        "source_checkpoint_artifact": "checkpoint lineage manifest",
+        "output_sha256": input_manifest_sha,
+    })
 
     event_rows = summarize_event_support(
         read_csv(source / "01_wrong_sign_mask_accounting.csv"),
@@ -171,6 +208,8 @@ def run(args: argparse.Namespace) -> Path:
         "diagnostic_only": True,
         "report_layer_only": True,
         "source_checkpoint_dir": str(source.relative_to(ROOT)).replace("\\", "/"),
+        "checkpoint_input_manifest_path": str(input_manifest_path.relative_to(ROOT)).replace("\\", "/"),
+        "checkpoint_input_manifest_sha256": input_manifest_sha,
         "sequencing_floor_commit": git("rev-parse", SEQUENCING_FLOOR),
         "response53_commit": git("rev-parse", RESPONSE53_COMMIT),
         "generator_postdates_181f41f": is_ancestor(SEQUENCING_FLOOR, head),
@@ -187,6 +226,8 @@ def run(args: argparse.Namespace) -> Path:
             "Scope: DIAGNOSTIC, CSV-only; no FlightSim/DCGame launch.",
             f"Repo HEAD / report generator: `{head}`.",
             f"Source checkpoints: `{summary['source_checkpoint_dir']}`.",
+            f"Checkpoint input manifest: `{summary['checkpoint_input_manifest_path']}`.",
+            f"Checkpoint input manifest sha256: `{summary['checkpoint_input_manifest_sha256']}`.",
             "",
             f"- Generator postdates `181f41f`: `{summary['generator_postdates_181f41f']}`.",
             f"- Shadow partition: {summary['shadow_partition']}.",
