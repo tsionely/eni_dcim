@@ -186,7 +186,8 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       e_z_clamp_m: float = 0.45,
                       t_tail_s: float = 0.45,
                       corridor_m: float = 0.30,
-                      cmd_clamp_m: float = 0.10):
+                      cmd_clamp_m: float = 0.10,
+                      validated_max_age_s: float = 0.50):
     """The ONE final-boundary override (enable-bit path).
 
     Computes the terminal vertical command from the CERTIFIED gate state
@@ -318,7 +319,16 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             score_ok = (2.0 * float(np.sqrt(sig_e ** 2
                                             + (h_m * sv_maint) ** 2))
                         + 0.06 <= corridor_m)
-            if oracle.rate_anchor_valid and age <= tau_s + 0.5 and score_ok:
+            # Validated-age ceiling (RESPONSE31 disposition): the anchor
+            # model holds only inside ages the held-out coverage table
+            # has validated — beyond the last green bin the score is an
+            # extrapolation, and a passing extrapolated score is not
+            # authority. 0.50 (the coverage-tail p95) is the interim
+            # ceiling until the LOFO table declares A_validated_max; the
+            # config value is re-read against that table before any
+            # HOLD lift.
+            age_ok = age <= min(tau_s + 0.5, validated_max_age_s)
+            if oracle.rate_anchor_valid and age_ok and score_ok:
                 # FEED-FORWARD (mandatory per the ruling — and the
                 # first sigma_a run proved why: without it every
                 # commanded servo correction counted as unmodeled,

@@ -875,6 +875,69 @@ def test_anchor_falsified_by_contradictory_side_positions():
     assert not g.rate_anchor_valid
 
 
+def test_validated_max_age_caps_anchor_authority():
+    """RESPONSE31 disposition (tank-2): runtime must enforce
+    anchor_age <= min(A_validated_max, tau-dependent cap). Beyond the
+    last held-out-validated age bin a PASSING maintenance score is an
+    extrapolation, not authority — neutral-decay (c) takes the tick
+    while TERM stays owned. tau=0.3 makes the legacy caps permissive
+    to ~0.8s so the new ceiling is the only discriminator."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st(ts_s):
+        return StateEstimate(
+            ts_ns=int(ts_s * 1e9), q_att=LEVEL, omega=np.zeros(3),
+            v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def anchored_oracle():
+        g = TerminalOracle()
+        for i in range(8):
+            ts = i * 0.04
+            g.observe(ts, 0.30 - 0.10 * ts, source="FULL_QUAD")
+            g.observe(ts, 0.34 - 0.10 * ts, source="SIDE_PAIR")
+        for i in range(8, 14):
+            g.observe(i * 0.04, 0.34 - 0.10 * i * 0.04, source="SIDE_PAIR")
+        assert g.active_source == "SIDE_PAIR" and g.rate_anchor_valid
+        assert g.anchor_applied_ref is None
+        return g
+
+    span = 284.0
+
+    def run(g, age_s, **kw):
+        a = make_arbiter()
+        assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
+        now = g.rate_anchor_ts + age_s
+        f = TerminalFeature(ts_ns=int(now * 1e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="SIDE_PAIR")
+        return terminal_override(a, st(now), np.array([1.8, 0.0, 0.0]),
+                                 True, 0.3, 0.55, 0.0, 0.04, feature=f,
+                                 feature_age_s=0.02, oracle=g, **kw)
+
+    # Inside the validated ceiling: the anchor branch runs (the
+    # feed-forward reference latches on the first authority tick).
+    g = anchored_oracle()
+    owner, _, _ = run(g, 0.40)
+    assert owner == TERM_OWNER and g.anchor_applied_ref is not None
+    # Beyond the ceiling but inside tau+0.5 AND score-passing: no
+    # authority — the branch must not run; ownership is unaffected.
+    h = anchored_oracle()
+    owner2, _, _ = run(h, 0.60)
+    assert owner2 == TERM_OWNER and h.anchor_applied_ref is None
+    # Same age with the ceiling widened: authority returns — proving
+    # the new ceiling, not the legacy caps, was the discriminator.
+    k = anchored_oracle()
+    owner3, _, _ = run(k, 0.60, validated_max_age_s=0.70)
+    assert owner3 == TERM_OWNER and k.anchor_applied_ref is not None
+
+
 def test_anchor_age_grows_with_time_not_observations():
     """R26 telemetry finding: the anchor age must grow with CURRENT
     time even when observations pause — a frozen age kept a stale

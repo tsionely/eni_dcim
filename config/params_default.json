@@ -78,7 +78,8 @@
       "engage_range_m": 2.5,
       "corridor_interim_m": 0.3,
       "cmd_clamp_m": 0.1,
-      "coverage_tail_p95_s": 0.5
+      "coverage_tail_p95_s": 0.5,
+      "validated_max_age_s": 0.5
     },
     "recover": {
       "brake_s": 0.8

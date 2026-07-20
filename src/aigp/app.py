@@ -277,6 +277,12 @@ class App:
         terminal_tail_p95 = float(params.get(
             "planner.terminal.coverage_tail_p95_s",
             default=0.50)) if params else 0.50
+        # Anchor-age validation ceiling (RESPONSE31 disposition): interim
+        # 0.50 until the LOFO coverage table declares A_validated_max;
+        # re-read against that table before any HOLD lift.
+        terminal_valid_age = float(params.get(
+            "planner.terminal.validated_max_age_s",
+            default=0.50)) if params else 0.50
         term_arbiter = VerticalOwnerArbiter()
         term_oracle = TerminalOracle()
         term_vz_up = None
@@ -431,7 +437,8 @@ class App:
                             e_z_clamp_m=terminal_e_clamp,
                             t_tail_s=term_tail,
                             corridor_m=terminal_corridor,
-                            cmd_clamp_m=terminal_cmd_clamp)
+                            cmd_clamp_m=terminal_cmd_clamp,
+                            validated_max_age_s=terminal_valid_age)
                         term_v_bz = v_bz
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
