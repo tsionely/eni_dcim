@@ -1011,6 +1011,17 @@ def test_dual_read_shadow_anchor_removes_policy_scaling():
         old + (1.0 - auth) * g.rate_anchor_v_raw, abs=1e-9)
     assert g.shadow_anchor_vz == pytest.approx(
         g.rate_anchor_v_raw + ff, abs=1e-9)
+    # Complete forecast pair (§5 log list): old/new e_cross and
+    # command recorded per tick; the e_cross split is EXACTLY the
+    # crossing_error difference of the two rates — definition-proof.
+    from aigp.planning.vertical_terminal import crossing_error
+    fc = g.shadow_forecast
+    assert fc is not None
+    assert fc["e_cross_new"] - fc["e_cross_old"] == pytest.approx(
+        crossing_error(0.0, g.shadow_anchor_vz, 0.6)
+        - crossing_error(0.0, old, 0.6), abs=1e-9)
+    assert fc["delta_latch"] == pytest.approx(
+        -(1.0 - auth) * g.rate_anchor_v_raw, abs=1e-9)
 
 
 def test_age_expiry_prenoreturn_flag_follows_reversibility():

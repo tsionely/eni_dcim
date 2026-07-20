@@ -413,6 +413,28 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     g = compute_terminal_guidance(
         e_z=e_z_cmd, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
+    # COMPLETE dual-read forecast pair (advisory-19 §5's log list: old
+    # and new e_cross AND command, not just the shadow rate): the same
+    # guidance step runs once more with the repaired anchor's v_z —
+    # scalar math, nothing actuates from it. This is what exposes a
+    # command-step or liveness regression in the repair BEFORE any
+    # live change.
+    if (oracle is not None and oracle.active_source == "SIDE_PAIR"
+            and oracle.shadow_anchor_vz is not None):
+        g_new = compute_terminal_guidance(
+            e_z=e_z_cmd, sigma_e=0.10, v_z=float(oracle.shadow_anchor_vz),
+            sigma_v=0.15, tau_s=tau_s, margin_m=margin_m, prev_phase=None,
+            vz_max=vz_max, az_max=az_max)
+        oracle.shadow_forecast = {
+            "e_cross_old": g["e_cross"], "e_cross_new": g_new["e_cross"],
+            "vz_cmd_old": g["vz_cmd"], "vz_cmd_new": g_new["vz_cmd"],
+            "delta_latch": ((oracle.rate_anchor_v
+                             - oracle.rate_anchor_v_raw)
+                            if (oracle.rate_anchor_v is not None
+                                and oracle.rate_anchor_v_raw is not None)
+                            else None)}
+    elif oracle is not None:
+        oracle.shadow_forecast = None
     if g["vz_cmd"] is None:                     # freeze: hold applied target
         vz_goal = prev_vz_up if prev_vz_up is not None else 0.0
     else:
@@ -492,6 +514,7 @@ class TerminalOracle:
         self.rate_anchor_v_raw: float | None = None   # honest measurement
         self.rate_anchor_quality: float | None = None  # 7B policy, separate
         self.shadow_anchor_vz: float | None = None     # dual-read forecast
+        self.shadow_forecast: dict | None = None       # old/new pair (§5)
         self.rate_expired_prenoreturn = False
         self.anchor_applied_ref: float | None = None
         self._applied_ring: list[tuple[float, float]] = []
@@ -524,6 +547,7 @@ class TerminalOracle:
         self.rate_anchor_v_raw = None
         self.rate_anchor_quality = None
         self.shadow_anchor_vz = None
+        self.shadow_forecast = None
         self.rate_expired_prenoreturn = False
         self.anchor_applied_ref = None
         self._applied_ring = []
@@ -739,6 +763,7 @@ class TerminalOracle:
                 self.rate_anchor_v_raw = None
                 self.rate_anchor_quality = None
                 self.shadow_anchor_vz = None
+                self.shadow_forecast = None
                 self.anchor_applied_ref = None
                 self._anchor_e0 = None
                 self._anchor_breaches = 0

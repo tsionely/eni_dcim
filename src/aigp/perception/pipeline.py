@@ -40,6 +40,17 @@ class PerceptionAgent(Agent):
         if params is not None and hasattr(detector, "red_mask"):
             self.tracker = GateCloseTracker(params, detector)
 
+    @staticmethod
+    def anchor_consistent(prior: float | None, r_fix: float) -> bool:
+        """Prediction-consistency gate for certificate anchoring —
+        pinned by the P4(d) regression fixture: in the next-gate-steal
+        window a far gate's quad is a perfectly valid detection of the
+        WRONG gate, and certification is per-target. An inconsistent
+        fix relocks (never anchors); F4 frames 308-315 (fixes at
+        17-20m under a sub-meter live lock) are the recorded case the
+        detector-only acceptance got wrong and this gate got right."""
+        return prior is None or abs(r_fix - prior) <= 0.4 * prior
+
     def _run(self) -> None:
         frame_cell = self.bus.cell(Topic.FRAME)
         state_cell = self.bus.cell(Topic.STATE)
@@ -70,7 +81,7 @@ class PerceptionAgent(Agent):
                     # perfectly valid detection of the WRONG gate, and
                     # certification is per-target (FA=0 manifest case 3).
                     r_fix = float(np.linalg.norm(detection.rel_pose.t))
-                    if prior is None or abs(r_fix - prior) <= 0.4 * prior:
+                    if self.anchor_consistent(prior, r_fix):
                         self.tracker.certificate.on_full_quad(
                             detection.ts_ns,
                             z_m=float(detection.rel_pose.t[2]))

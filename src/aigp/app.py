@@ -496,6 +496,7 @@ class App:
                             rate_anchor_quality=(
                                 term_oracle.rate_anchor_quality),
                             shadow_vz_up=term_oracle.shadow_anchor_vz,
+                            shadow_forecast=term_oracle.shadow_forecast,
                             rate_expired_prenoreturn=(
                                 term_oracle.rate_expired_prenoreturn)))
                 else:

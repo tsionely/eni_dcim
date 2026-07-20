@@ -96,3 +96,37 @@ def test_epoch_change_revokes():
     good_update(c, int(0.05e9))
     c.on_relock_or_collision()
     assert c.status_at(int(0.06e9)) == NONE
+
+
+def test_p4d_honest_relock_refuses_wrong_gate_metrology():
+    """P4(d) regression fixture (ruled: the honest-relock branch must
+    be pinned once classified). F4 frames 308-315: CERTIFIED detector
+    fixes at 17-20m arrived under a live sub-meter prior lock — the
+    detector-only acceptance attributed far-gate metrology to the
+    near-gate identity; the prediction-consistency gate relocks
+    instead of anchoring, and the cleared identity cannot freshly
+    re-certify below the promote floor, so the wrong-gate rows never
+    become certified FULL metrology. Safety pair: a same-gate fix
+    anchors; a first lock (no prior) always may."""
+    from aigp.perception.pipeline import PerceptionAgent as P
+    # The decision rule, on the recorded F4 numbers (p4d diff table):
+    assert not P.anchor_consistent(0.579, 19.869)     # frame 308
+    assert not P.anchor_consistent(0.502, 1.908)      # frame 309
+    assert not P.anchor_consistent(0.077, 17.615)     # frame 315
+    assert P.anchor_consistent(0.502, 0.55)           # honest same-gate fix
+    assert P.anchor_consistent(None, 19.869)          # first lock: no prior
+    # Consequence chain: the relock revokes the identity, and below
+    # the promote floor the dead identity reaches at most PROBATION —
+    # no certified metrology for the rest of the approach. This is
+    # the certificate boundary's priced cost, accepted as ruled.
+    c = anchored()
+    good_update(c, int(0.05e9))
+    c.on_relock_or_collision()
+    assert c.status_at(int(0.06e9)) == NONE
+    c.on_full_quad(int(0.1e9), z_m=0.6)               # sub-floor re-anchor
+    ts = int(0.1e9)
+    s = None
+    for _ in range(6):
+        ts += int(0.05e9)
+        s = good_update(c, ts, z=0.6)
+    assert s != CERTIFIED
