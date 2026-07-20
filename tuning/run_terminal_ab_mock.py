@@ -32,11 +32,12 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-RUN_LABEL = "terminal-ab-46e9a64"
+RUN_LABEL = "terminal-ab-4fc71bb"
 OUT_DIR = ROOT / "tuning" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 MOCK_IMAGE_SIZE = (320, 180)
 MOCK_GATE_WIDTH_M = 1.6
+COMPARE_RUN_DIR: Path | None = None
 
 BASE_PATCHES = {
     "safety.imu_stale_s": 0.25,
@@ -144,6 +145,11 @@ def _fmt_na(value, digits: int = 3) -> str:
 def _fmt_m(value, digits: int = 3) -> str:
     text = _fmt(value, digits)
     return f"{text}m" if text else "n/a"
+
+
+def _fmt_pct(value, digits: int = 1) -> str:
+    value = _f(value)
+    return "n/a" if value is None else f"{value:.{digits}%}"
 
 
 def _sign(value: float, eps: float = 0.02) -> int:
@@ -547,6 +553,38 @@ def term_status_detail_rows(log_dir: str) -> list[dict]:
     return rows
 
 
+def summarize_commit_vision(log_dir: str) -> dict:
+    counts = {
+        "commit_ticks": 0,
+        "commit_vision_fresh_ticks": 0,
+        "commit_vision_stale_ticks": 0,
+        "commit_vision_survival_frac": "",
+    }
+    flight_dir = Path(log_dir)
+    if not flight_dir.exists():
+        return counts
+    last_gate_age_s: float | None = None
+    for rec in iter_log(flight_dir):
+        topic = rec.get("topic")
+        data = rec.get("data", {})
+        if topic == "state":
+            last_gate_age_s = _f(data.get("gate_rel_age_s"))
+            continue
+        if topic != "setpoint" or data.get("phase") != "commit":
+            continue
+        counts["commit_ticks"] += 1
+        if last_gate_age_s is not None and last_gate_age_s < 0.6:
+            counts["commit_vision_fresh_ticks"] += 1
+    counts["commit_vision_stale_ticks"] = (
+        counts["commit_ticks"] - counts["commit_vision_fresh_ticks"]
+    )
+    if counts["commit_ticks"]:
+        counts["commit_vision_survival_frac"] = (
+            counts["commit_vision_fresh_ticks"] / counts["commit_ticks"]
+        )
+    return counts
+
+
 def write_csv(path: Path, rows: list[dict]) -> None:
     keys: list[str] = []
     for row in rows:
@@ -573,6 +611,8 @@ def arm_summary(rows: list[dict]) -> dict:
     lateral_vals = [v for v in lateral if v is not None]
     dz_vals = [v for v in dz if v is not None]
     range_vals = [v for v in closest_range if v is not None]
+    commit_ticks = sum(int(r.get("commit_ticks") or 0) for r in rows)
+    commit_fresh = sum(int(r.get("commit_vision_fresh_ticks") or 0) for r in rows)
     return {
         "runs": total,
         "passes": passes,
@@ -587,6 +627,11 @@ def arm_summary(rows: list[dict]) -> dict:
         "closest_lateral_std_m": _std(lateral_vals),
         "closest_true_dz_mean_m": _mean(dz_vals),
         "closest_true_dz_std_m": _std(dz_vals),
+        "commit_ticks": commit_ticks,
+        "commit_vision_fresh_ticks": commit_fresh,
+        "commit_vision_survival_frac": (
+            commit_fresh / commit_ticks if commit_ticks else None
+        ),
     }
 
 
@@ -603,6 +648,7 @@ def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
             result = app.reset_and_fly(params, settle_s=1.0, max_duration_s=45.0)
             term_counts, anomalies = summarize_term_status(result.get("log_dir", ""),
                                                            terminal_enabled)
+            commit_counts = summarize_commit_vision(result.get("log_dir", ""))
             term_csv = ""
             if terminal_enabled:
                 term_rows = term_status_detail_rows(result.get("log_dir", ""))
@@ -625,6 +671,7 @@ def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
                 "log_dir": result.get("log_dir", ""),
                 "term_status_csv": term_csv,
                 "term_anomalies": "; ".join(anomalies),
+                **commit_counts,
                 **term_counts,
             }
             rows.append(row)
@@ -637,7 +684,39 @@ def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
     return rows
 
 
+def load_compare_summaries(compare_dir: Path | None) -> tuple[str, dict[str, dict]]:
+    if compare_dir is None:
+        return "", {}
+    compare_dir = compare_dir.resolve()
+    runs_path = compare_dir / "runs.json"
+    if not runs_path.exists():
+        return str(compare_dir), {}
+    prior_rows = json.loads(runs_path.read_text(encoding="utf-8"))
+    rebuilt: list[dict] = []
+    for row in prior_rows:
+        rebuilt.append({
+            **row,
+            **summarize_commit_vision(row.get("log_dir", "")),
+        })
+    summaries = {
+        label: arm_summary([r for r in rebuilt if r.get("arm") == label])
+        for label, _patches in ARMS
+    }
+    commit = ""
+    summary_path = compare_dir / "summary.json"
+    if summary_path.exists():
+        try:
+            commit = str(json.loads(summary_path.read_text(encoding="utf-8")).get("commit", ""))
+        except json.JSONDecodeError:
+            commit = ""
+    label = compare_dir.name
+    if commit:
+        label = f"{label} ({commit[:7]})"
+    return label, summaries
+
+
 def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
+    compare_label, compare_summaries = load_compare_summaries(COMPARE_RUN_DIR)
     lines = [
         "# Terminal A/B Mock",
         "",
@@ -658,8 +737,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "",
         "## Arms",
         "",
-        "| Arm | Patches | Passes | Runs | Pass rate | Finished | Terminal anomaly runs | closest R mean | lateral mean/std | true dz mean/std |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Arm | Patches | Passes | Runs | Pass rate | Finished | Terminal anomaly runs | commit vision survival | captures by 2.2 | closest R mean | lateral mean/std | true dz mean/std |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for label, patches in ARMS:
         summary = summaries[label]
@@ -668,16 +747,43 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             f"| `{label}` | `{patch_text}` | {summary['passes']} | "
             f"{summary['runs']} | {summary['pass_rate']:.1%} | "
             f"{summary['finished']} | {summary['term_anomaly_runs']} | "
+            f"{_fmt_pct(summary.get('commit_vision_survival_frac'))} "
+            f"({summary.get('commit_vision_fresh_ticks', 0)}/{summary.get('commit_ticks', 0)}) | "
+            f"{summary.get('capture_by_2p2', 0)}/{summary['runs']} | "
             f"{_fmt(summary['closest_range_mean_m'])} | "
             f"{_fmt(summary['closest_lateral_mean_m'])}/{_fmt(summary['closest_lateral_std_m'])} | "
             f"{_fmt(summary['closest_true_dz_mean_m'])}/{_fmt(summary['closest_true_dz_std_m'])} |"
         )
+    if compare_summaries:
+        lines.extend([
+            "",
+            f"## Commit Vision Survival Vs {compare_label}",
+            "",
+            "| Arm | current survival | prior survival | delta | current captures by 2.2 | prior captures by 2.2 |",
+            "|---|---:|---:|---:|---:|---:|",
+        ])
+        for label, _patches in ARMS:
+            current = summaries[label]
+            prior = compare_summaries.get(label, {})
+            current_frac = _f(current.get("commit_vision_survival_frac"))
+            prior_frac = _f(prior.get("commit_vision_survival_frac"))
+            delta = (current_frac - prior_frac
+                     if current_frac is not None and prior_frac is not None else None)
+            lines.append(
+                f"| `{label}` | {_fmt_pct(current_frac)} "
+                f"({current.get('commit_vision_fresh_ticks', 0)}/{current.get('commit_ticks', 0)}) | "
+                f"{_fmt_pct(prior_frac)} "
+                f"({prior.get('commit_vision_fresh_ticks', 0)}/{prior.get('commit_ticks', 0)}) | "
+                f"{_fmt_pct(delta)} | "
+                f"{current.get('capture_by_2p2', 0)}/{current.get('runs', 0)} | "
+                f"{prior.get('capture_by_2p2', 0)}/{prior.get('runs', 0)} |"
+            )
     lines.extend([
         "",
         "## Term Status Notes",
         "",
-        "| Arm | Run | Gates | Finished | term rows | engaged | ready | engaged+ready | owner=term | applied | first capture R | capture by 2.2 | e_z at capture | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | scale rejects | closest y/dz | anomalies |",
-        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| Arm | Run | Gates | Finished | term rows | engaged | ready | engaged+ready | owner=term | applied | commit vision survival | first capture R | capture by 2.2 | e_z at capture | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | scale rejects | closest y/dz | anomalies |",
+        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ])
     for row in rows:
         lines.append(
@@ -685,7 +791,10 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             f"{row['finished']} | {row['term_rows']} | {row['engaged_rows']} | "
             f"{row['ready_rows']} | {row.get('engaged_ready_rows', '')} | "
             f"{row['owner_term_rows']} | "
-            f"{row['applied_rows']} | {_fmt(row.get('first_capture_range_m'))} | "
+            f"{row['applied_rows']} | "
+            f"{_fmt_pct(row.get('commit_vision_survival_frac'))} "
+            f"({row.get('commit_vision_fresh_ticks', 0)}/{row.get('commit_ticks', 0)}) | "
+            f"{_fmt(row.get('first_capture_range_m'))} | "
             f"{row.get('capture_by_2p2', '')} | "
             f"{_fmt(row.get('e_z_at_capture'))} | "
             f"{_fmt(row.get('first_applied_range_m'))} | "
@@ -734,9 +843,25 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         scale_reject_runs = sum(
             1 for r in arm_rows if int(r.get("visible_scale_gate_reject_rows") or 0)
         )
+        summary = summaries[label]
+        prior_summary = compare_summaries.get(label, {}) if compare_summaries else {}
+        current_survival = _f(summary.get("commit_vision_survival_frac"))
+        prior_survival = _f(prior_summary.get("commit_vision_survival_frac"))
+        survival_delta = (
+            current_survival - prior_survival
+            if current_survival is not None and prior_survival is not None else None
+        )
+        survival_text = f"commit vision survival {_fmt_pct(current_survival)}; "
+        if compare_summaries:
+            survival_text = (
+                f"commit vision survival {_fmt_pct(current_survival)} "
+                f"vs {_fmt_pct(prior_survival)} "
+                f"({_fmt_pct(survival_delta)} delta); "
+            )
         lines.append(
             f"- `{label}`: engaged+ready runs {len(engaged_ready_ranges)}/{len(arm_rows)} "
             f"(first range mean {_fmt_m(_mean(engaged_ready_ranges))}); "
+            + survival_text +
             f"owner=term runs {len(owner_ranges)}/{len(arm_rows)} "
             f"(first range mean {_fmt_m(_mean(owner_ranges))}, "
             f"min {_fmt_m(min(owner_ranges) if owner_ranges else None)}); "
@@ -766,10 +891,17 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         1 for r in live_rows if int(r.get("owner_drop_while_engaged_ready") or 0)
         or int(r.get("owner_transitions") or 0) > 2
     )
+    live_jitter_runs = sum(
+        1 for r in live_rows if int(r.get("applied_sign_flip_rows") or 0)
+    )
     if live_rows and (live_owner_rows == 0 or live_applied_rows == 0):
         verdict = "NO-GO for live terminal arms: the mock live arm never actuated."
-    elif live_wrong_sign_rows or live_chatter_runs:
-        verdict = "NO-GO for live terminal arms: wrong-sign or owner chatter observed."
+    elif live_wrong_sign_rows:
+        verdict = "NO-GO for live terminal arms: wrong-sign v_bz observed."
+    elif live_chatter_runs:
+        verdict = "NO-GO for live terminal arms: owner chatter observed."
+    elif live_jitter_runs:
+        verdict = "NO-GO for live terminal arms: v_bz sign-flip jitter observed."
     elif live_capture_by_2p2 < 7 or live_scale_reject_runs:
         verdict = (
             "NO-GO for live terminal gatekeeping: authority wiring actuated with "
@@ -797,6 +929,9 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
     (OUT_DIR / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (OUT_DIR / "summary.json").write_text(
         json.dumps({"commit": HEAD, "base_patches": BASE_PATCHES,
+                    "compare_run": str(COMPARE_RUN_DIR) if COMPARE_RUN_DIR else "",
+                    "compare_label": compare_label,
+                    "compare_summaries": compare_summaries,
                     "calibration": CALIBRATION, "arms": ARMS, "summaries": summaries,
                     "rows": rows}, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -815,11 +950,14 @@ def rebuild_existing(out_dir: Path) -> None:
         terminal_enabled = row.get("arm") == "terminal_speed1p8"
         term_counts, anomalies = summarize_term_status(row.get("log_dir", ""),
                                                        terminal_enabled)
+        commit_counts = summarize_commit_vision(row.get("log_dir", ""))
         keep = {k: v for k, v in row.items()
-                if k not in term_counts and k != "term_anomalies"}
+                if k not in term_counts and k not in commit_counts
+                and k != "term_anomalies"}
         rebuilt.append({
             **keep,
             "term_anomalies": "; ".join(anomalies),
+            **commit_counts,
             **term_counts,
         })
     summaries = {}
@@ -834,16 +972,19 @@ def rebuild_existing(out_dir: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    global BASE_PATCHES, CALIBRATION
+    global BASE_PATCHES, CALIBRATION, COMPARE_RUN_DIR
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs", type=int, default=10)
     parser.add_argument("--rebuild-from", type=Path)
+    parser.add_argument("--compare-run", type=Path)
     parser.add_argument("--pitch-cal-rad", type=float)
     parser.add_argument("--pitch-cal-source", default="")
     parser.add_argument("--pitch-cal-commit-ticks", type=int)
     parser.add_argument("--pitch-cal-flights", type=int)
     parser.add_argument("--pitch-cal-median-deg", type=float)
     args = parser.parse_args(argv)
+    if args.compare_run:
+        COMPARE_RUN_DIR = args.compare_run
     if args.pitch_cal_rad is not None:
         BASE_PATCHES = {
             **BASE_PATCHES,
