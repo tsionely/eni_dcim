@@ -214,7 +214,15 @@ class GateCloseTracker:
             n_top = px[0] - px[3]
             n_top = n_top / max(float(np.linalg.norm(n_top)), 1e-9)
             y_top = float(mid_top[1] + n_top[1] * float(np.median(top_offs)))
-            mode = "BAR_FULL" if len(top_offs) >= 6 else "BAR_ROW_ONLY"
+            # Source-mode tags (the ladder rulings): the rung identity
+            # must be explicit — one ambiguous label describing two
+            # different measurement models is the instrumentation
+            # failure class. Depth here is OBSERVED side-pair
+            # separation (sep_meas), never believed range; sparse top
+            # support stays out of metrology (shadow) for the first
+            # ladder release.
+            mode = ("SIDE_PAIR" if len(top_offs) >= 6
+                    else "SIDE_PAIR_ROW_ONLY")
             self.last_feature = TerminalFeature(
                 ts_ns=frame.ts_ns, y_top_px=y_top, span_px=sep_meas,
                 center_x_px=float((mid_l + mid_r)[0] / 2.0),

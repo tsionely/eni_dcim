@@ -220,6 +220,7 @@ class TermStatus:
     e_z: float | None          # oracle effective e_z (+up), if any
     vz_up: float | None        # commanded world-up velocity, if owning
     v_bz_applied: float | None # body-z actually applied (None = legacy)
+    source_mode: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

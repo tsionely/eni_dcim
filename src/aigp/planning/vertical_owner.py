@@ -125,6 +125,13 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
             or feature.cert_status not in ("certified", "probation")
             or state.image_size is None):
         return None
+    # Ladder first release: only the two METRIC rungs act (FULL_QUAD
+    # from whole quads; SIDE_PAIR from observed certified side-pair
+    # separation + top row). Sparse/row-only modes stay in shadow —
+    # they may inform telemetry, never metrology.
+    if getattr(feature, "mode", "FULL_QUAD") in ("BAR_ROW_ONLY",
+                                                 "SIDE_PAIR_ROW_ONLY"):
+        return None
     # Honest-detection scale gate at the oracle's front door: the span
     # and the BELIEVED range must tell the same story before a pixel
     # row becomes metrology. Three real 1.8-cohort flights fed the
@@ -158,8 +165,12 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
         / feature.span_px
     # Authority clamp (SS1.4): bounded to the eroded opening (A8 inherits).
     e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
-    oracle.observe(float(feature.ts_ns) / 1e9, e_meas)
-    return e_meas
+    active = oracle.observe(float(feature.ts_ns) / 1e9, e_meas,
+                            source=getattr(feature, "mode", "FULL_QUAD"))
+    # Only the ACTIVE rung's measurement may act this tick; inactive-
+    # rung observations were recorded (maturing toward a transition)
+    # but must not steer — one estimate, one meaning per number.
+    return e_meas if active else None
 
 
 def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
@@ -243,7 +254,8 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # placeholders are the quarantined believed-channel numbers
             # — with them 2*sigma + 0.06 exceeds the 0.30 corridor at
             # any tau >= 0.45 and admission can never pass.)
-            s_x = crossing_sigma(0.05, vz_vis, 0.10, h_tail)
+            sig_e, sig_v = oracle.sigmas()
+            s_x = crossing_sigma(sig_e, vz_vis, sig_v, h_tail)
             # corridor_m is CORRIDOR_INTERIM (advisory-10 ruling): the
             # operational admission band 0.30, explicitly labeled and
             # time-boxed — expiry condition is the cohort-2 R5 sigma
@@ -355,7 +367,19 @@ class TerminalOracle:
         # VISUAL vertical rate. The advisory's no-go condition: the
         # crossing forecast must never take v_z solely from the
         # believed state — that channel drifts exactly when it matters.
+        # LADDER (both rulings): _hist is the ACTIVE source's history;
+        # the inactive rung accumulates in _hist_other. A slope is
+        # NEVER fitted across a source boundary — a constant inter-
+        # source bias stepping through one Theil-Sen history would
+        # masquerade as vertical velocity (the S3 failure class).
         self._hist: list[tuple[float, float]] = []
+        self._hist_other: list[tuple[float, float]] = []
+        self.active_source = "FULL_QUAD"
+        self._last_full: tuple[float, float] | None = None
+        self._last_side: tuple[float, float] | None = None
+        self._overlap_ok = False
+        self._upgrade_streak = 0
+        self._transition_grace = False
 
     def reset(self) -> None:
         self.e_z = None
@@ -363,23 +387,129 @@ class TerminalOracle:
         self._violations = 0
         self.disarmed = False
         self._hist = []
+        self._hist_other = []
+        self.active_source = "FULL_QUAD"
+        self._last_full = None
+        self._last_side = None
+        self._overlap_ok = False
+        self._upgrade_streak = 0
+        self._transition_grace = False
 
-    def observe(self, ts_s: float, e_meas: float) -> None:
+    SIGMAS = {"FULL_QUAD": (0.05, 0.10),
+              # Side-pair rung: margined analogs (x1.5) until the R5
+              # library matures per-rung residuals — sigmas are source
+              # constants (advisory-13 SS2.2), never inherited.
+              "SIDE_PAIR": (0.075, 0.15)}
+
+    def sigmas(self) -> tuple[float, float]:
+        """(sigma_e, sigma_v) of the ACTIVE source."""
+        return self.SIGMAS[self.active_source]
+
+    @staticmethod
+    def _push(hist: list, ts_s: float, e: float) -> None:
+        if hist and ts_s <= hist[-1][0]:
+            return
+        hist.append((ts_s, e))
+        if len(hist) > 40:
+            del hist[:-40]
+
+    def _fresh_tail(self, hist: list) -> list:
+        """The contiguous evidence ending at the newest sample: walk
+        back while consecutive gaps stay within max_gap_s. Readiness,
+        maturity and the visual rate are properties of evidence that
+        is actually contiguous — a single mid-approach outage must not
+        permanently veto an approach whose recent stream is rich (the
+        whole-history gap statistic was doing exactly that), and a
+        slope must never be fitted across an outage."""
+        if len(hist) < 2:
+            return list(hist)
+        i = len(hist) - 1
+        while i > 0 and hist[i][0] - hist[i - 1][0] <= self.max_gap_s:
+            i -= 1
+        return hist[i:]
+
+    def _mature(self, hist: list) -> bool:
+        tail = self._fresh_tail(hist)
+        if len(tail) < self.min_samples:
+            return False
+        return tail[-1][0] - tail[0][0] >= self.min_span_s
+
+    def observe(self, ts_s: float, e_meas: float,
+                source: str = "FULL_QUAD") -> bool:
         """Record one UNIQUE exposure's accepted measurement (caller
         dedupes by feature timestamp — rebroadcasts overstate evidence
-        ~8-9x)."""
-        if self._hist and ts_s <= self._hist[-1][0]:
-            return
-        self._hist.append((ts_s, e_meas))
-        if len(self._hist) > 40:
-            self._hist = self._hist[-40:]
+        ~8-9x). Returns True when the observation belongs to the
+        ACTIVE source (i.e. may act this tick), False when it was
+        recorded to the inactive rung only.
+
+        Source transitions (the ladder's fine print): downgrade
+        FULL->SIDE only when the full history has gone stale, the side
+        history is independently MATURE, and the most recent overlap
+        passed |e_side - e_full| <= max(0.10, 3*sigma_side) — a
+        measurement-model change, never a phase/ownership event.
+        Upgrade back only after 3 consecutive consistent full-quad
+        observations (hysteresis)."""
+        if source in ("BAR_FULL",):
+            source = "FULL_QUAD"
+        if source not in ("FULL_QUAD", "SIDE_PAIR"):
+            return False                      # shadow rungs: no metrology
+        # Overlap bookkeeping (for the transition consistency gate).
+        if source == "FULL_QUAD":
+            self._last_full = (ts_s, e_meas)
+        else:
+            self._last_side = (ts_s, e_meas)
+        if (self._last_full is not None and self._last_side is not None
+                and abs(self._last_full[0] - self._last_side[0]) <= 0.15):
+            bound = max(0.10, 3.0 * self.SIGMAS["SIDE_PAIR"][0])
+            self._overlap_ok = abs(self._last_full[1]
+                                   - self._last_side[1]) <= bound
+        if source == self.active_source:
+            self._push(self._hist, ts_s, e_meas)
+            if self.active_source == "SIDE_PAIR":
+                self._upgrade_streak = 0      # no full obs this tick
+            return True
+        # Inactive-rung observation.
+        self._push(self._hist_other, ts_s, e_meas)
+        if self.active_source == "FULL_QUAD":
+            # Downgrade check: full gone stale + side mature + overlap.
+            full_stale = (not self._hist
+                          or ts_s - self._hist[-1][0] > self.max_gap_s)
+            if (full_stale and self._mature(self._hist_other)
+                    and self._overlap_ok):
+                self._hist, self._hist_other = self._hist_other, self._hist
+                self.active_source = "SIDE_PAIR"
+                self._upgrade_streak = 0
+                self._transition_grace = True
+                return True
+        else:
+            # Full-quad seen while side is active: hysteresis count.
+            # Upgrade on the ruling's bar — 3 consecutive CONSISTENT
+            # full-quad observations; the fresh-tail readiness clock
+            # then re-matures the returning rung honestly (no capture
+            # authority until it does).
+            ref = self.e_z if self.e_z is not None else e_meas
+            if abs(e_meas - ref) <= max(0.10,
+                                        3.0 * self.SIGMAS["SIDE_PAIR"][0]):
+                self._upgrade_streak += 1
+            else:
+                self._upgrade_streak = 0
+            if self._upgrade_streak >= 3:
+                self._hist, self._hist_other = self._hist_other, self._hist
+                self.active_source = "FULL_QUAD"
+                self._upgrade_streak = 0
+                self._transition_grace = True
+                return True
+        return False
 
     def history_stats(self) -> tuple[int, float, float]:
-        """(n_unique, span_s, max_gap_s) of the recent history."""
-        n = len(self._hist)
+        """(n_unique, span_s, max_gap_s) of the CONTIGUOUS fresh tail
+        (see _fresh_tail — readiness is a property of contiguous
+        evidence; ladder pre-registration in RESPONSE19)."""
+        tail = self._fresh_tail(self._hist)
+        n = len(tail)
         if n < 2:
             return n, 0.0, float("inf")
-        ts = [t for t, _ in self._hist]
+        ts = [t for t, _ in tail]
         gaps = [b - a for a, b in zip(ts, ts[1:])]
         return n, ts[-1] - ts[0], max(gaps)
 
@@ -389,9 +519,10 @@ class TerminalOracle:
         e_z is the +up correction required; the drone climbing shrinks
         it, so v_z = -d(e_z)/dt."""
         from aigp.planning.vertical_terminal import robust_slope
-        if len(self._hist) < 4:
+        tail = self._fresh_tail(self._hist)
+        if len(tail) < 4:
             return None
-        recent = self._hist[-12:]
+        recent = tail[-12:]
         slope = robust_slope([t for t, _ in recent], [e for _, e in recent])
         if slope is None:
             return None
@@ -422,6 +553,11 @@ class TerminalOracle:
             e_meas = None                     # neutral-decay to the end
         if e_meas is not None:
             limit = vz_max * max(dt, 1e-3) + self.jump_floor
+            if self._transition_grace:
+                # One-shot: a consistency-gated source step (<=0.10+3s)
+                # crosses the per-tick jump limit legally, exactly once.
+                self._transition_grace = False
+                limit = max(limit, 0.10 + 3.0 * self.SIGMAS["SIDE_PAIR"][0])
             if self.e_z is not None and abs(e_meas - self.e_z) > limit:
                 self._violations += 1
                 if self._violations >= self.jump_k:

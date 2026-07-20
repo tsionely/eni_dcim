@@ -636,3 +636,108 @@ def test_scale_gate_follows_image_geometry():
     g2 = TerminalOracle()
     assert terminal_observe(g2, st(1.0), feat(52.0), 0.02) is None
     assert len(g2._hist) == 0
+
+
+def _obs_series(g, t0, n, e0, slope, dt=0.04, source="FULL_QUAD"):
+    from aigp.planning.vertical_owner import TerminalOracle  # noqa: F401
+    for i in range(n):
+        g.observe(t0 + i * dt, e0 + slope * i * dt, source=source)
+    return t0 + (n - 1) * dt
+
+
+def test_s3_source_offset_never_becomes_velocity():
+    """Ladder gate S3: FULL_QUAD and SIDE_PAIR carry a constant +0.08
+    inter-source bias with the SAME true slope. A mixed history would
+    convert the step at the transition into a fictitious vertical
+    rate; per-source histories must keep v_z equal to the true slope
+    on both sides of the switch."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    true_slope = -0.10                       # e shrinking 0.10 m/s
+    # Overlap region: both rungs observing (full active), then full dies.
+    t = 0.0
+    for i in range(8):
+        ts = i * 0.04
+        g.observe(ts, 0.30 + true_slope * ts, source="FULL_QUAD")
+        g.observe(ts + 0.001, 0.38 + true_slope * ts, source="SIDE_PAIR")
+    assert g.active_source == "FULL_QUAD"
+    v_before = g.v_z_visual()
+    assert v_before == pytest.approx(0.10, abs=0.02)
+    # Full-quad stream dies (below ~2m); side continues alone.
+    for i in range(8, 14):
+        ts = i * 0.04
+        active = g.observe(ts, 0.38 + true_slope * ts, source="SIDE_PAIR")
+    assert g.active_source == "SIDE_PAIR"    # consistency-gated switch
+    assert active                            # side now acts
+    v_after = g.v_z_visual()
+    assert v_after == pytest.approx(0.10, abs=0.02), \
+        "the +0.08 source bias leaked into vertical rate"
+
+
+def test_s2_switch_requires_overlap_consistency_and_hysteresis():
+    """Ladder gate S2 (unit form): a side rung whose overlap
+    disagreement exceeds max(0.10, 3 sigma_side) may mature forever —
+    it never becomes the active source. And after a legal downgrade,
+    upgrading back requires 3 consecutive consistent full-quad
+    observations (hysteresis), not one lucky frame."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    # Inconsistent side rung: bias 0.40 >> bound.
+    for i in range(10):
+        ts = i * 0.04
+        g.observe(ts, 0.10, source="FULL_QUAD")
+        g.observe(ts + 0.001, 0.50, source="SIDE_PAIR")
+    for i in range(10, 16):
+        g.observe(i * 0.04, 0.50, source="SIDE_PAIR")
+    assert g.active_source == "FULL_QUAD"    # never switched
+    # Legal switch on a consistent rung.
+    g2 = TerminalOracle()
+    for i in range(8):
+        ts = i * 0.04
+        g2.observe(ts, 0.10, source="FULL_QUAD")
+        g2.observe(ts + 0.001, 0.14, source="SIDE_PAIR")
+    for i in range(8, 14):
+        g2.observe(i * 0.04, 0.14, source="SIDE_PAIR")
+    assert g2.active_source == "SIDE_PAIR"
+    g2.update(0.14, 0.02, 0.6)               # e_z reference for streak
+    # Upgrade needs 3 consecutive consistent full observations.
+    g2.observe(14 * 0.04, 0.10, source="FULL_QUAD")
+    g2.observe(15 * 0.04, 0.10, source="FULL_QUAD")
+    assert g2.active_source == "SIDE_PAIR"   # streak of 2: not yet
+    g2.observe(16 * 0.04, 0.10, source="FULL_QUAD")
+    assert g2.active_source == "FULL_QUAD"   # third one flips it
+
+
+def test_s6_source_histories_survive_enable_toggle_and_shadow_modes():
+    """Ladder gate S6: histories are observer property — maturing with
+    TERM disabled, untouched by enable toggles; shadow modes
+    (SIDE_PAIR_ROW_ONLY) never enter metrology."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_observe
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    g = TerminalOracle()
+    span = 284.0
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="SIDE_PAIR")
+        terminal_observe(g, st(), f, 0.02)
+    # Side history matured (inactive rung) without any enable bit.
+    assert g._mature(g._hist_other)
+    # Shadow mode: rejected at the door, no history growth anywhere.
+    n_before = len(g._hist_other) + len(g._hist)
+    sh = TerminalFeature(ts_ns=int(8 * 0.04e9), y_top_px=180.0 - 0.5 * span,
+                         span_px=span, center_x_px=320.0,
+                         cert_status="certified", mode="SIDE_PAIR_ROW_ONLY")
+    assert terminal_observe(g, st(), sh, 0.02) is None
+    assert len(g._hist_other) + len(g._hist) == n_before

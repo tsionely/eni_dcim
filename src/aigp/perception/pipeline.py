@@ -92,7 +92,7 @@ class PerceptionAgent(Agent):
                             span_px=span,
                             center_x_px=float((c[0][0] + c[1][0]) / 2.0),
                             cert_status=detection.cert_status,
-                            mode="BAR_FULL"))
+                            mode="FULL_QUAD"))
                 continue
             if detection is not None:
                 # Center-only detection (pose rejected by the sanity

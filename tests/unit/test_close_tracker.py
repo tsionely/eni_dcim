@@ -139,7 +139,10 @@ def test_terminal_feature_extracted_with_certified_pair():
     assert abs(f.y_top_px - (180 - 102.4)) < 8
     assert abs(f.span_px - 2 * 102.4) < 12
     assert f.cert_status in ("certified", "probation")
-    assert f.mode == "BAR_FULL"
+    # Ladder source tag: the tracker's feature is the SIDE_PAIR rung —
+    # depth from OBSERVED certified side separation, never believed
+    # range. One label per measurement model (advisory-13 SS7).
+    assert f.mode == "SIDE_PAIR"
 
 
 def test_no_feature_without_top_edge():
