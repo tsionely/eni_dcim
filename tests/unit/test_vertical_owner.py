@@ -1024,6 +1024,31 @@ def test_dual_read_shadow_anchor_removes_policy_scaling():
         -(1.0 - auth) * g.rate_anchor_v_raw, abs=1e-9)
 
 
+def test_dual_read_purity_no_actuating_side_effects():
+    """Advisory-20 binding purity invariant: enable vs disable of the
+    dual-read instrument must leave everything actuating bit-for-bit
+    unchanged. Two identical fixtures — one with the shadow channel
+    live, one with the raw channel stripped (the pre-instrument
+    build) — must return the identical (owner, v_bz, vz_up) triple
+    and identical actuating oracle state; only the shadow fields may
+    differ."""
+    anchored_oracle, run = _prenoreturn_fixture()
+    g1, g2 = anchored_oracle(), anchored_oracle()
+    g2.rate_anchor_v_raw = None            # strip the instrument
+    a1, a2 = make_arbiter(), make_arbiter()
+    assert a1.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    assert a2.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    r1 = run(g1, a1, 0.40)
+    r2 = run(g2, a2, 0.40)
+    assert r1 == r2                        # owner, v_bz, vz_up: identical
+    assert g1.rate_anchor_v == g2.rate_anchor_v
+    assert g1.anchor_applied_ref == g2.anchor_applied_ref
+    assert g1.e_z == g2.e_z
+    assert a1.latched == a2.latched
+    assert g1.shadow_anchor_vz is not None and g1.shadow_forecast is not None
+    assert g2.shadow_anchor_vz is None and g2.shadow_forecast is None
+
+
 def test_age_expiry_prenoreturn_flag_follows_reversibility():
     """RESPONSE32 disposition branch semantics: validated-age expiry
     BEFORE the no-return latch raises the hold/abort flag (the

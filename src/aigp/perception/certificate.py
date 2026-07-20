@@ -77,7 +77,16 @@ class SidePairCertificate:
         self._clean_streak = 0
 
     def on_relock_or_collision(self) -> None:
-        """Epoch change: the certificate never survives a target change."""
+        """Epoch change: the certificate never survives a target change.
+
+        Forensic vocabulary (advisory-20 terminology amendment): this
+        event is LOCKED_IDENTITY_REVOKED. It never implies the
+        successor acquired anything — a successor identity below the
+        promote floor reaches at most SUCCESSOR_PROBATION under the
+        ordinary range/persistence rules. Revocation is the DETECTOR
+        wire's power alone (single call site: the certified-detector
+        prediction-inconsistency branch); the SIDE producer can
+        demote by evidence or decay by silence, never revoke."""
         self._status = NONE
         self._last_ok_ns = None
         self._clean_streak = 0

@@ -130,3 +130,38 @@ def test_p4d_honest_relock_refuses_wrong_gate_metrology():
         ts += int(0.05e9)
         s = good_update(c, ts, z=0.6)
     assert s != CERTIFIED
+
+
+def test_negative_controls_side_cannot_revoke_locked_identity():
+    """Advisory-20 permanent regression invariant (the negative-control
+    triplet beside the P4(d) fixture). Revocation
+    (LOCKED_IDENTITY_REVOKED) is the DETECTOR wire's power alone —
+    the SIDE producer may demote by evidence or decay by silence,
+    never revoke:
+    (a) ONE grossly inconsistent side-pair measurement demotes its
+        own tick and the identity RECOVERS without a re-anchor;
+    (c) ordinary SIDE tracking failure (silence) degrades by TIME
+        decay and a detector re-anchor restores the held identity;
+    (b) persistent gross target contradiction MAY revoke — pinned by
+        test_p4d_honest_relock_refuses_wrong_gate_metrology (the
+        certified-detector branch, the single revoke call site)."""
+    # (a) single bad pair: demoted, not revoked; recovers in-chain.
+    c = anchored()
+    good_update(c, int(0.05e9))
+    sep_far = FXW / 8.0                    # ~4x-range scale lie
+    s = c.update(int(0.10e9), 2.0, sep_far, sep_far, FXW,
+                 GOOD_W, GOOD_W, 0.8, 0.8)
+    assert s == PROBATION                  # demotion, never NONE
+    ts = int(0.10e9)
+    for _ in range(3):
+        ts += int(0.05e9)
+        s = good_update(c, ts)             # clean streak, z=2.0 > floor
+    assert s == CERTIFIED                  # same identity, no re-anchor
+    # (c) silence: decay demotes; a detector re-anchor of the HELD
+    # identity restores certification (contrast: after a revocation
+    # the sub-floor re-anchor is refused — the P4(d) fixture).
+    c2 = anchored()
+    good_update(c2, int(0.05e9))
+    assert c2.status_at(int(0.3e9)) == PROBATION   # decay, not revocation
+    c2.on_full_quad(int(0.35e9), z_m=2.0)
+    assert c2.status_at(int(0.36e9)) == CERTIFIED
