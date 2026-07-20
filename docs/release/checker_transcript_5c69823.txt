@@ -1,0 +1,17 @@
+CHECKER TRANSCRIPT — evidence packet 5c69823
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json
+reviewed tip (HEAD at invocation): 2ef3e480a5ae2665c9760ab1ae019978005e9187
+repo: origin/main (github.com tsionely/eni_dcim)
+checker tool commit lineage: tools/release_manifest.py as of this tip
+--- output ---
+MANIFEST VERIFIES
+exit status: 0
+--- per-file sha256 (recomputed at transcript time) ---
+8fcfa2b697eeb29e54f124d662068ac9515a5679e72ae7154b1277b2907eeaf8  tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/summary.md
+c47d26ef10346fc4f7d902fd9b725665b12ec6ce8582b03ddaac8fcb4ad2c998  tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/expanded_census_clusters.csv
+1476fb1c947ff32342fc9786ec3d07851093fe758f26cc8db9d862c30bb19013  tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/censoring_ledger.csv
+25b50ed33e88858502d5734d770cc75167d89d70f96487a9800cac6e8392952c  tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/release_fit.csv
+14ab0ea7336b0a4a295850b6aee461423680e885719db9e08fb743fd72e6acf1  tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/era_heterogeneity.md
+fc5123a38e9ee386a45eb4e37efc4b5a182f099befd390e8bfc5247449c66498  tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_delta_latch_mechanism.csv
+a07d81d02397efe8dd2407fc436401776692c37eacec00442f033307e2075fe7  tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_restamp_verdict.csv
+903f95e04d6976aeecfef7fc865f2cfdbd7d998ab30b09e0437f8bd3a6958aaa  tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_anchor_trial_rows.csv

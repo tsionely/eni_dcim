@@ -94,6 +94,14 @@ def check_manifest(manifest_path: str | Path,
             if not _commit_exists(repo, row[key]):
                 failures.append(f"{rid}: {key} '{row[key]}' does not "
                                 "resolve in the object store")
+        # Optional typed evidence-landing commit (channel-2 amendment:
+        # dual roles must be TYPED fields, never filename or free
+        # text). When present it must resolve like the others.
+        if row.get("evidence_commit") not in (None, ""):
+            if not _commit_exists(repo, row["evidence_commit"]):
+                failures.append(f"{rid}: evidence_commit "
+                                f"'{row['evidence_commit']}' does not "
+                                "resolve in the object store")
         if (_commit_exists(repo, row["criterion_registered_at"])
                 and _commit_exists(repo, row["generator_commit"])
                 and not _is_ancestor(repo, row["criterion_registered_at"],

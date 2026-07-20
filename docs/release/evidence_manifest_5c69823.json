@@ -6,11 +6,12 @@
   "artifact_path": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/summary.md",
   "artifact_sha256": "8fcfa2b697eeb29e54f124d662068ac9515a5679e72ae7154b1277b2907eeaf8",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 23,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 2,
@@ -19,11 +20,12 @@
   "artifact_path": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/expanded_census_clusters.csv",
   "artifact_sha256": "c47d26ef10346fc4f7d902fd9b725665b12ec6ce8582b03ddaac8fcb4ad2c998",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 23,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 3,
@@ -32,11 +34,12 @@
   "artifact_path": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/censoring_ledger.csv",
   "artifact_sha256": "1476fb1c947ff32342fc9786ec3d07851093fe758f26cc8db9d862c30bb19013",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 23,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 4,
@@ -45,11 +48,12 @@
   "artifact_path": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/release_fit.csv",
   "artifact_sha256": "25b50ed33e88858502d5734d770cc75167d89d70f96487a9800cac6e8392952c",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 23,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 5,
@@ -58,11 +62,12 @@
   "artifact_path": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/era_heterogeneity.md",
   "artifact_sha256": "14ab0ea7336b0a4a295850b6aee461423680e885719db9e08fb743fd72e6acf1",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 23,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 6,
@@ -71,11 +76,12 @@
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_delta_latch_mechanism.csv",
   "artifact_sha256": "fc5123a38e9ee386a45eb4e37efc4b5a182f099befd390e8bfc5247449c66498",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 5,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 7,
@@ -84,11 +90,12 @@
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_restamp_verdict.csv",
   "artifact_sha256": "a07d81d02397efe8dd2407fc436401776692c37eacec00442f033307e2075fe7",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 5,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  },
  {
   "board_row": 8,
@@ -97,10 +104,11 @@
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_anchor_trial_rows.csv",
   "artifact_sha256": "903f95e04d6976aeecfef7fc865f2cfdbd7d998ab30b09e0437f8bd3a6958aaa",
   "generator_commit": "bb0dbcf",
-  "generator_command": "codex task A/B harnesses at generator commit; evidence landed at 5c69823",
+  "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
   "independent_n": 5,
   "result": "see artifact",
-  "status": "REPORTED"
+  "status": "REPORTED",
+  "evidence_commit": "5c69823"
  }
 ]
