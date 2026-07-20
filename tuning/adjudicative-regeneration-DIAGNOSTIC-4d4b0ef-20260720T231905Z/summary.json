@@ -1,5 +1,5 @@
 {
-  "artifact_manifest": "tuning/adjudicative-regeneration-DIAGNOSTIC-bfe4578-20260720T231510Z/adjudicative_artifact_manifest.csv",
+  "artifact_manifest": "tuning/adjudicative-regeneration-DIAGNOSTIC-4d4b0ef-20260720T231905Z/adjudicative_artifact_manifest.csv",
   "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
   "computation_commit": "de19d881ce8fa0ddc27dd71d7306d0d366c43e90",
   "criterion_commits": {
@@ -11,12 +11,12 @@
   },
   "csv_only_no_sim": true,
   "diagnostic_only": true,
-  "input_manifest_path": "tuning/adjudicative-regeneration-DIAGNOSTIC-bfe4578-20260720T231510Z/checkpoint_input_manifest.json",
-  "input_manifest_sha256": "dbc3f4e8e52b74b514fcd316b734c40489f051c0a107aa32f3f887ff41568409",
+  "input_manifest_path": "tuning/adjudicative-regeneration-DIAGNOSTIC-4d4b0ef-20260720T231905Z/checkpoint_input_manifest.json",
+  "input_manifest_sha256": "6e352d4b0ea87650c7904e6096d490a0d62125467c8e13453d1e0180fe739821",
   "legacy_formula": "reconstructed: cmd=terminal_vz_up_mps, e=e_meas, abs(e)>0.03, cmd*e<-1e-6; zero command has no deadband in the historical mask; reconstructs 28/68 scored trace rows",
   "r26_1_verdict_scope": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
-  "repo_head": "bfe45782e441f43c9c8650abe6ae89a763e781ce",
-  "report_generator_commit": "bfe45782e441f43c9c8650abe6ae89a763e781ce",
+  "repo_head": "4d4b0ef13b8e8cbee7263964eba0259087ea72d8",
+  "report_generator_commit": "4d4b0ef13b8e8cbee7263964eba0259087ea72d8",
   "rng_resample_provenance": "Student-t nu=5.0; cluster_bootstrap_n=2200; cluster_bootstrap_seed=20260720; profile grid from archive_harvest_release_fit_v21/run_shadow_residual_diagnostics",
   "second_mechanism_table": "per-cluster |b1| vs rate_feed_forward_mps RMS; cut-aware near-hover refutation columns included",
   "source_checkpoint_dir": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z",

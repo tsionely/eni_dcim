@@ -1,12 +1,12 @@
 # ADJUDICATIVE REGENERATION ROUND
 
 Scope: DIAGNOSTIC verdict-layer regeneration, CSV-only, no simulator launch.
-Report generator commit: `bfe45782e441f43c9c8650abe6ae89a763e781ce`.
+Report generator commit: `4d4b0ef13b8e8cbee7263964eba0259087ea72d8`.
 Computation checkpoint commit: `de19d881ce8fa0ddc27dd71d7306d0d366c43e90`.
 Checkpoint evidence commit: `c19602f384bc30b0a53d649238b429f9085b6b8f`.
 Source checkpoints: `tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z`.
-Input manifest: `tuning/adjudicative-regeneration-DIAGNOSTIC-bfe4578-20260720T231510Z/checkpoint_input_manifest.json`.
-Input manifest sha256: `dbc3f4e8e52b74b514fcd316b734c40489f051c0a107aa32f3f887ff41568409`.
+Input manifest: `tuning/adjudicative-regeneration-DIAGNOSTIC-4d4b0ef-20260720T231905Z/checkpoint_input_manifest.json`.
+Input manifest sha256: `6e352d4b0ea87650c7904e6096d490a0d62125467c8e13453d1e0180fe739821`.
 
 ## Shadow Closure Read
 
