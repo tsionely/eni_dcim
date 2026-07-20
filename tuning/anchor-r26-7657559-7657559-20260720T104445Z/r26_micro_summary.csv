@@ -1,0 +1,4 @@
+scenario,verdict,final_active_source,final_rate_source,final_rate_anchor_age_s,final_rate_anchor_age_frozen_s,final_rate_anchor_valid,final_rate_anchor_v_mps
+R26-4-side-offset,PASS,SIDE_PAIR,FULL_RATE_ANCHOR,0.24,0.24,True,0.07466666666666674
+R26-5-contradiction,PASS,SIDE_PAIR,ANCHOR_INVALID,0.2799999999999999,0.2799999999999999,False,0.07466666666666674
+R26-6-full-return,PASS,FULL_QUAD,FULL_QUAD,0.0,0.0,False,

@@ -1,0 +1,5 @@
+trial,drop_full_after_ts_ns,rows,capture_rows,first_capture_range_m,first_capture_source,owner_term_rows,owner_term_side_rows,side_shadow_capture_rows,side_admission_max,side_min_range_m,transition_count,full_to_side_count,rate_source_complete,phase_changed_rows,candidate_frame_id,candidate_range_z_m
+baseline_no_drop,,43,2,1.9027490654879835,FULL_QUAD,27,0,0,,,0,0,True,0,,
+anchor_drop_frame_304,1784531480159929900,43,5,1.9027490654879835,FULL_QUAD,27,16,1,0.2708939736582296,1.0055592429041487,1,1,True,0,304,1.8205209770928898
+anchor_drop_frame_306,1784531480229388300,43,2,1.9027490654879835,FULL_QUAD,27,0,0,,,0,0,True,0,306,1.648511592213068
+anchor_drop_frame_308,1784531480298793200,43,2,1.9027490654879835,FULL_QUAD,27,0,0,,,0,0,True,0,308,1.497103373282544

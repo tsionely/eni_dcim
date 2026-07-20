@@ -1,4 +1,4 @@
-"""R26 anchor-run replay on commit 3c4c5d9.
+"""R26 anchor-run replay on commit 7657559.
 
 QA & MOCK-TUNER scope: recorded-video replay and synthetic oracle micro-replays
 only. Writes artifacts under tuning/.
@@ -29,8 +29,13 @@ from aigp.planning.vertical_owner import (  # noqa: E402
     TERM_OWNER,
     TerminalOracle,
     VerticalOwnerArbiter,
+    slew_up_velocity,
 )
-from aigp.planning.vertical_terminal import crossing_error, crossing_sigma  # noqa: E402
+from aigp.planning.vertical_terminal import (  # noqa: E402
+    compute_terminal_guidance,
+    crossing_error,
+    crossing_sigma,
+)
 from run_l1_perception_replay import (  # noqa: E402
     TARGETS,
     assert_mock_safe,
@@ -43,7 +48,7 @@ from run_l1_perception_replay import (  # noqa: E402
 )
 
 
-SOURCE_REF = "3c4c5d9"
+SOURCE_REF = "7657559"
 SIDE_SIGMA_E_FLOOR_M = 0.038
 FULL_SIGMA_E_M = 0.05
 FULL_SIGMA_V_MPS = 0.10
@@ -79,7 +84,7 @@ def apply_patches(params: ParamSet, patches: list[str]) -> ParamSet:
     return params.patch(overrides) if overrides else params
 
 
-def load_setpoint_speeds(log_path: Path) -> list[tuple[int, float]]:
+def load_setpoint_signals(log_path: Path) -> list[tuple[int, float, float | None]]:
     out = []
     for rec in read_jsonl(log_path):
         if rec.get("topic") != "setpoint":
@@ -87,14 +92,42 @@ def load_setpoint_speeds(log_path: Path) -> list[tuple[int, float]]:
         data = rec.get("data", {})
         v = data.get("v_body") or data.get("vel_body") or data.get("velocity_body")
         speed = None
+        body_z = None
         if isinstance(v, list) and len(v) >= 2:
             speed = math.hypot(float(v[0]), float(v[1]))
+            if len(v) >= 3:
+                body_z = float(v[2])
         if speed is None:
             speed = fnum(data.get("speed_mps"))
         if speed is not None:
-            out.append((int(rec.get("mono_ns", 0)), float(speed)))
+            out.append((int(rec.get("mono_ns", 0)), float(speed), body_z))
     out.sort()
     return out
+
+
+def setpoint_speed_at(samples: list[tuple[int, float, float | None]],
+                      mono_ns: int, default: float | None = None) -> float | None:
+    if not samples:
+        return default
+    idx = bisect_right([s[0] for s in samples], mono_ns) - 1
+    if idx < 0:
+        return default
+    return samples[idx][1]
+
+
+def setpoint_vz_up_at(samples: list[tuple[int, float, float | None]],
+                      mono_ns: int, level_roll: float,
+                      level_pitch: float) -> float | None:
+    if not samples:
+        return None
+    idx = bisect_right([s[0] for s in samples], mono_ns) - 1
+    if idx < 0:
+        return None
+    body_z = samples[idx][2]
+    if body_z is None:
+        return None
+    cos_tilt = float(np.cos(level_pitch) * np.cos(level_roll))
+    return -float(body_z) * cos_tilt
 
 
 def load_truth_vz(log_path: Path) -> list[tuple[int, float]]:
@@ -128,12 +161,18 @@ def at_or_before(samples: list[tuple[int, float]], mono_ns: int,
 
 def attach_flight_signals(params: ParamSet, rows: list[dict], target: dict) -> None:
     log_path = ROOT / target["log"]
-    speeds = load_setpoint_speeds(log_path)
+    setpoints = load_setpoint_signals(log_path)
     truth_vz = load_truth_vz(log_path)
     default_speed = float(params.get("planner.commit.speed_mps", default=2.5))
     for row in rows:
         mono = int(row["mono_ns"])
-        row["setpoint_speed_xy_mps"] = at_or_before(speeds, mono, default_speed)
+        row["setpoint_speed_xy_mps"] = setpoint_speed_at(setpoints, mono, default_speed)
+        row["setpoint_vz_up_mps"] = setpoint_vz_up_at(
+            setpoints,
+            mono,
+            float(row.get("level_roll_rad") or 0.0),
+            float(row.get("level_pitch_rad") or 0.0),
+        )
         row["truth_vz_up_mps"] = at_or_before(truth_vz, mono, None)
 
 
@@ -195,7 +234,13 @@ def rate_source_of(oracle: TerminalOracle) -> str:
     return "FULL_QUAD"
 
 
-def rate_anchor_age(oracle: TerminalOracle) -> float:
+def rate_anchor_age(oracle: TerminalOracle, now_s: float) -> float:
+    if oracle.rate_anchor_ts is None:
+        return 0.0
+    return float(oracle.anchor_age_s(now_s))
+
+
+def rate_anchor_age_frozen(oracle: TerminalOracle) -> float:
     if oracle.rate_anchor_ts is None:
         return 0.0
     return float(oracle.anchor_age_s())
@@ -207,8 +252,92 @@ def rate_anchor_elapsed(oracle: TerminalOracle, ts_s: float) -> float:
     return max(0.0, float(ts_s) - float(oracle.rate_anchor_ts))
 
 
+def anchor_hold_rate(oracle: TerminalOracle, prev_vz_up: float | None) -> tuple[float | None, float, float | str]:
+    anchor_v = fnum(oracle.rate_anchor_v)
+    if anchor_v is None or not oracle.rate_anchor_valid:
+        return None, 0.0, oracle.anchor_applied_ref if oracle.anchor_applied_ref is not None else ""
+    if oracle.anchor_applied_ref is None and prev_vz_up is not None:
+        oracle.anchor_applied_ref = float(prev_vz_up)
+    ff = (
+        float(prev_vz_up) - float(oracle.anchor_applied_ref)
+        if prev_vz_up is not None and oracle.anchor_applied_ref is not None
+        else 0.0
+    )
+    return anchor_v + ff, ff, oracle.anchor_applied_ref if oracle.anchor_applied_ref is not None else ""
+
+
+def terminal_command_update(
+    params: ParamSet,
+    oracle: TerminalOracle,
+    row: dict,
+    e_z_eff: float,
+    prev_vz_up: float | None,
+    dt: float,
+) -> dict:
+    speed = max(float(row.get("setpoint_speed_xy_mps") or 0.0),
+                float(params.get("planner.commit.speed_mps", default=2.5)),
+                0.5)
+    r = max(float(row.get("range_z_m") or 0.0), 0.05)
+    tau_s = r / speed
+    vz_max = float(params.get("planner.terminal.vz_max_mps", default=0.6))
+    az_max = float(params.get("planner.terminal.az_max_mps2", default=2.0))
+    margin = float(params.get("planner.terminal.margin_m", default=0.55))
+    cmd_clamp = float(params.get("planner.terminal.cmd_clamp_m", default=0.10))
+    logged_applied_vz_up = fnum(row.get("setpoint_vz_up_mps"))
+    if oracle.active_source == "SIDE_PAIR":
+        age = rate_anchor_age(oracle, float(row["feature_ts_ns"]) / 1e9)
+        if oracle.rate_anchor_valid and age <= tau_s + 0.5:
+            # The recorded replay is counterfactual for the terminal owner, so
+            # use the actually logged vertical command as the applied-command
+            # feed-forward term when it is available.
+            applied_now = logged_applied_vz_up if logged_applied_vz_up is not None else prev_vz_up
+            rate_hold, ff, applied_ref = anchor_hold_rate(oracle, applied_now)
+            v_z_up = float(rate_hold or 0.0)
+        else:
+            rate_hold, ff, applied_ref = None, 0.0, oracle.anchor_applied_ref or ""
+            v_z_up = 0.0
+    else:
+        vz = oracle.v_z_visual()
+        v_z_up = vz * oracle.rate_authority() if vz is not None else 0.0
+        rate_hold, ff, applied_ref = None, 0.0, ""
+
+    guidance = compute_terminal_guidance(
+        e_z=float(np.clip(e_z_eff, -cmd_clamp, cmd_clamp)),
+        sigma_e=0.10,
+        v_z=v_z_up,
+        sigma_v=0.15,
+        tau_s=tau_s,
+        margin_m=margin,
+        prev_phase=None,
+        vz_max=vz_max,
+        az_max=az_max,
+    )
+    vz_goal = (
+        prev_vz_up if guidance["vz_cmd"] is None and prev_vz_up is not None
+        else 0.0 if guidance["vz_cmd"] is None
+        else float(guidance["vz_cmd"])
+    )
+    vz_applied = slew_up_velocity(
+        prev_vz_up if prev_vz_up is not None else vz_goal,
+        vz_goal,
+        dt,
+        az_max,
+        az_max,
+    )
+    return {
+        "rate_hold_corrected_mps": rate_hold if rate_hold is not None else "",
+        "rate_feed_forward_mps": ff,
+        "anchor_applied_ref_mps": applied_ref,
+        "logged_applied_vz_up_mps": logged_applied_vz_up if logged_applied_vz_up is not None else "",
+        "terminal_rate_input_mps": v_z_up,
+        "terminal_vz_up_mps": vz_applied,
+        "terminal_vz_goal_mps": vz_goal,
+    }
+
+
 def admission_metrics(params: ParamSet, oracle: TerminalOracle, row: dict,
-                      side_sigma_e_m: float) -> dict:
+                      side_sigma_e_m: float,
+                      side_vz_override: float | None = None) -> dict:
     if not oracle.ready():
         return {
             "admission_score": "",
@@ -234,7 +363,13 @@ def admission_metrics(params: ParamSet, oracle: TerminalOracle, row: dict,
     r = max(float(row.get("range_z_m") or 0.0), 0.05)
     h_tail = min(r / speed, terminal_tail_s(params), TAIL_S)
     if oracle.active_source == "SIDE_PAIR":
-        vz_vis = float(oracle.rate_anchor_v or 0.0) if oracle.rate_anchor_valid else 0.0
+        vz_vis = (
+            float(side_vz_override)
+            if side_vz_override is not None
+            else float(oracle.rate_anchor_v or 0.0)
+            if oracle.rate_anchor_valid
+            else 0.0
+        )
         sig_e, sig_v = side_sigma_e_m, FULL_SIGMA_V_MPS
     else:
         vz = oracle.v_z_visual()
@@ -262,6 +397,7 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
     last_t = None
     transition_id = 0
     vz_max = float(params.get("planner.terminal.vz_max_mps", default=0.6))
+    term_vz_up: float | None = None
 
     for row in rows:
         if not row.get("commit"):
@@ -293,7 +429,9 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
                 "from_source": prev_source,
                 "to_source": oracle.active_source,
                 "rate_source": rate_source_of(oracle),
-                "rate_anchor_age_s": rate_anchor_age(oracle),
+                "rate_anchor_age_s": rate_anchor_age(oracle, ts_s),
+                "rate_anchor_age_frozen_s": rate_anchor_age_frozen(oracle),
+                "rate_anchor_elapsed_s": rate_anchor_elapsed(oracle, ts_s),
                 "rate_anchor_valid": oracle.rate_anchor_valid,
                 "rate_anchor_v_mps": oracle.rate_anchor_v if oracle.rate_anchor_v is not None else "",
             })
@@ -330,18 +468,58 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
             applied = oracle.update(float(e_raw) if active_sample else None,
                                     dt=dt, vz_max=vz_max)
             applied_e_z = applied if applied is not None else ""
+            command_info = terminal_command_update(
+                params,
+                oracle,
+                row,
+                float(applied) if applied is not None else 0.0,
+                term_vz_up,
+                dt,
+            )
+            term_vz_up = fnum(command_info["terminal_vz_up_mps"])
+            if oracle.active_source == "SIDE_PAIR":
+                metrics = admission_metrics(
+                    params,
+                    oracle,
+                    decision_row,
+                    side_sigma_e_m,
+                    fnum(command_info["rate_hold_corrected_mps"]),
+                )
+                score = fnum(metrics.get("admission_score"))
+        else:
+            command_info = {
+                "rate_hold_corrected_mps": "",
+                "rate_feed_forward_mps": "",
+                "anchor_applied_ref_mps": "",
+                "logged_applied_vz_up_mps": row.get("setpoint_vz_up_mps", ""),
+                "terminal_rate_input_mps": "",
+                "terminal_vz_up_mps": "",
+                "terminal_vz_goal_mps": "",
+            }
         truth_v = fnum(row.get("truth_vz_up_mps"))
         anchor_v = fnum(oracle.rate_anchor_v)
-        age = rate_anchor_age(oracle)
-        rate_error = (
+        rate_hold = fnum(command_info.get("rate_hold_corrected_mps"))
+        age = rate_anchor_age(oracle, ts_s)
+        frozen_age = rate_anchor_age_frozen(oracle)
+        elapsed_age = rate_anchor_elapsed(oracle, ts_s)
+        rate_error_anchor_only = (
             truth_v - anchor_v
             if truth_v is not None and anchor_v is not None and age > 1e-6
             else ""
         )
-        elapsed_age = rate_anchor_elapsed(oracle, ts_s)
+        rate_error = (
+            truth_v - rate_hold
+            if truth_v is not None and rate_hold is not None and age > 1e-6
+            else ""
+        )
         sigma_a_sample = (
-            float(rate_error) / elapsed_age
-            if fnum(rate_error) is not None and elapsed_age > 1e-6
+            float(rate_error) / age
+            if fnum(rate_error) is not None and age > 1e-6
+            else ""
+        )
+        sigma_a_anchor_only_sample = (
+            float(rate_error_anchor_only) / age
+            if fnum(rate_error_anchor_only) is not None and age > 1e-6
             else ""
         )
         shadow_capture = (
@@ -372,10 +550,14 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
             "admission_h_tail_s": metrics["admission_h_tail_s"],
             "rate_source": rate_source_of(oracle),
             "rate_anchor_age_s": age,
+            "rate_anchor_age_frozen_s": frozen_age,
             "rate_anchor_elapsed_s": elapsed_age,
             "rate_anchor_valid": oracle.rate_anchor_valid,
             "rate_anchor_v_mps": oracle.rate_anchor_v if oracle.rate_anchor_v is not None else "",
+            **command_info,
             "truth_vz_up_mps": row.get("truth_vz_up_mps", ""),
+            "rate_error_anchor_only_mps": rate_error_anchor_only,
+            "sigma_a_anchor_only_sample_mps2": sigma_a_anchor_only_sample,
             "rate_error_mps": rate_error,
             "sigma_a_sample_mps2": sigma_a_sample,
             "applied_e_z": applied_e_z,
@@ -438,15 +620,23 @@ def summarize_sigma_a(rows: list[dict]) -> list[dict]:
         group = []
         for row in rows:
             sample = fnum(row.get("sigma_a_sample_mps2"))
-            age = fnum(row.get("rate_anchor_elapsed_s"))
+            age = fnum(row.get("rate_anchor_age_s"))
             if sample is None or age is None or age < 0.10:
                 continue
             if label != "all" and age_bin(age) != label:
                 continue
             group.append(row)
         samples = [float(r["sigma_a_sample_mps2"]) for r in group]
-        ages = [float(r["rate_anchor_elapsed_s"]) for r in group]
+        anchor_samples = [
+            float(r["sigma_a_anchor_only_sample_mps2"]) for r in group
+            if fnum(r.get("sigma_a_anchor_only_sample_mps2")) is not None
+        ]
+        ages = [float(r["rate_anchor_age_s"]) for r in group]
         errors = [float(r["rate_error_mps"]) for r in group]
+        anchor_errors = [
+            float(r["rate_error_anchor_only_mps"]) for r in group
+            if fnum(r.get("rate_error_anchor_only_mps")) is not None
+        ]
         out.append({
             "age_bin": label,
             "n": len(group),
@@ -455,8 +645,10 @@ def summarize_sigma_a(rows: list[dict]) -> list[dict]:
             "age_median_s": statistics.median(ages) if ages else "",
             "rate_error_bias_mps": statistics.fmean(errors) if errors else "",
             "rate_error_rms_mps": rms(errors) if errors else "",
+            "rate_error_anchor_only_rms_mps": rms(anchor_errors) if anchor_errors else "",
             "sigma_a_rms_mps2": rms(samples) if samples else "",
             "sigma_a_centered_mps2": rms_centered(samples) if len(samples) >= 2 else "",
+            "sigma_a_anchor_only_rms_mps2": rms(anchor_samples) if anchor_samples else "",
         })
     return out
 
@@ -497,7 +689,8 @@ def feed_oracle_row(rows: list[dict], scenario: str, oracle: TerminalOracle,
         "active_sample": active,
         "active_source": oracle.active_source,
         "rate_source": rate_source_of(oracle),
-        "rate_anchor_age_s": rate_anchor_age(oracle),
+        "rate_anchor_age_s": rate_anchor_age(oracle, ts),
+        "rate_anchor_age_frozen_s": rate_anchor_age_frozen(oracle),
         "rate_anchor_elapsed_s": rate_anchor_elapsed(oracle, ts),
         "rate_anchor_valid": oracle.rate_anchor_valid,
         "rate_anchor_v_mps": oracle.rate_anchor_v if oracle.rate_anchor_v is not None else "",
@@ -530,7 +723,8 @@ def micro_replays() -> tuple[list[dict], list[dict]]:
         else "FAIL",
         "final_active_source": g.active_source,
         "final_rate_source": rate_source_of(g),
-        "final_rate_anchor_age_s": rate_anchor_age(g),
+        "final_rate_anchor_age_s": rate_anchor_age(g, 13 * 0.04),
+        "final_rate_anchor_age_frozen_s": rate_anchor_age_frozen(g),
         "final_rate_anchor_valid": g.rate_anchor_valid,
         "final_rate_anchor_v_mps": g.rate_anchor_v if g.rate_anchor_v is not None else "",
     })
@@ -555,7 +749,8 @@ def micro_replays() -> tuple[list[dict], list[dict]]:
         "verdict": "PASS" if valid_before and not g.rate_anchor_valid else "FAIL",
         "final_active_source": g.active_source,
         "final_rate_source": rate_source_of(g),
-        "final_rate_anchor_age_s": rate_anchor_age(g),
+        "final_rate_anchor_age_s": rate_anchor_age(g, t0 + 2 * 0.04),
+        "final_rate_anchor_age_frozen_s": rate_anchor_age_frozen(g),
         "final_rate_anchor_valid": g.rate_anchor_valid,
         "final_rate_anchor_v_mps": g.rate_anchor_v if g.rate_anchor_v is not None else "",
     })
@@ -581,7 +776,8 @@ def micro_replays() -> tuple[list[dict], list[dict]]:
         else "FAIL",
         "final_active_source": g.active_source,
         "final_rate_source": rate_source_of(g),
-        "final_rate_anchor_age_s": rate_anchor_age(g),
+        "final_rate_anchor_age_s": rate_anchor_age(g, 12 * 0.04 + 2 * 0.04),
+        "final_rate_anchor_age_frozen_s": rate_anchor_age_frozen(g),
         "final_rate_anchor_valid": g.rate_anchor_valid,
         "final_rate_anchor_v_mps": g.rate_anchor_v if g.rate_anchor_v is not None else "",
     })
@@ -623,14 +819,15 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "",
         "## R26-2/3 Sigma-a",
         "",
-        "| Anchor age bin | n | age range | rate error RMS | sigma_a RMS | sigma_a centered |",
-        "|---|---:|---|---:|---:|---:|",
+        "| Anchor age bin | n | age range | corrected err RMS | corrected sigma_a RMS | anchor-only sigma_a RMS | centered |",
+        "|---|---:|---|---:|---:|---:|---:|",
     ])
     for row in summary["sigma_a_summary"]:
         lines.append(
             f"| `{row['age_bin']}` | {row['n']} | "
             f"{fmt(row['age_min_s'])}-{fmt(row['age_max_s'])} | "
             f"{fmt(row['rate_error_rms_mps'])} | {fmt(row['sigma_a_rms_mps2'])} | "
+            f"{fmt(row['sigma_a_anchor_only_rms_mps2'])} | "
             f"{fmt(row['sigma_a_centered_mps2'])} |"
         )
     lines.extend([
@@ -649,24 +846,36 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "",
         "## R26-4/5/6 Replays",
         "",
-        "| Scenario | Verdict | Final source | Final rate source | Final anchor age | Anchor valid |",
-        "|---|---|---|---|---:|---|",
+        "| Scenario | Verdict | Final source | Final rate source | Final now-age | Final frozen-age | Anchor valid |",
+        "|---|---|---|---|---:|---:|---|",
     ])
     for row in summary["micro_summary"]:
         lines.append(
             f"| `{row['scenario']}` | `{row['verdict']}` | "
             f"`{row['final_active_source']}` | `{row['final_rate_source']}` | "
-            f"{fmt(row['final_rate_anchor_age_s'])} | `{row['final_rate_anchor_valid']}` |"
+            f"{fmt(row['final_rate_anchor_age_s'])} | "
+            f"{fmt(row['final_rate_anchor_age_frozen_s'])} | "
+            f"`{row['final_rate_anchor_valid']}` |"
         )
     lines.extend([
         "",
         f"Telemetry coverage: `{summary['rate_telemetry_complete']}` "
         "for rate_source/rate_anchor_age_s in every generated term row.",
-        f"Anchor-age telemetry note: code `rate_anchor_age_s` range "
-        f"{fmt(summary['code_anchor_age_min_s'])}-{fmt(summary['code_anchor_age_max_s'])}; "
+        f"Anchor-age telemetry note: now-based `rate_anchor_age_s` range "
+        f"{fmt(summary['now_anchor_age_min_s'])}-{fmt(summary['now_anchor_age_max_s'])}; "
+        f"frozen/no-now diagnostic range "
+        f"{fmt(summary['frozen_anchor_age_min_s'])}-{fmt(summary['frozen_anchor_age_max_s'])}; "
         f"elapsed anchor age range "
         f"{fmt(summary['elapsed_anchor_age_min_s'])}-{fmt(summary['elapsed_anchor_age_max_s'])}; "
-        f"frozen-age flag `{summary['anchor_age_frozen_flag']}`.",
+        f"now-based advances `{summary['now_anchor_age_advances_flag']}`; "
+        f"frozen/no-now static `{summary['frozen_no_now_static_flag']}`.",
+        f"Feed-forward corrected sigma_a: `{fmt(summary['measured_sigma_a_mps2'])}`; "
+        f"anchor-only comparison: `{fmt(summary['measured_anchor_only_sigma_a_mps2'])}`.",
+        f"Applied-command audit: logged applied vz range "
+        f"{fmt(summary['logged_applied_vz_min_mps'])}-{fmt(summary['logged_applied_vz_max_mps'])}; "
+        f"feed-forward range "
+        f"{fmt(summary['feed_forward_min_mps'])}-{fmt(summary['feed_forward_max_mps'])} "
+        f"(RMS `{fmt(summary['feed_forward_rms_mps'])}`).",
         "",
         "Artifacts: `features_f2.csv`, `anchor_trial_rows.csv`, "
         "`anchor_trial_summary.csv`, `anchor_transitions.csv`, "
@@ -754,17 +963,31 @@ def main() -> int:
         and r.get("shadow_owner") == TERM_OWNER
         and r.get("active_source") == "SIDE_PAIR"
         and fnum(r.get("sigma_a_sample_mps2")) is not None
-        and fnum(r.get("rate_anchor_elapsed_s")) is not None
-        and float(r["rate_anchor_elapsed_s"]) >= 0.10
+        and fnum(r.get("rate_anchor_age_s")) is not None
+        and float(r["rate_anchor_age_s"]) >= 0.10
     ]
     write_csv(out_dir / "sigma_a_rows.csv", sigma_a_rows)
     sigma_a_summary = summarize_sigma_a(sigma_a_rows)
     code_ages = [float(r["rate_anchor_age_s"]) for r in sigma_a_rows
                  if fnum(r.get("rate_anchor_age_s")) is not None]
+    frozen_ages = [float(r["rate_anchor_age_frozen_s"]) for r in sigma_a_rows
+                   if fnum(r.get("rate_anchor_age_frozen_s")) is not None]
     elapsed_ages = [float(r["rate_anchor_elapsed_s"]) for r in sigma_a_rows
                     if fnum(r.get("rate_anchor_elapsed_s")) is not None]
+    feed_forwards = [float(r["rate_feed_forward_mps"]) for r in sigma_a_rows
+                     if fnum(r.get("rate_feed_forward_mps")) is not None]
+    logged_applied_vz = [float(r["logged_applied_vz_up_mps"]) for r in sigma_a_rows
+                         if fnum(r.get("logged_applied_vz_up_mps")) is not None]
     measured_sigma_a = next(
         (fnum(r["sigma_a_rms_mps2"]) for r in sigma_a_summary if r["age_bin"] == "all"),
+        None,
+    )
+    measured_anchor_only_sigma_a = next(
+        (
+            fnum(r["sigma_a_anchor_only_rms_mps2"])
+            for r in sigma_a_summary
+            if r["age_bin"] == "all"
+        ),
         None,
     )
     floors = floor_table(measured_sigma_a)
@@ -795,15 +1018,33 @@ def main() -> int:
         "r26_1_verdict": "PASS" if r26_1_pass else "FAIL",
         "sigma_a_summary": sigma_a_summary,
         "measured_sigma_a_mps2": measured_sigma_a,
+        "measured_anchor_only_sigma_a_mps2": measured_anchor_only_sigma_a,
         "floor_table": floors,
         "r26_23_verdict": "PASS" if r26_23_pass else "FAIL",
         "micro_summary": micro_summary,
         "r26_456_verdict": "PASS" if all(r["verdict"] == "PASS" for r in micro_summary) else "FAIL",
         "rate_telemetry_complete": rate_telemetry_complete,
+        "now_anchor_age_min_s": min(code_ages) if code_ages else "",
+        "now_anchor_age_max_s": max(code_ages) if code_ages else "",
+        "frozen_anchor_age_min_s": min(frozen_ages) if frozen_ages else "",
+        "frozen_anchor_age_max_s": max(frozen_ages) if frozen_ages else "",
         "code_anchor_age_min_s": min(code_ages) if code_ages else "",
         "code_anchor_age_max_s": max(code_ages) if code_ages else "",
         "elapsed_anchor_age_min_s": min(elapsed_ages) if elapsed_ages else "",
         "elapsed_anchor_age_max_s": max(elapsed_ages) if elapsed_ages else "",
+        "logged_applied_vz_min_mps": min(logged_applied_vz) if logged_applied_vz else "",
+        "logged_applied_vz_max_mps": max(logged_applied_vz) if logged_applied_vz else "",
+        "feed_forward_min_mps": min(feed_forwards) if feed_forwards else "",
+        "feed_forward_max_mps": max(feed_forwards) if feed_forwards else "",
+        "feed_forward_rms_mps": rms(feed_forwards) if feed_forwards else "",
+        "now_anchor_age_advances_flag": (
+            bool(code_ages) and max(code_ages) - min(code_ages) > 0.10
+        ),
+        "frozen_no_now_static_flag": (
+            bool(frozen_ages and code_ages)
+            and max(frozen_ages) - min(frozen_ages) < 1e-6
+            and max(code_ages) - min(code_ages) > 0.10
+        ),
         "anchor_age_frozen_flag": (
             bool(code_ages and elapsed_ages)
             and max(code_ages) - min(code_ages) < 1e-6
