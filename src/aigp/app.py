@@ -263,6 +263,14 @@ class App:
         term_arbiter = VerticalOwnerArbiter()
         term_oracle = TerminalOracle()
         term_vz_up = None
+        # Uncorrected-tail horizon for admission (ratified rule): the
+        # tail is the LONGER of the damping+freeze interval (0.45s) and
+        # the no-return tail — time-to-plane at the distance where
+        # retreat stops being possible (the planner's no-abort band).
+        # At 1.8 m/s these coincide (0.8m/1.8 = 0.44s); at restored
+        # 2.5 m/s the braking band grows to 1.2m and the tail follows.
+        term_tail = max(0.45, planner.abort_min_dist_m
+                        / max(planner.commit_speed, 0.1))
 
         supervisor.start_flight()
         while not supervisor.done:
@@ -383,7 +391,8 @@ class App:
                             d_star=terminal_d_star, oracle=term_oracle,
                             vz_max=terminal_vz_max,
                             pitch_cal_rad=terminal_pitch_cal,
-                            e_z_clamp_m=terminal_e_clamp)
+                            e_z_clamp_m=terminal_e_clamp,
+                            t_tail_s=term_tail)
                         term_v_bz = v_bz
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz

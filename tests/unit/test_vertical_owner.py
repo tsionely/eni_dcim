@@ -302,7 +302,9 @@ def test_readiness_and_admission_gate_capture():
 
     # Feature at exact center-aim: y_top such that e_z ~ 0.
     # e_z = 1.6*(180 - y)/span - 0.8 = 0  =>  y = 180 - 0.5*span.
-    def feat(ts_ns, span=800.0):
+    # span is PHYSICAL for the 1.8m rig (512 px.m / 1.8m): the scale
+    # gate at the oracle door rejects span/range fiction.
+    def feat(ts_ns, span=284.0):
         return TerminalFeature(ts_ns=ts_ns, y_top_px=180.0 - 0.5 * span,
                                span_px=span, center_x_px=320.0,
                                cert_status="certified", mode="BAR_FULL")
@@ -323,7 +325,7 @@ def test_readiness_and_admission_gate_capture():
     # Admission corridor blocks a genuinely-off arrival: e_z ~ -0.45.
     b = make_arbiter()
     g2 = TerminalOracle()
-    span = 800.0
+    span = 284.0
     y_off = 180.0 - (0.45 - 0.8 + 0.8) * span / 1.6 - 0.5 * span  # e~-0.45
     for i in range(7):
         f = TerminalFeature(ts_ns=int(i * 0.04e9),
@@ -380,7 +382,7 @@ def test_observer_matures_before_ownership_no_maturity_delay():
             image_size=(640, 360), healthy=True, level_roll=0.0,
             level_pitch=-0.311)
 
-    def feat(ts, span=800.0):
+    def feat(ts, span=284.0):
         return TerminalFeature(ts_ns=ts, y_top_px=180.0 - 0.5 * span,
                                span_px=span, center_x_px=320.0,
                                cert_status="certified", mode="BAR_FULL")
@@ -417,7 +419,7 @@ def test_admission_passable_at_engagement_range():
             image_size=(640, 360), healthy=True, level_roll=0.0,
             level_pitch=-0.311)
 
-    def feat(ts, span=600.0):
+    def feat(ts, span=213.0):
         return TerminalFeature(ts_ns=ts, y_top_px=180.0 - 0.5 * span,
                                span_px=span, center_x_px=320.0,
                                cert_status="certified", mode="BAR_FULL")
@@ -432,3 +434,95 @@ def test_admission_passable_at_engagement_range():
             oracle=g)
     assert owner == TERM_OWNER, \
         "admission corridor impassable at its own engagement range"
+
+
+def _ramp_rig(e_start, e_step, t_tail_s=0.45, ticks=7, span=213.0):
+    """Drive terminal_override with a linearly-drifting oracle history
+    (constant span => the trim shift is constant and drops out of the
+    slope). Returns the final (owner, v_bz)."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 2.4]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    a = make_arbiter()
+    g = TerminalOracle()
+    owner, v_bz = None, None
+    for i in range(ticks):
+        e_i = e_start + i * e_step
+        y_top = 180.0 - (e_i + 0.8) * span / 1.6
+        f = TerminalFeature(ts_ns=int(i * 0.04e9), y_top_px=y_top,
+                            span_px=span, center_x_px=320.0,
+                            cert_status="certified", mode="BAR_FULL")
+        owner, v_bz, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 1.37, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g,
+            t_tail_s=t_tail_s)
+    return owner, v_bz
+
+
+def test_admission_mean_rides_the_tail_horizon_liveness():
+    """RATIFIED admission rule (both advisories + the third mock A/B's
+    engaged+ready-9/10 / owner-0/10 deadlock): the MEAN forecast rides
+    the same uncorrected tail as the sigma. A converging approach with
+    a real measured closing rate — the servo's own action — must ADMIT;
+    full-tau ballistics extrapolated that same rate through the aim
+    into a phantom overshoot and blocked every capture. Liveness
+    fixture per the pattern book: the guard must pass what it exists
+    for, not only block what it must."""
+    owner, v_bz = _ramp_rig(e_start=0.28, e_step=-0.026)
+    assert owner == TERM_OWNER and v_bz is not None
+    # The parameter is live: pricing the whole flight as open-loop
+    # (t_tail = full tau) restores the deadlock on the same rig.
+    owner_full, _ = _ramp_rig(e_start=0.28, e_step=-0.026, t_tail_s=1.37)
+    assert owner_full == ALT_OWNER
+
+
+def test_admission_tail_mean_still_blocks_divergence():
+    """Safety companion: a genuinely diverging arrival (drone sinking
+    away from the aim, miss growing every exposure) stays blocked
+    under the tail horizon — the fix admits the correctable, not the
+    unrecoverable."""
+    owner, v_bz = _ramp_rig(e_start=0.10, e_step=0.026)
+    assert owner == ALT_OWNER and v_bz is None
+
+
+def test_scale_gate_rejects_successor_wearing_certificate():
+    """Pinned with REAL logged numbers (1.8 cohort, flights 202445 /
+    201630): certified BAR_FULL quads with span~103px arrived while
+    the believed gate stood at 1.0m — span*range=103 px.m against the
+    honest 512 px.m — the successor gate, crisp behind the wash,
+    wearing gate-1's certificate. Rows like that pegged e_meas at the
+    clamp and (rightly) blocked admission on two centered passes. The
+    scale gate refuses them at the oracle's front door; the honest
+    F4-capture geometry (span 388 at 1.32m => 512) passes."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_observe
+
+    def st(r):
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, r]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def feat(span):
+        return TerminalFeature(ts_ns=1, y_top_px=360.0, span_px=span,
+                               center_x_px=320.0, cert_status="certified",
+                               mode="BAR_FULL")
+
+    g = TerminalOracle()
+    assert terminal_observe(g, st(1.0), feat(103.0), 0.02) is None
+    assert len(g._hist) == 0                      # fiction never enters
+    g2 = TerminalOracle()
+    assert terminal_observe(g2, st(1.32), feat(388.0), 0.02) is not None
+    assert len(g2._hist) == 1

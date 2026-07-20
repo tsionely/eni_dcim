@@ -125,6 +125,20 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
             or feature.cert_status not in ("certified", "probation")
             or state.image_size is None):
         return None
+    # Honest-detection scale gate at the oracle's front door: the span
+    # and the BELIEVED range must tell the same story before a pixel
+    # row becomes metrology (fx*W = 512 px*m, audited band 333-768,
+    # widened to 300-800). Three real 1.8-cohort flights fed the
+    # oracle certified BAR_FULL quads whose span implied ~5m while the
+    # believed gate stood <1.2m — the SUCCESSOR gate, crisp behind the
+    # wash, wearing gate-1's certificate; e_meas pegged the clamp and
+    # admission (rightly) refused two centered passes. Identity
+    # machinery certifies continuity; only cross-channel consistency
+    # certifies that the row measures THIS gate.
+    if state.gate_rel is not None:
+        r_b = float(state.gate_rel.t[2])
+        if r_b >= 0.5 and not (300.0 <= feature.span_px * r_b <= 800.0):
+            return None
     cy = state.image_size[1] / 2.0
     fx = state.image_size[0] / 2.0                # 90deg HFOV pinhole
     e_meas = gate_w * (cy - feature.y_top_px) / feature.span_px - d_star
@@ -151,7 +165,8 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       d_star: float = 0.8, gate_w: float = 1.6,
                       oracle: "TerminalOracle | None" = None,
                       pitch_cal_rad: float = -0.33,
-                      e_z_clamp_m: float = 0.45):
+                      e_z_clamp_m: float = 0.45,
+                      t_tail_s: float = 0.45):
     """The ONE final-boundary override (enable-bit path).
 
     Computes the terminal vertical command from the CERTIFIED gate state
@@ -201,25 +216,27 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             vz_vis = oracle.v_z_visual() * oracle.rate_authority()
             e_now = e_meas if e_meas is not None else (
                 oracle._hist[-1][1] if oracle._hist else 0.0)
-            e_x = crossing_error(e_now, vz_vis, tau_s)
-            # Admission sigma horizon (mock A/B rerun on the fixed wire
-            # was STILL 0/10 captures — arithmetic, not wiring: at the
-            # 2.5m engagement range tau~1.37s makes 2*sigma_x + 0.06 =
-            # 0.35 > the 0.30 corridor even with a perfect forecast,
-            # deferring capture below ~1.8m where certification dies.
-            # The uncertainty that matters for admission is over the
-            # UNCORRECTED interval (damping+freeze ~0.45s) — rate
-            # errors before damping are corrected by the servo itself.
-            # tau_cap awaits advisory ratification (pre-registered
-            # corridor; constant parameterized, not hard-coded).
-            tau_sig = min(tau_s, 0.45)
+            # RATIFIED admission horizon (both advisories, independently
+            # identical): the mean forecast and the sigma must ride the
+            # SAME uncorrected tail. The sigma-only cap left the mean
+            # ballistic over full tau — a benign 0.08 m/s measured rate
+            # at tau~1.37 consumed the whole 0.106m budget, and the
+            # third mock A/B proved it: engaged+ready 9/10 around
+            # 2.47m, owner=term 0/10. Admission prices the OPEN-LOOP
+            # tail only; rate before damping is the servo's job.
+            # t_tail_s = max(0.45 damping+freeze, dynamic no-return
+            # tail) — supplied by the caller from the abort-band
+            # geometry, so a loss after retreat stops being possible is
+            # never priced with the shorter healthy-loop horizon.
+            h_tail = min(tau_s, t_tail_s)
+            e_x = crossing_error(e_now, vz_vis, h_tail)
             # Oracle measurement sigmas, MEASURED not assumed: the F2
             # graze series scattered ~0.02 RMS sample-to-sample; 0.05 /
             # 0.10 carry a x2.5 margin on that. (The legacy 0.10/0.15
             # placeholders are the quarantined believed-channel numbers
             # — with them 2*sigma + 0.06 exceeds the 0.30 corridor at
             # any tau >= 0.45 and admission can never pass.)
-            s_x = crossing_sigma(0.05, vz_vis, 0.10, tau_sig)
+            s_x = crossing_sigma(0.05, vz_vis, 0.10, h_tail)
             capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= 0.30
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,

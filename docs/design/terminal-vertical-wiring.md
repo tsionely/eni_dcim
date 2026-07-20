@@ -221,3 +221,52 @@ attempt that began without terminal observability.
    conservative speed after the suite passes; (8) if raw structure
    truly leaves the image, change braking geometry before adding dead
    reckoning.
+
+## Ratified admission horizon + the honest-measurement gates (2026-07-20)
+
+Both advisories ruled independently and identically on the sigma-horizon
+ratification request: **approved in structure — and the MEAN must ride
+the same uncorrected tail as the sigma** (a full-tau ballistic mean with
+a benign 0.08 m/s measured rate consumes the whole 0.106m budget; the
+third mock A/B proved it: engaged+ready 9/10 around 2.47m, owner=term
+0/10). Corridor 0.30 stays (geometry vs epistemology — never trade the
+two currencies); 0.42 rejected; position-only admission rejected as sole
+criterion.
+
+Implemented (this commit set):
+- `h_tail = min(tau_eff, t_tail_s)` rides BOTH mean and sigma;
+  `t_tail_s = max(0.45 damping+freeze, T_irrev)` with
+  `T_irrev = abort_min_dist_m / commit_speed` — the no-return tail from
+  the planner's own no-retreat band, so a loss after retreat stops being
+  possible is never priced with the healthy-loop horizon.
+- Liveness + safety unit fixtures per the pattern-book rule ("every
+  guard ships with a liveness fixture as well as a safety fixture").
+
+**The §3 coverage crux — answered from the real fixtures** (cert status
+vs range, phase6i-R six + phase6h): certification does NOT die at 1.8m;
+it THINS (50-65% per 0.2m bin below 2.25m) and holds to 0.6-0.9m on
+every pass. Measured coverage tail on passes: 0.33-0.5s => T_u=0.45
+stands on evidence (green branch). The cert=none finding was a
+definitional split: per-bin presence vs per-tick continuity.
+
+**Close-range measurement fiction (new, real-fixture evidence)**: three
+1.8-cohort flights fed the oracle certified BAR_FULL quads whose span
+implied ~5m while the believed gate stood <1.2m — the successor gate,
+crisp behind the wash, wearing gate-1's certificate; e_meas pegged the
+clamp and admission (rightly) refused two centered passes. Fix: the
+honest-detection scale test (512 px.m, band 300-800) now guards the
+oracle's front door — span and believed range must agree before a row
+becomes metrology. Offline census after the gate: F4 still admits at
+1.32m; the fiction rows (7/4/4 per flight) are refused at the door.
+Remaining close-range coverage breadth is the e_z LADDER work item
+(advisory-7 item 4) — robustness, not a live-treatment blocker.
+
+**Mock-domain trim fiction (voids all mock owner=term verdicts)**: the
+mock vehicle flies -20..-31 deg dynamic pitch at 1.8 m/s where the real
+sim flies ~-1 deg; the trim compensation (calibrated on real graze data,
+pitch_cal=-0.33) injects ~-2.2m into mock e_meas, pegging the clamp.
+Mock A/B can therefore never exercise capture as-is. QA harness rule:
+mock terminal arms must carry a MOCK-DOMAIN pitch_cal (calibrated from
+mock commit logs) as a base patch in BOTH arms; it is a calibration
+constant of the domain, never a treatment variable. Real-domain liveness
+evidence stands on F4 (capture 1.32m, 28 owned ticks, pass).
