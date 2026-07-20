@@ -5,6 +5,7 @@ only. Writes artifacts under tuning/.
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -48,7 +49,7 @@ from run_l1_perception_replay import (  # noqa: E402
 )
 
 
-SOURCE_REF = "7657559"
+DEFAULT_SOURCE_REF = "8cd67fa"
 SIDE_SIGMA_E_FLOOR_M = 0.038
 FULL_SIGMA_E_M = 0.05
 FULL_SIGMA_V_MPS = 0.10
@@ -56,14 +57,14 @@ TAIL_S = 0.50
 CORRIDOR_M = 0.30
 
 
-def source_commit() -> tuple[str, str, list[str]]:
+def source_commit(source_ref: str) -> tuple[str, str, list[str]]:
     source = subprocess.check_output(
-        ["git", "rev-parse", SOURCE_REF],
+        ["git", "rev-parse", source_ref],
         cwd=ROOT,
         text=True,
     ).strip()
     changed = subprocess.check_output(
-        ["git", "diff", "--name-only", f"{SOURCE_REF}..HEAD", "--", ".", ":!tuning"],
+        ["git", "diff", "--name-only", f"{source_ref}..HEAD", "--", ".", ":!tuning"],
         cwd=ROOT,
         text=True,
     ).splitlines()
@@ -653,6 +654,34 @@ def summarize_sigma_a(rows: list[dict]) -> list[dict]:
     return out
 
 
+def summarize_sigma_regimes(rows: list[dict]) -> list[dict]:
+    out = []
+    for label in ["switch_adjacent", "maintenance"]:
+        group = [r for r in rows if r.get("sigma_regime") == label]
+        samples = [
+            float(r["sigma_a_sample_mps2"]) for r in group
+            if fnum(r.get("sigma_a_sample_mps2")) is not None
+        ]
+        ages = [
+            float(r["rate_anchor_age_s"]) for r in group
+            if fnum(r.get("rate_anchor_age_s")) is not None
+        ]
+        errors = [
+            float(r["rate_error_mps"]) for r in group
+            if fnum(r.get("rate_error_mps")) is not None
+        ]
+        out.append({
+            "regime": label,
+            "n": len(group),
+            "age_min_s": min(ages) if ages else "",
+            "age_max_s": max(ages) if ages else "",
+            "rate_error_rms_mps": rms(errors) if errors else "",
+            "sigma_a_rms_mps2": rms(samples) if samples else "",
+            "sigma_a_centered_mps2": rms_centered(samples) if len(samples) >= 2 else "",
+        })
+    return out
+
+
 def floor_for_sigma_a(sigma_a: float, age_s: float = TAIL_S) -> float:
     sig_v = math.sqrt(FULL_SIGMA_V_MPS ** 2 + (sigma_a * min(age_s, TAIL_S)) ** 2)
     return 2.0 * math.sqrt(SIDE_SIGMA_E_FLOOR_M ** 2 + (TAIL_S * sig_v) ** 2) + 0.06
@@ -673,6 +702,25 @@ def floor_table(measured_sigma_a: float | None) -> list[dict]:
             "measured_lands_here": (
                 measured_sigma_a is not None
                 and abs(sigma_a - measured_sigma_a) < 1e-9
+            ),
+        })
+    return rows
+
+
+def anchor_age_sweep(measured_sigma_a: float | None, max_used_age: float | None) -> list[dict]:
+    rows = []
+    sigma_a = float(measured_sigma_a or 0.0)
+    for age in [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.75, 1.00]:
+        sig_v = math.sqrt(FULL_SIGMA_V_MPS ** 2 + (sigma_a * min(age, TAIL_S)) ** 2)
+        floor = 2.0 * math.sqrt(SIDE_SIGMA_E_FLOOR_M ** 2 + (TAIL_S * sig_v) ** 2) + 0.06
+        rows.append({
+            "anchor_age_s": age,
+            "sigma_a_mps2": sigma_a,
+            "sigma_v_mps": sig_v,
+            "floor_m": floor,
+            "corridor_pass": floor <= CORRIDOR_M,
+            "observed_age_used": (
+                max_used_age is not None and age <= float(max_used_age) + 1e-9
             ),
         })
     return rows
@@ -792,7 +840,7 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "Scope: recorded-video replay plus synthetic oracle micro-replays only; no real simulator was launched.",
         f"Source commit: `{summary['commit']}`.",
         f"Repo HEAD: `{summary['repo_head']}`.",
-        f"Non-tuning delta from `{SOURCE_REF}`: `{summary['non_tuning_delta_from_source']}`.",
+        f"Non-tuning delta from `{summary['source_ref']}`: `{summary['non_tuning_delta_from_source']}`.",
         "",
         "## R26-1 Liveness",
         "",
@@ -832,6 +880,21 @@ def write_report(out_dir: Path, summary: dict) -> None:
         )
     lines.extend([
         "",
+        "### Regime Split",
+        "",
+        "| Regime | n | age range | corrected err RMS | sigma_a RMS | centered |",
+        "|---|---:|---|---:|---:|---:|",
+    ])
+    for row in summary["sigma_regime_summary"]:
+        lines.append(
+            f"| `{row['regime']}` | {row['n']} | "
+            f"{fmt(row['age_min_s'])}-{fmt(row['age_max_s'])} | "
+            f"{fmt(row['rate_error_rms_mps'])} | "
+            f"{fmt(row['sigma_a_rms_mps2'])} | "
+            f"{fmt(row['sigma_a_centered_mps2'])} |"
+        )
+    lines.extend([
+        "",
         "| sigma_a | floor | pass corridor | measured lands here |",
         "|---:|---:|---|---|",
     ])
@@ -843,6 +906,19 @@ def write_report(out_dir: Path, summary: dict) -> None:
     lines.extend([
         "",
         f"Overall R26-2/3 verdict: `{summary['r26_23_verdict']}`.",
+        "",
+        "### Anchor-Age Sweep",
+        "",
+        "| Age | sigma_v | floor | corridor pass | observed age used |",
+        "|---:|---:|---:|---|---|",
+    ])
+    for row in summary["anchor_age_sweep"]:
+        lines.append(
+            f"| {fmt(row['anchor_age_s'])} | {fmt(row['sigma_v_mps'])} | "
+            f"{fmt(row['floor_m'])} | `{row['corridor_pass']}` | "
+            f"`{row['observed_age_used']}` |"
+        )
+    lines.extend([
         "",
         "## R26-4/5/6 Replays",
         "",
@@ -879,18 +955,23 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "",
         "Artifacts: `features_f2.csv`, `anchor_trial_rows.csv`, "
         "`anchor_trial_summary.csv`, `anchor_transitions.csv`, "
-        "`sigma_a_rows.csv`, `sigma_a_summary.csv`, `floor_table.csv`, "
+        "`sigma_a_rows.csv`, `sigma_a_summary.csv`, `sigma_regime_summary.csv`, "
+        "`anchor_age_sweep.csv`, `floor_table.csv`, "
         "`r26_micro_rows.csv`, `r26_micro_summary.csv`, and `summary.json`.",
     ])
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--source-ref", default=DEFAULT_SOURCE_REF)
+    args = ap.parse_args(argv)
+
     assert_mock_safe()
     head, head_short = git_head()
-    src_head, src_short, source_delta = source_commit()
+    src_head, src_short, source_delta = source_commit(args.source_ref)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_dir = ROOT / "tuning" / f"anchor-r26-{src_short}-{head_short}-{stamp}"
+    out_dir = ROOT / "tuning" / f"hold-lift-r26-{src_short}-{head_short}-{stamp}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     params = apply_patches(ParamSet.load(ROOT / "config" / "params_default.json"), [])
@@ -966,8 +1047,16 @@ def main() -> int:
         and fnum(r.get("rate_anchor_age_s")) is not None
         and float(r["rate_anchor_age_s"]) >= 0.10
     ]
+    for row in sigma_a_rows:
+        age = fnum(row.get("rate_anchor_age_s"))
+        row["sigma_regime"] = (
+            "switch_adjacent"
+            if age is not None and age < 0.20
+            else "maintenance"
+        )
     write_csv(out_dir / "sigma_a_rows.csv", sigma_a_rows)
     sigma_a_summary = summarize_sigma_a(sigma_a_rows)
+    sigma_regime_summary = summarize_sigma_regimes(sigma_a_rows)
     code_ages = [float(r["rate_anchor_age_s"]) for r in sigma_a_rows
                  if fnum(r.get("rate_anchor_age_s")) is not None]
     frozen_ages = [float(r["rate_anchor_age_frozen_s"]) for r in sigma_a_rows
@@ -991,7 +1080,10 @@ def main() -> int:
         None,
     )
     floors = floor_table(measured_sigma_a)
+    age_sweep = anchor_age_sweep(measured_sigma_a, max(code_ages) if code_ages else None)
     write_csv(out_dir / "sigma_a_summary.csv", sigma_a_summary)
+    write_csv(out_dir / "sigma_regime_summary.csv", sigma_regime_summary)
+    write_csv(out_dir / "anchor_age_sweep.csv", age_sweep)
     write_csv(out_dir / "floor_table.csv", floors)
     r26_23_pass = measured_sigma_a is not None and measured_sigma_a < 0.35
 
@@ -1004,6 +1096,7 @@ def main() -> int:
         and all("rate_source" in r and "rate_anchor_age_s" in r for r in micro_rows)
     )
     summary = {
+        "source_ref": args.source_ref,
         "commit": src_head,
         "repo_head": head,
         "non_tuning_delta_from_source": source_delta,
@@ -1017,8 +1110,10 @@ def main() -> int:
         "trial_summary": trial_summary,
         "r26_1_verdict": "PASS" if r26_1_pass else "FAIL",
         "sigma_a_summary": sigma_a_summary,
+        "sigma_regime_summary": sigma_regime_summary,
         "measured_sigma_a_mps2": measured_sigma_a,
         "measured_anchor_only_sigma_a_mps2": measured_anchor_only_sigma_a,
+        "anchor_age_sweep": age_sweep,
         "floor_table": floors,
         "r26_23_verdict": "PASS" if r26_23_pass else "FAIL",
         "micro_summary": micro_summary,
