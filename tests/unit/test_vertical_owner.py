@@ -664,7 +664,7 @@ def test_s3_source_offset_never_becomes_velocity():
     for i in range(8):
         ts = i * 0.04
         g.observe(ts, 0.30 + true_slope * ts, source="FULL_QUAD")
-        g.observe(ts + 0.001, 0.38 + true_slope * ts, source="SIDE_PAIR")
+        g.observe(ts, 0.38 + true_slope * ts, source="SIDE_PAIR")
     assert g.active_source == "FULL_QUAD"
     v_before = g.v_z_visual()
     assert v_before == pytest.approx(0.10, abs=0.02)
@@ -691,7 +691,7 @@ def test_s2_switch_requires_overlap_consistency_and_hysteresis():
     for i in range(10):
         ts = i * 0.04
         g.observe(ts, 0.10, source="FULL_QUAD")
-        g.observe(ts + 0.001, 0.50, source="SIDE_PAIR")
+        g.observe(ts, 0.50, source="SIDE_PAIR")
     for i in range(10, 16):
         g.observe(i * 0.04, 0.50, source="SIDE_PAIR")
     assert g.active_source == "FULL_QUAD"    # never switched
@@ -700,7 +700,7 @@ def test_s2_switch_requires_overlap_consistency_and_hysteresis():
     for i in range(8):
         ts = i * 0.04
         g2.observe(ts, 0.10, source="FULL_QUAD")
-        g2.observe(ts + 0.001, 0.14, source="SIDE_PAIR")
+        g2.observe(ts, 0.14, source="SIDE_PAIR")
     for i in range(8, 14):
         g2.observe(i * 0.04, 0.14, source="SIDE_PAIR")
     assert g2.active_source == "SIDE_PAIR"
@@ -759,7 +759,7 @@ def test_hard_step_limit_overrides_inflated_sigma():
     for i in range(10):
         ts = i * 0.04
         g.observe(ts, 0.10, source="FULL_QUAD")
-        g.observe(ts + 0.001, 0.25, source="SIDE_PAIR")   # de = 0.15
+        g.observe(ts, 0.25, source="SIDE_PAIR")   # de = 0.15
     for i in range(10, 16):
         g.observe(i * 0.04, 0.25, source="SIDE_PAIR")
     assert g.active_source == "FULL_QUAD"
@@ -797,3 +797,37 @@ def test_side_rung_maintains_but_never_first_captures():
             0.04, feature=f, feature_age_s=0.02, oracle=g)
     assert g.ready()                        # mature and honest...
     assert owner == ALT_OWNER               # ...but the door stays shut
+
+
+def test_p1_held_latest_packet_is_consumed_once():
+    """Kill test P1 (advisory-15B disposition): one SIDE packet held in
+    a latest-value cell while the 250Hz loop polls it ~25 times must
+    append to the side history EXACTLY once — repeated polling is
+    re-observation, never new evidence. Exact-exposure pairing: the
+    pair count increments at most once too."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_observe
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 284.0
+    g = TerminalOracle()
+    full = TerminalFeature(ts_ns=1000, y_top_px=180.0 - 0.5 * span,
+                           span_px=span, center_x_px=320.0,
+                           cert_status="certified", mode="FULL_QUAD")
+    side = TerminalFeature(ts_ns=1000, y_top_px=180.0 - 0.5 * span,
+                           span_px=span, center_x_px=320.0,
+                           cert_status="certified", mode="SIDE_PAIR")
+    for _ in range(25):
+        terminal_observe(g, st(), full, 0.02)
+        terminal_observe(g, st(), side, 0.02)
+    assert len(g._hist) == 1                  # FULL history: one row
+    assert len(g._hist_other) == 1            # SIDE history: one row
+    assert len(g._overlap_deltas) == 1        # exact-exposure pair: one

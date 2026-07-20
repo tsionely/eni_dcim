@@ -486,8 +486,13 @@ class TerminalOracle:
             self._last_full = (ts_s, e_meas)
         else:
             self._last_side = (ts_s, e_meas)
+        # EXACT-EXPOSURE pairing (binding: nearest-timestamp joins are
+        # prohibited — the latest FULL and latest SIDE can come from
+        # adjacent images and a mismatched pair corrupts the 0.10 hard
+        # step gate). Our exposure id IS the exposure timestamp; both
+        # measurement models of one image carry the identical ts.
         if (self._last_full is not None and self._last_side is not None
-                and abs(self._last_full[0] - self._last_side[0]) <= 0.15):
+                and self._last_full[0] == self._last_side[0]):
             de = self._last_side[1] - self._last_full[1]
             ts_pair = max(self._last_full[0], self._last_side[0])
             if (not self._overlap_deltas

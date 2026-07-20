@@ -111,8 +111,26 @@ class PerceptionAgent(Agent):
                     if (self.tracker is not None and self.tracker.enabled
                             and float(detection.rel_pose.t[2])
                             <= self.parallel_below_m):
+                        # ARM on a fresh measured detection; the latch
+                        # holds through detector loss (the exact
+                        # condition SIDE exists to survive) and range
+                        # bounce — it releases only with the approach
+                        # (recording/attempt end).
+                        self._side_armed = True
+                        # FALLBACK-REALISTIC SEEDING (advisory-15B §2):
+                        # the prior is the believed continuity chain —
+                        # the same prior the tracker will have when it
+                        # runs ALONE — never the same-frame detection
+                        # pose (a seeded copy makes the overlap
+                        # consistency partly self-fulfilling). The SIDE
+                        # metric itself is pixel-derived either way;
+                        # seeding only aims the search ROI.
+                        st, _ = state_cell.get()
+                        prior_pose = (st.gate_rel if st is not None
+                                      and st.gate_rel is not None
+                                      else detection.rel_pose)
                         tracked = self.tracker.track(
-                            frame, detection.rel_pose,
+                            frame, prior_pose,
                             center_hint_px=detection.center_px)
                         if (tracked is not None
                                 and self.tracker.last_feature is not None):
@@ -130,8 +148,14 @@ class PerceptionAgent(Agent):
                 self.bus.publish_latest(Topic.DETECTION, detection)
             if self.tracker is None or not self.tracker.enabled:
                 continue
-            if last_full_fix is None or \
-                    time.monotonic() - last_full_fix > self.tracker.max_solo_s:
+            if not getattr(self, "_side_armed", False) and (
+                    last_full_fix is None
+                    or time.monotonic() - last_full_fix
+                    > self.tracker.max_solo_s):
+                # Unarmed: the historical solo budget. Armed (a fresh
+                # measured detection <=parallel_below_m this approach):
+                # the tracker continues through detector loss — never
+                # disarmed by the very condition it exists to survive.
                 continue
             state, _ = state_cell.get()
             if state is None or state.gate_rel is None:
