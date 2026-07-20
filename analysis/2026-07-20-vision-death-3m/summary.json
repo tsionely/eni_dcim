@@ -1,0 +1,1085 @@
+{
+  "ask": "vision death at ~3m \u2014 phase6j cohort-2 vs cohort-1",
+  "cohort2": {
+    "n": 6,
+    "n_vision_death_no_reacq": 6,
+    "frac": 1.0,
+    "last_det_R_at_loss": {
+      "n": 6,
+      "min": 1.8104360593831428,
+      "max": 4.404762285340096,
+      "mean": 3.219872996407331
+    },
+    "loss_modes": {
+      "fov_leave": 5,
+      "far_gate_contest": 1
+    },
+    "n_with_vz_oscillation": 6
+  },
+  "cohort1": {
+    "n": 6,
+    "n_vision_death_no_reacq": 3,
+    "frac": 0.5,
+    "last_det_R_at_loss": {
+      "n": 3,
+      "min": 1.0804009911374195,
+      "max": 4.955953801800678,
+      "mean": 3.2350814686913787
+    },
+    "loss_modes": {
+      "fov_leave": 3
+    },
+    "n_with_vz_oscillation": 3
+  },
+  "flights_cohort2": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260720T053402-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T053402-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.035630798205873,
+        "first_det_t_ff": 0.0251994,
+        "first_det_center": [
+          321.5,
+          175.25
+        ],
+        "commit_entry_R": 3.9707230701338174,
+        "commit_entry_age": 0.512966088,
+        "commit_entry_center": [
+          311.67610087212273,
+          142.5423816112896
+        ],
+        "commit_entry_pitch_deg": -17.801849608686755
+      },
+      "vision_death": {
+        "commit_start_s": 2.711603,
+        "commit_end_s": 5.9314111,
+        "loss_t_ff": 3.1316993,
+        "max_age_in_commit": null,
+        "max_age_inf": true,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.1316993,
+          "age": 0.273218984,
+          "R_believed": 3.2929361317290553,
+          "center_px": [
+            317.3273487583118,
+            149.26193516556046
+          ],
+          "phase": null,
+          "v_world": [
+            2.229970482390761,
+            -0.26836542122897367,
+            0.8934087798133798
+          ],
+          "level_pitch_deg": -17.801849608686755
+        },
+        "last_near_detection": {
+          "t_ff": 2.8261437,
+          "R": 4.036410292233415,
+          "center_px": [
+            314.5,
+            289.5
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            314.5,
+            289.5
+          ]
+        },
+        "n_far_certified_during_commit": 45,
+        "far_R_sample": [
+          13.69,
+          13.68,
+          13.69,
+          13.77,
+          13.1,
+          12.08
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": 0.49516782703233103,
+          "std": 0.867172020311866,
+          "min": -1.6182538953596557,
+          "max": 2.0569463619722064,
+          "peak_to_peak": 3.675200257331862,
+          "zero_crossings": 15,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 1
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 2.232142857142857e-05,
+        "mean_red_frac": 0.02787636408730159,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T053402-f170ead6_near_loss.jpg"
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260720T053514-5cebc2b2",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T053514-5cebc2b2-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.143251149622634,
+        "first_det_t_ff": 0.0235578,
+        "first_det_center": [
+          321.25,
+          173.25
+        ],
+        "commit_entry_R": 4.270165329368503,
+        "commit_entry_age": 0.395113872,
+        "commit_entry_center": [
+          327.9598907696424,
+          126.86524855457492
+        ],
+        "commit_entry_pitch_deg": -17.799560465852743
+      },
+      "vision_death": {
+        "commit_start_s": 2.2563765,
+        "commit_end_s": 5.6366738,
+        "loss_t_ff": 3.516219,
+        "max_age_in_commit": 2.380140336,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.516219,
+          "age": 0.262205336,
+          "R_believed": 2.0459801856454303,
+          "center_px": [
+            343.1588127358,
+            118.17162349800245
+          ],
+          "phase": null,
+          "v_world": [
+            2.4389190163410808,
+            0.325704433809591,
+            0.9864839435237215
+          ],
+          "level_pitch_deg": -17.799560465852743
+        },
+        "last_near_detection": {
+          "t_ff": 2.7502745,
+          "R": 4.239381720579434,
+          "center_px": [
+            325.25,
+            300.5
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            325.25,
+            300.5
+          ]
+        },
+        "n_far_certified_during_commit": 40,
+        "far_R_sample": [
+          13.59,
+          12.92,
+          13.59,
+          13.26,
+          13.55,
+          13.17
+        ],
+        "vz_at_loss": {
+          "n": 61,
+          "mean": -0.30747561709686516,
+          "std": 1.0111546494336245,
+          "min": -3.322936798385865,
+          "max": 1.3285313164052952,
+          "peak_to_peak": 4.65146811479116,
+          "zero_crossings": 20,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 14
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 0.0005580357142857143,
+        "mean_red_frac": 0.027855902777777778,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T053514-5cebc2b2_near_loss.jpg"
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260720T053635-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T053635-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.065384158443512,
+        "first_det_t_ff": 0.0065302,
+        "first_det_center": [
+          321.25,
+          175.25
+        ],
+        "commit_entry_R": 4.812101373105634,
+        "commit_entry_age": 0.007164736,
+        "commit_entry_center": [
+          364.46526674214374,
+          126.8859379350902
+        ],
+        "commit_entry_pitch_deg": -17.799653835199468
+      },
+      "vision_death": {
+        "commit_start_s": 1.5121867,
+        "commit_end_s": 3.8123713,
+        "loss_t_ff": 3.9186764,
+        "max_age_in_commit": 0.16292532,
+        "max_age_inf": false,
+        "blind_budget_breach": false,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.9186764,
+          "age": 0.26001632,
+          "R_believed": 1.166766431559505,
+          "center_px": [
+            552.25,
+            293.25
+          ],
+          "phase": null,
+          "v_world": [
+            1.9383639723315589,
+            1.4038955004345628,
+            -1.132491910488075
+          ],
+          "level_pitch_deg": -17.799653835199468
+        },
+        "last_near_detection": {
+          "t_ff": 3.61085,
+          "R": 1.8954099622632488,
+          "center_px": [
+            452.25,
+            202.25
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "top",
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            452.25,
+            202.25
+          ]
+        },
+        "n_far_certified_during_commit": 1,
+        "far_R_sample": [
+          20.32
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": -0.4811239295379791,
+          "std": 0.4725690155130474,
+          "min": -1.8495416635097257,
+          "max": 0.20128131359883605,
+          "peak_to_peak": 2.0508229771085618,
+          "zero_crossings": 7,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 44
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 0.0028125,
+        "mean_red_frac": 0.028198164682539682,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T053635-f170ead6_near_loss.jpg"
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260720T053745-5cebc2b2",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T053745-5cebc2b2-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 5.956218744405637,
+        "first_det_t_ff": 0.0075236,
+        "first_det_center": [
+          321.5,
+          175.25
+        ],
+        "commit_entry_R": 3.118986710405701,
+        "commit_entry_age": 0.073099296,
+        "commit_entry_center": [
+          296.9042336881213,
+          148.02965914344617
+        ],
+        "commit_entry_pitch_deg": -17.80248991355626
+      },
+      "vision_death": {
+        "commit_start_s": 3.62439,
+        "commit_end_s": 5.5240217,
+        "loss_t_ff": 4.5442413,
+        "max_age_in_commit": 1.214192504,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 4.5442413,
+          "age": 0.262982504,
+          "R_believed": 1.5750620507872957,
+          "center_px": [
+            308.73342407196867,
+            117.28838933890071
+          ],
+          "phase": null,
+          "v_world": [
+            2.450154496761288,
+            -0.1876729590409221,
+            -0.04037765168935226
+          ],
+          "level_pitch_deg": -17.80248991355626
+        },
+        "last_near_detection": {
+          "t_ff": 3.8676516,
+          "R": 2.93283765864465,
+          "center_px": [
+            292.0,
+            267.0
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            292.0,
+            267.0
+          ]
+        },
+        "n_far_certified_during_commit": 29,
+        "far_R_sample": [
+          11.79,
+          11.76,
+          11.5,
+          11.39,
+          10.98,
+          10.99
+        ],
+        "vz_at_loss": {
+          "n": 61,
+          "mean": -0.12657541697849703,
+          "std": 0.5585454180599279,
+          "min": -1.317353429675164,
+          "max": 0.9195799948685878,
+          "peak_to_peak": 2.2369334245437518,
+          "zero_crossings": 15,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 28
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 0.0007366071428571429,
+        "mean_red_frac": 0.02861359126984127,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T053745-5cebc2b2_near_loss.jpg"
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260720T053905-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T053905-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.009402287850675,
+        "first_det_t_ff": 0.0064741,
+        "first_det_center": [
+          322.25,
+          176.25
+        ],
+        "commit_entry_R": 4.355581043167838,
+        "commit_entry_age": 0.491426128,
+        "commit_entry_center": [
+          313.92843980161587,
+          133.92658426572598
+        ],
+        "commit_entry_pitch_deg": -17.801787472140127
+      },
+      "vision_death": {
+        "commit_start_s": 2.6722552,
+        "commit_end_s": 5.9521124,
+        "loss_t_ff": 3.1720731,
+        "max_age_in_commit": null,
+        "max_age_inf": true,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.1720731,
+          "age": 0.255642312,
+          "R_believed": 3.8001346405361205,
+          "center_px": [
+            265.37441901429736,
+            193.946927762424
+          ],
+          "phase": null,
+          "v_world": [
+            2.1987565871331163,
+            -0.5739777101340069,
+            0.8439174615971048
+          ],
+          "level_pitch_deg": -17.801787472140127
+        },
+        "last_near_detection": {
+          "t_ff": 2.8106527,
+          "R": 4.404762285340096,
+          "center_px": [
+            258.75,
+            266.25
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [],
+          "edge_clip": false,
+          "center_px": [
+            258.75,
+            266.25
+          ]
+        },
+        "n_far_certified_during_commit": 15,
+        "far_R_sample": [
+          12.99,
+          12.26,
+          13.33,
+          12.47,
+          12.94,
+          12.7
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": 0.5672980258577879,
+          "std": 0.7024261925156217,
+          "min": -0.8314202980230083,
+          "max": 1.7499017430680068,
+          "peak_to_peak": 2.581322041091015,
+          "zero_crossings": 5,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 4
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 0.03359375,
+        "mean_red_frac": 0.026019345238095237,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T053905-f170ead6_near_loss.jpg"
+      },
+      "loss_mode": "far_gate_contest",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260720T054016-5cebc2b2",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T054037-phase6j-block-a-cohort-2\\20260720T054016-5cebc2b2-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.015516117456541,
+        "first_det_t_ff": 0.0032529,
+        "first_det_center": [
+          322.0,
+          176.25
+        ],
+        "commit_entry_R": 5.01564964711329,
+        "commit_entry_age": 0.017215728,
+        "commit_entry_center": [
+          277.9388423689216,
+          105.84298632383808
+        ],
+        "commit_entry_pitch_deg": -17.8019403009347
+      },
+      "vision_death": {
+        "commit_start_s": 1.5200932,
+        "commit_end_s": 5.3198416,
+        "loss_t_ff": 3.9404269,
+        "max_age_in_commit": 1.642759056,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.9404269,
+          "age": 0.261055056,
+          "R_believed": 0.4421486359722752,
+          "center_px": [
+            251.0987013811615,
+            -114.68782890688391
+          ],
+          "phase": null,
+          "v_world": [
+            2.108922837705854,
+            -0.45230084061555004,
+            0.18863929413551309
+          ],
+          "level_pitch_deg": -17.8019403009347
+        },
+        "last_near_detection": {
+          "t_ff": 3.7614884,
+          "R": 1.8104360593831428,
+          "center_px": [
+            95.0,
+            179.5
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "left",
+            "top",
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            95.0,
+            179.5
+          ]
+        },
+        "n_far_certified_during_commit": 20,
+        "far_R_sample": [
+          10.81,
+          10.51,
+          10.48,
+          10.08,
+          10.27,
+          9.82
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": -0.9868129341385427,
+          "std": 0.9722821924505891,
+          "min": -3.2634162892468686,
+          "max": 0.9109789343517632,
+          "peak_to_peak": 4.174395223598632,
+          "zero_crossings": 9,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 58
+      },
+      "frame_diagnosis": {
+        "n_frames_sampled": 7,
+        "primary_reason": "ok",
+        "mean_bloom": 0.0,
+        "mean_red_frac": 0.027907366071428574,
+        "preview": "analysis\\2026-07-20-vision-death-3m\\frames\\20260720T054016-5cebc2b2_near_loss.jpg"
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    }
+  ],
+  "flights_cohort1": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260719T200816-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T200816-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.056920164275271,
+        "first_det_t_ff": 0.0011226,
+        "first_det_center": [
+          322.5,
+          176.0
+        ],
+        "commit_entry_R": 4.639206618502181,
+        "commit_entry_age": 0.007370512,
+        "commit_entry_center": [
+          268.406729573517,
+          106.12521392493463
+        ],
+        "commit_entry_pitch_deg": -17.80169810037604
+      },
+      "vision_death": {
+        "commit_start_s": 1.5121273,
+        "commit_end_s": 4.012344,
+        "loss_t_ff": null,
+        "max_age_in_commit": 0.286788728,
+        "max_age_inf": false,
+        "blind_budget_breach": false,
+        "in_loss_band": true,
+        "reacquired_near": true,
+        "n_reacq_near": 1,
+        "vision_death_first_commit": false,
+        "state_at_loss": null,
+        "last_near_detection": {
+          "t_ff": 3.0992994,
+          "R": 2.4208585661030377,
+          "center_px": [
+            312.25,
+            262.0
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            312.25,
+            262.0
+          ]
+        },
+        "n_far_certified_during_commit": 9,
+        "far_R_sample": [
+          10.89,
+          10.72,
+          10.52,
+          10.82,
+          10.83,
+          11.2
+        ],
+        "vz_at_loss": null,
+        "n_near_dets_in_commit": 33
+      },
+      "loss_mode": "held_or_reacq",
+      "vision_died_no_reacq": false
+    },
+    {
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260719T201038-50f9dcc8",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201038-50f9dcc8-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 12.386226451422445,
+        "first_det_t_ff": 0.1154397,
+        "first_det_center": [
+          326.25,
+          184.0
+        ],
+        "commit_entry_R": null,
+        "commit_entry_age": null,
+        "commit_entry_center": null,
+        "commit_entry_pitch_deg": null
+      },
+      "vision_death": {
+        "error": "no_commit",
+        "commit_start": null
+      },
+      "loss_mode": "no_commit",
+      "vision_died_no_reacq": false
+    },
+    {
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260719T201630-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201630-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.143250651651628,
+        "first_det_t_ff": 0.0129222,
+        "first_det_center": [
+          321.25,
+          173.0
+        ],
+        "commit_entry_R": 3.8783432632740897,
+        "commit_entry_age": 0.304077208,
+        "commit_entry_center": [
+          297.2978629716358,
+          131.7399103530242
+        ],
+        "commit_entry_pitch_deg": -17.801698097597995
+      },
+      "vision_death": {
+        "commit_start_s": 2.6323242,
+        "commit_end_s": 4.4323375,
+        "loss_t_ff": 3.1122555,
+        "max_age_in_commit": 1.557985392,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": true,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 3.1122555,
+          "age": 0.259498392,
+          "R_believed": 3.0661420688868923,
+          "center_px": [
+            370.16089636286523,
+            158.52026611711355
+          ],
+          "phase": null,
+          "v_world": [
+            2.5995434950479823,
+            0.3575231761627945,
+            0.848739509925239
+          ],
+          "level_pitch_deg": -17.801698097597995
+        },
+        "last_near_detection": {
+          "t_ff": 2.8797662,
+          "R": 3.668889613136039,
+          "center_px": [
+            383.8469855142402,
+            360.85824406381255
+          ],
+          "cert": "probation",
+          "conf": 0.5
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            383.8469855142402,
+            360.85824406381255
+          ]
+        },
+        "n_far_certified_during_commit": 30,
+        "far_R_sample": [
+          12.97,
+          19.85,
+          13.39,
+          12.87,
+          12.75,
+          12.47
+        ],
+        "vz_at_loss": {
+          "n": 61,
+          "mean": -0.10132841701503166,
+          "std": 0.8607311042964775,
+          "min": -2.106717839331534,
+          "max": 1.4678287285756686,
+          "peak_to_peak": 3.5745465679072024,
+          "zero_crossings": 13,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 4
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260719T201851-50f9dcc8",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.035630798205873,
+        "first_det_t_ff": 0.0039287,
+        "first_det_center": [
+          321.5,
+          175.25
+        ],
+        "commit_entry_R": 5.1266591894129245,
+        "commit_entry_age": 0.003665944,
+        "commit_entry_center": [
+          327.25,
+          239.0
+        ],
+        "commit_entry_pitch_deg": -17.80172799780948
+      },
+      "vision_death": {
+        "commit_start_s": 1.8642698,
+        "commit_end_s": 4.5240865,
+        "loss_t_ff": 4.1641427,
+        "max_age_in_commit": null,
+        "max_age_inf": true,
+        "blind_budget_breach": true,
+        "in_loss_band": false,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 4.1641427,
+          "age": 0.253745848,
+          "R_believed": 0.6284579865928759,
+          "center_px": [
+            302.67288827395237,
+            -234.07258251157845
+          ],
+          "phase": null,
+          "v_world": [
+            1.9298782612217544,
+            0.2561195164393097,
+            0.35947434786385457
+          ],
+          "level_pitch_deg": -17.80172799780948
+        },
+        "last_near_detection": {
+          "t_ff": 3.906835,
+          "R": 1.0804009911374195,
+          "center_px": [
+            303.1566175177388,
+            225.39965248966456
+          ],
+          "cert": "certified",
+          "conf": 0.5
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "left",
+            "right",
+            "top",
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            303.1566175177388,
+            225.39965248966456
+          ]
+        },
+        "n_far_certified_during_commit": 15,
+        "far_R_sample": [
+          20.58,
+          8.66,
+          9.09,
+          8.99,
+          8.99,
+          8.83
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": -0.4637900640020307,
+          "std": 0.9022085628799565,
+          "min": -2.449662538936892,
+          "max": 1.0245296347555843,
+          "peak_to_peak": 3.4741921736924763,
+          "zero_crossings": 8,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 73
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260719T202445-f170ead6",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202445-f170ead6-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.23135304880391,
+        "first_det_t_ff": 0.001677,
+        "first_det_center": [
+          321.5,
+          174.75
+        ],
+        "commit_entry_R": 3.8702048685540937,
+        "commit_entry_age": 0.0,
+        "commit_entry_center": [
+          382.99993896484375,
+          306.0
+        ],
+        "commit_entry_pitch_deg": -17.801756243515666
+      },
+      "vision_death": {
+        "commit_start_s": 1.8001277,
+        "commit_end_s": 3.6801219,
+        "loss_t_ff": 2.3201761,
+        "max_age_in_commit": 1.589605152,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": false,
+        "reacquired_near": false,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": true,
+        "state_at_loss": {
+          "t_ff": 2.3201761,
+          "age": 0.256589152,
+          "R_believed": 3.0760070681205325,
+          "center_px": [
+            353.61404701849125,
+            124.3058117557532
+          ],
+          "phase": null,
+          "v_world": [
+            2.5006539010048447,
+            0.19899503174584462,
+            1.9606498180019765
+          ],
+          "level_pitch_deg": -17.801756243515666
+        },
+        "last_near_detection": {
+          "t_ff": 2.2689041,
+          "R": 4.955953801800678,
+          "center_px": [
+            339.5,
+            337.25
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            339.5,
+            337.25
+          ]
+        },
+        "n_far_certified_during_commit": 29,
+        "far_R_sample": [
+          13.18,
+          13.81,
+          13.28,
+          13.69,
+          14.13,
+          14.13
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": -0.11236198085497294,
+          "std": 0.9316771327398097,
+          "min": -1.5648997697901947,
+          "max": 2.5429853708100776,
+          "peak_to_peak": 4.107885140600272,
+          "zero_crossings": 15,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 7
+      },
+      "loss_mode": "fov_leave",
+      "vision_died_no_reacq": true
+    },
+    {
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260719T202720-50f9dcc8",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202720-50f9dcc8-flight.jsonl",
+      "start_geometry": {
+        "first_det_R": 6.229488330607689,
+        "first_det_t_ff": 0.0080673,
+        "first_det_center": [
+          321.25,
+          175.0
+        ],
+        "commit_entry_R": 5.054161098894292,
+        "commit_entry_age": 0.51354036,
+        "commit_entry_center": [
+          319.80972928777555,
+          164.84477061560142
+        ],
+        "commit_entry_pitch_deg": -17.799560464072464
+      },
+      "vision_death": {
+        "commit_start_s": 1.5880828,
+        "commit_end_s": 4.0481612,
+        "loss_t_ff": 2.1080617,
+        "max_age_in_commit": 1.201047984,
+        "max_age_inf": false,
+        "blind_budget_breach": true,
+        "in_loss_band": false,
+        "reacquired_near": true,
+        "n_reacq_near": 0,
+        "vision_death_first_commit": false,
+        "state_at_loss": {
+          "t_ff": 2.1080617,
+          "age": 0.260315984,
+          "R_believed": 4.652171111220177,
+          "center_px": [
+            386.36122950236233,
+            179.0155149452972
+          ],
+          "phase": null,
+          "v_world": [
+            2.3406102300445824,
+            0.35573969104215386,
+            1.1501161781830385
+          ],
+          "level_pitch_deg": -17.799560464072464
+        },
+        "last_near_detection": {
+          "t_ff": 1.8428978,
+          "R": 5.28459132757967,
+          "center_px": [
+            399.0,
+            308.75
+          ],
+          "cert": "certified",
+          "conf": 1.0
+        },
+        "fov_at_last_near": {
+          "touches": [
+            "bottom"
+          ],
+          "edge_clip": true,
+          "center_px": [
+            399.0,
+            308.75
+          ]
+        },
+        "n_far_certified_during_commit": 24,
+        "far_R_sample": [
+          14.37,
+          14.21,
+          14.76,
+          13.53,
+          13.88,
+          13.85
+        ],
+        "vz_at_loss": {
+          "n": 60,
+          "mean": 0.38810278525781483,
+          "std": 0.8355054380269715,
+          "min": -1.3265453516829,
+          "max": 2.0353899339497468,
+          "peak_to_peak": 3.3619352856326468,
+          "zero_crossings": 9,
+          "oscillating": true
+        },
+        "n_near_dets_in_commit": 6
+      },
+      "loss_mode": "held_or_reacq",
+      "vision_died_no_reacq": false
+    }
+  ],
+  "binding": {
+    "cohort2_all_died": true,
+    "cohort1_frac": 0.5,
+    "dominant_mode_c2": "fov_leave"
+  }
+}
