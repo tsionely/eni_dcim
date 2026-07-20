@@ -1,0 +1,396 @@
+{
+  "flights": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260720T071008-5b501b4c",
+      "label": "phase6l_control_F1_try1",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071008-5b501b4c_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260720T071112-cd18c5fb",
+      "label": "phase6l_live_F2_try2",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071112-cd18c5fb_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260720T071220-5b501b4c",
+      "label": "phase6l_control_F3_try3",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071220-5b501b4c_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260720T071333-cd18c5fb",
+      "label": "phase6l_live_F4_try4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071333-cd18c5fb_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260720T071439-5b501b4c",
+      "label": "phase6l_control_F5_try5",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071439-5b501b4c_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260720T071545-cd18c5fb",
+      "label": "phase6l_live_F6_try6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071545-cd18c5fb_takeoff_to_end.aigprec"
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260720T071008-5b501b4c",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.0)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 2,
+        "duration_s": 4.404010300000664,
+        "loop_overrun_frac": 0.0018165304268846503,
+        "loop_stats": {
+          "ticks": 1101,
+          "overruns": 2,
+          "overrun_frac": 0.0018165304268846503,
+          "max_late_us": 6464
+        },
+        "flight_id": "20260720T071008-5b501b4c",
+        "log_dir": "logs\\20260720T071008-5b501b4c"
+      },
+      "closest_direct": {
+        "range_m": 5.455,
+        "t_rel_s": 0.838,
+        "center_px": [
+          311.25,
+          206.25
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.029587032,
+        "range_m": 5.781
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff"
+      ],
+      "unique_frames_after_takeoff": 31,
+      "commit_vz_stats": {
+        "ticks": 0,
+        "mean": null,
+        "std": 0,
+        "min": null,
+        "max": null
+      }
+    },
+    {
+      "flight_id": "20260720T071112-cd18c5fb",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "gate clip budget exceeded (11)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 11,
+        "env_hits": 1,
+        "duration_s": 7.871994299988728,
+        "loop_overrun_frac": 0.006097560975609756,
+        "loop_stats": {
+          "ticks": 1968,
+          "overruns": 12,
+          "overrun_frac": 0.006097560975609756,
+          "max_late_us": 4598
+        },
+        "flight_id": "20260720T071112-cd18c5fb",
+        "log_dir": "logs\\20260720T071112-cd18c5fb"
+      },
+      "closest_direct": {
+        "range_m": 0.852,
+        "t_rel_s": 4.654,
+        "center_px": [
+          319.5,
+          114.0
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.0,
+        "range_m": 0.852
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "retreat",
+        "recover"
+      ],
+      "unique_frames_after_takeoff": 140,
+      "commit_vz_stats": {
+        "ticks": 101,
+        "mean": -0.2489287698681388,
+        "std": 0.12368022741711747,
+        "min": -0.35,
+        "max": 0.0
+      }
+    },
+    {
+      "flight_id": "20260720T071220-5b501b4c",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.5)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 2,
+        "duration_s": 13.291995800012955,
+        "loop_overrun_frac": 0.006018657839301836,
+        "loop_stats": {
+          "ticks": 3323,
+          "overruns": 20,
+          "overrun_frac": 0.006018657839301836,
+          "max_late_us": 7738
+        },
+        "flight_id": "20260720T071220-5b501b4c",
+        "log_dir": "logs\\20260720T071220-5b501b4c"
+      },
+      "closest_direct": {
+        "range_m": 3.163,
+        "t_rel_s": 4.264,
+        "center_px": [
+          167.2777862548828,
+          94.97771453857422
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.159637224,
+        "range_m": 10.06
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "approach",
+        "search",
+        "approach",
+        "search"
+      ],
+      "unique_frames_after_takeoff": 298,
+      "commit_vz_stats": {
+        "ticks": 37,
+        "mean": 0.17500215241578865,
+        "std": 0.1392969022104135,
+        "min": -0.1529575676639905,
+        "max": 0.35
+      }
+    },
+    {
+      "flight_id": "20260720T071333-cd18c5fb",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.1)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 3,
+        "duration_s": 7.159994099987671,
+        "loop_overrun_frac": 0.0016759776536312849,
+        "loop_stats": {
+          "ticks": 1790,
+          "overruns": 3,
+          "overrun_frac": 0.0016759776536312849,
+          "max_late_us": 2714
+        },
+        "flight_id": "20260720T071333-cd18c5fb",
+        "log_dir": "logs\\20260720T071333-cd18c5fb"
+      },
+      "closest_direct": {
+        "range_m": 0.652,
+        "t_rel_s": 3.607,
+        "center_px": [
+          281.0077302068118,
+          611.4269259318132
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.11464416,
+        "range_m": 0.644
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "hover"
+      ],
+      "unique_frames_after_takeoff": 119,
+      "commit_vz_stats": {
+        "ticks": 112,
+        "mean": -0.11959055458674074,
+        "std": 0.09869678701029157,
+        "min": -0.3346624797824381,
+        "max": 0.055337520217561886
+      }
+    },
+    {
+      "flight_id": "20260720T071439-5b501b4c",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=4.9)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 6.735980700002983,
+        "loop_overrun_frac": 0.0011876484560570072,
+        "loop_stats": {
+          "ticks": 1684,
+          "overruns": 2,
+          "overrun_frac": 0.0011876484560570072,
+          "max_late_us": 448
+        },
+        "flight_id": "20260720T071439-5b501b4c",
+        "log_dir": "logs\\20260720T071439-5b501b4c"
+      },
+      "closest_direct": {
+        "range_m": 4.965,
+        "t_rel_s": 0.997,
+        "center_px": [
+          305.5,
+          319.0
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.00214796,
+        "range_m": 5.11
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "commit",
+        "recover",
+        "approach",
+        "search"
+      ],
+      "unique_frames_after_takeoff": 106,
+      "commit_vz_stats": {
+        "ticks": 5,
+        "mean": 0.25200009,
+        "std": 0.05381444267139073,
+        "min": 0.18999999999999997,
+        "max": 0.35
+      }
+    },
+    {
+      "flight_id": "20260720T071545-cd18c5fb",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.6)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 6.5320080000092275,
+        "loop_overrun_frac": 0.000612369871402327,
+        "loop_stats": {
+          "ticks": 1633,
+          "overruns": 1,
+          "overrun_frac": 0.000612369871402327,
+          "max_late_us": 2935
+        },
+        "flight_id": "20260720T071545-cd18c5fb",
+        "log_dir": "logs\\20260720T071545-cd18c5fb"
+      },
+      "closest_direct": {
+        "range_m": 2.661,
+        "t_rel_s": 3.378,
+        "center_px": [
+          332.039363861084,
+          233.15301513671875
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.035079304,
+        "range_m": 2.55
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit"
+      ],
+      "unique_frames_after_takeoff": 103,
+      "commit_vz_stats": {
+        "ticks": 42,
+        "mean": -0.1018644991786612,
+        "std": 0.09031465721703236,
+        "min": -0.2773265320556952,
+        "max": 0.0
+      }
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260720T071008-5b501b4c",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071008-5b501b4c_takeoff_to_end.aigprec",
+      "unique_frames": 32,
+      "span_s": 1.034,
+      "bytes": 1536443,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T071112-cd18c5fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071112-cd18c5fb_takeoff_to_end.aigprec",
+      "unique_frames": 141,
+      "span_s": 4.668,
+      "bytes": 7888537,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T071220-5b501b4c",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071220-5b501b4c_takeoff_to_end.aigprec",
+      "unique_frames": 299,
+      "span_s": 9.934,
+      "bytes": 11800048,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T071333-cd18c5fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071333-cd18c5fb_takeoff_to_end.aigprec",
+      "unique_frames": 120,
+      "span_s": 3.965,
+      "bytes": 7025331,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T071439-5b501b4c",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071439-5b501b4c_takeoff_to_end.aigprec",
+      "unique_frames": 107,
+      "span_s": 3.534,
+      "bytes": 5045183,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T071545-cd18c5fb",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6l_slices\\cohort3\\20260720T071545-cd18c5fb_takeoff_to_end.aigprec",
+      "unique_frames": 104,
+      "span_s": 3.437,
+      "bytes": 6153880,
+      "truncated_at_45mb": false
+    }
+  ]
+}

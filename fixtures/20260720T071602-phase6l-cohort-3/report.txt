@@ -1,0 +1,151 @@
+﻿===== PHASE6L COHORT3 2026-07-20T10:09:24.1746598+03:00 =====
+===== pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:52 char:168
++ ... == pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+   b8f5ed4..e179898  main       -> origin/main
+Updating b8f5ed4..e179898
+Fast-forward
+ analysis/2026-07-20-a8-riders.md                   |   46 +
+ analysis/2026-07-20-a8-riders/report.md            |   46 +
+ analysis/2026-07-20-a8-riders/run_a8_riders.py     |  455 ++++
+ analysis/2026-07-20-a8-riders/summary.json         |  323 +++
+ .../run_r5_envelope_prep.py                        |   22 +-
+ analysis/2026-07-20-r5-sigma-phase6k.md            |   21 +
+ analysis/2026-07-20-r5-sigma-phase6k/report.md     |   21 +
+ .../run_r5_sigma_phase6k.py                        |  194 ++
+ analysis/2026-07-20-r5-sigma-phase6k/summary.json  | 2210 ++++++++++++++++++++
+ analysis/2026-07-20-vision-death-3m.md             |   59 +
+ .../2026-07-20-vision-death-3m/cohort2_deaths.csv  |    7 +
+ .../frames/20260720T053402-f170ead6_near_loss.jpg  |  Bin 0 -> 53637 bytes
+ .../frames/20260720T053514-5cebc2b2_near_loss.jpg  |  Bin 0 -> 53145 bytes
+ .../frames/20260720T053635-f170ead6_near_loss.jpg  |  Bin 0 -> 60334 bytes
+ .../frames/20260720T053745-5cebc2b2_near_loss.jpg  |  Bin 0 -> 61846 bytes
+ .../frames/20260720T053905-f170ead6_near_loss.jpg  |  Bin 0 -> 56444 bytes
+ .../frames/20260720T054016-5cebc2b2_near_loss.jpg  |  Bin 0 -> 53237 bytes
+ analysis/2026-07-20-vision-death-3m/report.md      |   59 +
+ .../run_vision_death_3m.py                         |  761 +++++++
+ analysis/2026-07-20-vision-death-3m/summary.json   | 1085 ++++++++++
+ config/params_default.json                         |    5 +-
+ docs/design/action-legality.md                     |   33 +
+ docs/design/geometry-derivation.md                 |    4 +-
+ docs/thinktank/RESPONSE14.md                       |   73 +
+ docs/thinktank/RESPONSE15.md                       |   58 +
+ docs/thinktank/RESPONSE16.md                       |   84 +
+ docs/thinktank/RESPONSE17.md                       |  104 +
+ src/aigp/planning/race_planner.py                  |  108 +-
+ tests/unit/test_planner.py                         |   71 +
+ tuning/run_terminal_ab_mock.py                     |   39 +-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1502 +++++++++++++
+ .../summary.json                                   | 1563 ++++++++++++++
+ .../summary.md                                     |   67 +
+ .../01_20260720T064154-b59d0674.csv                |  112 +
+ .../02_20260720T064206-b59d0674.csv                |  163 ++
+ .../03_20260720T064228-b59d0674.csv                |  144 ++
+ .../04_20260720T064243-b59d0674.csv                |  154 ++
+ .../05_20260720T064257-b59d0674.csv                |  141 ++
+ .../06_20260720T064309-b59d0674.csv                |  295 +++
+ .../07_20260720T064334-b59d0674.csv                |  151 ++
+ .../08_20260720T064357-b59d0674.csv                |  180 ++
+ .../09_20260720T064425-b59d0674.csv                |  125 ++
+ .../10_20260720T064437-b59d0674.csv                |  147 ++
+ 44 files changed, 10637 insertions(+), 16 deletions(-)
+ create mode 100644 analysis/2026-07-20-a8-riders.md
+ create mode 100644 analysis/2026-07-20-a8-riders/report.md
+ create mode 100644 analysis/2026-07-20-a8-riders/run_a8_riders.py
+ create mode 100644 analysis/2026-07-20-a8-riders/summary.json
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k.md
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/report.md
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/run_r5_sigma_phase6k.py
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/summary.json
+ create mode 100644 analysis/2026-07-20-vision-death-3m.md
+ create mode 100644 analysis/2026-07-20-vision-death-3m/cohort2_deaths.csv
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053402-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053514-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053635-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053745-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053905-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T054016-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/report.md
+ create mode 100644 analysis/2026-07-20-vision-death-3m/run_vision_death_3m.py
+ create mode 100644 analysis/2026-07-20-vision-death-3m/summary.json
+ create mode 100644 docs/design/action-legality.md
+ create mode 100644 docs/thinktank/RESPONSE14.md
+ create mode 100644 docs/thinktank/RESPONSE15.md
+ create mode 100644 docs/thinktank/RESPONSE16.md
+ create mode 100644 docs/thinktank/RESPONSE17.md
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/runs.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/runs.json
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/summary.json
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/summary.md
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/01_20260720T064154-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/02_20260720T064206-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/03_20260720T064228-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/04_20260720T064243-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/05_20260720T064257-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/06_20260720T064309-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/07_20260720T064334-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/08_20260720T064357-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/09_20260720T064425-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/10_20260720T064437-b59d0674.csv
+
+HEAD
+e179898 RESPONSE17: reconciliation brief for the two-channel clamp conflict
+
+ancestor 4fc71bb
+OK
+
+=== F1 control ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 4.404010300000664, 'loop_overrun_frac': 0.0018165304268846503, 'loop_stats': {'ticks': 1101, 'overruns': 2, 'overrun_frac': 0.0018165304268846503, 'max_late_us': 6464}, 'flight_id': '20260720T071008-5b501b4c', 'log_dir': 'logs\\20260720T071008-5b501b4c'}
+F1 control gates=0 abort=environment collision (impulse=1.0) closest=5.455 commit_vz_std=0
+=== F2 live ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'gate clip budget exceeded (11)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 11, 'env_hits': 1, 'duration_s': 7.871994299988728, 'loop_overrun_frac': 0.006097560975609756, 'loop_stats': {'ticks': 1968, 'overruns': 12, 'overrun_frac': 0.006097560975609756, 'max_late_us': 4598}, 'flight_id': '20260720T071112-cd18c5fb', 'log_dir': 'logs\\20260720T071112-cd18c5fb'}
+F2 live gates=0 abort=gate clip budget exceeded (11) closest=0.852 commit_vz_std=0.12368022741711747
+=== F3 control ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.5)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 13.291995800012955, 'loop_overrun_frac': 0.006018657839301836, 'loop_stats': {'ticks': 3323, 'overruns': 20, 'overrun_frac': 0.006018657839301836, 'max_late_us': 7738}, 'flight_id': '20260720T071220-5b501b4c', 'log_dir': 'logs\\20260720T071220-5b501b4c'}
+F3 control gates=0 abort=environment collision (impulse=1.5) closest=3.163 commit_vz_std=0.1392969022104135
+=== F4 live ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.1)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 7.159994099987671, 'loop_overrun_frac': 0.0016759776536312849, 'loop_stats': {'ticks': 1790, 'overruns': 3, 'overrun_frac': 0.0016759776536312849, 'max_late_us': 2714}, 'flight_id': '20260720T071333-cd18c5fb', 'log_dir': 'logs\\20260720T071333-cd18c5fb'}
+F4 live gates=0 abort=environment collision (impulse=1.1) closest=0.652 commit_vz_std=0.09869678701029157
+=== F5 control ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=4.9)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 6.735980700002983, 'loop_overrun_frac': 0.0011876484560570072, 'loop_stats': {'ticks': 1684, 'overruns': 2, 'overrun_frac': 0.0011876484560570072, 'max_late_us': 448}, 'flight_id': '20260720T071439-5b501b4c', 'log_dir': 'logs\\20260720T071439-5b501b4c'}
+F5 control gates=0 abort=environment collision (impulse=4.9) closest=4.965 commit_vz_std=0.05381444267139073
+=== F6 live ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.6)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 6.5320080000092275, 'loop_overrun_frac': 0.000612369871402327, 'loop_stats': {'ticks': 1633, 'overruns': 1, 'overrun_frac': 0.000612369871402327, 'max_late_us': 2935}, 'flight_id': '20260720T071545-cd18c5fb', 'log_dir': 'logs\\20260720T071545-cd18c5fb'}
+F6 live gates=0 abort=environment collision (impulse=1.6) closest=2.661 commit_vz_std=0.09031465721703236

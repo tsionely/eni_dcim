@@ -1,0 +1,102 @@
+﻿===== pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:52 char:168
++ ... == pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+   b8f5ed4..e179898  main       -> origin/main
+Updating b8f5ed4..e179898
+Fast-forward
+ analysis/2026-07-20-a8-riders.md                   |   46 +
+ analysis/2026-07-20-a8-riders/report.md            |   46 +
+ analysis/2026-07-20-a8-riders/run_a8_riders.py     |  455 ++++
+ analysis/2026-07-20-a8-riders/summary.json         |  323 +++
+ .../run_r5_envelope_prep.py                        |   22 +-
+ analysis/2026-07-20-r5-sigma-phase6k.md            |   21 +
+ analysis/2026-07-20-r5-sigma-phase6k/report.md     |   21 +
+ .../run_r5_sigma_phase6k.py                        |  194 ++
+ analysis/2026-07-20-r5-sigma-phase6k/summary.json  | 2210 ++++++++++++++++++++
+ analysis/2026-07-20-vision-death-3m.md             |   59 +
+ .../2026-07-20-vision-death-3m/cohort2_deaths.csv  |    7 +
+ .../frames/20260720T053402-f170ead6_near_loss.jpg  |  Bin 0 -> 53637 bytes
+ .../frames/20260720T053514-5cebc2b2_near_loss.jpg  |  Bin 0 -> 53145 bytes
+ .../frames/20260720T053635-f170ead6_near_loss.jpg  |  Bin 0 -> 60334 bytes
+ .../frames/20260720T053745-5cebc2b2_near_loss.jpg  |  Bin 0 -> 61846 bytes
+ .../frames/20260720T053905-f170ead6_near_loss.jpg  |  Bin 0 -> 56444 bytes
+ .../frames/20260720T054016-5cebc2b2_near_loss.jpg  |  Bin 0 -> 53237 bytes
+ analysis/2026-07-20-vision-death-3m/report.md      |   59 +
+ .../run_vision_death_3m.py                         |  761 +++++++
+ analysis/2026-07-20-vision-death-3m/summary.json   | 1085 ++++++++++
+ config/params_default.json                         |    5 +-
+ docs/design/action-legality.md                     |   33 +
+ docs/design/geometry-derivation.md                 |    4 +-
+ docs/thinktank/RESPONSE14.md                       |   73 +
+ docs/thinktank/RESPONSE15.md                       |   58 +
+ docs/thinktank/RESPONSE16.md                       |   84 +
+ docs/thinktank/RESPONSE17.md                       |  104 +
+ src/aigp/planning/race_planner.py                  |  108 +-
+ tests/unit/test_planner.py                         |   71 +
+ tuning/run_terminal_ab_mock.py                     |   39 +-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1502 +++++++++++++
+ .../summary.json                                   | 1563 ++++++++++++++
+ .../summary.md                                     |   67 +
+ .../01_20260720T064154-b59d0674.csv                |  112 +
+ .../02_20260720T064206-b59d0674.csv                |  163 ++
+ .../03_20260720T064228-b59d0674.csv                |  144 ++
+ .../04_20260720T064243-b59d0674.csv                |  154 ++
+ .../05_20260720T064257-b59d0674.csv                |  141 ++
+ .../06_20260720T064309-b59d0674.csv                |  295 +++
+ .../07_20260720T064334-b59d0674.csv                |  151 ++
+ .../08_20260720T064357-b59d0674.csv                |  180 ++
+ .../09_20260720T064425-b59d0674.csv                |  125 ++
+ .../10_20260720T064437-b59d0674.csv                |  147 ++
+ 44 files changed, 10637 insertions(+), 16 deletions(-)
+ create mode 100644 analysis/2026-07-20-a8-riders.md
+ create mode 100644 analysis/2026-07-20-a8-riders/report.md
+ create mode 100644 analysis/2026-07-20-a8-riders/run_a8_riders.py
+ create mode 100644 analysis/2026-07-20-a8-riders/summary.json
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k.md
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/report.md
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/run_r5_sigma_phase6k.py
+ create mode 100644 analysis/2026-07-20-r5-sigma-phase6k/summary.json
+ create mode 100644 analysis/2026-07-20-vision-death-3m.md
+ create mode 100644 analysis/2026-07-20-vision-death-3m/cohort2_deaths.csv
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053402-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053514-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053635-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053745-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T053905-f170ead6_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/frames/20260720T054016-5cebc2b2_near_loss.jpg
+ create mode 100644 analysis/2026-07-20-vision-death-3m/report.md
+ create mode 100644 analysis/2026-07-20-vision-death-3m/run_vision_death_3m.py
+ create mode 100644 analysis/2026-07-20-vision-death-3m/summary.json
+ create mode 100644 docs/design/action-legality.md
+ create mode 100644 docs/thinktank/RESPONSE14.md
+ create mode 100644 docs/thinktank/RESPONSE15.md
+ create mode 100644 docs/thinktank/RESPONSE16.md
+ create mode 100644 docs/thinktank/RESPONSE17.md
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/runs.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/runs.json
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/summary.json
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/summary.md
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/01_20260720T064154-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/02_20260720T064206-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/03_20260720T064228-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/04_20260720T064243-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/05_20260720T064257-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/06_20260720T064309-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/07_20260720T064334-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/08_20260720T064357-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/09_20260720T064425-b59d0674.csv
+ create mode 100644 tuning/terminal-ab-46e9a64-46e9a64-20260720T063932Z/term_status_live/10_20260720T064437-b59d0674.csv
+
+HEAD
+e179898 RESPONSE17: reconciliation brief for the two-channel clamp conflict
+
+ancestor 4fc71bb
+OK
+
