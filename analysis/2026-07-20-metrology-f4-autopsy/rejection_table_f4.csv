@@ -1,0 +1,7 @@
+stage,pass,kill,n_rows,detail
+A_pad_to_mid_FULL_certified,True,False,31,31 certified FULL with range_z>5; continuous lock from pad
+B_FULL_dropout_to_SIDE_4to5m,True,False,6,"6 SIDE rows ≤5m (probation=5, row_only=3); last continuous FULL before band ends ~5.31m"
+C_harvest_certified_FULL_le_3p5,False,True,0,"census gate FAIL — 0 certified FULL ≤3.5m; closest certified FULL harvest range=3.748470846892272 (frame 284, phase=recover)"
+D_live_detector_fixes_le_3p5,True,False,2,"YES approach got close — min_det={'mono_ns': 234436648706300, 'ts_ns': 1784557765501837500, 'range_z_m': 2.302953553473273, 'cert_status': 'none', 'confidence': 0.5, 'center_px': [259.23188202356476, 253.6251868953678]}; cert breakdown ≤3.5: {'none': 2}"
+E_close_dets_certified,False,True,0,close dets are cert=none conf=0.5 — identity never re-certified below promote floor path; promote_floor=1.6m is moot because these are not fresh FULL anchors in harvest
+F_SIDE_certified_for_cluster,False,True,0,SIDE stays probation/row-only/none — census needs certified SIDE≥2 AND certified FULL≤3.5

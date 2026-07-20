@@ -1,0 +1,5 @@
+flight,n_full_certified_le_3p5,full_range_min,n_side_probation,n_side_row_only,census_label
+metrology_f4,0,3.748470846892272,5,3,NO_CERTIFIED_FULL_BELOW_3P5
+archive_F1,0,4.314456083022236,1,0,NO_CERTIFIED_FULL_BELOW_3P5
+archive_F5,0,4.5730690923464765,0,0,NO_CERTIFIED_FULL_BELOW_3P5
+metrology_f2_ok,33,-0.8334916678566519,1,6,OK

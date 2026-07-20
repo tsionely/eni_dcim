@@ -1,0 +1,210 @@
+{
+  "response": "RESPONSE36 \u00a73",
+  "repo_tip_requested": "2e37585",
+  "features_source": "tuning\\archive-harvest-release-fit-v21-6fe13e3-6fe13e3-20260720T144339Z\\features_archive.csv",
+  "flight_f4": "20260720T142917-9aa0ef5c",
+  "comparators": {
+    "F1": "20260720T071008-5b501b4c",
+    "F5": "20260720T071439-5b501b4c",
+    "ok_sibling": "20260720T134522-9aa0ef5c"
+  },
+  "census_label": "NO_CERTIFIED_FULL_BELOW_3P5",
+  "WHERE_USABILITY_DIED": "FULL_DROPOUT_THEN_UNCERTIFIED_CLOSE_DETS",
+  "distinct_from_f1": true,
+  "f1_funnel": "SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP",
+  "SYSTEMATIC_vs_LOTTERY": "SYSTEMATIC_PROFILE_COVERAGE_LOTTERY",
+  "profile_change_required": true,
+  "RESCUABLE_as_7th_cluster": false,
+  "f4_csv": {
+    "label": "metrology_f4",
+    "n_feature_rows": 40,
+    "mode_cert": {
+      "FULL_QUAD|certified": 34,
+      "SIDE_PAIR|probation": 3,
+      "SIDE_PAIR_ROW_ONLY|none": 1,
+      "SIDE_PAIR_ROW_ONLY|probation": 2
+    },
+    "n_full": 34,
+    "full_range_min": 3.748470846892272,
+    "full_range_max": 6.048201249156073,
+    "n_full_le_3p5_any_cert": 0,
+    "n_full_certified_le_3p5": 0,
+    "n_side_any": 6,
+    "n_side_probation": 5,
+    "n_side_row_only": 3,
+    "closest_full": {
+      "t_rel_s": 5.532844,
+      "range_z_m": 3.748470846892272,
+      "cert_status": "certified",
+      "phase": "recover",
+      "center_x_px": 294.5,
+      "e_reject": "ok",
+      "frame_id": "284"
+    }
+  },
+  "f4_live": {
+    "min_detection": {
+      "mono_ns": 234436648706300,
+      "ts_ns": 1784557765501837500,
+      "range_z_m": 2.302953553473273,
+      "cert_status": "none",
+      "confidence": 0.5,
+      "center_px": [
+        259.23188202356476,
+        253.6251868953678
+      ]
+    },
+    "n_det_le_3p5": 2,
+    "det_le_3p5_cert": {
+      "none": 2
+    },
+    "fsm_abort": {
+      "mono_ns": 234442355540400,
+      "reason": "environment collision (impulse=2.6)"
+    }
+  },
+  "archive_F1": {
+    "label": "archive_F1",
+    "n_feature_rows": 23,
+    "mode_cert": {
+      "FULL_QUAD|certified": 22,
+      "SIDE_PAIR|probation": 1
+    },
+    "n_full": 22,
+    "full_range_min": 4.314456083022236,
+    "full_range_max": 6.104445681562479,
+    "n_full_le_3p5_any_cert": 0,
+    "n_full_certified_le_3p5": 0,
+    "n_side_any": 1,
+    "n_side_probation": 1,
+    "n_side_row_only": 0,
+    "closest_full": {
+      "t_rel_s": 3.6983677,
+      "range_z_m": 4.314456083022236,
+      "cert_status": "certified",
+      "phase": "takeoff",
+      "center_x_px": 284.5,
+      "e_reject": "ok",
+      "frame_id": "230"
+    }
+  },
+  "archive_F5": {
+    "label": "archive_F5",
+    "n_feature_rows": 34,
+    "mode_cert": {
+      "FULL_QUAD|certified": 34
+    },
+    "n_full": 34,
+    "full_range_min": 4.5730690923464765,
+    "full_range_max": 8.35836416022431,
+    "n_full_le_3p5_any_cert": 0,
+    "n_full_certified_le_3p5": 0,
+    "n_side_any": 0,
+    "n_side_probation": 0,
+    "n_side_row_only": 0,
+    "closest_full": {
+      "t_rel_s": 5.7943548,
+      "range_z_m": 4.5730690923464765,
+      "cert_status": "certified",
+      "phase": "approach",
+      "center_x_px": 477.0,
+      "e_reject": "scale_gate",
+      "frame_id": "284"
+    }
+  },
+  "ok_sibling": {
+    "label": "metrology_f2_ok",
+    "n_feature_rows": 171,
+    "mode_cert": {
+      "FULL_QUAD|certified": 142,
+      "SIDE_PAIR|certified": 8,
+      "SIDE_PAIR|none": 14,
+      "SIDE_PAIR|probation": 1,
+      "SIDE_PAIR_ROW_ONLY|none": 6
+    },
+    "n_full": 142,
+    "full_range_min": -0.8334916678566519,
+    "full_range_max": 16.167473068607386,
+    "n_full_le_3p5_any_cert": 33,
+    "n_full_certified_le_3p5": 33,
+    "n_side_any": 29,
+    "n_side_probation": 1,
+    "n_side_row_only": 6,
+    "closest_full": {
+      "t_rel_s": 8.8259749,
+      "range_z_m": -0.8334916678566519,
+      "cert_status": "certified",
+      "phase": "search",
+      "center_x_px": 403.0,
+      "e_reject": "ok",
+      "frame_id": "375"
+    }
+  },
+  "stages": [
+    {
+      "stage": "A_pad_to_mid_FULL_certified",
+      "pass": true,
+      "n_rows": 31,
+      "detail": "31 certified FULL with range_z>5; continuous lock from pad",
+      "kill": false
+    },
+    {
+      "stage": "B_FULL_dropout_to_SIDE_4to5m",
+      "pass": true,
+      "n_rows": 6,
+      "detail": "6 SIDE rows \u22645m (probation=5, row_only=3); last continuous FULL before band ends ~5.31m",
+      "kill": false
+    },
+    {
+      "stage": "C_harvest_certified_FULL_le_3p5",
+      "pass": false,
+      "n_rows": 0,
+      "detail": "census gate FAIL \u2014 0 certified FULL \u22643.5m; closest certified FULL harvest range=3.748470846892272 (frame 284, phase=recover)",
+      "kill": true
+    },
+    {
+      "stage": "D_live_detector_fixes_le_3p5",
+      "pass": true,
+      "n_rows": 2,
+      "detail": "YES approach got close \u2014 min_det={'mono_ns': 234436648706300, 'ts_ns': 1784557765501837500, 'range_z_m': 2.302953553473273, 'cert_status': 'none', 'confidence': 0.5, 'center_px': [259.23188202356476, 253.6251868953678]}; cert breakdown \u22643.5: {'none': 2}",
+      "kill": false
+    },
+    {
+      "stage": "E_close_dets_certified",
+      "pass": false,
+      "n_rows": 0,
+      "detail": "close dets are cert=none conf=0.5 \u2014 identity never re-certified below promote floor path; promote_floor=1.6m is moot because these are not fresh FULL anchors in harvest",
+      "kill": true
+    },
+    {
+      "stage": "F_SIDE_certified_for_cluster",
+      "pass": false,
+      "n_rows": 0,
+      "detail": "SIDE stays probation/row-only/none \u2014 census needs certified SIDE\u22652 AND certified FULL\u22643.5",
+      "kill": true
+    }
+  ],
+  "verdict_rationale": "Approach DID get close (live min det 2.30 m, 2 dets \u22643.5 m) but both close dets are cert=none conf=0.5 and emit no harvest FULL feature. Continuous certified FULL ends ~5.31 m; the 4\u20135 m band is SIDE probation/row-only only; one recover FULL at 3.75 m sits ABOVE the 3.5 m census cut (e_reject=ok \u2014 not a scale_gate kill). Archive F1/F5 share NO_CERTIFIED_FULL_BELOW_3P5 with closest harvest FULL \u22654.3 m. Successful sibling 134522 delivers 33 certified FULL \u22643.5 on the same metrology profile family \u2014 so this is a systematic coverage lottery of the standard approach, not an idiosyncratic one-off and not f1's funnel.",
+  "profile_selection_proposal": {
+    "decision": "CHANGE_METROLOGY_PROFILE_SELECTION",
+    "visibility": "tanks-visible (RESPONSE36 \u00a73 / advisory \u00a76)",
+    "do_not": "quiet retune of detector/cert thresholds to rescue these flights",
+    "items": [
+      {
+        "id": "P1_accept_gate",
+        "title": "Collection accept-gate on certified coverage",
+        "text": "A metrology flight counts toward the shortfall ONLY if harvest shows \u22654 certified FULL with range_z\u22643.5 and e_reject=ok (cluster entry bar). Flights labeled NO_CERTIFIED_FULL_BELOW_3P5 are logged as coverage failures and do not consume the remaining shortfall slot \u2014 retry under P2."
+      },
+      {
+        "id": "P2_hold_certified_through_band",
+        "title": "Hold certified FULL through the 5\u21923 m band",
+        "text": "Profile selection change: when FULL drops to SIDE before 4.5 m, align/hold (or slow to \u22641.2 m/s) until \u22653 consecutive certified FULL re-anchors, then continue. Goal = enrich older-age SIDE bins AND hold certified FULL coverage through \u22643.5 m (advisory \u00a76 both clauses)."
+      },
+      {
+        "id": "P3_no_more_identical_blind_collection",
+        "title": "Stop identical blind collection",
+        "text": "Per RESPONSE36 escalation: do not fly another identical standard-profile metrology attempt until P1/P2 are adopted. f1 (scale_gate) and f4 (no certified FULL\u22643.5) are two different honest funnels; repeating the profile reproduces known censoring."
+      }
+    ]
+  }
+}
