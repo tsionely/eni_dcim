@@ -41,7 +41,12 @@ from run_l1_perception_replay import (  # noqa: E402
 )
 
 
-ARCHIVE_DIR = ROOT / "fixtures" / "20260720T071602-phase6l-cohort-3"
+ARCHIVE_DIRS = [
+    ROOT / "fixtures" / "20260720T071602-phase6l-cohort-3",
+    ROOT / "fixtures" / "20260720T133508-phase7m-metrology-f1",
+    ROOT / "fixtures" / "20260720T134548-phase7m-metrology-f2",
+    ROOT / "fixtures" / "20260720T135040-phase7m-metrology-f3",
+]
 P4_DIR = ROOT / "tuning" / "hold-lift-p4-3b554f3-3942837-20260720T115546Z"
 OUT_PREFIX = "archive-harvest-release-fit-v21"
 BOOTSTRAP_N = 2200
@@ -104,26 +109,34 @@ def read_csv(path: Path) -> list[dict]:
 
 
 def targets_from_archive() -> list[dict]:
-    manifest = json.loads((ARCHIVE_DIR / "manifest.json").read_text(encoding="utf-8"))
-    recordings = {}
-    logs = {}
-    for item in manifest["items"]:
-        file = item["file"]
-        if item["kind"] == "recording" and file.endswith(".aigprec"):
-            fid = file.replace("_takeoff_to_end.aigprec", "")
-            recordings[fid] = file
-        elif item["kind"] == "flight" and file.endswith("-flight.jsonl"):
-            fid = file.replace("-flight.jsonl", "")
-            logs[fid] = file
     targets = []
-    for idx, fid in enumerate(sorted(recordings), start=1):
-        targets.append({
-            "label": f"F{idx}",
-            "flight_id": fid,
-            "recording": str((ARCHIVE_DIR / recordings[fid]).relative_to(ROOT)),
-            "log": str((ARCHIVE_DIR / logs[fid]).relative_to(ROOT)),
-            "contact_offset_m": 0.162,
-        })
+    seq = 0
+    for archive_dir in ARCHIVE_DIRS:
+        if not (archive_dir / "manifest.json").exists():
+            continue
+        manifest = json.loads((archive_dir / "manifest.json").read_text(encoding="utf-8"))
+        recordings = {}
+        logs = {}
+        for item in manifest["items"]:
+            file = item["file"]
+            if file.endswith(".aigprec"):
+                fid = file.replace("_takeoff_to_end.aigprec", "")
+                recordings[fid] = file
+            elif file.endswith("-flight.jsonl"):
+                fid = file.replace("-flight.jsonl", "")
+                logs[fid] = file
+        for fid in sorted(recordings):
+            if fid not in logs:
+                continue
+            seq += 1
+            targets.append({
+                "label": f"F{seq}",
+                "flight_id": fid,
+                "fixture_dir": archive_dir.name,
+                "recording": str((archive_dir / recordings[fid]).relative_to(ROOT)),
+                "log": str((archive_dir / logs[fid]).relative_to(ROOT)),
+                "contact_offset_m": 0.162,
+            })
     return targets
 
 
@@ -184,6 +197,51 @@ def split_approaches(rows: list[dict], meta: dict) -> list[dict]:
             "census_ok": True,
         })
     return out
+
+
+def census_diagnostics(features: list[dict], metas: list[dict],
+                       approaches: list[dict]) -> list[dict]:
+    rows = []
+    for meta in metas:
+        fr = [r for r in features if r.get("flight_id") == meta["flight_id"]]
+        apps = [a for a in approaches if a["flight_id"] == meta["flight_id"]]
+        full_any = [
+            r for r in fr
+            if r.get("feature_mode") == "FULL_QUAD"
+            and r.get("cert_status") == "certified"
+            and fnum(r.get("range_z_m")) is not None
+            and float(r["range_z_m"]) <= 3.5
+        ]
+        full_ok = [
+            r for r in full_any
+            if fnum(r.get("e_meas")) is not None
+            and r.get("e_reject") == "ok"
+        ]
+        side_cert = certified_side(fr)
+        side_row_only = [r for r in fr if r.get("feature_mode") == "SIDE_PAIR_ROW_ONLY"]
+        if apps:
+            reason = "OK"
+        elif not full_any:
+            reason = "NO_CERTIFIED_FULL_BELOW_3P5"
+        elif len(full_ok) < 4:
+            reason = "FULL_BELOW_3P5_NOT_EZ_USABLE"
+        elif len(side_cert) < 2:
+            reason = "NO_CERTIFIED_SIDE_ROWS"
+        else:
+            reason = "SEGMENT_SPLIT_REJECTED"
+        rows.append({
+            "flight": meta["flight"],
+            "flight_id": meta["flight_id"],
+            "approaches": len(apps),
+            "full_certified_below_3p5_any": len(full_any),
+            "full_ok_below_3p5": len(full_ok),
+            "full_depth_any_m": min([float(r["range_z_m"]) for r in full_any], default=""),
+            "full_depth_ok_m": min([float(r["range_z_m"]) for r in full_ok], default=""),
+            "side_pair_certified": len(side_cert),
+            "side_pair_row_only": len(side_row_only),
+            "failure_reason": reason,
+        })
+    return rows
 
 
 def run_archive_replays(params: ParamSet) -> tuple[list[dict], list[dict], list[dict]]:
@@ -299,9 +357,17 @@ def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> 
                     "rv2_m2ps2": rv * rv,
                     "v_ref_oracle_mps": v_ref,
                     "v_hold_mps": v_hold,
+                    "residual_sign_convention": "r_v = v_ref_oracle - (v_anchor_old + feed_forward)",
+                    "v_latch_mps": v_latch_true,
                     "v_latch_true_mps": v_latch_true,
+                    "v_full_raw_mps": v_latch_true,
+                    "v_anchor_old_mps": v_anchor,
                     "v_latch_auth_applied_mps": v_anchor,
+                    "delta_latch_mps": v_anchor - v_latch_true,
                     "auth_at_latch": auth,
+                    "rate_anchor_v_raw": cut.get("rate_anchor_v_raw", ""),
+                    "rate_anchor_quality": cut.get("rate_anchor_quality", ""),
+                    "shadow_vz_up": side.get("shadow_vz_up", ""),
                     "n_full_at_latch": n_full,
                     "span_full_at_latch_s": span_full,
                     "predicted_b0_from_auth_mps": pred_b0,
@@ -473,6 +539,28 @@ def loao_sensitivity(samples: list[dict]) -> list[dict]:
         u95 = float(fit["profile_u95_sigma_a_mps2"])
         rows.append({
             "left_out_approach": cid,
+            "train_clusters": len({r["cluster_id"] for r in train}),
+            "train_rows": len(train),
+            "point_sigma_a_mps2": fit["sigma_a_mps2"],
+            "profile_u95_sigma_a_mps2": u95,
+            "pushes_over_gate": u95 > SIGMA_A_GATE,
+            "profile_nearly_flat": fit["profile_nearly_flat"],
+        })
+    return rows
+
+
+def flight_loao_sensitivity(samples: list[dict]) -> list[dict]:
+    rows = []
+    flight_ids = sorted({r["flight_id"] for r in samples})
+    for fid in flight_ids:
+        train = [r for r in samples if r["flight_id"] != fid]
+        if not train:
+            continue
+        fit = fit_release(train)
+        u95 = float(fit["profile_u95_sigma_a_mps2"])
+        rows.append({
+            "left_out_flight_id": fid,
+            "train_flights": len({r["flight_id"] for r in train}),
             "train_clusters": len({r["cluster_id"] for r in train}),
             "train_rows": len(train),
             "point_sigma_a_mps2": fit["sigma_a_mps2"],
@@ -679,7 +767,18 @@ def write_report(out_dir: Path, summary: dict) -> None:
     lines.extend([
         "",
         f"Census verdict: `{summary['census_verdict']}`.",
+        "",
+        "## Census Diagnostics",
+        "",
+        "| flight_id | full any <3.5 | full e_z ok <3.5 | side certified | row-only side | reason |",
+        "|---|---:|---:|---:|---:|---|",
     ])
+    for row in summary.get("census_diagnostics", []):
+        lines.append(
+            f"| `{row['flight_id']}` | {row['full_certified_below_3p5_any']} | "
+            f"{row['full_ok_below_3p5']} | {row['side_pair_certified']} | "
+            f"{row['side_pair_row_only']} | `{row['failure_reason']}` |"
+        )
     if summary.get("stopped_after_census"):
         lines.append("")
         lines.append("Stopped before fitting because fewer than six independent approaches were available.")
@@ -749,6 +848,8 @@ def main(argv: list[str] | None = None) -> int:
     write_csv(out_dir / "features_archive.csv", features)
     write_csv(out_dir / "flight_meta.csv", metas)
     write_csv(out_dir / "approaches.csv", approaches)
+    diag = census_diagnostics(features, metas, approaches)
+    write_csv(out_dir / "census_diagnostics.csv", diag)
 
     census_by_flight = []
     for meta in metas:
@@ -768,6 +869,7 @@ def main(argv: list[str] | None = None) -> int:
         "source_ref": args.source_ref,
         "source_sha": src_sha,
         "census": census_by_flight,
+        "census_diagnostics": diag,
         "census_verdict": "PASS" if census_ok else "STOP_ARCHIVE_LT_6_APPROACHES",
         "stopped_after_census": bool(args.census_only or not census_ok),
     }
@@ -783,6 +885,7 @@ def main(argv: list[str] | None = None) -> int:
     fit = fit_release(samples)
     boot = cluster_bootstrap(samples)
     loao = loao_sensitivity(samples)
+    flight_loao = flight_loao_sensitivity(samples)
     reg = regime_rows(samples)
     cov, max_age, monotone = cluster_balanced_coverage(samples, fit)
     fallback = fallback_bound(samples, fit)
@@ -825,6 +928,7 @@ def main(argv: list[str] | None = None) -> int:
     write_csv(out_dir / "cluster_bootstrap.csv", [boot])
     write_csv(out_dir / "profile_likelihood.csv", [{k: fit[k] for k in ["profile_u95_sigma_a_mps2", "profile_threshold_nll", "profile_nearly_flat", "profile_loss_min", "profile_loss_max"]}])
     write_csv(out_dir / "loao_sensitivity.csv", loao)
+    write_csv(out_dir / "flight_loao_sensitivity.csv", flight_loao)
     write_csv(out_dir / "command_regimes.csv", reg)
     write_csv(out_dir / "cluster_balanced_coverage.csv", cov)
     write_csv(out_dir / "fallback_monotone_bound.csv", fallback)

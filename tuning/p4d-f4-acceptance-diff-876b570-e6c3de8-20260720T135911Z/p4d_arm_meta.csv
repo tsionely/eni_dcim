@@ -1,0 +1,3 @@
+flight,flight_id,arm,unique_exposures,raw_full_fixes,accepted_full,full_feature_rows,side_rows,relock_events
+F4,20260720T071333-cd18c5fb,detector_only,120,115,64,62,0,0
+F4,20260720T071333-cd18c5fb,parallel_tracker,120,115,56,56,15,56
