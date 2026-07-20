@@ -127,17 +127,22 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
         return None
     # Honest-detection scale gate at the oracle's front door: the span
     # and the BELIEVED range must tell the same story before a pixel
-    # row becomes metrology (fx*W = 512 px*m, audited band 333-768,
-    # widened to 300-800). Three real 1.8-cohort flights fed the
+    # row becomes metrology. Three real 1.8-cohort flights fed the
     # oracle certified BAR_FULL quads whose span implied ~5m while the
     # believed gate stood <1.2m — the SUCCESSOR gate, crisp behind the
     # wash, wearing gate-1's certificate; e_meas pegged the clamp and
     # admission (rightly) refused two centered passes. Identity
     # machinery certifies continuity; only cross-channel consistency
-    # certifies that the row measures THIS gate.
+    # certifies that the row measures THIS gate. The honest product is
+    # GEOMETRY, not a constant: fx*W = (image_w/2)*1.6 — 512 px*m at
+    # 640 wide (audited band 300-800) but 256 at the low-load mock's
+    # 320x180, where a literal 300 floor rejected every honest feature
+    # 10/10 (caught by the calibrated QA rerun). Ratios preserved.
     if state.gate_rel is not None:
         r_b = float(state.gate_rel.t[2])
-        if r_b >= 0.5 and not (300.0 <= feature.span_px * r_b <= 800.0):
+        honest = 0.5 * float(state.image_size[0]) * gate_w
+        if r_b >= 0.5 and not (0.59 * honest <= feature.span_px * r_b
+                               <= 1.56 * honest):
             return None
     cy = state.image_size[1] / 2.0
     fx = state.image_size[0] / 2.0                # 90deg HFOV pinhole

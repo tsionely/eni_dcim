@@ -604,3 +604,35 @@ def test_corridor_param_is_live():
             0.04, feature=f, feature_age_s=0.02, oracle=g,
             corridor_m=0.10)
     assert owner == ALT_OWNER
+
+
+def test_scale_gate_follows_image_geometry():
+    """The honest product is geometry, not a constant: at the low-load
+    mock's 320x180 the honest fx*W is 256 px.m — a literal 300 floor
+    rejected every honest mock feature (10/10, calibrated QA rerun).
+    An honest low-res feature (span*R ~ 256) must observe; the same
+    fiction ratio (~0.2x honest) must still be refused."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_observe
+
+    def st(r):
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, r]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(160, 90),
+            image_size=(320, 180), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def feat(span):
+        return TerminalFeature(ts_ns=1, y_top_px=90.0, span_px=span,
+                               center_x_px=160.0, cert_status="certified",
+                               mode="BAR_FULL")
+
+    g = TerminalOracle()
+    # Honest at 320 wide: span 128 at R=2.0 => product 256 = fx*W.
+    assert terminal_observe(g, st(2.0), feat(128.0), 0.02) is not None
+    # Fiction at the same resolution: successor-scale span.
+    g2 = TerminalOracle()
+    assert terminal_observe(g2, st(1.0), feat(52.0), 0.02) is None
+    assert len(g2._hist) == 0
