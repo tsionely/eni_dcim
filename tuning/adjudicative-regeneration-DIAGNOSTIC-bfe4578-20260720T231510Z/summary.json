@@ -1,0 +1,25 @@
+{
+  "artifact_manifest": "tuning/adjudicative-regeneration-DIAGNOSTIC-bfe4578-20260720T231510Z/adjudicative_artifact_manifest.csv",
+  "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+  "computation_commit": "de19d881ce8fa0ddc27dd71d7306d0d366c43e90",
+  "criterion_commits": {
+    "response54": "d0a73f028c265c428c1ceabbcb30b51cb2e66849",
+    "response55": "36a9b205b23ff5827a4b237821e5795a05e6fb0b",
+    "second_mechanism_refutation_thresholds": "bb998ae2a5edf79f7b2431b6b8388d496a76a522",
+    "shadow_fit_decision_structure": "02b32cca996a22f3a44a8757ce2486a747eb706e",
+    "wrong_sign_rescore_equivalence": "d0a73f028c265c428c1ceabbcb30b51cb2e66849"
+  },
+  "csv_only_no_sim": true,
+  "diagnostic_only": true,
+  "input_manifest_path": "tuning/adjudicative-regeneration-DIAGNOSTIC-bfe4578-20260720T231510Z/checkpoint_input_manifest.json",
+  "input_manifest_sha256": "dbc3f4e8e52b74b514fcd316b734c40489f051c0a107aa32f3f887ff41568409",
+  "legacy_formula": "reconstructed: cmd=terminal_vz_up_mps, e=e_meas, abs(e)>0.03, cmd*e<-1e-6; zero command has no deadband in the historical mask; reconstructs 28/68 scored trace rows",
+  "r26_1_verdict_scope": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
+  "repo_head": "bfe45782e441f43c9c8650abe6ae89a763e781ce",
+  "report_generator_commit": "bfe45782e441f43c9c8650abe6ae89a763e781ce",
+  "rng_resample_provenance": "Student-t nu=5.0; cluster_bootstrap_n=2200; cluster_bootstrap_seed=20260720; profile grid from archive_harvest_release_fit_v21/run_shadow_residual_diagnostics",
+  "second_mechanism_table": "per-cluster |b1| vs rate_feed_forward_mps RMS; cut-aware near-hover refutation columns included",
+  "source_checkpoint_dir": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z",
+  "viewed_old_output_statement": "385b7eb diagnostics and ordered A-G checkpoint outputs were viewed; this generator emits a post-criterion adjudicative report layer and does not relabel pre-criterion diagnostics.",
+  "wrong_sign_event_support": "16 trace rows -> 9 events -> 7 sign-evaluable + 2 zero-on-support"
+}

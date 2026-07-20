@@ -1,0 +1,92 @@
+[
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_release_fit_by_set.csv",
+    "sha256": "8003902cf6171dbf41292fac9cfba1124d522972f753b3e2efb6f92f3d42e1f7"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_cluster_bootstrap_by_set.csv",
+    "sha256": "b354e3551f7e9d28bb1eb4bc7c208a4dd280be08513ec6728dc666661296493b"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_loao_by_set.csv",
+    "sha256": "1249899925e4a091ab9e0ef640be9e105c6cdf889f3c7d4f2673b8726ad1899c"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_balanced_coverage_by_set.csv",
+    "sha256": "2dacff552b5c5485f29317f883a80dba6b4ae8495bb66f874648299bca05d538"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_new_per_cluster_split.csv",
+    "sha256": "4017311fcd43bd8d7a2de0e4a3692a6760cb71ecc134047fdf19c0a3b46b22de"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_exact_maxima.csv",
+    "sha256": "ef926678be020a4b3d0d13c920c2e06c50c04958045fd5bf89cc7966148377dc"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_legacy_discovery_appendix_5_listed_4_analyzable.csv",
+    "sha256": "2ee7b0b9ee5a670886d1f1773312ebf6644f5c4cb61cf74a48e493ebccc0e310"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_forced_withhold_samples.csv",
+    "sha256": "d62d8f751ca492b5f31a878d1ae5f93a273aa6a512a968efefe5ca3d6bfc91f8"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_definition_scorecard.csv",
+    "sha256": "9d37fbeae5101da6226c3d566db2fd8d44778bcf788ea21a837db0c2ec13533f"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_approach_level_rescore.csv",
+    "sha256": "6dd0e66205a2b0ae0850bcee306b07dc51b429e7a1b8b684dc98742250602689"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_mask_accounting.csv",
+    "sha256": "48c3928311cbe57a85cdcb9e91e3fd7b39a5015d365c1ff5c55c6d76e67bb8aa"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_paired_common_support_events.csv",
+    "sha256": "9c88f52ecfa7ed47d493dbce71d2148527163ada9a46c30651a2201587238704"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_legacy_28_rows.csv",
+    "sha256": "3dd39532dbe410c199ee7f38c3cb372d5b106ca29626a93afbbd40934f997e14"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_historical_zero_wrong_sign_green_rescore.csv",
+    "sha256": "562fff48ac276d2013ce71bbe87e889e2dffe77e19bb10135e8da9338b279304"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/03_Y_eligible_by_era_with_applicability.csv",
+    "sha256": "768fdc55dffede42739e0142f9c3fb9be1f00f89b1223c0c171846685ff3d3f3"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/03_frozen_compound_signature_2x2_with_applicability.csv",
+    "sha256": "c1ee76713f06d800b2d9a815d263eb16a481b1343b9843f49c107c6bc9824e89"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/04_old_fit_verdict_taxonomy.csv",
+    "sha256": "add8549d3ea7d50031a99d70be707b2a159ab089c7ddf622bfc583ac2c50d7fa"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/summary.json",
+    "sha256": "d9a1ba2b00d08e6bff918595c2b852d4ab9b7628cef35a4dda455f04879e94d4"
+  }
+]
