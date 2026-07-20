@@ -1,0 +1,16 @@
+sweep,flight,commit_rows,observer_ready_rows,shadow_capture_rows,captures_by_2p2m,first_capture_range_m,first_capture_source,owner_term_rows,owner_term_side_rows,min_admission_score,sigma_induced_abort_rows,transition_count,held_through_full_to_side
+baseline,F2,25,5,1,1,1.9027490654879835,FULL_QUAD,14,0,0.22131123298279648,1,0,False
+baseline,F4,26,21,0,0,,,0,0,0.6394931569736408,0,0,False
+baseline,F6,11,0,0,0,,,0,0,,0,0,False
+drop_all_0p16s_after_first_below_2m,F2,25,4,2,2,1.064305018103599,FULL_QUAD,2,0,0.26648778828548714,1,0,False
+drop_all_0p16s_after_first_below_2m,F4,26,21,0,0,,,0,0,0.6394931569736408,0,0,False
+drop_all_0p16s_after_first_below_2m,F6,11,0,0,0,,,0,0,,0,0,False
+drop_all_0p30s_after_first_below_2m,F2,25,0,0,0,,,0,0,,0,0,False
+drop_all_0p30s_after_first_below_2m,F4,26,21,0,0,,,0,0,0.6394931569736408,0,0,False
+drop_all_0p30s_after_first_below_2m,F6,11,0,0,0,,,0,0,,0,0,False
+drop_full_below_1p5m,F2,25,14,1,1,1.9027490654879835,FULL_QUAD,14,0,0.22131123298279648,1,0,False
+drop_full_below_1p5m,F4,26,21,0,0,,,0,0,0.6394931569736408,0,0,False
+drop_full_below_1p5m,F6,11,0,0,0,,,0,0,,0,0,False
+drop_full_below_2p0m,F2,25,0,0,0,,,0,0,,0,0,False
+drop_full_below_2p0m,F4,26,21,0,0,,,0,0,0.6394931569736408,0,0,False
+drop_full_below_2p0m,F6,11,0,0,0,,,0,0,,0,0,False
