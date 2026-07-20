@@ -1,0 +1,54 @@
+{
+  "response": "RESPONSE35 \u00a73",
+  "features_source": "tuning\\archive-harvest-release-fit-v21-e6c3de8-e6c3de8-20260720T140659Z\\features_archive.csv",
+  "flight_f1": "20260720T133443-9aa0ef5c",
+  "flight_twin": "20260720T071220-5b501b4c",
+  "WHERE_USABILITY_DIED": "SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP",
+  "RESCUABLE": false,
+  "cert_earned_above_promote_floor": true,
+  "promote_floor_m": 1.6,
+  "not_promote_floor_failure": true,
+  "not_harness_overreject_honest": true,
+  "f1": {
+    "label": "metrology_f1",
+    "n_full_certified_le_3p5": 11,
+    "n_ez_usable": 0,
+    "kill_stage_counts": {
+      "scale_gate": 11
+    },
+    "n_scale_gate": 11,
+    "n_far_right_edge": 11,
+    "n_large_lateral": 11,
+    "n_stale_gate_age": 11,
+    "n_undersized_span": 11,
+    "phases": [
+      "recover"
+    ],
+    "range_z_min": 2.9111323319150393,
+    "range_z_max": 3.4826411636430183,
+    "gate_age_min_s": 1.171113176,
+    "gate_age_max_s": 1.492714176
+  },
+  "twin": {
+    "label": "archive_071220",
+    "n_full_certified_le_3p5": 1,
+    "n_ez_usable": 0,
+    "kill_stage_counts": {
+      "scale_gate": 1
+    },
+    "n_scale_gate": 1,
+    "n_far_right_edge": 0,
+    "n_large_lateral": 0,
+    "n_stale_gate_age": 1,
+    "n_undersized_span": 1,
+    "phases": [
+      "approach"
+    ],
+    "range_z_min": 1.24343725135097,
+    "range_z_max": 1.24343725135097,
+    "gate_age_min_s": 1.49648756,
+    "gate_age_max_s": 1.49648756
+  },
+  "twin_same_mechanism": true,
+  "verdict_rationale": "All 11 FULL<=3.5 certified rows die at e_reject=scale_gate. Span is ~1/3 of fx*W/Z at the reported range_z (same visual structure later reappears at ~10 m with e_reject=ok). center_x~510\u2013513 (right edge), |x|~3.5\u20134.5 m, gate_age~1.2\u20131.5 s, phase=recover after a FULL gap filled only by SIDE_PAIR_ROW_ONLY/none. Certification was earned above the 1.6 m promote floor; usability died at the scale gate on flipped/far-gate quads \u2014 not harness over-reject of honest e_z. Twin 071220 shows the same kill (1 FULL<=3.5, scale_gate, then ~9 m). Not rescuable as a 7th cluster."
+}
