@@ -32,7 +32,7 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-RUN_LABEL = "terminal-ab-4fc71bb"
+RUN_LABEL = "terminal-ab-b74cbbf"
 OUT_DIR = ROOT / "tuning" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 MOCK_IMAGE_SIZE = (320, 180)
@@ -605,6 +605,8 @@ def arm_summary(rows: list[dict]) -> dict:
     anomalies = sum(1 for r in rows if r.get("term_anomalies"))
     capture_runs = sum(1 for r in rows if _f(r.get("first_capture_range_m")) is not None)
     capture_by_2p2 = sum(int(r.get("capture_by_2p2") or 0) for r in rows)
+    first_capture_ranges = [_f(r.get("first_capture_range_m")) for r in rows]
+    first_capture_vals = [v for v in first_capture_ranges if v is not None]
     lateral = [_f(r.get("closest_lateral_m")) for r in rows]
     dz = [_f(r.get("closest_true_dz_m")) for r in rows]
     closest_range = [_f(r.get("closest_range_m")) for r in rows]
@@ -622,6 +624,9 @@ def arm_summary(rows: list[dict]) -> dict:
         "term_anomaly_runs": anomalies,
         "capture_runs": capture_runs,
         "capture_by_2p2": capture_by_2p2,
+        "first_capture_range_mean_m": _mean(first_capture_vals),
+        "first_capture_range_min_m": min(first_capture_vals) if first_capture_vals else None,
+        "first_capture_range_max_m": max(first_capture_vals) if first_capture_vals else None,
         "closest_range_mean_m": _mean(range_vals),
         "closest_lateral_mean_m": _mean(lateral_vals),
         "closest_lateral_std_m": _std(lateral_vals),
@@ -737,8 +742,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "",
         "## Arms",
         "",
-        "| Arm | Patches | Passes | Runs | Pass rate | Finished | Terminal anomaly runs | commit vision survival | captures by 2.2 | closest R mean | lateral mean/std | true dz mean/std |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Arm | Patches | Passes | Runs | Pass rate | Finished | Terminal anomaly runs | commit vision survival | captures by 2.2 | first capture R mean/min | closest R mean | lateral mean/std | true dz mean/std |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for label, patches in ARMS:
         summary = summaries[label]
@@ -750,6 +755,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             f"{_fmt_pct(summary.get('commit_vision_survival_frac'))} "
             f"({summary.get('commit_vision_fresh_ticks', 0)}/{summary.get('commit_ticks', 0)}) | "
             f"{summary.get('capture_by_2p2', 0)}/{summary['runs']} | "
+            f"{_fmt_m(summary.get('first_capture_range_mean_m'))}/"
+            f"{_fmt_m(summary.get('first_capture_range_min_m'))} | "
             f"{_fmt(summary['closest_range_mean_m'])} | "
             f"{_fmt(summary['closest_lateral_mean_m'])}/{_fmt(summary['closest_lateral_std_m'])} | "
             f"{_fmt(summary['closest_true_dz_mean_m'])}/{_fmt(summary['closest_true_dz_std_m'])} |"
@@ -759,8 +766,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             "",
             f"## Commit Vision Survival Vs {compare_label}",
             "",
-            "| Arm | current survival | prior survival | delta | current captures by 2.2 | prior captures by 2.2 |",
-            "|---|---:|---:|---:|---:|---:|",
+            "| Arm | current survival | prior survival | delta | current captures by 2.2 | prior captures by 2.2 | current first capture R mean/min | prior first capture R mean/min |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|",
         ])
         for label, _patches in ARMS:
             current = summaries[label]
@@ -776,7 +783,11 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
                 f"({prior.get('commit_vision_fresh_ticks', 0)}/{prior.get('commit_ticks', 0)}) | "
                 f"{_fmt_pct(delta)} | "
                 f"{current.get('capture_by_2p2', 0)}/{current.get('runs', 0)} | "
-                f"{prior.get('capture_by_2p2', 0)}/{prior.get('runs', 0)} |"
+                f"{prior.get('capture_by_2p2', 0)}/{prior.get('runs', 0)} | "
+                f"{_fmt_m(current.get('first_capture_range_mean_m'))}/"
+                f"{_fmt_m(current.get('first_capture_range_min_m'))} | "
+                f"{_fmt_m(prior.get('first_capture_range_mean_m'))}/"
+                f"{_fmt_m(prior.get('first_capture_range_min_m'))} |"
             )
     lines.extend([
         "",
