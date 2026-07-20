@@ -1,4 +1,4 @@
-"""L1 shadow-capture + sigma-harvest addendum replay for commit 2aa8b9c.
+"""L1 shadow-capture + sigma-harvest addendum replay for commit a150ece.
 
 QA & MOCK-TUNER scope: recorded video replay only. This script reuses the
 fresh-video perception replay harness and then runs the current terminal
@@ -47,7 +47,7 @@ def apply_patches(params: ParamSet, patches: list[str]) -> ParamSet:
     return params.patch(overrides) if overrides else params
 
 
-SOURCE_REF = "2aa8b9c"
+SOURCE_REF = "a150ece"
 
 
 def source_commit() -> tuple[str, str, list[str]]:
@@ -423,6 +423,10 @@ def sample_std(values: list[float]) -> float | None:
     return statistics.stdev(vals) if len(vals) >= 2 else None
 
 
+def exact_pair_key(row: dict) -> tuple[str, str]:
+    return row["flight"], str(row["feature_ts_ns"])
+
+
 def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
     full = [
         r for r in rows
@@ -436,20 +440,16 @@ def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
         and r.get("cert_status") == "certified"
         and fnum(r.get("e_meas")) is not None
     ]
-    full_by_flight: dict[str, list[dict]] = {}
+    full_by_key: dict[tuple[str, str], dict] = {}
     for row in full:
-        full_by_flight.setdefault(row["flight"], []).append(row)
+        full_by_key.setdefault(exact_pair_key(row), row)
     pairs = []
     for row in side:
         st = float(row["feature_ts_ns"]) / 1e9
-        candidates = []
-        for frow in full_by_flight.get(row["flight"], []):
-            dt = abs(st - float(frow["feature_ts_ns"]) / 1e9)
-            if dt <= 0.15:
-                candidates.append((dt, frow))
-        if not candidates:
+        frow = full_by_key.get(exact_pair_key(row))
+        if frow is None:
             continue
-        dt, frow = min(candidates, key=lambda x: x[0])
+        dt = abs(st - float(frow["feature_ts_ns"]) / 1e9)
         rng = fnum(row.get("range_z_m"))
         residual = float(row["e_meas"]) - float(frow["e_meas"])
         pairs.append({
@@ -467,6 +467,7 @@ def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
             "side_e_z": row["e_meas"],
             "full_e_z": frow["e_meas"],
             "residual_e_m": residual,
+            "pairing_mode": "exact_exposure",
         })
 
     summary = []
@@ -487,6 +488,7 @@ def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
                 if 1e-3 < dt <= 0.25:
                     derivs.append((float(b["residual_e_m"])
                                    - float(a["residual_e_m"])) / dt)
+        paired_switch_sigma_v = rms_centered(derivs) if len(derivs) >= 2 else ""
         summary.append({
             "cohort": cohort,
             "range_bin": label,
@@ -494,11 +496,219 @@ def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
             "bias_e_m": statistics.fmean(residuals) if residuals else "",
             "sigma_e_m": rms_centered(residuals) if len(residuals) >= 2 else "",
             "std_e_m": sample_std(residuals) if len(residuals) >= 2 else "",
-            "sigma_v_mps": rms_centered(derivs) if len(derivs) >= 2 else "",
+            "sigma_v_mps": paired_switch_sigma_v,
+            "paired_switch_sigma_v_mps": paired_switch_sigma_v,
             "std_v_mps": sample_std(derivs) if len(derivs) >= 2 else "",
             "n_v_pairs": len(derivs),
+            "v_component": "paired_switch_exact_exposure",
         })
     return pairs, summary
+
+
+TIME_SINCE_ANCHOR_BINS = [
+    ("0p00-0p10", 0.0, 0.10),
+    ("0p10-0p25", 0.10, 0.25),
+    ("0p25-0p50", 0.25, 0.50),
+    ("0p50-1p00", 0.50, 1.00),
+    ("gte1p00", 1.00, float("inf")),
+]
+
+
+def time_since_anchor_bin(value: float | None) -> str:
+    if value is None:
+        return "unknown"
+    for label, lo, hi in TIME_SINCE_ANCHOR_BINS:
+        if lo <= value < hi:
+            return label
+    return "unknown"
+
+
+def median_value(values: list[float]) -> float | str:
+    vals = [v for v in values if math.isfinite(v)]
+    return statistics.median(vals) if vals else ""
+
+
+def maintenance_sigma_harvest(
+    rows: list[dict],
+    sweeps: list[ShadowOptions],
+    paired_summary: list[dict],
+) -> tuple[list[dict], list[dict], list[dict]]:
+    full = [
+        r for r in rows
+        if r.get("feature_mode") == "FULL_QUAD"
+        and r.get("cert_status") == "certified"
+        and fnum(r.get("e_meas")) is not None
+    ]
+    side = [
+        r for r in rows
+        if r.get("feature_mode") == "SIDE_PAIR"
+        and r.get("cert_status") == "certified"
+        and fnum(r.get("e_meas")) is not None
+    ]
+    full_by_key: dict[tuple[str, str], dict] = {}
+    for row in full:
+        full_by_key.setdefault(exact_pair_key(row), row)
+
+    exact_pairs: list[dict] = []
+    for side_row in side:
+        full_row = full_by_key.get(exact_pair_key(side_row))
+        if full_row is None:
+            continue
+        ts_s = float(side_row["feature_ts_ns"]) / 1e9
+        rng = fnum(side_row.get("range_z_m"))
+        residual = float(side_row["e_meas"]) - float(full_row["e_meas"])
+        exact_pairs.append({
+            "cohort": side_row.get("cohort", "primary"),
+            "flight": side_row["flight"],
+            "ts_s": ts_s,
+            "side_row": side_row,
+            "full_row": full_row,
+            "range_z_m": rng,
+            "range_bin": range_bin(rng),
+            "residual_e_m": residual,
+        })
+    exact_pairs.sort(key=lambda p: (p["cohort"], p["flight"], p["ts_s"]))
+
+    rows_out = []
+    withheld_sweeps = [s for s in sweeps if s.drop_full_below_m is not None]
+    for opts in withheld_sweeps:
+        for cohort, flight in sorted({(p["cohort"], p["flight"]) for p in exact_pairs}):
+            flight_pairs = [
+                p for p in exact_pairs
+                if p["cohort"] == cohort and p["flight"] == flight
+            ]
+            anchor: dict | None = None
+            for pair in flight_pairs:
+                full_fed = should_feed_feature(pair["full_row"], opts, None)
+                side_fed = should_feed_feature(pair["side_row"], opts, None)
+                if full_fed and side_fed:
+                    anchor = pair
+                    continue
+                if full_fed or not side_fed or anchor is None:
+                    continue
+                age_s = float(pair["ts_s"]) - float(anchor["ts_s"])
+                if age_s <= 1e-6:
+                    continue
+                residual = float(pair["residual_e_m"])
+                anchor_residual = float(anchor["residual_e_m"])
+                drift = residual - anchor_residual
+                rows_out.append({
+                    "cohort": cohort,
+                    "sweep": opts.label,
+                    "flight": flight,
+                    "side_frame_id": pair["side_row"]["frame_id"],
+                    "withheld_full_frame_id": pair["full_row"]["frame_id"],
+                    "anchor_frame_id": anchor["full_row"]["frame_id"],
+                    "side_ts_s": pair["ts_s"],
+                    "anchor_ts_s": anchor["ts_s"],
+                    "time_since_anchor_s": age_s,
+                    "time_since_anchor_bin": time_since_anchor_bin(age_s),
+                    "range_z_m": pair["range_z_m"] if pair["range_z_m"] is not None else "",
+                    "range_bin": pair["range_bin"],
+                    "side_e_z": pair["side_row"]["e_meas"],
+                    "withheld_full_e_z": pair["full_row"]["e_meas"],
+                    "anchor_side_e_z": anchor["side_row"]["e_meas"],
+                    "anchor_full_e_z": anchor["full_row"]["e_meas"],
+                    "maintenance_residual_e_m": residual,
+                    "anchor_residual_e_m": anchor_residual,
+                    "residual_drift_from_anchor_m": drift,
+                    "maintenance_interval_v_mps": drift / age_s,
+                    "full_withheld_below_m": opts.drop_full_below_m,
+                })
+
+    summary = summarize_maintenance_sigma(rows_out)
+    two_component = two_component_sigma_summary(summary, paired_summary)
+    return rows_out, summary, two_component
+
+
+def summarize_maintenance_sigma(rows: list[dict]) -> list[dict]:
+    if not rows:
+        return []
+    groups: list[tuple[str, str, str, str, list[dict]]] = []
+    cohorts = sorted({r["cohort"] for r in rows})
+    sweeps = sorted({r["sweep"] for r in rows})
+    range_labels = ["all"] + [label for label, _, _ in RANGE_BINS]
+    age_labels = ["all"] + [label for label, _, _ in TIME_SINCE_ANCHOR_BINS]
+    for cohort in cohorts:
+        for sweep in sweeps + ["all_full_withheld"]:
+            for rlabel in range_labels:
+                for alabel in age_labels:
+                    group = [
+                        r for r in rows
+                        if r["cohort"] == cohort
+                        and (sweep == "all_full_withheld" or r["sweep"] == sweep)
+                        and (rlabel == "all" or r["range_bin"] == rlabel)
+                        and (alabel == "all" or r["time_since_anchor_bin"] == alabel)
+                    ]
+                    if group or (rlabel == "all" and alabel == "all"):
+                        groups.append((cohort, sweep, rlabel, alabel, group))
+
+    summary = []
+    for cohort, sweep, rlabel, alabel, group in groups:
+        residuals = [float(r["maintenance_residual_e_m"]) for r in group]
+        drift_rates = [float(r["maintenance_interval_v_mps"]) for r in group]
+        ages = [float(r["time_since_anchor_s"]) for r in group]
+        ranges = [
+            float(r["range_z_m"]) for r in group
+            if fnum(r.get("range_z_m")) is not None
+        ]
+        summary.append({
+            "cohort": cohort,
+            "sweep": sweep,
+            "range_bin": rlabel,
+            "time_since_anchor_bin": alabel,
+            "n": len(group),
+            "bias_residual_e_m": statistics.fmean(residuals) if residuals else "",
+            "sigma_residual_e_m": rms_centered(residuals) if len(residuals) >= 2 else "",
+            "maintenance_sigma_v_mps": (
+                rms_centered(drift_rates) if len(drift_rates) >= 2 else ""
+            ),
+            "maintenance_std_v_mps": (
+                sample_std(drift_rates) if len(drift_rates) >= 2 else ""
+            ),
+            "median_time_since_anchor_s": median_value(ages),
+            "median_range_z_m": median_value(ranges),
+        })
+    return summary
+
+
+def two_component_sigma_summary(
+    maintenance_summary: list[dict],
+    paired_summary: list[dict],
+) -> list[dict]:
+    maint_lookup = {
+        (r["cohort"], r["range_bin"]): r
+        for r in maintenance_summary
+        if r["sweep"] == "all_full_withheld"
+        and r["time_since_anchor_bin"] == "all"
+    }
+    out = []
+    for row in paired_summary:
+        maint = maint_lookup.get((row["cohort"], row["range_bin"]))
+        paired_v = fnum(row.get("paired_switch_sigma_v_mps"))
+        maint_v = fnum(maint.get("maintenance_sigma_v_mps")) if maint else None
+        candidates = [v for v in (paired_v, maint_v) if v is not None]
+        out.append({
+            "cohort": row["cohort"],
+            "range_bin": row["range_bin"],
+            "paired_n": row["n"],
+            "paired_sigma_e_m": row["sigma_e_m"],
+            "paired_switch_sigma_v_mps": row["paired_switch_sigma_v_mps"],
+            "paired_n_v": row["n_v_pairs"],
+            "maintenance_n": maint["n"] if maint else 0,
+            "maintenance_sigma_v_mps": (
+                maint["maintenance_sigma_v_mps"] if maint else ""
+            ),
+            "release_sigma_v_mps": max(candidates) if candidates else "",
+            "release_sigma_v_source": (
+                "maintenance"
+                if maint_v is not None and (paired_v is None or maint_v >= paired_v)
+                else "paired_switch"
+                if paired_v is not None
+                else ""
+            ),
+        })
+    return out
 
 
 def discover_recent_targets() -> list[dict]:
@@ -575,7 +785,7 @@ def write_report(out_dir: Path, summary: dict) -> None:
     else:
         lines.append("No full->side source transition was observed.")
     lines.extend(["", "## Earned Sigma Row", ""])
-    lines.append("| Cohort | Range bin | n | bias_e | sigma_e | sigma_v | n_v |")
+    lines.append("| Cohort | Range bin | n | bias_e | sigma_e | paired-switch sigma_v | n_v |")
     lines.append("|---|---|---:|---:|---:|---:|---:|")
     for row in summary["sigma_summary"]:
         if row["range_bin"] != "all" and row["n"] == 0:
@@ -584,6 +794,33 @@ def write_report(out_dir: Path, summary: dict) -> None:
             f"| `{row['cohort']}` | `{row['range_bin']}` | {row['n']} | "
             f"{fmt(row['bias_e_m'])} | {fmt(row['sigma_e_m'])} | "
             f"{fmt(row['sigma_v_mps'])} | {row['n_v_pairs']} |"
+        )
+    lines.extend(["", "## Two-Component Sigma-v", ""])
+    lines.append("| Cohort | Range bin | paired n | paired-switch sigma_v | maintenance n | maintenance sigma_v | release sigma_v | source |")
+    lines.append("|---|---|---:|---:|---:|---:|---:|---|")
+    for row in summary["two_component_sigma"]:
+        if row["range_bin"] != "all" and row["paired_n"] == 0 and row["maintenance_n"] == 0:
+            continue
+        lines.append(
+            f"| `{row['cohort']}` | `{row['range_bin']}` | {row['paired_n']} | "
+            f"{fmt(row['paired_switch_sigma_v_mps'])} | {row['maintenance_n']} | "
+            f"{fmt(row['maintenance_sigma_v_mps'])} | "
+            f"{fmt(row['release_sigma_v_mps'])} | `{row['release_sigma_v_source']}` |"
+        )
+    lines.extend(["", "## Maintenance Sigma Strata", ""])
+    lines.append("| Cohort | Sweep | Range bin | Anchor age bin | n | median age | median range | maintenance sigma_v |")
+    lines.append("|---|---|---|---|---:|---:|---:|---:|")
+    for row in summary["maintenance_sigma_summary"]:
+        if row["n"] == 0:
+            continue
+        if row["sweep"] != "all_full_withheld" and row["time_since_anchor_bin"] != "all":
+            continue
+        lines.append(
+            f"| `{row['cohort']}` | `{row['sweep']}` | `{row['range_bin']}` | "
+            f"`{row['time_since_anchor_bin']}` | {row['n']} | "
+            f"{fmt(row['median_time_since_anchor_s'])} | "
+            f"{fmt(row['median_range_z_m'])} | "
+            f"{fmt(row['maintenance_sigma_v_mps'])} |"
         )
     lines.extend([
         "",
@@ -594,7 +831,9 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "Artifacts: `features.csv`, `observer_timeline.csv`, `shadow_capture_timeline.csv`, "
         "`shadow_capture_summary.csv`, `shadow_source_transitions.csv`, "
         "`observer_source_transitions.csv`, `earned_sigma_pairs.csv`, "
-        "`earned_sigma_summary.csv`, and `summary.json`.",
+        "`earned_sigma_summary.csv`, `maintenance_sigma_rows.csv`, "
+        "`maintenance_sigma_summary.csv`, `two_component_sigma_summary.csv`, "
+        "and `summary.json`.",
     ])
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -646,9 +885,23 @@ def main(argv: list[str] | None = None) -> int:
         row.setdefault("cohort", "primary_f2_f4")
     write_csv(out_dir / "features.csv", all_features)
 
+    sweeps = [
+        ShadowOptions("baseline"),
+        ShadowOptions("drop_all_0p16s_after_first_below_2m", drop_all_window_s=0.16),
+        ShadowOptions("drop_all_0p30s_after_first_below_2m", drop_all_window_s=0.30),
+        ShadowOptions("drop_full_below_2p0m", drop_full_below_m=2.0),
+        ShadowOptions("drop_full_below_1p5m", drop_full_below_m=1.5),
+    ]
+
     sigma_pairs, sigma_summary = sigma_harvest(all_features)
     write_csv(out_dir / "earned_sigma_pairs.csv", sigma_pairs)
     write_csv(out_dir / "earned_sigma_summary.csv", sigma_summary)
+    maintenance_rows, maintenance_summary, two_component_sigma = (
+        maintenance_sigma_harvest(all_features, sweeps, sigma_summary)
+    )
+    write_csv(out_dir / "maintenance_sigma_rows.csv", maintenance_rows)
+    write_csv(out_dir / "maintenance_sigma_summary.csv", maintenance_summary)
+    write_csv(out_dir / "two_component_sigma_summary.csv", two_component_sigma)
 
     observer = []
     observer_transitions = []
@@ -666,13 +919,6 @@ def main(argv: list[str] | None = None) -> int:
     write_csv(out_dir / "observer_timeline.csv", observer)
     write_csv(out_dir / "observer_source_transitions.csv", observer_transitions)
 
-    sweeps = [
-        ShadowOptions("baseline"),
-        ShadowOptions("drop_all_0p16s_after_first_below_2m", drop_all_window_s=0.16),
-        ShadowOptions("drop_all_0p30s_after_first_below_2m", drop_all_window_s=0.30),
-        ShadowOptions("drop_full_below_2p0m", drop_full_below_m=2.0),
-        ShadowOptions("drop_full_below_1p5m", drop_full_below_m=1.5),
-    ]
     shadow_rows = []
     shadow_transitions = []
     for opts in sweeps:
@@ -708,6 +954,8 @@ def main(argv: list[str] | None = None) -> int:
         "flight_meta": metas,
         "observer_transitions": observer_transitions,
         "sigma_summary": sigma_summary,
+        "maintenance_sigma_summary": maintenance_summary,
+        "two_component_sigma": two_component_sigma,
         "shadow_summary": shadow_summary,
         "shadow_transitions": shadow_transitions,
         "verdict": verdict,
