@@ -32,8 +32,11 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-OUT_DIR = ROOT / "tuning" / f"terminal-ab-e16d506-{HEAD_SHORT}-{RUN_STAMP}"
-RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"terminal-ab-e16d506-{HEAD_SHORT}-{RUN_STAMP}"
+RUN_LABEL = "terminal-ab-46e9a64"
+OUT_DIR = ROOT / "tuning" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
+RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
+MOCK_IMAGE_SIZE = (320, 180)
+MOCK_GATE_WIDTH_M = 1.6
 
 BASE_PATCHES = {
     "safety.imu_stale_s": 0.25,
@@ -103,7 +106,7 @@ def mock_session(label: str, port_offset: int, seed: int) -> Iterator[App]:
         mav_addr=("127.0.0.1", cfg.mavlink_port),
         video_addr=("127.0.0.1", cfg.vision_port),
         gates=[gate],
-        image_size=(320, 180),
+        image_size=MOCK_IMAGE_SIZE,
         video_hz=20.0,
         seed=seed,
     )
@@ -219,7 +222,8 @@ def _visible_scale_gate_reject(feature: dict | None, state: dict | None) -> bool
     range_m = _f(state.get("range_m"))
     if span is None or range_m is None or span <= 1.0 or range_m < 0.5:
         return False
-    return not (300.0 <= span * range_m <= 800.0)
+    honest = 0.5 * MOCK_IMAGE_SIZE[0] * MOCK_GATE_WIDTH_M
+    return not (0.59 * honest <= span * range_m <= 1.56 * honest)
 
 
 def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, list[str]]:
@@ -752,9 +756,27 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
     live_engaged_ready = sum(1 for r in live_rows
                              if int(r.get("engaged_ready_rows") or 0))
     live_capture_by_2p2 = sum(int(r.get("capture_by_2p2") or 0) for r in live_rows)
-    verdict = ("NO-GO for live terminal arms: the mock live arm never actuated."
-               if live_rows and (live_owner_rows == 0 or live_applied_rows == 0)
-               else "GO from mock terminal authority wiring.")
+    live_scale_reject_runs = sum(
+        1 for r in live_rows if int(r.get("visible_scale_gate_reject_rows") or 0)
+    )
+    live_wrong_sign_rows = sum(
+        int(r.get("applied_sign_mismatch_rows") or 0) for r in live_rows
+    )
+    live_chatter_runs = sum(
+        1 for r in live_rows if int(r.get("owner_drop_while_engaged_ready") or 0)
+        or int(r.get("owner_transitions") or 0) > 2
+    )
+    if live_rows and (live_owner_rows == 0 or live_applied_rows == 0):
+        verdict = "NO-GO for live terminal arms: the mock live arm never actuated."
+    elif live_wrong_sign_rows or live_chatter_runs:
+        verdict = "NO-GO for live terminal arms: wrong-sign or owner chatter observed."
+    elif live_capture_by_2p2 < 7 or live_scale_reject_runs:
+        verdict = (
+            "NO-GO for live terminal gatekeeping: authority wiring actuated with "
+            "correct sign, but K1/scale-gate criteria failed."
+        )
+    else:
+        verdict = "GO from mock terminal authority wiring and gatekeeping."
     lines.extend([
         "",
         "## Verdict",
@@ -764,7 +786,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         f"Live arm summary: owner=term rows `{live_owner_rows}`, "
         f"v_bz_applied rows `{live_applied_rows}`, "
         f"runs with engaged+ready `{live_engaged_ready}/{len(live_rows)}`, "
-        f"captures by 2.2m `{live_capture_by_2p2}/{len(live_rows)}`.",
+        f"captures by 2.2m `{live_capture_by_2p2}/{len(live_rows)}`, "
+        f"visible scale-reject runs `{live_scale_reject_runs}/{len(live_rows)}`.",
     ])
     lines.extend([
         "",
