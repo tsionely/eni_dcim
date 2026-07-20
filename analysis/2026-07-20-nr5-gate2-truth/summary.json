@@ -1,0 +1,374 @@
+{
+  "ask": "N-R5 gate-2 truth labels",
+  "flights": [
+    {
+      "label": "try15_death",
+      "fid": "20260719T160537-f170ead6",
+      "role": "chase_death",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6-flight.jsonl",
+      "t_pass_ff": 3.7571,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": -0.4978927866103442,
+        "source": "body_travel_median"
+      },
+      "gate2_at_crossing": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.1513868,
+        "bearing_deg": 8.381050268233087,
+        "R_m": 5.872604724270243,
+        "elev_deg": 29.553730921141582,
+        "height_ty_m": -2.873101400383376,
+        "error_vs_exit_deg": 8.878943054843432,
+        "n_cands": 18,
+        "rival_bearings_deg": [],
+        "center_px": [
+          361.1960062383071,
+          179.46452901640995
+        ],
+        "cert": "probation"
+      },
+      "postpass_persistent_lock": {
+        "source": "postpass_persistent_state",
+        "t_ff": 3.7761587,
+        "bearing_deg": 41.238500287659285,
+        "R_m": 7.3938363270096294,
+        "elev_deg": 28.315212413616987,
+        "height_ty_m": -2.7764156030689007,
+        "error_vs_exit_deg": 41.73639307426964,
+        "persist_s": 2.6600424,
+        "age": 0.0
+      },
+      "truth_used": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.1513868,
+        "bearing_deg": 8.381050268233087,
+        "R_m": 5.872604724270243,
+        "elev_deg": 29.553730921141582,
+        "height_ty_m": -2.873101400383376,
+        "error_vs_exit_deg": 8.878943054843432,
+        "n_cands": 18,
+        "rival_bearings_deg": [],
+        "center_px": [
+          361.1960062383071,
+          179.46452901640995
+        ],
+        "cert": "probation"
+      },
+      "kill_test_row": {
+        "flight": "try15_death",
+        "fid": "20260719T160537-f170ead6",
+        "t_pass_ff": 3.7571,
+        "exit_bearing_deg": -0.4978927866103442,
+        "gate2_bearing_deg": 8.381050268233087,
+        "gate2_R_m": 5.872604724270243,
+        "gate2_elev_deg": 29.553730921141582,
+        "gate2_height_ty_m": -2.873101400383376,
+        "err_vs_exit_deg": 8.878943054843432,
+        "label_source": "far_det_near_crossing",
+        "in_bearing_cone_pm12": true,
+        "in_range_tube_3_12": true
+      },
+      "try39_nearpass_gate2": null
+    },
+    {
+      "label": "try39_death",
+      "fid": "20260719T163649-f170ead6",
+      "role": "chase_death_plus_nearpass",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.2576177,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": 30.939008212143513,
+        "source": "gate1_los_median"
+      },
+      "gate2_at_crossing": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.3426748,
+        "bearing_deg": 29.982788869572033,
+        "R_m": 6.388983850102961,
+        "elev_deg": 42.416333601031425,
+        "height_ty_m": -3.9647778629099752,
+        "error_vs_exit_deg": -0.9562193425714725,
+        "n_cands": 17,
+        "rival_bearings_deg": [],
+        "center_px": [
+          462.3970642089844,
+          105.83825492858887
+        ],
+        "cert": "none"
+      },
+      "postpass_persistent_lock": {
+        "source": "postpass_persistent_state",
+        "t_ff": 4.3122286,
+        "bearing_deg": 33.19507700092205,
+        "R_m": 7.758298558707656,
+        "elev_deg": 48.095775833650634,
+        "height_ty_m": -5.291110767872905,
+        "error_vs_exit_deg": 2.2560687887785207,
+        "persist_s": 1.6998484999999999,
+        "age": 0.002011768
+      },
+      "truth_used": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.3426748,
+        "bearing_deg": 29.982788869572033,
+        "R_m": 6.388983850102961,
+        "elev_deg": 42.416333601031425,
+        "height_ty_m": -3.9647778629099752,
+        "error_vs_exit_deg": -0.9562193425714725,
+        "n_cands": 17,
+        "rival_bearings_deg": [],
+        "center_px": [
+          462.3970642089844,
+          105.83825492858887
+        ],
+        "cert": "none"
+      },
+      "kill_test_row": {
+        "flight": "try39_death",
+        "fid": "20260719T163649-f170ead6",
+        "t_pass_ff": 4.2576177,
+        "exit_bearing_deg": 30.939008212143513,
+        "gate2_bearing_deg": 29.982788869572033,
+        "gate2_R_m": 6.388983850102961,
+        "gate2_elev_deg": 42.416333601031425,
+        "gate2_height_ty_m": -3.9647778629099752,
+        "err_vs_exit_deg": -0.9562193425714725,
+        "label_source": "far_det_near_crossing",
+        "in_bearing_cone_pm12": true,
+        "in_range_tube_3_12": true
+      },
+      "try39_nearpass_gate2": {
+        "t_ff": 7.6920342,
+        "R_m": 0.41539636433706767,
+        "bearing_deg": -89.9994296149253,
+        "elev_deg": -89.99789299949104,
+        "height_ty_m": 0.027193054412349375,
+        "tx": -0.10045104974286258,
+        "ty": 0.027193054412349375,
+        "tz": -0.4021495541483763,
+        "age": 0.7312804,
+        "note": "geometric_term_nearpass_gate2",
+        "also_min_R": {
+          "t_ff": 7.5119784,
+          "R_m": 0.03200872866713348,
+          "bearing_deg": -67.19408065152199,
+          "elev_deg": 34.373778073349975,
+          "height_ty_m": -0.008203410127914807,
+          "tx": -0.028520896815233475,
+          "ty": -0.008203410127914807,
+          "tz": 0.011992548437017152,
+          "age": 0.5501454,
+          "note": "postpass_min_state_R"
+        }
+      }
+    },
+    {
+      "label": "phase6i_200816",
+      "fid": "20260719T200816-f170ead6",
+      "role": "pass",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T200816-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.0068052,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": 0.5616709188511886,
+        "source": "body_travel_median"
+      },
+      "gate2_at_crossing": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.3631498,
+        "bearing_deg": 4.06317460310418,
+        "R_m": 7.884133875100651,
+        "elev_deg": 38.45748522329881,
+        "height_ty_m": -4.895840526638753,
+        "error_vs_exit_deg": 3.501503684252981,
+        "n_cands": 8,
+        "rival_bearings_deg": [
+          14.8382684468656,
+          24.63300316427024,
+          28.627992665113478
+        ],
+        "center_px": [
+          339.25,
+          127.5
+        ],
+        "cert": "certified"
+      },
+      "postpass_persistent_lock": {
+        "source": "postpass_persistent_state",
+        "t_ff": 4.0123316,
+        "bearing_deg": 43.45547141527981,
+        "R_m": 8.534827005948415,
+        "elev_deg": 26.17745820325752,
+        "height_ty_m": -2.8683916407131806,
+        "error_vs_exit_deg": 42.89380049642861,
+        "persist_s": 1.0042392999999992,
+        "age": 0.00342992
+      },
+      "truth_used": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.3631498,
+        "bearing_deg": 4.06317460310418,
+        "R_m": 7.884133875100651,
+        "elev_deg": 38.45748522329881,
+        "height_ty_m": -4.895840526638753,
+        "error_vs_exit_deg": 3.501503684252981,
+        "n_cands": 8,
+        "rival_bearings_deg": [
+          14.8382684468656,
+          24.63300316427024,
+          28.627992665113478
+        ],
+        "center_px": [
+          339.25,
+          127.5
+        ],
+        "cert": "certified"
+      },
+      "kill_test_row": {
+        "flight": "phase6i_200816",
+        "fid": "20260719T200816-f170ead6",
+        "t_pass_ff": 4.0068052,
+        "exit_bearing_deg": 0.5616709188511886,
+        "gate2_bearing_deg": 4.06317460310418,
+        "gate2_R_m": 7.884133875100651,
+        "gate2_elev_deg": 38.45748522329881,
+        "gate2_height_ty_m": -4.895840526638753,
+        "err_vs_exit_deg": 3.501503684252981,
+        "label_source": "far_det_near_crossing",
+        "in_bearing_cone_pm12": true,
+        "in_range_tube_3_12": true
+      },
+      "try39_nearpass_gate2": null
+    },
+    {
+      "label": "phase6i_201851",
+      "fid": "20260719T201851-50f9dcc8",
+      "role": "pass",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8-flight.jsonl",
+      "t_pass_ff": 4.5110314,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": -3.8621715049101666,
+        "source": "body_travel_median"
+      },
+      "gate2_at_crossing": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.5957621,
+        "bearing_deg": 24.64163337130443,
+        "R_m": 7.419977257347275,
+        "elev_deg": 23.654811603122532,
+        "height_ty_m": -2.744648135570112,
+        "error_vs_exit_deg": 28.503804876214588,
+        "n_cands": 16,
+        "rival_bearings_deg": [],
+        "center_px": [
+          458.0,
+          211.0
+        ],
+        "cert": "certified"
+      },
+      "postpass_persistent_lock": {
+        "source": "postpass_persistent_state",
+        "t_ff": 6.6040914,
+        "bearing_deg": -1.2067207582063533,
+        "R_m": 11.974943970050544,
+        "elev_deg": 22.768330202492635,
+        "height_ty_m": -4.6335009457689535,
+        "error_vs_exit_deg": 2.6554507467038206,
+        "persist_s": 0.9005056000000007,
+        "age": 0.732020232
+      },
+      "truth_used": {
+        "source": "far_det_near_crossing",
+        "t_ff": 4.5957621,
+        "bearing_deg": 24.64163337130443,
+        "R_m": 7.419977257347275,
+        "elev_deg": 23.654811603122532,
+        "height_ty_m": -2.744648135570112,
+        "error_vs_exit_deg": 28.503804876214588,
+        "n_cands": 16,
+        "rival_bearings_deg": [],
+        "center_px": [
+          458.0,
+          211.0
+        ],
+        "cert": "certified"
+      },
+      "kill_test_row": {
+        "flight": "phase6i_201851",
+        "fid": "20260719T201851-50f9dcc8",
+        "t_pass_ff": 4.5110314,
+        "exit_bearing_deg": -3.8621715049101666,
+        "gate2_bearing_deg": 24.64163337130443,
+        "gate2_R_m": 7.419977257347275,
+        "gate2_elev_deg": 23.654811603122532,
+        "gate2_height_ty_m": -2.744648135570112,
+        "err_vs_exit_deg": 28.503804876214588,
+        "label_source": "far_det_near_crossing",
+        "in_bearing_cone_pm12": false,
+        "in_range_tube_3_12": true
+      },
+      "try39_nearpass_gate2": null
+    }
+  ],
+  "kill_test_table": [
+    {
+      "flight": "try15_death",
+      "fid": "20260719T160537-f170ead6",
+      "t_pass_ff": 3.7571,
+      "exit_bearing_deg": -0.4978927866103442,
+      "gate2_bearing_deg": 8.381050268233087,
+      "gate2_R_m": 5.872604724270243,
+      "gate2_elev_deg": 29.553730921141582,
+      "gate2_height_ty_m": -2.873101400383376,
+      "err_vs_exit_deg": 8.878943054843432,
+      "label_source": "far_det_near_crossing",
+      "in_bearing_cone_pm12": true,
+      "in_range_tube_3_12": true
+    },
+    {
+      "flight": "try39_death",
+      "fid": "20260719T163649-f170ead6",
+      "t_pass_ff": 4.2576177,
+      "exit_bearing_deg": 30.939008212143513,
+      "gate2_bearing_deg": 29.982788869572033,
+      "gate2_R_m": 6.388983850102961,
+      "gate2_elev_deg": 42.416333601031425,
+      "gate2_height_ty_m": -3.9647778629099752,
+      "err_vs_exit_deg": -0.9562193425714725,
+      "label_source": "far_det_near_crossing",
+      "in_bearing_cone_pm12": true,
+      "in_range_tube_3_12": true
+    },
+    {
+      "flight": "phase6i_200816",
+      "fid": "20260719T200816-f170ead6",
+      "t_pass_ff": 4.0068052,
+      "exit_bearing_deg": 0.5616709188511886,
+      "gate2_bearing_deg": 4.06317460310418,
+      "gate2_R_m": 7.884133875100651,
+      "gate2_elev_deg": 38.45748522329881,
+      "gate2_height_ty_m": -4.895840526638753,
+      "err_vs_exit_deg": 3.501503684252981,
+      "label_source": "far_det_near_crossing",
+      "in_bearing_cone_pm12": true,
+      "in_range_tube_3_12": true
+    },
+    {
+      "flight": "phase6i_201851",
+      "fid": "20260719T201851-50f9dcc8",
+      "t_pass_ff": 4.5110314,
+      "exit_bearing_deg": -3.8621715049101666,
+      "gate2_bearing_deg": 24.64163337130443,
+      "gate2_R_m": 7.419977257347275,
+      "gate2_elev_deg": 23.654811603122532,
+      "gate2_height_ty_m": -2.744648135570112,
+      "err_vs_exit_deg": 28.503804876214588,
+      "label_source": "far_det_near_crossing",
+      "in_bearing_cone_pm12": false,
+      "in_range_tube_3_12": true
+    }
+  ]
+}
