@@ -1,0 +1,9 @@
+CHECKER TRANSCRIPT v2 — evidence packet 5c69823 (post-commit, clean tree)
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json ccf0f626ec285b848127dcbab2ea8e2a7990bee2
+reviewed tip (full hash, committed state containing checker+manifest): ccf0f626ec285b848127dcbab2ea8e2a7990bee2
+--- git status --porcelain (must be empty) ---
+?? docs/release/checker_transcript_5c69823_v2.txt
+--- output ---
+FAIL working tree not clean at verification time — the transcript would not describe a committed state
+1 FAILURES — the walk may not proceed
+exit status: 1
