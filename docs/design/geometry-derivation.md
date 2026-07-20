@@ -32,6 +32,7 @@ derivation is quarantined.** Base set (all measured):
 | margin_m (guidance safe_to_continue) | 0.55 | predates GATE_GEOM; no derivation from the base set | **QUARANTINED** — candidate re-derivation at R5: C_pass-based band with evidence sigmas |
 | abort_offset_m (commit corridor) | 0.45 | half-opening 0.80 − h_drone... = 0.18 would be doctrinal; 0.45 predates A8 | **QUARANTINED** — re-derivation owed: 0.18 + retreat-reachability term; frozen until ruled (flight-behavior constant, mid-block) |
 | lateral half-extent | — | UNMEASURED — the lateral servo/corridor runs on the vertical number's assumptions | **DEBT** (advisory-10 §1) — extraction queued with the analyst |
+| h_drone base row | 0.62 | **IN COLLAPSE + CONVENTION CLASH**: contact-validity audit (P2) voids the extraction (3/11 far-belief samples; contact-valid support = none); tank-1 read 0.62 as HALF-extent (C_contact 0.18, clamp 0.10), tank-2 as FULL envelope (M_contact 0.49, clamp 0.60). Everything below C_contact re-derives ONCE from the r_top/r_bottom contact-grade re-extraction under a single stated convention, with both channels signing (RESPONSE17 §1-2). Flying value held: cmd_clamp 0.10 (conservative; cannot license contact) | **RULING PENDING** |
 
 ## Notes
 
