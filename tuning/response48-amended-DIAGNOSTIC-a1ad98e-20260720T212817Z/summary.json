@@ -7,7 +7,7 @@
     "current_gate_approaches": 113,
     "signature_positive": 45
   },
-  "repo_head": "d497628f1b56bc55c2b60743795e6ad44af7c3fb",
+  "repo_head": "a1ad98e5d17f69c9238004546add590eec0cfd27",
   "shadow": {
     "confirmatory_approaches": 20,
     "discovery_overlap_approaches": 3,
@@ -77,5 +77,5 @@
     "trace_term_side_rows": 16,
     "zero_neutral_events": 2
   },
-  "wrong_sign_criterion_commit": "02b32cca996a22f3a44a8757ce2486a747eb706e"
+  "wrong_sign_criterion_commit": "d0a73f028c265c428c1ceabbcb30b51cb2e66849"
 }

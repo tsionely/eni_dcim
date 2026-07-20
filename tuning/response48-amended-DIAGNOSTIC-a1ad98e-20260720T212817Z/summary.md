@@ -1,7 +1,7 @@
 # RESPONSE48 Amended Three-Task Round
 
 Scope: DIAGNOSTIC, CSV-only; no FlightSim/DCGame launch.
-Repo HEAD / generator commit: `d497628f1b56bc55c2b60743795e6ad44af7c3fb`.
+Repo HEAD / generator commit: `a1ad98e5d17f69c9238004546add590eec0cfd27`.
 
 ## 1. Wrong-Sign Archaeology First
 

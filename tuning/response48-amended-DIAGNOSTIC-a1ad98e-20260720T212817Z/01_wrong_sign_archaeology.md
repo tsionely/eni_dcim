@@ -32,6 +32,6 @@ The apparent `16 -> 13` contraction is a trace-row to sign-evaluable-row contrac
 ## Corrected Criterion
 
 - Criterion file: `docs\criteria\wrong_sign_rescore_equivalence.md`.
-- Criterion commit: `02b32cca996a22f3a44a8757ce2486a747eb706e`.
+- Criterion commit: `d0a73f028c265c428c1ceabbcb30b51cb2e66849`.
 - Corrected wrong-sign clause result on paired common support: `PASS`.
 - Historical zero-wrong-sign artifacts re-scored: `5`.
