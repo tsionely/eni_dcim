@@ -122,6 +122,7 @@
     "paired_common_support_events": 9,
     "sign_evaluable_events": 7,
     "trace_term_side_rows": 16,
+    "verdict_scope_language": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
     "zero_neutral_events": 2
   },
   "wrong_sign_criterion_commit": "d0a73f028c265c428c1ceabbcb30b51cb2e66849"

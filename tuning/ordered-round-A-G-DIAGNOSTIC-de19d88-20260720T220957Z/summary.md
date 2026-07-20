@@ -12,6 +12,7 @@ Repo HEAD / generator commit: `de19d881ce8fa0ddc27dd71d7306d0d366c43e90`.
 - Sign-evaluable events: `7`.
 - Zero/neutral events on support: `2`.
 - New excess wrong-sign events on paired common support: `0`.
+- Verdict scope: PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.
 - Historical zero-wrong-sign artifacts re-scored: `5`.
 
 ## 2. Shadow Residual v2.1 Fit

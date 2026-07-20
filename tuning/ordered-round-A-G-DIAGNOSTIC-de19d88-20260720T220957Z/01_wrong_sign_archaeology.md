@@ -34,4 +34,5 @@ The apparent `16 -> 13` contraction is a trace-row to sign-evaluable-row contrac
 - Criterion file: `docs\criteria\wrong_sign_rescore_equivalence.md`.
 - Criterion commit: `d0a73f028c265c428c1ceabbcb30b51cb2e66849`.
 - Corrected wrong-sign clause result on paired common support: `PASS`.
+- Verdict scope: PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.
 - Historical zero-wrong-sign artifacts re-scored: `5`.
