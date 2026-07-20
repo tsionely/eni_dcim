@@ -81,9 +81,13 @@ def run_episode(e0_m: float, ticks: int = 120, tau_s: float = 0.9,
                 vz_max: float = 0.6, az_max: float = 2.0,
                 withhold_full_after: int | None = None,
                 level_pitch: float = LEVEL_PITCH,
-                pitch_cal: float = MOCK_PITCH_CAL):
+                pitch_cal: float = MOCK_PITCH_CAL,
+                disturb: dict[int, float] | None = None):
     """Drive the production terminal chain against the plant. Returns
-    per-tick rows: (ts, e_true, owner, v_bz, vz_up)."""
+    per-tick rows: (ts, e_true, owner, v_bz, vz_up, plant_v_up).
+    disturb maps tick -> delta injected into the TRUE error (a target
+    displacement / gust: the physical world moves, the chain must
+    follow it through the pixel row)."""
     a = VerticalOwnerArbiter()
     for _ in range(3):
         a.note_exposure(True)
@@ -93,6 +97,8 @@ def run_episode(e0_m: float, ticks: int = 120, tau_s: float = 0.9,
     rows = []
     for i in range(ticks):
         ts = i * DT
+        if disturb and i in disturb:
+            plant.e_z += disturb[i]
         if withhold_full_after is not None and i >= withhold_full_after:
             f = _feature(ts, plant.e_z, mode="SIDE_PAIR")
         else:
@@ -107,7 +113,7 @@ def run_episode(e0_m: float, ticks: int = 120, tau_s: float = 0.9,
             vz_max=vz_max, az_max=az_max, pitch_cal_rad=pitch_cal)
         if owner == TERM_OWNER and v_bz is not None:
             plant.step(v_bz, DT)               # physical response
-        rows.append((ts, plant.e_z, owner, v_bz, vz_up))
+        rows.append((ts, plant.e_z, owner, v_bz, vz_up, plant.v_up))
         prev = vz_up
     return rows, g, a
 
@@ -265,3 +271,90 @@ def test_term_exclusivity_under_ownership():
     # FULL-only episode it must be empty: the feed-forward substrate
     # exists for the anchor path alone, no silent parallel consumer.
     assert g._applied_ring == []
+
+
+# ---------------------------------------------------------------- wave 2
+
+def _leg_signs(rows, lo, hi):
+    return [r[4] for r in rows[lo:hi]
+            if r[2] == TERM_OWNER and r[4] is not None]
+
+
+def test_triangular_up_down_return():
+    """[MOCK/SEMANTIC] Wave-2 triangular (up -> down -> anchor): a
+    physical target displacement mid-hold reverses the command sign;
+    each leg carries the correct sign, the reversal obeys the ordinary
+    slew bound (never a software step), the owner never chatters, and
+    the plant's velocity follows with physical lag — it may trail the
+    command but must not invert for a software-ordering reason (its
+    zero-crossings in the reversal window number at most one)."""
+    rows, g, a = run_episode(+0.08, ticks=160, disturb={i: -0.02 for i in range(60, 65)})
+    owned = _owned(rows)
+    assert len(owned) > 100
+    up_leg = _leg_signs(rows, 10, 40)
+    down_leg = _leg_signs(rows, 70, 110)
+    assert max(up_leg) > 0.0                    # climb leg commands climb
+    assert min(down_leg) < 0.0                  # return leg commands sink
+    for (r1, r2) in zip(owned, owned[1:]):      # incl. the reversal tick
+        assert abs(r2[4] - r1[4]) <= 2.0 * DT + 1e-9
+    # Owner stability: once captured, TERM holds through the reversal.
+    first_own = next(i for i, r in enumerate(rows) if r[2] == TERM_OWNER)
+    assert all(r[2] == TERM_OWNER for r in rows[first_own:])
+    # Physical lag, not inversion: at most one v_up zero-crossing after
+    # the disturbance.
+    v = [r[5] for r in rows[60:]]
+    crossings = sum(1 for x, y in zip(v, v[1:]) if x * y < 0)
+    assert crossings <= 1
+
+
+def test_triangular_down_up_return():
+    """[MOCK/SEMANTIC] Wave-2 triangular, mirror direction
+    (down -> up -> anchor): identical clauses with every sign
+    reflected."""
+    rows, g, a = run_episode(-0.08, ticks=160, disturb={i: +0.02 for i in range(60, 65)})
+    owned = _owned(rows)
+    assert len(owned) > 100
+    down_leg = _leg_signs(rows, 10, 40)
+    up_leg = _leg_signs(rows, 70, 110)
+    assert min(down_leg) < 0.0
+    assert max(up_leg) > 0.0
+    for (r1, r2) in zip(owned, owned[1:]):
+        assert abs(r2[4] - r1[4]) <= 2.0 * DT + 1e-9
+    first_own = next(i for i, r in enumerate(rows) if r[2] == TERM_OWNER)
+    assert all(r[2] == TERM_OWNER for r in rows[first_own:])
+    v = [r[5] for r in rows[60:]]
+    crossings = sum(1 for x, y in zip(v, v[1:]) if x * y < 0)
+    assert crossings <= 1
+
+
+def test_saturation_reaches_and_never_exceeds_achieved_cap():
+    """[MOCK/SEMANTIC] Wave-2 deep saturation: with a small vz_max the
+    servo's raw request exceeds the cap — the applied command must
+    REACH the cap (saturation genuinely exercised, not avoided) and
+    never exceed it, and the plant must consume exactly the achieved
+    value (its lagged velocity approaches the capped command, never
+    the unachievable request)."""
+    vz_cap = 0.05
+    rows, g, _ = run_episode(+0.10, ticks=100, vz_max=vz_cap)
+    owned = _owned(rows)
+    assert len(owned) > 40
+    peak = max(abs(r[4]) for r in owned)
+    assert peak <= vz_cap + 1e-9                # never exceeded
+    assert peak == pytest.approx(vz_cap, abs=1e-6)   # actually reached
+    # The plant tracked the ACHIEVED command: through the adapter and
+    # tilt relation the world-up command equals vz_up exactly, so the
+    # lagged plant velocity can never exceed the cap itself.
+    assert max(abs(r[5]) for r in rows) <= vz_cap + 1e-6
+
+
+def test_command_shape_never_resets_phase_or_epoch():
+    """[MOCK/SEMANTIC] Wave-2 owner/phase stability: a full triangular
+    command shape must cause no capture/handback cycle, no no-return
+    latch transition, and no gate-lock epoch change — command sign
+    reversals are servo activity, never identity or phase events."""
+    rows, g, a = run_episode(+0.08, ticks=160, disturb={i: -0.02 for i in range(60, 65)})
+    assert not a.latched                        # tau 0.9: position only
+    assert g.epoch == 0                         # no reset mid-approach
+    owners = [r[2] for r in rows]
+    flips = sum(1 for x, y in zip(owners, owners[1:]) if x != y)
+    assert flips == 1                           # exactly ALT -> TERM once
