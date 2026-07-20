@@ -237,6 +237,16 @@ class TermStatus:
     tau_s: float | None = None
     admission_score: float | None = None
     transition: dict | None = None
+    # Dual-read anchor repair shadow (advisory-19 §5): the honest
+    # latched slope and the 7B policy stored separately; shadow_vz_up
+    # is what the REPAIRED anchor would command (same feed-forward).
+    # Only the old path actuates while the HOLD lasts.
+    rate_anchor_v_raw: float | None = None
+    rate_anchor_quality: float | None = None
+    shadow_vz_up: float | None = None
+    # Pre-no-return validated-age expiry (RESPONSE32 disposition
+    # branch semantics): the tick raised the hold/abort flag.
+    rate_expired_prenoreturn: bool = False
 
 
 @dataclass(frozen=True, slots=True)

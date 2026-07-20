@@ -848,6 +848,14 @@ def test_full_rate_anchor_latches_and_survives_side_offset():
     assert g.active_source == "SIDE_PAIR"
     assert g.rate_anchor_valid
     assert g.rate_anchor_v == pytest.approx(0.10, abs=0.03)
+    # Dual-read split (advisory-19): the honest measurement and the 7B
+    # policy are stored separately; the actuating value is their
+    # product (OLD path, unchanged until the harvest + re-stamp).
+    assert g.rate_anchor_v_raw == pytest.approx(0.10, abs=0.005)
+    assert g.rate_anchor_quality == pytest.approx((0.28 / 0.3) * 0.8,
+                                                  abs=1e-6)
+    assert g.rate_anchor_v == pytest.approx(
+        g.rate_anchor_quality * g.rate_anchor_v_raw, abs=1e-9)
     # SIDE observations advance the clock but never reset the anchor.
     assert g.anchor_age_s() > 0.2
 
@@ -936,6 +944,138 @@ def test_validated_max_age_caps_anchor_authority():
     k = anchored_oracle()
     owner3, _, _ = run(k, 0.60, validated_max_age_s=0.70)
     assert owner3 == TERM_OWNER and k.anchor_applied_ref is not None
+
+
+def _prenoreturn_fixture():
+    """Shared SIDE-anchored fixture for the advisory-19 round tests:
+    anchored oracle + TERM-owned arbiter + a runner that drives one
+    terminal_override tick at a chosen anchor age and tau."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st(ts_s):
+        return StateEstimate(
+            ts_ns=int(ts_s * 1e9), q_att=LEVEL, omega=np.zeros(3),
+            v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def anchored_oracle():
+        g = TerminalOracle()
+        for i in range(8):
+            ts = i * 0.04
+            g.observe(ts, 0.30 - 0.10 * ts, source="FULL_QUAD")
+            g.observe(ts, 0.34 - 0.10 * ts, source="SIDE_PAIR")
+        for i in range(8, 14):
+            g.observe(i * 0.04, 0.34 - 0.10 * i * 0.04, source="SIDE_PAIR")
+        assert g.active_source == "SIDE_PAIR" and g.rate_anchor_valid
+        return g
+
+    span = 284.0
+
+    def run(g, arb, age_s, tau_s=0.6, **kw):
+        now = g.rate_anchor_ts + age_s
+        f = TerminalFeature(ts_ns=int(now * 1e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="SIDE_PAIR")
+        return terminal_override(arb, st(now), np.array([1.8, 0.0, 0.0]),
+                                 True, tau_s, 0.55, 0.0, 0.04, feature=f,
+                                 feature_age_s=0.02, oracle=g, **kw)
+
+    return anchored_oracle, run
+
+
+def test_dual_read_shadow_anchor_removes_policy_scaling():
+    """Advisory-19 §5 required shadow fixture: at a transition with
+    unchanged command, the OLD forecast carries the policy-scaling
+    offset -(1-auth)*v_raw and the SHADOW (repaired anchor: honest
+    slope, authority kept as separate policy) removes exactly that
+    offset WITHOUT altering the command feed-forward. Only the old
+    path actuates while the HOLD lasts."""
+    anchored_oracle, run = _prenoreturn_fixture()
+    g = anchored_oracle()
+    a = make_arbiter()
+    assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    owner, _, _ = run(g, a, 0.40)
+    assert owner == TERM_OWNER
+    auth = g.rate_anchor_quality
+    assert auth is not None and auth < 1.0        # short-tail latch
+    # Same feed-forward on both sides (prev_vz_up = applied ref = 0):
+    ff = 0.0 - g.anchor_applied_ref
+    old = g.rate_anchor_v + ff
+    assert g.shadow_anchor_vz == pytest.approx(
+        old + (1.0 - auth) * g.rate_anchor_v_raw, abs=1e-9)
+    assert g.shadow_anchor_vz == pytest.approx(
+        g.rate_anchor_v_raw + ff, abs=1e-9)
+
+
+def test_age_expiry_prenoreturn_flag_follows_reversibility():
+    """RESPONSE32 disposition branch semantics: validated-age expiry
+    BEFORE the no-return latch raises the hold/abort flag (the
+    planner applies the braking-band feasibility test); AFTER the
+    latch the flag must stay down — neutral-decay governs and TERM
+    stays owned."""
+    anchored_oracle, run = _prenoreturn_fixture()
+    # Pre-no-return (tau 0.6 -> position phase, latch never set):
+    g = anchored_oracle()
+    a = make_arbiter()
+    assert a.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    owner, _, _ = run(g, a, 0.60, tau_s=0.6)
+    assert owner == TERM_OWNER and not a.latched
+    assert g.rate_expired_prenoreturn          # hold/abort raised
+    assert g.anchor_applied_ref is None        # and no authority
+    # Post-no-return (tau 0.3 -> damping: the latch engages on the
+    # SAME tick, before the rate branch reads it):
+    h = anchored_oracle()
+    b = make_arbiter()
+    assert b.tick(True, True, True, 0.05, "position") == TERM_OWNER
+    owner2, _, _ = run(h, b, 0.60, tau_s=0.3)
+    assert owner2 == TERM_OWNER and b.latched
+    assert not h.rate_expired_prenoreturn      # neutral-decay branch
+    assert h.anchor_applied_ref is None
+
+
+def test_no_first_capture_in_damping_via_production_wire():
+    """The no-first-capture-in-damping rule previously lived only in
+    unit tests: production passed a constant 'position' to the
+    arbiter, so the schedule phase never reached it and the no-return
+    latch never engaged in flight. The phase now derives from tau at
+    the tick — a late feature at tau <= 0.45 must not open the door;
+    the identical fixture at position-phase tau still captures."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 284.0
+
+    def drive(tau_s):
+        a = make_arbiter()
+        g = TerminalOracle()
+        owner = None
+        for i in range(7):
+            f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                                y_top_px=180.0 - 0.5 * span, span_px=span,
+                                center_x_px=320.0, cert_status="certified",
+                                mode="FULL_QUAD")
+            owner, _, _ = terminal_override(
+                a, st(), np.array([1.8, 0.0, 0.0]), True, tau_s, 0.55,
+                None, 0.04, feature=f, feature_age_s=0.02, oracle=g)
+        return owner
+
+    assert drive(0.6) == TERM_OWNER            # position phase: door open
+    assert drive(0.40) == ALT_OWNER            # damping: door stays shut
 
 
 def test_anchor_age_grows_with_time_not_observations():

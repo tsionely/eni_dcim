@@ -312,6 +312,57 @@ def test_abort_requires_fresh_vision():
     assert sp.phase == "commit", "dead-reckoned evidence fired the abort"
 
 
+def test_term_abort_request_retreats_when_reversible():
+    """RESPONSE32 disposition, pre-no-return branch: a terminal-channel
+    epistemic abort (rate model expired beyond its validated age) is
+    honored where reversal is feasible — outside the braking band, on
+    a fresh estimate — through the ordinary retreat path."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    p.request_commit_abort()
+    sp = p.plan(int(0.1e9), "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                               center_px=(320, 180)),
+                None)
+    assert sp.phase == "retreat"
+
+
+def test_term_abort_request_dropped_inside_braking_band():
+    """Inside abort_min_dist_m a retreat cannot reverse momentum and
+    coasts into the gate — the epistemic abort is dropped (consumed)
+    and the terminal channel's neutral-decay floor governs instead."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    p.request_commit_abort()
+    inside = make_state(gate_t=[0.0, 0.0, 0.9], center_px=(320, 180))
+    sp = p.plan(int(0.1e9), "race", inside, None)
+    assert sp.phase == "commit"
+    # Consumed: a later reversible tick must NOT fire on the stale flag.
+    sp2 = p.plan(int(0.15e9), "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                                 center_px=(320, 180)),
+                 None)
+    assert sp2.phase == "commit"
+
+
+def test_term_abort_request_needs_fresh_estimate():
+    """The band check on a fossil dist could command a retreat inside
+    the REAL band (advisory-6's no-irreversible-maneuver-on-state-only
+    -evidence law, extended to the epistemic abort): a dead-reckoned
+    estimate drops the request."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.0],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    p.request_commit_abort()
+    stale = make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180),
+                       age_s=0.5)
+    sp = p.plan(int(0.1e9), "race", stale, None)
+    assert sp.phase == "commit", "fossil dist fired an irreversible abort"
+
+
 def test_no_abort_radius_scales_with_commit_speed():
     """Advisory-6: the braking band is a formula, not a number. Slower
     commit speed shrinks the no-abort radius (down to the floor)."""

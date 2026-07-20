@@ -449,6 +449,15 @@ class App:
                             # from the applied value, never a latent
                             # accumulated trim.
                             planner.track_applied_vz(float(v_bz), now_ns)
+                        # Branch semantics (RESPONSE32 disposition): a
+                        # validated-age expiry BEFORE dynamic no-return
+                        # requests hold/abort; the planner applies its
+                        # own reversibility bound (braking band + fresh
+                        # estimate) before acting. Re-raised each tick
+                        # while the condition persists; consumed by the
+                        # planner either way.
+                        if term_oracle.rate_expired_prenoreturn:
+                            planner.request_commit_abort()
                     if terminal_enable:
                         # Adjudication record: the REAL channel, never
                         # the shadow (phase6i lesson).
@@ -481,7 +490,14 @@ class App:
                             tau_s=term_oracle.last_tau_s,
                             admission_score=(
                                 term_oracle.last_admission_score),
-                            transition=term_oracle.last_transition))
+                            transition=term_oracle.last_transition,
+                            rate_anchor_v_raw=(
+                                term_oracle.rate_anchor_v_raw),
+                            rate_anchor_quality=(
+                                term_oracle.rate_anchor_quality),
+                            shadow_vz_up=term_oracle.shadow_anchor_vz,
+                            rate_expired_prenoreturn=(
+                                term_oracle.rate_expired_prenoreturn)))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

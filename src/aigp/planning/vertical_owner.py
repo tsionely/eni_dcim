@@ -207,10 +207,18 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     """
     from aigp.estimation.attitude_filter import quat_multiply, quat_rotate
     from aigp.planning.approach import level_quat, true_world_dz
-    from aigp.planning.vertical_terminal import compute_terminal_guidance
+    from aigp.planning.vertical_terminal import (compute_terminal_guidance,
+                                                 guidance_phase)
 
     gr = state.gate_rel
-    phase_hint = "position"
+    # REAL schedule phase (advisory-19 round): the arbiter previously
+    # received a constant "position", so the no-return latch never
+    # engaged in flight and the no-first-capture-in-damping rule lived
+    # only in unit tests. The arbiter's latch supplies prev_phase so
+    # the production progression is one-way, same as the guidance
+    # schedule's own hysteresis.
+    phase_hint = guidance_phase(tau_s,
+                                "damping" if arbiter.latched else None)
     q_lvl = level_quat(state.level_roll, state.level_pitch)
     # Observer step (idempotent per unique exposure: observe() dedupes
     # by timestamp, so a prior app-level terminal_observe call for the
@@ -328,6 +336,19 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # config value is re-read against that table before any
             # HOLD lift.
             age_ok = age <= min(tau_s + 0.5, validated_max_age_s)
+            # Branch semantics (RESPONSE32 disposition, binding): a
+            # ceiling failure must follow the physical reversibility
+            # state. BEFORE dynamic no-return (schedule latch not set)
+            # the honest move is hold/abort while reversal is feasible
+            # — surfaced here as a flag; the PLANNER applies its own
+            # reversibility bound (the abort_min_dist_m braking band)
+            # before acting, because feasibility is the planner's
+            # geometry, not the oracle's. AFTER no-return: neutral-
+            # decay below, TERM stays owned, never a handback to the
+            # believed altitude.
+            oracle.rate_expired_prenoreturn = (
+                oracle.rate_anchor_valid and not age_ok
+                and not arbiter.latched)
             if oracle.rate_anchor_valid and age_ok and score_ok:
                 # FEED-FORWARD (mandatory per the ruling — and the
                 # first sigma_a run proved why: without it every
@@ -349,8 +370,19 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                           and oracle.anchor_applied_ref is not None)
                       else 0.0)
                 v_z_up = float(oracle.rate_anchor_v) + ff
+                # DUAL-READ SHADOW (advisory-19 §5, approved build):
+                # the repaired anchor — honest latched slope, authority
+                # kept as a separate policy — forecasts beside the
+                # actuating path with the SAME feed-forward. Only the
+                # old path commands while the HOLD lasts; the shadow
+                # exists so every archived approach tests the
+                # mechanism before any live change.
+                oracle.shadow_anchor_vz = (
+                    float(oracle.rate_anchor_v_raw) + ff
+                    if oracle.rate_anchor_v_raw is not None else None)
             else:
                 v_z_up = 0.0
+                oracle.shadow_anchor_vz = None
         else:
             vz_vis = oracle.v_z_visual()
             v_z_up = (vz_vis * oracle.rate_authority()
@@ -457,6 +489,10 @@ class TerminalOracle:
         self.rate_anchor_v: float | None = None
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
+        self.rate_anchor_v_raw: float | None = None   # honest measurement
+        self.rate_anchor_quality: float | None = None  # 7B policy, separate
+        self.shadow_anchor_vz: float | None = None     # dual-read forecast
+        self.rate_expired_prenoreturn = False
         self.anchor_applied_ref: float | None = None
         self._applied_ring: list[tuple[float, float]] = []
         self._anchor_e0: float | None = None
@@ -485,6 +521,10 @@ class TerminalOracle:
         self.rate_anchor_v: float | None = None
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
+        self.rate_anchor_v_raw = None
+        self.rate_anchor_quality = None
+        self.shadow_anchor_vz = None
+        self.rate_expired_prenoreturn = False
         self.anchor_applied_ref = None
         self._applied_ring = []
         self._anchor_e0: float | None = None
@@ -647,6 +687,17 @@ class TerminalOracle:
                 sl = self._slope_of(self._hist)
                 n_f, span_f, _ = self.history_stats()
                 auth = float(min(1.0, (span_f / 0.3) * (n_f / 10.0)))
+                # DUAL-READ (advisory-19 / RESPONSE33 disposition): the
+                # 7B authority schedule is a GAIN POLICY — "policies
+                # attenuate commands, never estimates". The latched
+                # product below is the OLD actuating path, kept until
+                # the harvest confirms the mechanism and R26-1
+                # re-stamps; the honest measurement and the policy are
+                # stored separately so the repair runs in shadow beside
+                # it (only the old path actuates while the HOLD lasts).
+                self.rate_anchor_v_raw = (-float(sl)
+                                          if sl is not None else None)
+                self.rate_anchor_quality = auth
                 self.rate_anchor_v = (-float(sl) * auth
                                       if sl is not None else 0.0)
                 self.rate_anchor_ts = (self._hist[-1][0]
@@ -685,6 +736,9 @@ class TerminalOracle:
                 self.rate_anchor_v = None      # FULL rate authority back
                 self.rate_anchor_ts = None
                 self.rate_anchor_valid = False
+                self.rate_anchor_v_raw = None
+                self.rate_anchor_quality = None
+                self.shadow_anchor_vz = None
                 self.anchor_applied_ref = None
                 self._anchor_e0 = None
                 self._anchor_breaches = 0

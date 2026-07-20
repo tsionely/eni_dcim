@@ -177,6 +177,19 @@ class RacePlanner:
         self._search_last_ns: int | None = None
         self._search_prev_rate = 0.0
         self._search_yaw_accum = 0.0
+        self._term_abort_request = False
+
+    def request_commit_abort(self) -> None:
+        """Terminal-channel abort request (RESPONSE32 disposition,
+        pre-no-return branch): the rate model expired beyond its
+        validated age while reversal was still schedulable. The flag
+        is honored at the next commit tick ONLY outside the braking
+        band — feasibility is decided here, by the same
+        abort_min_dist_m geometry as the vision abort, because a
+        retreat inside the band cannot reverse momentum and coasts
+        into the gate. Inside the band the request is dropped and the
+        terminal channel's neutral-decay floor governs instead."""
+        self._term_abort_request = True
 
     def reset(self) -> None:
         self._commit_until_ns = None
@@ -186,6 +199,7 @@ class RacePlanner:
         self._retreat_until_ns = None
         self._align_until_ns = None
         self._abort_breach = 0
+        self._term_abort_request = False
         self._last_seen_side = 1.0
         self._gap_bias = None
         self._reacquire_until_ns = None
@@ -404,6 +418,26 @@ class RacePlanner:
                     d_body = ap.cam_to_body(gate.t)
                     dist = float(np.linalg.norm(d_body))
                     au = self._aim_up(dist)
+                    # Terminal-channel epistemic abort (RESPONSE32
+                    # disposition, pre-no-return branch): honored only
+                    # where reversal is feasible — outside the braking
+                    # band, on a FRESH estimate (a band check on a
+                    # fossil dist could retreat inside the real band).
+                    # Consumed either way; the terminal channel
+                    # re-raises it while the condition persists, and
+                    # inside the band its neutral-decay floor governs.
+                    if self._term_abort_request:
+                        self._term_abort_request = False
+                        if (self.retreat_enabled
+                                and dist > self.abort_min_dist_m
+                                and state.gate_rel_age_s <= self.blind_age_s):
+                            self._commit_until_ns = None
+                            self._commit_v_body = None
+                            self._commit_prev_z = None
+                            self._note_attempt_failed(now_ns)
+                            self._retreat_until_ns = now_ns + int(
+                                self.retreat_s * 1e9)
+                            return self._retreat_setpoint(state)
                     # Abort the attempt if the opening is escaping the
                     # corridor — a frame clip is now certain; retreating
                     # for another pass beats plowing into the bar. Debounced:
