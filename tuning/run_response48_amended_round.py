@@ -750,6 +750,8 @@ def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
 
     mapping_rows = mapping_walk(task_a_dir)
     write_csv(out_dir / "02_directory_recording_approach_cluster_mapping_walk.csv", mapping_rows)
+    mapping_counts = mapping_walk_counts(task_a_dir, mapping_rows)
+    write_csv(out_dir / "02_directory_recording_approach_cluster_mapping_counts.csv", [mapping_counts])
 
     return {
         "pooled_shadow": next(r for r in release_rows if r["target_set"] == "pooled_23" and r["anchor_policy"] == "shadow_unattenuated_anchor"),
@@ -758,6 +760,7 @@ def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
         "confirmatory_approaches": 20,
         "pooled_approaches": 23,
         "mapping_rows": len(mapping_rows),
+        "mapping_counts": mapping_counts,
     }
 
 
@@ -808,6 +811,23 @@ def mapping_walk(task_a_dir: Path) -> list[dict[str, Any]]:
                 "provenance": cluster.get("provenance", ""),
             })
     return rows
+
+
+def mapping_walk_counts(task_a_dir: Path, mapping_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    dirs = read_csv(task_a_dir / "eligibility_dirs.csv")
+    targets = read_csv(task_a_dir / "replay_targets.csv")
+    diagnostics = read_csv(task_a_dir / "censored_approach_diagnostics.csv")
+    clusters = read_csv(task_a_dir / "expanded_census_clusters.csv")
+    return {
+        "fixture_dirs_enumerated": len(dirs),
+        "eligible_recordings": len(targets),
+        "physical_approaches_examined": len(diagnostics),
+        "legal_clusters": len(clusters),
+        "mapping_walk_rows": len(mapping_rows),
+        "no_eligible_recording_rows": sum(1 for r in mapping_rows if r.get("failure_reason") == "NO_ELIGIBLE_RECORDING"),
+        "censored_or_legal_approach_rows": sum(1 for r in mapping_rows if r.get("failure_reason") != "NO_ELIGIBLE_RECORDING"),
+        "walk": "61 fixture dirs -> 115 eligible recordings -> 178 physical approaches -> 23 legal clusters",
+    }
 
 
 def funnel_applicability(row: dict[str, str]) -> tuple[str, str]:
