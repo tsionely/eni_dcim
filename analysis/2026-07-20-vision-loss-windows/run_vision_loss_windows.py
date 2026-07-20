@@ -137,24 +137,41 @@ def vz_stats_commit(log: dict) -> dict:
     c0, c1 = first_commit_window(log["setpoints"])
     if c0 is None:
         return {"std": None}
-    vz = []
+    vz_world = []
+    vz_cmd = []
     for s in log["states"]:
         if s["t_ff"] < c0:
             continue
         if c1 is not None and s["t_ff"] > c1:
             break
         if s.get("v_world"):
-            vz.append(s["v_world"][2])
-    if not vz:
-        return {"std": None, "n": 0}
-    a = np.asarray(vz, float)
-    return {
-        "n": len(a),
-        "std": float(a.std()),
-        "mean": float(a.mean()),
-        "ptp": float(a.max() - a.min()),
-        "damper_band_0p05_0p14": bool(0.05 <= a.std() <= 0.14),
-    }
+            vz_world.append(s["v_world"][2])
+    for sp in log["setpoints"]:
+        if sp["t_ff"] < c0:
+            continue
+        if c1 is not None and sp["t_ff"] > c1:
+            break
+        if sp.get("phase") == "commit" and sp.get("v_body"):
+            vz_cmd.append(float(sp["v_body"][2]))
+    out = {"n_world": len(vz_world), "n_cmd": len(vz_cmd)}
+    if vz_world:
+        a = np.asarray(vz_world, float)
+        out.update({
+            "std": float(a.std()),
+            "mean": float(a.mean()),
+            "ptp": float(a.max() - a.min()),
+        })
+    else:
+        out["std"] = None
+    if vz_cmd:
+        b = np.asarray(vz_cmd, float)
+        out["cmd_std"] = float(b.std())
+        out["cmd_ptp"] = float(b.max() - b.min())
+        out["damper_band_0p05_0p14"] = bool(0.05 <= b.std() <= 0.14)
+    else:
+        out["cmd_std"] = None
+        out["damper_band_0p05_0p14"] = None
+    return out
 
 
 def endpoint_past_3m(log: dict) -> dict:
@@ -252,12 +269,12 @@ def main():
         summary["note"],
         "",
         "| slot | arm | past_3m | why_fail | fresh&lt;1m | min_R&lt;1 | "
-        "n_L→R | fov_edge_losses | vz_std | vision_death |",
-        "|---:|---|:---:|---|---:|---:|---:|---:|---:|:---:|",
+        "n_L→R | fov_edge | vz_std | cmd_vz_std | vision_death |",
+        "|---:|---|:---:|---|---:|---:|---:|---:|---:|---:|:---:|",
     ]
     for r in rows:
         if r.get("error"):
-            lines.append(f"| {r.get('slot')} | {r.get('arm')} | ERR | | | | | | | |")
+            lines.append(f"| {r.get('slot')} | {r.get('arm')} | ERR | | | | | | | | |")
             continue
         ep = r["endpoint"]
         px = r["fresh_px_lt_1m"]
@@ -270,6 +287,7 @@ def main():
             f"{px['min_R'] if px['min_R'] is not None else float('nan'):.2f} | "
             f"{r['n_loss_recover_windows']} | {r['n_fov_edge_losses']} | "
             f"{vz['std'] if vz['std'] is not None else float('nan'):.3f} | "
+            f"{vz['cmd_std'] if vz.get('cmd_std') is not None else float('nan'):.3f} | "
             f"{'Y' if r['vision_died_analyzer'] else 'n'} |"
         )
 

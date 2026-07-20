@@ -63,11 +63,11 @@ def collect_control_dz(fid: str) -> dict:
         if not gr or not gr.get("t"):
             continue
         age = st.get("age")
-        if age is None or not math.isfinite(float(age)) or float(age) > 0.25:
+        if age is None or not math.isfinite(float(age)) or float(age) > 0.35:
             continue
         t = list(map(float, gr["t"]))
         R = float(np.linalg.norm(t))
-        if not (0.8 <= R <= 5.0):
+        if not (0.5 <= R <= 6.0):
             continue
         tw = float(true_world_dz(
             RelPose(t=np.asarray(t, float),

@@ -2,12 +2,13 @@
 
 ## Verdict
 
-- **Events (first-touch)**: 3; accepted graze `1` / any-impulse `1`
+- **Events (first-touch)**: 4; accepted graze `1` / any-impulse `1`
 - **Sample**: `graze_band` n=`1` (HIGH `0` / LOW `1`)
-- **h_up / h_down / h_drone**: `None` / `0.18951618926913028` / `0.18951618926913028`
+- **h_up / h_down / h_drone**: `None` / `0.6381744117938181` / `0.6381744117938181`
 - **Contact-grade usable**: `False`; **unfreeze candidate**: `False`
-- **Chain**: HELD — harvest insufficient or h≈0
-- **Rejects**: `{'REJECT_stale_state': 1, 'REJECT_state_R_vs_contact_geom': 1}`
+- **Chain**: HELD — first-touch n<3 or h≈0; see micro-fresh for consistency
+- **Micro-fresh clips** (consistency, not first-touch n): n=`5`, h_down scatter max=`0.6381744117938181`, h_up max=`0.7440711265785648`
+- **Rejects**: `{'REJECT_no_state_gate': 1, 'REJECT_stale_state': 1, 'REJECT_state_R_vs_contact_geom': 1}`
 
 ### Sim cross-check
 
@@ -17,13 +18,14 @@
 
 | flight | evt | t_ff | imp | thr | ok | prov | true_dz | tail | h_up | h_down | R | age |
 |---|---:|---:|---:|---:|:---:|---|---:|---|---:|---:|---:|---:|
-| phase6l_F2 | 0 | 4.493 | 0.220 | 1 | Y | det_plus_att | -0.610 | LOW | nan | 0.190 | 0.90 | inf |
+| phase6l_F2 | 0 | 4.493 | 0.220 | 1 | n | state_gate_rel | nan | — | nan | nan | nan | inf |
+| phase6l_F2 | 1 | 4.621 | 0.151 | 1 | Y | state_gate_rel | -0.162 | LOW | nan | 0.638 | 0.91 | 0.000 |
 | phase6l_F4 | 0 | 3.948 | 0.076 | 1 | n | state_gate_rel | nan | — | nan | nan | 0.23 | 0.337 |
 | phase6l_F6 | 0 | 3.405 | 1.646 | 2 | n | state_gate_rel | nan | — | nan | nan | 2.59 | 0.014 |
 
 ## Method
 
-1. Event-group collisions within 0.15s.
+1. Event-group collisions within 0.05s.
 2. First-touch = earliest in group (fallback to first admissible).
 3. Contact-instant: R≤2.0, age≤0.2, |Δt|≤0.08; det+att allowed only if state gate_rel absent/far.
 4. h_up = max(0, 0.8−true_dz) on HIGH; h_down = max(0, 0.8+true_dz) on LOW; h_drone = max(h_up, h_down).

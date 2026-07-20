@@ -4,14 +4,14 @@
 
 Endpoint 'past 3m' requires closest det R<3 AND not blind in the WHOLE first commit. Fresh px inside 1m can coexist with a prior loss window (age≥0.25 then recover) — that is loss-then-recover, not continuous survival.
 
-| slot | arm | past_3m | why_fail | fresh&lt;1m | min_R&lt;1 | n_L→R | fov_edge_losses | vz_std | vision_death |
-|---:|---|:---:|---|---:|---:|---:|---:|---:|:---:|
-| 1 | control | n | no_near_det | 0 | nan | 0 | 0 | nan | n |
-| 2 | live | Y | — | 5 | 0.85 | 2 | 0 | 0.607 | Y |
-| 3 | control | n | blind_budget | 0 | nan | 2 | 0 | 0.565 | Y |
-| 4 | live | n | blind_budget | 0 | nan | 4 | 1 | 0.599 | Y |
-| 5 | control | n | no_near_det | 0 | nan | 2 | 1 | 0.187 | Y |
-| 6 | live | n | closest_R_ge_3 | 0 | nan | 0 | 0 | 0.634 | Y |
+| slot | arm | past_3m | why_fail | fresh&lt;1m | min_R&lt;1 | n_L→R | fov_edge | vz_std | cmd_vz_std | vision_death |
+|---:|---|:---:|---|---:|---:|---:|---:|---:|---:|:---:|
+| 1 | control | n | no_near_det | 0 | nan | 0 | 0 | nan | nan | n |
+| 2 | live | Y | — | 5 | 0.85 | 2 | 0 | 0.607 | 0.124 | Y |
+| 3 | control | n | blind_budget | 0 | nan | 2 | 0 | 0.565 | 0.139 | Y |
+| 4 | live | n | blind_budget | 0 | nan | 4 | 1 | 0.599 | 0.099 | Y |
+| 5 | control | n | no_near_det | 0 | nan | 2 | 1 | 0.187 | 0.054 | Y |
+| 6 | live | n | closest_R_ge_3 | 0 | nan | 0 | 0 | 0.634 | 0.090 | Y |
 
 ## Loss→recover windows
 

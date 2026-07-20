@@ -40,7 +40,7 @@ from run_a8_contact_instant import (  # noqa: E402
     contact_geometry_ok, state_true_dz, scatter, sim_collision_crosscheck,
 )
 
-EVENT_GAP_S = 0.15  # collisions closer than this = same contact event
+EVENT_GAP_S = 0.05  # micro-clip cluster; 0.15 wrongly merged F2's 0.125s gap
 FIX = "20260720T071602-phase6l-cohort-3"
 
 FLIGHTS = [
@@ -119,26 +119,21 @@ def score_touch(c: dict, log: dict, meta: dict, event_id: int,
     ok, reason = contact_geometry_ok(R_state, age, dt, R_det)
 
     # Fresh vision at the plane: if state lacks gate_rel but a near
-    # certified/probation det exists with attitude, allow det+att as
-    # secondary provenance (ledger marks it).
+    # det exists with FRESH attitude-bearing state, allow det+att.
     provenance = "state_gate_rel"
+    age_ok = age is not None and math.isfinite(age) and age <= AGE_MAX
     if (not ok or tw is None) and det is not None and det["R"] <= R_CONTACT_MAX:
-        if st is not None:
-            nrm = det.get("normal") or [0, 0, 1]
-            tw_det = float(true_world_dz(
-                RelPose(t=np.asarray(det["t_vec"], float),
-                        normal=np.asarray(nrm, float)),
-                np.asarray(st["q_att"], float),
-                float(st["level_roll"]), float(st["level_pitch"])))
-            # Accept det path only if age of ANY nearby state is fresh
-            # OR det cert is certified and R agrees with contact band
-            det_ok = det["R"] <= R_CONTACT_MAX and dt <= DT_STATE_MAX
-            if det_ok and (age is None or age <= AGE_MAX or not math.isfinite(age or 0)):
-                # Prefer when state R missing/far
-                if R_state is None or R_state > R_CONTACT_MAX:
-                    tw, R_state, tz = tw_det, det["R"], float(det["t_vec"][2])
-                    ok, reason = True, "ACCEPT_det_plus_att_plane"
-                    provenance = "det_plus_att"
+        if st is not None and age_ok and dt <= DT_STATE_MAX:
+            if R_state is None or R_state > R_CONTACT_MAX:
+                nrm = det.get("normal") or [0, 0, 1]
+                tw_det = float(true_world_dz(
+                    RelPose(t=np.asarray(det["t_vec"], float),
+                            normal=np.asarray(nrm, float)),
+                    np.asarray(st["q_att"], float),
+                    float(st["level_roll"]), float(st["level_pitch"])))
+                tw, R_state, tz = tw_det, det["R"], float(det["t_vec"][2])
+                ok, reason = True, "ACCEPT_det_plus_att_plane"
+                provenance = "det_plus_att"
 
     tails = h_up_down(tw) if (ok and tw is not None) else {}
     proxy = None if tw is None else (OPENING_HALF_H - tw)
@@ -171,9 +166,9 @@ def analyze_flight(meta: dict) -> dict:
     # Prefer graze band for envelope; keep ledger of all first-touches
     groups = group_events(colls)
     ledger = []
+    micro_fresh = []  # all graze-band collisions with fresh state (consistency)
     for i, g in enumerate(groups):
         touch = first_touch(g)
-        # Prefer a touch in the group that has gate_rel if first lacks it
         scored = score_touch(touch, log, meta, i, len(g))
         if not scored["accepted"]:
             for alt in sorted(g, key=lambda c: c["t_ff"])[1:]:
@@ -184,10 +179,17 @@ def analyze_flight(meta: dict) -> dict:
                     alt_s["original_first_t_ff"] = touch["t_ff"]
                     scored = alt_s
                     break
-        # Impulse filter for envelope sample: graze band preferred
         scored["in_graze_band"] = (
             GRAZE_IMPULSE[0] <= scored["impulse"] <= GRAZE_IMPULSE[1])
         ledger.append(scored)
+        # Micro-contact census: every collision in group with fresh state
+        for c in g:
+            if not (GRAZE_IMPULSE[0] <= c["impulse"] <= GRAZE_IMPULSE[1]):
+                continue
+            m = score_touch(c, log, meta, i, len(g))
+            m["first_touch"] = abs(c["t_ff"] - touch["t_ff"]) < 1e-6
+            if m.get("accepted") and m.get("R_state") is not None:
+                micro_fresh.append(m)
     return {
         "label": meta["label"],
         "fid": meta["fid"],
@@ -196,6 +198,7 @@ def analyze_flight(meta: dict) -> dict:
         "n_collisions": len(colls),
         "n_events": len(groups),
         "ledger": ledger,
+        "micro_fresh_contacts": micro_fresh,
     }
 
 
@@ -203,21 +206,26 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     flights = [analyze_flight(m) for m in FLIGHTS]
     ledger = []
+    micros = []
     for f in flights:
         ledger.extend(f.get("ledger") or [])
+        micros.extend(f.get("micro_fresh_contacts") or [])
 
     accepted = [r for r in ledger if r.get("accepted") and r.get("in_graze_band")]
     accepted_all = [r for r in ledger if r.get("accepted")]
-    # If graze band empties the set, also report all-accepted for harvest size
     sample = accepted if accepted else accepted_all
 
     high = [r for r in sample if r.get("tail") == "HIGH"]
     low = [r for r in sample if r.get("tail") == "LOW"]
     h_ups = [r["h_up"] for r in high if r.get("h_up") is not None]
     h_downs = [r["h_down"] for r in low if r.get("h_down") is not None]
+    # Micro-consistency (same trajectory, all fresh graze clips)
+    micro_h_downs = [r["h_down"] for r in micros
+                     if r.get("tail") == "LOW" and r.get("h_down") is not None]
+    micro_h_ups = [r["h_up"] for r in micros
+                   if r.get("tail") == "HIGH" and r.get("h_up") is not None]
     h_up = float(max(h_ups)) if h_ups else None
     h_down = float(max(h_downs)) if h_downs else None
-    # Combined worst-case vertical half-extent
     extents = [x for x in [h_up, h_down] if x is not None]
     h_drone = float(max(extents)) if extents else None
 
@@ -234,7 +242,6 @@ def main():
         and len(sample) >= 3
         and (h_up is not None or h_down is not None)
     )
-    # Unfreeze candidate: contact-grade with n>=3 and positive extent
     unfreeze = bool(usable and h_drone is not None and h_drone > 0.05)
 
     sim = sim_collision_crosscheck()
@@ -252,6 +259,9 @@ def main():
         "h_up_scatter": scatter(h_ups),
         "h_down_scatter": scatter(h_downs),
         "proxy_scatter": scatter(proxies),
+        "micro_fresh_n": len(micros),
+        "micro_h_up_scatter": scatter(micro_h_ups),
+        "micro_h_down_scatter": scatter(micro_h_downs),
         "rejection_reasons": reasons,
         "contact_grade_usable": usable,
         "envelope_unfreeze_candidate": unfreeze,
@@ -263,7 +273,7 @@ def main():
             "status": (
                 "UNFREEZE CANDIDATE — re-derive from harvest h_drone"
                 if unfreeze else
-                "HELD — harvest insufficient or h≈0"
+                "HELD — first-touch n<3 or h≈0; see micro-fresh for consistency"
             ),
         },
         "sim_crosscheck": sim,
@@ -301,6 +311,10 @@ def main():
         f"- **Contact-grade usable**: `{usable}`; "
         f"**unfreeze candidate**: `{unfreeze}`",
         f"- **Chain**: {verdict['chain']['status']}",
+        f"- **Micro-fresh clips** (consistency, not first-touch n): "
+        f"n=`{verdict['micro_fresh_n']}`, "
+        f"h_down scatter max=`{(verdict['micro_h_down_scatter'] or {}).get('max')}`, "
+        f"h_up max=`{(verdict['micro_h_up_scatter'] or {}).get('max')}`",
         f"- **Rejects**: `{reasons}`",
         "",
         "### Sim cross-check",

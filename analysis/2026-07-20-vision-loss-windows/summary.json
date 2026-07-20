@@ -95,11 +95,14 @@
         ]
       },
       "vz_commit": {
-        "n": 101,
+        "n_world": 101,
+        "n_cmd": 101,
         "std": 0.6067139574479574,
         "mean": -0.14137158339894515,
         "ptp": 3.2978276582582247,
-        "damper_band_0p05_0p14": false
+        "cmd_std": 0.12368022741711747,
+        "cmd_ptp": 0.35,
+        "damper_band_0p05_0p14": true
       },
       "n_loss_recover_windows": 2,
       "windows": [
@@ -154,11 +157,14 @@
         "samples": []
       },
       "vz_commit": {
-        "n": 37,
+        "n_world": 37,
+        "n_cmd": 37,
         "std": 0.5650924090008215,
         "mean": 0.4240445437807945,
         "ptp": 2.2544491559852555,
-        "damper_band_0p05_0p14": false
+        "cmd_std": 0.1392969022104135,
+        "cmd_ptp": 0.5029575676639905,
+        "damper_band_0p05_0p14": true
       },
       "n_loss_recover_windows": 2,
       "windows": [
@@ -217,11 +223,14 @@
         "samples": []
       },
       "vz_commit": {
-        "n": 112,
+        "n_world": 112,
+        "n_cmd": 112,
         "std": 0.598969105153032,
         "mean": 0.08175961665538993,
         "ptp": 3.373807812770597,
-        "damper_band_0p05_0p14": false
+        "cmd_std": 0.09869678701029158,
+        "cmd_ptp": 0.39,
+        "damper_band_0p05_0p14": true
       },
       "n_loss_recover_windows": 4,
       "windows": [
@@ -314,11 +323,14 @@
         "samples": []
       },
       "vz_commit": {
-        "n": 5,
+        "n_world": 5,
+        "n_cmd": 5,
         "std": 0.18694978913183533,
         "mean": -1.1196529927001986,
         "ptp": 0.5222941790829249,
-        "damper_band_0p05_0p14": false
+        "cmd_std": 0.05381444267139074,
+        "cmd_ptp": 0.16,
+        "damper_band_0p05_0p14": true
       },
       "n_loss_recover_windows": 2,
       "windows": [
@@ -377,11 +389,14 @@
         "samples": []
       },
       "vz_commit": {
-        "n": 41,
+        "n_world": 41,
+        "n_cmd": 42,
         "std": 0.6335020980037668,
         "mean": -0.09649758760981889,
         "ptp": 2.50432100889855,
-        "damper_band_0p05_0p14": false
+        "cmd_std": 0.09031465721703236,
+        "cmd_ptp": 0.2773265320556952,
+        "damper_band_0p05_0p14": true
       },
       "n_loss_recover_windows": 0,
       "windows": [],
