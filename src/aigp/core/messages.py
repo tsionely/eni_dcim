@@ -221,6 +221,7 @@ class TermStatus:
     vz_up: float | None        # commanded world-up velocity, if owning
     v_bz_applied: float | None # body-z actually applied (None = legacy)
     source_mode: str | None = None
+    ready_legacy: bool = False
 
 
 @dataclass(frozen=True, slots=True)

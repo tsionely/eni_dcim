@@ -430,7 +430,8 @@ class App:
                             ready=term_oracle.ready(),
                             e_z=term_oracle.e_z, vz_up=term_vz_up,
                             v_bz_applied=term_v_bz,
-                            source_mode=term_oracle.active_source))
+                            source_mode=term_oracle.active_source,
+                            ready_legacy=term_oracle.ready_legacy()))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

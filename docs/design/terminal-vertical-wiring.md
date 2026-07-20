@@ -304,3 +304,11 @@ failed-approach case, one build early. Pre-registered for the cohort-2
 REDO: zero blind-reverse collisions; the early-blindness flights end
 hovering 2-3m short and re-attempt; the fork metric (first-commit
 closest <1.1m => pass) still holds on the non-blind attempts.
+
+## The side rung's structural immunity (advisory-14 §3, for the record)
+
+A rung whose depth is the OBSERVED certified side-pair separation and
+never the believed range cannot be poisoned by the believed-range
+lockout class — the failure mode is impossible by construction, not
+by vigilance. The believed state may bound a search ROI or an
+identity prior; it has no metrology authority in this rung.

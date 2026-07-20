@@ -537,6 +537,21 @@ class TerminalOracle:
                 and self.v_z_visual() is not None
                 and not self.disarmed)
 
+    def ready_legacy(self) -> bool:
+        """The PRE-correction readiness (whole-attempt gap statistic),
+        computed for cohort-4's dual-readiness log only — the semantic
+        A/B measuring itself in situ (advisory-14 SS2.1). Never used
+        for any decision."""
+        n = len(self._hist)
+        if n < self.min_samples:
+            return False
+        ts = [t for t, _ in self._hist]
+        gaps = [b - a for a, b in zip(ts, ts[1:])]
+        return (ts[-1] - ts[0] >= self.min_span_s
+                and (not gaps or max(gaps) <= self.max_gap_s)
+                and self.v_z_visual() is not None
+                and not self.disarmed)
+
     def rate_authority(self) -> float:
         """Advisory-7B §1: the barely-ready window's slope is ~4x
         noisier than a half-second one (sigma ~0.4 vs ~0.1 m/s at the
