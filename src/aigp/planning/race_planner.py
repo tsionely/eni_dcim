@@ -135,6 +135,14 @@ class RacePlanner:
                                            default=1.2))
         self.retreat_speed = float(p.get("planner.retreat.speed_mps", default=1.2))
         self.retreat_s = float(p.get("planner.retreat.duration_s", default=2.0))
+        # Blind-hover escalation (advisory-11 SS3): hover is not a fixed
+        # point — it drifts at the velocity-estimate error near
+        # structure. Look for a bounded time, then slow-retrace along
+        # the inbound tangent; never loiter blind indefinitely.
+        self.blind_hold_s = float(p.get("planner.search.blind_hold_s",
+                                        default=4.5))
+        self.retrace_mps = float(p.get("planner.search.retrace_mps",
+                                       default=0.5))
         self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
         self.recover_brake_s = float(p.get("planner.recover.brake_s"))
         self.force_hover = bool(p.get("planner.force_hover", default=False))
@@ -149,6 +157,10 @@ class RacePlanner:
         self._last_seen_side = 1.0   # search toward the last known bearing
         self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
         self._reacquire_until_ns: int | None = None   # post-miss range guard
+        self._blind_hold_ns: int | None = None  # blind-brake epoch (retrace)
+        self._search_last_ns: int | None = None
+        self._search_prev_rate = 0.0
+        self._search_yaw_accum = 0.0
 
     def reset(self) -> None:
         self._commit_until_ns = None
@@ -161,6 +173,10 @@ class RacePlanner:
         self._last_seen_side = 1.0
         self._gap_bias = None
         self._reacquire_until_ns = None
+        self._blind_hold_ns = None
+        self._search_last_ns = None
+        self._search_prev_rate = 0.0
+        self._search_yaw_accum = 0.0
 
     def _note_attempt_failed(self, now_ns: int) -> None:
         """A commit ended without a pass event: arm the post-miss
@@ -273,6 +289,10 @@ class RacePlanner:
                     self._note_attempt_failed(now_ns)
                     self._recover_until_ns = now_ns + int(
                         self.recover_brake_s * 1e9)
+                    self._blind_hold_ns = now_ns
+                    self._search_last_ns = None
+                    self._search_prev_rate = 0.0
+                    self._search_yaw_accum = 0.0
                     return Setpoint(phase="recover", v_body=np.zeros(3),
                                     yaw_rate=0.0)
                 # Relock guard (phase6a dash-F2): the believed target
@@ -403,6 +423,10 @@ class RacePlanner:
             if state.gate_rel_age_s > self.entry_max_age_s:
                 self._recover_until_ns = now_ns + int(
                     self.recover_brake_s * 1e9)
+                self._blind_hold_ns = now_ns
+                self._search_last_ns = None
+                self._search_prev_rate = 0.0
+                self._search_yaw_accum = 0.0
                 return Setpoint(phase="recover", v_body=np.zeros(3),
                                 yaw_rate=0.0)
             if self.retreat_enabled:
@@ -412,6 +436,31 @@ class RacePlanner:
         gate = state.gate_rel
         if gate is None:
             # -- search: spin toward the side the gate was last seen on.
+            # After a BLIND brake (advisory-11 SS3): hover is not a fixed
+            # point — the velocity-estimate error (~0.1-0.2 m/s) walks a
+            # blind hover into structure. Look for blind_hold_s, then
+            # slow-retrace along the INBOUND tangent (known-clear: we
+            # just flew it) — retrace beats explore, and never loiter
+            # blind near steel. The sweep's commanded yaw is integrated
+            # so the retrace vector stays world-inbound however far the
+            # sweep has rotated the body frame.
+            if self._blind_hold_ns is not None:
+                if self._search_last_ns is not None:
+                    self._search_yaw_accum += self._search_prev_rate * (
+                        now_ns - self._search_last_ns) / 1e9
+                self._search_last_ns = now_ns
+                v = np.array([0.0, 0.0, -self.search_climb])
+                if now_ns - self._blind_hold_ns > int(self.blind_hold_s * 1e9):
+                    a = self._search_yaw_accum
+                    v = np.array([-self.retrace_mps * np.cos(a),
+                                  self.retrace_mps * np.sin(a),
+                                  0.0])
+                    rate = (-self.search_yaw_rate * np.sign(a)
+                            if abs(a) > 0.15 else 0.0)
+                else:
+                    rate = self.search_yaw_rate * self._last_seen_side
+                self._search_prev_rate = float(rate)
+                return Setpoint(phase="search", v_body=v, yaw_rate=float(rate))
             return Setpoint(
                 phase="search",
                 v_body=np.array([0.0, 0.0, -self.search_climb]),
@@ -419,6 +468,10 @@ class RacePlanner:
             )
 
         # -- approach
+        self._blind_hold_ns = None            # evidence is back
+        self._search_last_ns = None
+        self._search_prev_rate = 0.0
+        self._search_yaw_accum = 0.0
         dist = float(np.linalg.norm(gate.t))
         # Post-miss reacquisition guard: right after a blown attempt, a
         # "fresh" far target is almost certainly a relock onto the NEXT

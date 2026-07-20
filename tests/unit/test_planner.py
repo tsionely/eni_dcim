@@ -416,3 +416,35 @@ def test_timer_expiry_blind_brakes_instead_of_reverse():
     sp = p.plan(int(5e9), "race", stale, None)
     assert sp.phase == "recover"
     assert np.allclose(sp.v_body, 0.0)
+
+
+def test_blind_hover_escalates_to_inbound_retrace():
+    """Advisory-11 SS3: blind hover drifts at the velocity-estimate
+    error — look for blind_hold_s (4.5s), then slow-retrace along the
+    inbound tangent, yaw-accum-compensated so the vector stays
+    world-inbound however far the sweep has rotated, unwinding the
+    sweep as it goes. Never loiter blind near steel."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.4],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    assert p.plan(int(0.5e9), "race",
+                  make_state(age_s=2.0), None).phase == "recover"
+    # Hover-search inside the look window: stationary sweep.
+    sp1 = p.plan(int(1.5e9), "race", make_state(age_s=3.0), None)
+    assert sp1.phase == "search" and np.linalg.norm(sp1.v_body[:2]) == 0
+    sp2 = p.plan(int(2.0e9), "race", make_state(age_s=3.5), None)
+    assert np.linalg.norm(sp2.v_body[:2]) == 0
+    # Past the window: slow retrace at retrace_mps, sweep unwinding.
+    sp3 = p.plan(int(5.2e9), "race", make_state(age_s=6.7), None)
+    assert sp3.phase == "search"
+    assert np.linalg.norm(sp3.v_body[:2]) == pytest.approx(0.5, abs=0.01)
+    a = 0.6 * 0.5 + 0.6 * 3.2          # integrated commanded sweep
+    assert sp3.v_body[0] == pytest.approx(-0.5 * np.cos(a), abs=0.01)
+    assert sp3.v_body[1] == pytest.approx(0.5 * np.sin(a), abs=0.01)
+    assert sp3.yaw_rate == -0.6         # unwinding toward the entry heading
+    # Fresh evidence ends the blind episode entirely.
+    sp4 = p.plan(int(5.4e9), "race",
+                 make_state(gate_t=[0.0, 0.0, 8.0], center_px=(320, 180)),
+                 None)
+    assert sp4.phase in ("approach", "search")   # reacquire guard may hold
