@@ -141,6 +141,20 @@ class RacePlanner:
         # the inbound tangent; never loiter blind indefinitely.
         self.blind_hold_s = float(p.get("planner.search.blind_hold_s",
                                         default=4.5))
+        # Commit vertical damper (P1 verdict, cohort-2: FOV-leave 5/6
+        # with vz peak-to-peak 2.0-4.65 m/s at loss while the hold's
+        # own cap is 0.8 — the vertical chain chasing the between-fix
+        # velocity-estimate sawtooth bobs the airframe and walks the
+        # gate out the BOTTOM of the +29deg-up camera's frame at
+        # 3-4.5m. Commit is entered PRE-ALIGNED (align closed the gap
+        # to <=0.5m): the in-commit vertical is a TRIM, not a chase —
+        # deadbanded around the aim, hard-capped, slew-limited.
+        self.commit_vz_deadband_m = float(p.get(
+            "planner.commit.vz_deadband_m", default=0.15))
+        self.commit_vz_cap = float(p.get(
+            "planner.commit.vz_cap_mps", default=0.35))
+        self.commit_vz_slew = float(p.get(
+            "planner.commit.vz_slew_mps2", default=1.5))
         self.retrace_mps = float(p.get("planner.search.retrace_mps",
                                        default=0.5))
         self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
@@ -158,6 +172,8 @@ class RacePlanner:
         self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
         self._reacquire_until_ns: int | None = None   # post-miss range guard
         self._blind_hold_ns: int | None = None  # blind-brake epoch (retrace)
+        self._commit_vz_prev: float | None = None   # damper slew memory
+        self._commit_vz_prev_ns: int | None = None
         self._search_last_ns: int | None = None
         self._search_prev_rate = 0.0
         self._search_yaw_accum = 0.0
@@ -177,6 +193,8 @@ class RacePlanner:
         self._search_last_ns = None
         self._search_prev_rate = 0.0
         self._search_yaw_accum = 0.0
+        self._commit_vz_prev = None
+        self._commit_vz_prev_ns = None
 
     def _note_attempt_failed(self, now_ns: int) -> None:
         """A commit ended without a pass event: arm the post-miss
@@ -202,6 +220,29 @@ class RacePlanner:
         self._commit_prev_z = None
         self._retreat_until_ns = None
         self._align_until_ns = None
+
+    def _damp_commit_vz(self, vz: float, tdz_err: float,
+                        now_ns: int) -> float:
+        """Deadband + cap + slew for the in-commit vertical (NED z).
+
+        The commit vertical is a trim on a pre-aligned entry; chasing
+        the velocity-estimate sawtooth at full hold authority is what
+        bobbed the gate out of frame (cohort-2 P1). Inside the
+        deadband the vertical is ZERO; outside it is capped and its
+        rate of change bounded so estimate noise cannot ring the
+        airframe."""
+        if abs(tdz_err) < self.commit_vz_deadband_m:
+            vz = 0.0
+        vz = float(np.clip(vz, -self.commit_vz_cap, self.commit_vz_cap))
+        if (self._commit_vz_prev is not None
+                and self._commit_vz_prev_ns is not None):
+            step = self.commit_vz_slew * max(
+                (now_ns - self._commit_vz_prev_ns) / 1e9, 0.0)
+            vz = float(np.clip(vz, self._commit_vz_prev - step,
+                               self._commit_vz_prev + step))
+        self._commit_vz_prev = vz
+        self._commit_vz_prev_ns = now_ns
+        return vz
 
     def _retreat_setpoint(self, state: StateEstimate,
                           climb_bias: float = 0.0) -> Setpoint:
@@ -401,9 +442,16 @@ class RacePlanner:
                         # overfly case still gets zero (hold -0.72 >> 0.1).
                         climb = max(0.0, -float(extra[2]))   # NED: -z up
                         self._gap_bias = max(0.0, self.blind_climb_bias - climb)
+                    v_next = direction * self.commit_speed + extra
+                    # Damper governs the HOLD/steering vertical; the
+                    # once-decided, bounded (<=0.1) sink insurance rides
+                    # ON TOP — capping it away would silently disarm the
+                    # no-arm rule's covered class (phase3h sink).
+                    v_next[2] = self._damp_commit_vz(
+                        float(v_next[2]), tdz - au, now_ns)
                     if self._gap_bias:
-                        extra[2] -= self._gap_bias
-                    self._commit_v_body = direction * self.commit_speed + extra
+                        v_next[2] -= self._gap_bias
+                    self._commit_v_body = v_next
                 yaw = 0.0
                 if gate is not None and gate.t[2] > 0.3:
                     yaw = ap.yaw_rate_to_bearing(gate, self.commit_yaw_gain)
@@ -547,6 +595,9 @@ class RacePlanner:
             # range (phase6a dash-F1: the fixed 2.5s window expired at
             # believed z=+1.09m and retreat yanked a centered dash back).
             v = direction * self.commit_speed + crosstrack
+            self._commit_vz_prev = None           # fresh damper epoch
+            self._commit_vz_prev_ns = None
+            v[2] = self._damp_commit_vz(float(v[2]), world_dz - au, now_ns)
             self._commit_v_body = v
             self._commit_prev_z = float(gate.t[2])
             duration_s = max(self.commit_duration_s,

@@ -448,3 +448,42 @@ def test_blind_hover_escalates_to_inbound_retrace():
                  make_state(gate_t=[0.0, 0.0, 8.0], center_px=(320, 180)),
                  None)
     assert sp4.phase in ("approach", "search")   # reacquire guard may hold
+
+
+def test_commit_vz_damper_bounds_oscillation_but_trims_deficit():
+    """P1 verdict (cohort-2): FOV-leave 5/6 with vz peak-to-peak
+    2.0-4.65 m/s at loss — the vertical chain chasing the between-fix
+    velocity-estimate sawtooth bobbed the gate out the bottom of the
+    +29deg camera's frame. SAFETY: an oscillating believed dz may not
+    ring the commit vertical (cap 0.35, slew 1.5 m/s^2). LIVENESS: a
+    steady honest deficit still trims at up to the cap — the damper
+    bounds the chase, not the correction."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.2],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    # Oscillating believed: gate bobs +-0.4 in cam y at 10Hz.
+    vzs = []
+    for i in range(1, 9):
+        y = 0.4 if i % 2 else -0.4
+        sp = p.plan(int(i * 0.1e9), "race",
+                    make_state(gate_t=[0.0, y, 2.0 - 0.05 * i],
+                               center_px=(320, 180)), None)
+        assert sp.phase == "commit"
+        vzs.append(float(sp.v_body[2]))
+    assert max(abs(v) for v in vzs) <= 0.351, vzs
+    deltas = [abs(b - a) for a, b in zip(vzs, vzs[1:])]
+    assert max(deltas) <= 0.16, deltas          # 1.5 m/s^2 * 0.1s + eps
+    # Steady TRIM deficit (large deficits belong to align): gate
+    # persistently ~0.25 above the aim inside commit -> still climbs.
+    p2 = planner()
+    assert p2.plan(0, "race", make_state(gate_t=[0.0, -0.25, 2.2],
+                                         center_px=(320, 160)),
+                   None).phase == "commit"
+    sp = None
+    for i in range(1, 5):
+        sp = p2.plan(int(i * 0.1e9), "race",
+                     make_state(gate_t=[0.0, -0.25, 2.0],
+                                center_px=(320, 160)), None)
+        assert sp.phase == "commit"
+    assert sp.v_body[2] < -0.05                 # NED: climbing, not muted

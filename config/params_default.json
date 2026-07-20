@@ -63,7 +63,10 @@
       "abort_min_dist_m": 0.8,
       "brake_decel_mps2": 2.6,
       "brake_react_s": 0.0,
-      "entry_max_age_s": 0.6
+      "entry_max_age_s": 0.6,
+      "vz_deadband_m": 0.15,
+      "vz_cap_mps": 0.35,
+      "vz_slew_mps2": 1.5
     },
     "terminal": {
       "enable": false,
