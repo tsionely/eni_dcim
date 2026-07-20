@@ -1,0 +1,308 @@
+{
+  "ask": "N-R4 corridor clearance",
+  "flights": [
+    {
+      "label": "try15",
+      "fid": "20260719T160537-f170ead6",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6-flight.jsonl",
+      "t_pass_ff": 3.7571,
+      "pass_source": "hud",
+      "t_death_ff": 9.9958999,
+      "death": {
+        "t_ff": 9.9958999,
+        "impulse": 5.220639705657959,
+        "threat_level": 2
+      },
+      "exit": {
+        "bearing_deg": -0.4978927866103442,
+        "source": "body_travel_median",
+        "n": 8
+      },
+      "hard_collisions": [
+        {
+          "t_ff": 9.9958999,
+          "impulse": 5.220639705657959,
+          "threat_level": 2,
+          "s_par_m": 7.275377957227486,
+          "s_lat_m": 0.2716230535969132,
+          "abs_s_lat_m": 0.2716230535969132,
+          "gate_rel_tx": null,
+          "gate_rel_R": null
+        }
+      ],
+      "min_abs_s_lat_at_hard_m": 0.2716230535969132,
+      "min_s_par_at_hard_m": 7.275377957227486,
+      "midrange_closest_tx": {
+        "t_ff": 4.8628424,
+        "R": 5.50937939223194,
+        "tx": 0.06586650068898339,
+        "abs_tx": 0.06586650068898339,
+        "ty": -2.2382826360979506,
+        "tz": 5.033787215663708
+      },
+      "cyan": {
+        "n_frames": 47,
+        "cyan_frames": 28,
+        "cyan_pct": 59.57446808510638,
+        "lat_offset_px": {
+          "median": 59.70664349822292,
+          "p90_abs": 227.10926211260576,
+          "n": 28
+        },
+        "lat_offset_m_est": {
+          "median": 1.3096646696452559,
+          "p90_abs": 6.021012233412932,
+          "n": 28
+        },
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6_takeoff_to_end.aigprec",
+        "n_decoded_intergate": 47
+      },
+      "intergate_duration_s": 6.2387999
+    },
+    {
+      "label": "try39",
+      "fid": "20260719T163649-f170ead6",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.2576177,
+      "pass_source": "hud",
+      "t_death_ff": 13.8743804,
+      "death": {
+        "t_ff": 13.8743804,
+        "impulse": 2.395251989364624,
+        "threat_level": 2
+      },
+      "exit": {
+        "bearing_deg": 30.939008212143513,
+        "source": "gate1_los_median",
+        "n": 8
+      },
+      "hard_collisions": [
+        {
+          "t_ff": 13.8743804,
+          "impulse": 2.395251989364624,
+          "threat_level": 2,
+          "s_par_m": 3.2531921217271504,
+          "s_lat_m": -1.6768675607720862,
+          "abs_s_lat_m": 1.6768675607720862,
+          "gate_rel_tx": 0.5093795647413314,
+          "gate_rel_R": 7.861806588208164
+        }
+      ],
+      "min_abs_s_lat_at_hard_m": 1.6768675607720862,
+      "min_s_par_at_hard_m": 3.2531921217271504,
+      "midrange_closest_tx": {
+        "t_ff": 6.2922648,
+        "R": 3.0676787341235587,
+        "tx": 0.002140828841171297,
+        "abs_tx": 0.002140828841171297,
+        "ty": -0.6273843148663318,
+        "tz": 3.002838183136996
+      },
+      "cyan": {
+        "n_frames": 73,
+        "cyan_frames": 58,
+        "cyan_pct": 79.45205479452055,
+        "lat_offset_px": {
+          "median": -40.745066939358395,
+          "p90_abs": 247.574503968254,
+          "n": 58
+        },
+        "lat_offset_m_est": {
+          "median": -0.8990599374552458,
+          "p90_abs": 7.68364272305344,
+          "n": 58
+        },
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6_takeoff_to_end.aigprec",
+        "n_decoded_intergate": 73
+      },
+      "intergate_duration_s": 9.616762699999999
+    },
+    {
+      "label": "phase6i_200816",
+      "fid": "20260719T200816-f170ead6",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T200816-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.0068052,
+      "pass_source": "hud",
+      "t_death_ff": 11.9834684,
+      "death": {
+        "t_ff": 11.9834684,
+        "impulse": 6.309671878814697,
+        "threat_level": 2
+      },
+      "exit": {
+        "bearing_deg": 0.5616709188511886,
+        "source": "body_travel_median",
+        "n": 7
+      },
+      "hard_collisions": [
+        {
+          "t_ff": 11.9834684,
+          "impulse": 6.309671878814697,
+          "threat_level": 2,
+          "s_par_m": 6.114231891054697,
+          "s_lat_m": 0.26792368000796424,
+          "abs_s_lat_m": 0.26792368000796424,
+          "gate_rel_tx": 0.3865335260814383,
+          "gate_rel_R": 1.226849880610162
+        }
+      ],
+      "min_abs_s_lat_at_hard_m": 0.26792368000796424,
+      "min_s_par_at_hard_m": 6.114231891054697,
+      "midrange_closest_tx": {
+        "t_ff": 4.9522678,
+        "R": 5.04583957133964,
+        "tx": -0.024275849815815945,
+        "abs_tx": 0.024275849815815945,
+        "ty": -0.9727841240452899,
+        "tz": 4.951120954977585
+      },
+      "cyan": {
+        "n_frames": 59,
+        "cyan_frames": 41,
+        "cyan_pct": 69.49152542372882,
+        "lat_offset_px": {
+          "median": -33.633093525179845,
+          "p90_abs": 107.39191919191919,
+          "n": 41
+        },
+        "lat_offset_m_est": {
+          "median": -0.1988491980262,
+          "p90_abs": 3.6225230946414255,
+          "n": 30
+        },
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T200816-f170ead6_takeoff_to_end.aigprec",
+        "n_decoded_intergate": 59
+      },
+      "intergate_duration_s": 7.9766632
+    },
+    {
+      "label": "phase6i_201851",
+      "fid": "20260719T201851-50f9dcc8",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8-flight.jsonl",
+      "t_pass_ff": 4.5110314,
+      "pass_source": "hud",
+      "t_death_ff": 17.3937434,
+      "death": {
+        "t_ff": 17.3937434,
+        "impulse": 7.251072406768799,
+        "threat_level": 2
+      },
+      "exit": {
+        "bearing_deg": -3.8621715049101666,
+        "source": "body_travel_median",
+        "n": 8
+      },
+      "hard_collisions": [
+        {
+          "t_ff": 17.3937434,
+          "impulse": 7.251072406768799,
+          "threat_level": 2,
+          "s_par_m": 11.019407173716425,
+          "s_lat_m": -0.5972924975475324,
+          "abs_s_lat_m": 0.5972924975475324,
+          "gate_rel_tx": -1.8382346933782159,
+          "gate_rel_R": 4.929373059158763
+        }
+      ],
+      "min_abs_s_lat_at_hard_m": 0.5972924975475324,
+      "min_s_par_at_hard_m": 11.019407173716425,
+      "midrange_closest_tx": {
+        "t_ff": 8.3841392,
+        "R": 6.59252540182779,
+        "tx": 0.00010801684518971233,
+        "abs_tx": 0.00010801684518971233,
+        "ty": -2.9742427034296584,
+        "tz": 5.883474441448052
+      },
+      "cyan": {
+        "n_frames": 97,
+        "cyan_frames": 59,
+        "cyan_pct": 60.824742268041234,
+        "lat_offset_px": {
+          "median": 83.89576547231269,
+          "p90_abs": 211.55342447862003,
+          "n": 59
+        },
+        "lat_offset_m_est": {
+          "median": 2.6675530748983025,
+          "p90_abs": 7.611125692294571,
+          "n": 52
+        },
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8_takeoff_to_end.aigprec",
+        "n_decoded_intergate": 97
+      },
+      "intergate_duration_s": 12.882712000000001
+    },
+    {
+      "label": "milestone_131137",
+      "fid": "20260716T131137-2ca531c3",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T131137-2ca531c3-flight.jsonl",
+      "t_pass_ff": 3.7574043,
+      "pass_source": "hud",
+      "t_death_ff": 17.1731807,
+      "death": {
+        "t_ff": 17.1731807,
+        "impulse": 15.537909507751465,
+        "threat_level": 2
+      },
+      "exit": {
+        "bearing_deg": -2.4910057646382535,
+        "source": "body_travel_median",
+        "n": 8
+      },
+      "hard_collisions": [
+        {
+          "t_ff": 17.1731807,
+          "impulse": 15.537909507751465,
+          "threat_level": 2,
+          "s_par_m": 26.856571805476097,
+          "s_lat_m": 2.964993532335447,
+          "abs_s_lat_m": 2.964993532335447,
+          "gate_rel_tx": 5.74987540791795,
+          "gate_rel_R": 35.34014580987245
+        }
+      ],
+      "min_abs_s_lat_at_hard_m": 2.964993532335447,
+      "min_s_par_at_hard_m": 26.856571805476097,
+      "midrange_closest_tx": {
+        "t_ff": 6.6318364,
+        "R": 10.18113303569468,
+        "tx": -0.004524674722477334,
+        "abs_tx": 0.004524674722477334,
+        "ty": -6.57251468577186,
+        "tz": 7.775442117535535
+      },
+      "cyan": {
+        "n_frames": 0,
+        "note": "pad-only slice; cyan inter-gate skipped if no post-pass frames",
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T131137-2ca531c3_r2j_rerun_slice_start.aigprec"
+      },
+      "intergate_duration_s": 13.415776399999999
+    }
+  ],
+  "aggregate": {
+    "n_flights_ok": 5,
+    "n_with_hard_lat": 5,
+    "corridor_lower_m": 0.26792368000796424,
+    "corridor_lower_source": "min_|s_lat|_at_hard_env_collision",
+    "d_clear_provisional_m": 0.9,
+    "d_clear_note": "design default 0.9 m",
+    "d_bridge_max_m": -1.032076319992036,
+    "d_bridge_kill": true,
+    "formula": "d_bridge_max = min(0.8, corridor_lower - d_clear - 0.4)",
+    "s_par_at_hard_m": {
+      "min": 3.2531921217271504,
+      "median": 7.275377957227486,
+      "p25": 6.114231891054697
+    },
+    "midrange_abs_tx_m": {
+      "min": 0.00010801684518971233,
+      "median": 0.004524674722477334
+    },
+    "cyan_lat_p90_abs_m": {
+      "min": 3.6225230946414255,
+      "median": 6.816068962853752,
+      "n": 4
+    }
+  }
+}
