@@ -1,0 +1,17 @@
+[
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_forced_withhold_samples.csv",
+    "sha256": "d62d8f751ca492b5f31a878d1ae5f93a273aa6a512a968efefe5ca3d6bfc91f8"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_new_per_cluster_split.csv",
+    "sha256": "4017311fcd43bd8d7a2de0e4a3692a6760cb71ecc134047fdf19c0a3b46b22de"
+  },
+  {
+    "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/summary.json",
+    "sha256": "d9a1ba2b00d08e6bff918595c2b852d4ab9b7628cef35a4dda455f04879e94d4"
+  }
+]

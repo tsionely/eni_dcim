@@ -1,0 +1,19 @@
+{
+  "criterion_commit": "bb998ae2a5edf79f7b2431b6b8388d496a76a522",
+  "diagnostic_only": true,
+  "intervention_collapse_condition_met": false,
+  "large_cluster_count_after": 22,
+  "large_cluster_count_before": 5,
+  "large_count_fell_by_half": false,
+  "n_clusters": 23,
+  "n_cuts": 177,
+  "near_zero_after_large_count": 1,
+  "near_zero_cluster_count": 1,
+  "plant_signal": "rate_feed_forward_mps",
+  "plant_signal_formula": "rate_feed_forward_mps = setpoint_vz_up_mps(side exposure) - setpoint_vz_up_mps(latch exposure), carried from the replay-attached flight-log setpoint stream",
+  "post_intervention_residual_admissible_input": "post_intervention_residual_samples.csv:r_v_after_recorded_legacy_mps",
+  "prediction_refutation_branch_met": false,
+  "prediction_refutation_candidate_clusters": [],
+  "registered_intervention_verdict": "REFUTED_OR_NOT_CONFIRMED_UNDER_REGISTERED_COLLAPSE_CONDITION",
+  "report_generator_commit": "55ba6da5a959371098c654826efff5ceec7688e1"
+}
