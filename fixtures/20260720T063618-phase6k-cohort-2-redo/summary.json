@@ -1,0 +1,413 @@
+{
+  "flights": [
+    {
+      "slot": 1,
+      "arm": "control",
+      "attempt": 1,
+      "fid": "20260720T062804-c38fd469",
+      "label": "phase6k_control_F1_try1",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T062804-c38fd469_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 2,
+      "arm": "live",
+      "attempt": 2,
+      "fid": "20260720T062921-790186c4",
+      "label": "phase6k_live_F2_try2",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T062921-790186c4_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 3,
+      "arm": "control",
+      "attempt": 3,
+      "fid": "20260720T063042-c38fd469",
+      "label": "phase6k_control_F3_try3",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063042-c38fd469_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 4,
+      "arm": "live",
+      "attempt": 4,
+      "fid": "20260720T063147-790186c4",
+      "label": "phase6k_live_F4_try4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063147-790186c4_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 5,
+      "arm": "control",
+      "attempt": 5,
+      "fid": "20260720T063258-c38fd469",
+      "label": "phase6k_control_F5_try5",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063258-c38fd469_takeoff_to_end.aigprec"
+    },
+    {
+      "slot": 6,
+      "arm": "live",
+      "attempt": 6,
+      "fid": "20260720T063419-790186c4",
+      "label": "phase6k_live_F6_try6",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063419-790186c4_takeoff_to_end.aigprec"
+    }
+  ],
+  "metrics": [
+    {
+      "flight_id": "20260720T062804-c38fd469",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=11.1)",
+        "gates_passed": 1,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 16.091994399990654,
+        "loop_overrun_frac": 0.018891374596072583,
+        "loop_stats": {
+          "ticks": 4023,
+          "overruns": 76,
+          "overrun_frac": 0.018891374596072583,
+          "max_late_us": 10386
+        },
+        "flight_id": "20260720T062804-c38fd469",
+        "log_dir": "logs\\20260720T062804-c38fd469"
+      },
+      "closest_direct": {
+        "range_m": 1.257,
+        "t_rel_s": 3.307,
+        "center_px": [
+          320.25,
+          185.5
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.0234666,
+        "range_m": 1.297
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "commit",
+        "search",
+        "approach",
+        "commit",
+        "recover",
+        "commit",
+        "recover",
+        "approach",
+        "search"
+      ],
+      "recover_then_search": false,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 384
+    },
+    {
+      "flight_id": "20260720T062921-790186c4",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=12.7)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 20.315999999991618,
+        "loop_overrun_frac": 0.0092537901161646,
+        "loop_stats": {
+          "ticks": 5079,
+          "overruns": 47,
+          "overrun_frac": 0.0092537901161646,
+          "max_late_us": 6038
+        },
+        "flight_id": "20260720T062921-790186c4",
+        "log_dir": "logs\\20260720T062921-790186c4"
+      },
+      "closest_direct": {
+        "range_m": 1.181,
+        "t_rel_s": 3.643,
+        "center_px": [
+          342.17889029881474,
+          376.5845684133584
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.009888528,
+        "range_m": 1.175
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "approach",
+        "search",
+        "approach",
+        "search"
+      ],
+      "recover_then_search": false,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 513
+    },
+    {
+      "flight_id": "20260720T063042-c38fd469",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=1.4)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 1,
+        "duration_s": 5.832001600007061,
+        "loop_overrun_frac": 0.00823045267489712,
+        "loop_stats": {
+          "ticks": 1458,
+          "overruns": 12,
+          "overrun_frac": 0.00823045267489712,
+          "max_late_us": 6399
+        },
+        "flight_id": "20260720T063042-c38fd469",
+        "log_dir": "logs\\20260720T063042-c38fd469"
+      },
+      "closest_direct": {
+        "range_m": 4.25,
+        "t_rel_s": 1.045,
+        "center_px": [
+          301.00000381469727,
+          316.4999694824219
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.0,
+        "range_m": 4.651
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search"
+      ],
+      "recover_then_search": false,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 80
+    },
+    {
+      "flight_id": "20260720T063147-790186c4",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=8.2)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 3,
+        "duration_s": 11.383998200006317,
+        "loop_overrun_frac": 0.0035137034434293743,
+        "loop_stats": {
+          "ticks": 2846,
+          "overruns": 10,
+          "overrun_frac": 0.0035137034434293743,
+          "max_late_us": 1744
+        },
+        "flight_id": "20260720T063147-790186c4",
+        "log_dir": "logs\\20260720T063147-790186c4"
+      },
+      "closest_direct": {
+        "range_m": 4.269,
+        "t_rel_s": 1.544,
+        "center_px": [
+          253.60215541426643,
+          373.2533576390233
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.13445232,
+        "range_m": 4.927
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "recover"
+      ],
+      "recover_then_search": false,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 245
+    },
+    {
+      "flight_id": "20260720T063258-c38fd469",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=7.0)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 46,
+        "duration_s": 20.379996800009394,
+        "loop_overrun_frac": 0.0041216879293424925,
+        "loop_stats": {
+          "ticks": 5095,
+          "overruns": 21,
+          "overrun_frac": 0.0041216879293424925,
+          "max_late_us": 4686
+        },
+        "flight_id": "20260720T063258-c38fd469",
+        "log_dir": "logs\\20260720T063258-c38fd469"
+      },
+      "closest_direct": {
+        "range_m": 1.385,
+        "t_rel_s": 6.265,
+        "center_px": [
+          371.9999694824219,
+          92.49998474121094
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.0,
+        "range_m": 1.385
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "search",
+        "align",
+        "commit",
+        "recover",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "approach",
+        "search",
+        "hover"
+      ],
+      "recover_then_search": true,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 518
+    },
+    {
+      "flight_id": "20260720T063419-790186c4",
+      "result": {
+        "finished": false,
+        "aborted": true,
+        "abort_reason": "environment collision (impulse=2.1)",
+        "gates_passed": 0,
+        "lap_time_s": null,
+        "gate_clips": 0,
+        "env_hits": 3,
+        "duration_s": 10.499996200000169,
+        "loop_overrun_frac": 0.01180952380952381,
+        "loop_stats": {
+          "ticks": 2625,
+          "overruns": 31,
+          "overrun_frac": 0.01180952380952381,
+          "max_late_us": 6737
+        },
+        "flight_id": "20260720T063419-790186c4",
+        "log_dir": "logs\\20260720T063419-790186c4"
+      },
+      "closest_direct": {
+        "range_m": 5.051,
+        "t_rel_s": 1.988,
+        "center_px": [
+          295.5,
+          331.0
+        ]
+      },
+      "gate_rel_age_at_closest": {
+        "age_s": 0.0,
+        "range_m": 5.081
+      },
+      "phase_sequence": [
+        "hover",
+        "takeoff",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "approach",
+        "search",
+        "approach",
+        "align",
+        "commit",
+        "recover",
+        "approach",
+        "search",
+        "hover"
+      ],
+      "recover_then_search": false,
+      "blind_reverse_collision_count": 0,
+      "blind_reverse_collisions": [],
+      "unique_frames_after_takeoff": 222
+    }
+  ],
+  "slices": [
+    {
+      "fid": "20260720T062804-c38fd469",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T062804-c38fd469_takeoff_to_end.aigprec",
+      "unique_frames": 385,
+      "span_s": 12.803,
+      "bytes": 18622006,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T062921-790186c4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T062921-790186c4_takeoff_to_end.aigprec",
+      "unique_frames": 514,
+      "span_s": 17.095,
+      "bytes": 25787390,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T063042-c38fd469",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063042-c38fd469_takeoff_to_end.aigprec",
+      "unique_frames": 81,
+      "span_s": 2.666,
+      "bytes": 4206186,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T063147-790186c4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063147-790186c4_takeoff_to_end.aigprec",
+      "unique_frames": 246,
+      "span_s": 8.165,
+      "bytes": 9230902,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T063258-c38fd469",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063258-c38fd469_takeoff_to_end.aigprec",
+      "unique_frames": 519,
+      "span_s": 17.268,
+      "bytes": 19489695,
+      "truncated_at_45mb": false
+    },
+    {
+      "fid": "20260720T063419-790186c4",
+      "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase6k_slices\\cohort2_redo\\20260720T063419-790186c4_takeoff_to_end.aigprec",
+      "unique_frames": 223,
+      "span_s": 7.398,
+      "bytes": 8627172,
+      "truncated_at_45mb": false
+    }
+  ]
+}

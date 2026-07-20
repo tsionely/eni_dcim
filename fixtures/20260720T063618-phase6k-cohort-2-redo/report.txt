@@ -1,0 +1,110 @@
+﻿===== PHASE6K COHORT 2 REDO 2026-07-20T09:27:20.6757187+03:00 =====
+===== pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:61 char:168
++ ... == pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+   b1699fc..46e9a64  main       -> origin/main
+Updating b1699fc..46e9a64
+Fast-forward
+ config/params_default.json                         |    5 +-
+ docs/design/geometry-derivation.md                 |   48 +
+ docs/design/intergate-segment.md                   |   11 +-
+ docs/design/terminal-vertical-wiring.md            |   34 +
+ docs/thinktank/RESPONSE13.md                       |   84 ++
+ src/aigp/app.py                                    |   36 +-
+ src/aigp/planning/race_planner.py                  |   42 +-
+ src/aigp/planning/vertical_owner.py                |   40 +-
+ tests/unit/test_planner.py                         |   52 +-
+ tests/unit/test_vertical_owner.py                  |  110 ++
+ tuning/run_terminal_ab_mock.py                     |  176 ++-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1502 +++++++++++++++++++
+ .../summary.json                                   | 1563 ++++++++++++++++++++
+ .../summary.md                                     |   59 +
+ .../01_20260720T054838-03b4e9fc.csv                |  171 +++
+ .../02_20260720T054902-03b4e9fc.csv                |  163 ++
+ .../03_20260720T054916-03b4e9fc.csv                |  168 +++
+ .../04_20260720T054940-03b4e9fc.csv                |  612 ++++++++
+ .../05_20260720T055023-03b4e9fc.csv                |  162 ++
+ .../06_20260720T055036-03b4e9fc.csv                |  148 ++
+ .../07_20260720T055054-03b4e9fc.csv                |  158 ++
+ .../08_20260720T055107-03b4e9fc.csv                |  233 +++
+ .../09_20260720T055133-03b4e9fc.csv                |  147 ++
+ .../10_20260720T055222-03b4e9fc.csv                |  158 ++
+ 25 files changed, 5848 insertions(+), 55 deletions(-)
+ create mode 100644 docs/design/geometry-derivation.md
+ create mode 100644 docs/thinktank/RESPONSE13.md
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/runs.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/runs.json
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/summary.json
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/summary.md
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/01_20260720T054838-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/02_20260720T054902-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/03_20260720T054916-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/04_20260720T054940-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/05_20260720T055023-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/06_20260720T055036-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/07_20260720T055054-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/08_20260720T055107-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/09_20260720T055133-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/10_20260720T055222-03b4e9fc.csv
+
+===== HEAD =====
+46e9a64 Scale gate follows image geometry, not a 640px constant
+
+===== ancestor 46e9a64 =====
+OK
+
+=== F1 control attempt=1 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=11.1)', 'gates_passed': 1, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 16.091994399990654, 'loop_overrun_frac': 0.018891374596072583, 'loop_stats': {'ticks': 4023, 'overruns': 76, 'overrun_frac': 0.018891374596072583, 'max_late_us': 10386}, 'flight_id': '20260720T062804-c38fd469', 'log_dir': 'logs\\20260720T062804-c38fd469'}
+F1 control: gates=1 abort=environment collision (impulse=11.1) closest=1.257 phases=hover>takeoff>commit>search>approach>commit>recover>commit>recover>approach>search recover_search=False blind_reverse_collisions=0
+=== F2 live attempt=2 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 117 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=12.7)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 20.315999999991618, 'loop_overrun_frac': 0.0092537901161646, 'loop_stats': {'ticks': 5079, 'overruns': 47, 'overrun_frac': 0.0092537901161646, 'max_late_us': 6038}, 'flight_id': '20260720T062921-790186c4', 'log_dir': 'logs\\20260720T062921-790186c4'}
+F2 live: gates=0 abort=environment collision (impulse=12.7) closest=1.181 phases=hover>takeoff>align>commit>recover>approach>search>approach>search>approach>search recover_search=False blind_reverse_collisions=0
+=== F3 control attempt=3 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.4)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 5.832001600007061, 'loop_overrun_frac': 0.00823045267489712, 'loop_stats': {'ticks': 1458, 'overruns': 12, 'overrun_frac': 0.00823045267489712, 'max_late_us': 6399}, 'flight_id': '20260720T063042-c38fd469', 'log_dir': 'logs\\20260720T063042-c38fd469'}
+F3 control: gates=0 abort=environment collision (impulse=1.4) closest=4.25 phases=hover>takeoff>align>commit>recover>approach>search recover_search=False blind_reverse_collisions=0
+=== F4 live attempt=4 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=8.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 11.383998200006317, 'loop_overrun_frac': 0.0035137034434293743, 'loop_stats': {'ticks': 2846, 'overruns': 10, 'overrun_frac': 0.0035137034434293743, 'max_late_us': 1744}, 'flight_id': '20260720T063147-790186c4', 'log_dir': 'logs\\20260720T063147-790186c4'}
+F4 live: gates=0 abort=environment collision (impulse=8.2) closest=4.269 phases=hover>takeoff>align>commit>recover>approach>search>recover recover_search=False blind_reverse_collisions=0
+=== F5 control attempt=5 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 46, 'duration_s': 20.379996800009394, 'loop_overrun_frac': 0.0041216879293424925, 'loop_stats': {'ticks': 5095, 'overruns': 21, 'overrun_frac': 0.0041216879293424925, 'max_late_us': 4686}, 'flight_id': '20260720T063258-c38fd469', 'log_dir': 'logs\\20260720T063258-c38fd469'}
+F5 control: gates=0 abort=environment collision (impulse=7.0) closest=1.385 phases=hover>takeoff>align>commit>recover>search>align>commit>recover>commit>recover>approach>search>approach>search>hover recover_search=True blind_reverse_collisions=0
+=== F6 live attempt=6 ===
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=2.1)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 3, 'duration_s': 10.499996200000169, 'loop_overrun_frac': 0.01180952380952381, 'loop_stats': {'ticks': 2625, 'overruns': 31, 'overrun_frac': 0.01180952380952381, 'max_late_us': 6737}, 'flight_id': '20260720T063419-790186c4', 'log_dir': 'logs\\20260720T063419-790186c4'}
+F6 live: gates=0 abort=environment collision (impulse=2.1) closest=5.051 phases=hover>takeoff>align>commit>recover>approach>search>approach>search>approach>align>commit>recover>approach>search>hover recover_search=False blind_reverse_collisions=0

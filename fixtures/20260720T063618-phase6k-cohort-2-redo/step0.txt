@@ -1,0 +1,61 @@
+﻿===== pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:61 char:168
++ ... == pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+   b1699fc..46e9a64  main       -> origin/main
+Updating b1699fc..46e9a64
+Fast-forward
+ config/params_default.json                         |    5 +-
+ docs/design/geometry-derivation.md                 |   48 +
+ docs/design/intergate-segment.md                   |   11 +-
+ docs/design/terminal-vertical-wiring.md            |   34 +
+ docs/thinktank/RESPONSE13.md                       |   84 ++
+ src/aigp/app.py                                    |   36 +-
+ src/aigp/planning/race_planner.py                  |   42 +-
+ src/aigp/planning/vertical_owner.py                |   40 +-
+ tests/unit/test_planner.py                         |   52 +-
+ tests/unit/test_vertical_owner.py                  |  110 ++
+ tuning/run_terminal_ab_mock.py                     |  176 ++-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1502 +++++++++++++++++++
+ .../summary.json                                   | 1563 ++++++++++++++++++++
+ .../summary.md                                     |   59 +
+ .../01_20260720T054838-03b4e9fc.csv                |  171 +++
+ .../02_20260720T054902-03b4e9fc.csv                |  163 ++
+ .../03_20260720T054916-03b4e9fc.csv                |  168 +++
+ .../04_20260720T054940-03b4e9fc.csv                |  612 ++++++++
+ .../05_20260720T055023-03b4e9fc.csv                |  162 ++
+ .../06_20260720T055036-03b4e9fc.csv                |  148 ++
+ .../07_20260720T055054-03b4e9fc.csv                |  158 ++
+ .../08_20260720T055107-03b4e9fc.csv                |  233 +++
+ .../09_20260720T055133-03b4e9fc.csv                |  147 ++
+ .../10_20260720T055222-03b4e9fc.csv                |  158 ++
+ 25 files changed, 5848 insertions(+), 55 deletions(-)
+ create mode 100644 docs/design/geometry-derivation.md
+ create mode 100644 docs/thinktank/RESPONSE13.md
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/runs.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/runs.json
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/summary.json
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/summary.md
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/01_20260720T054838-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/02_20260720T054902-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/03_20260720T054916-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/04_20260720T054940-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/05_20260720T055023-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/06_20260720T055036-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/07_20260720T055054-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/08_20260720T055107-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/09_20260720T055133-03b4e9fc.csv
+ create mode 100644 tuning/terminal-ab-e16d506-e16d506-20260720T054614Z/term_status_live/10_20260720T055222-03b4e9fc.csv
+
+===== HEAD =====
+46e9a64 Scale gate follows image geometry, not a 640px constant
+
+===== ancestor 46e9a64 =====
+OK
+
