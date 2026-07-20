@@ -1,0 +1,2 @@
+fixture_dirs_enumerated,eligible_recordings,physical_approaches_examined,legal_clusters,mapping_walk_rows,no_eligible_recording_rows,censored_or_legal_approach_rows,walk
+61,115,178,23,202,24,178,61 fixture dirs -> 115 eligible recordings -> 178 physical approaches -> 23 legal clusters

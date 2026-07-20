@@ -1,0 +1,128 @@
+{
+  "diagnostic_only": true,
+  "ledger": {
+    "Y_eligible": 23,
+    "approaches": 178,
+    "current_gate_Y_eligible": 23,
+    "current_gate_approaches": 113,
+    "signature_positive": 45
+  },
+  "old_fit_taxonomy": {
+    "cluster_bootstrap_u95_sigma_a_mps2": "1.7354300892950971",
+    "machine_readable_status": "OLD_BUILD_BLOCKED",
+    "n_clusters": 23,
+    "n_rows": 1638,
+    "point_sigma_a_mps2": "1.3069277300036368",
+    "profile_u95_sigma_a_mps2": "1.4000000000000001",
+    "replacement_reason_codes": "INVALID_FOR_RELEASE_MODEL_PRECONDITION;KNOWN_SIGNED_DEFECT;OLD_BUILD_BLOCKED",
+    "source_previous_verdict": "HOLD, DATA-INSUFFICIENT",
+    "u95_release_sigma_a_mps2": "1.7354300892950971"
+  },
+  "repo_head": "de19d881ce8fa0ddc27dd71d7306d0d366c43e90",
+  "shadow": {
+    "confirmatory_approaches": 20,
+    "discovery_overlap_approaches": 3,
+    "exact_maxima": [
+      {
+        "approaches_analyzable": 3,
+        "approaches_listed": 3,
+        "b0_new_abs_max_mps_exact": 0.2305251782459188,
+        "b0_new_auth1_abs_max_mps_exact": 0.020166649907647105,
+        "precision_note": "exact CSV value, do not round into threshold-pass language",
+        "target_set": "discovery_overlap_3"
+      },
+      {
+        "approaches_analyzable": 20,
+        "approaches_listed": 20,
+        "b0_new_abs_max_mps_exact": 0.8588192627189799,
+        "b0_new_auth1_abs_max_mps_exact": 0.8588192627189799,
+        "precision_note": "exact CSV value, do not round into threshold-pass language",
+        "target_set": "confirmatory_20"
+      },
+      {
+        "approaches_analyzable": 23,
+        "approaches_listed": 23,
+        "b0_new_abs_max_mps_exact": 0.8588192627189799,
+        "b0_new_auth1_abs_max_mps_exact": 0.8588192627189799,
+        "precision_note": "exact CSV value, do not round into threshold-pass language",
+        "target_set": "pooled_23"
+      },
+      {
+        "approaches_analyzable": 4,
+        "approaches_listed": 5,
+        "b0_new_abs_max_mps_exact": 0.2305251782459188,
+        "b0_new_auth1_abs_max_mps_exact": 0.020166649907647105,
+        "precision_note": "exact CSV value, do not round into threshold-pass language",
+        "target_set": "legacy_discovery_appendix_5_listed_4_analyzable"
+      }
+    ],
+    "legacy_appendix_analyzable": 4,
+    "legacy_appendix_listed": 5,
+    "mapping_counts": {
+      "censored_or_legal_approach_rows": 178,
+      "eligible_recordings": 115,
+      "fixture_dirs_enumerated": 61,
+      "legal_clusters": 23,
+      "mapping_walk_rows": 202,
+      "no_eligible_recording_rows": 24,
+      "physical_approaches_examined": 178,
+      "walk": "61 fixture dirs -> 115 eligible recordings -> 178 physical approaches -> 23 legal clusters"
+    },
+    "mapping_rows": 202,
+    "pooled_approaches": 23,
+    "pooled_old": {
+      "anchor_policy": "old_attenuated_anchor",
+      "cluster_bootstrap_u95_sigma_a_mps2": 1.7354299132867415,
+      "coverage_monotone_degrade": false,
+      "diagnostic_only": true,
+      "gate_0p35_push": true,
+      "max_validated_age": "none",
+      "n_clusters": 23,
+      "n_flights": 23,
+      "n_rows": 1638,
+      "point_sigma_a_mps2": 1.3069278036530936,
+      "profile_nearly_flat": false,
+      "profile_u95_sigma_a_mps2": 1.4000000000000001,
+      "sigma_0_mps": 0.08397544341786896,
+      "target_set": "pooled_23",
+      "u95_conservative_mps2": 1.7354299132867415
+    },
+    "pooled_shadow": {
+      "anchor_policy": "shadow_unattenuated_anchor",
+      "cluster_bootstrap_u95_sigma_a_mps2": 1.7098675259932024,
+      "coverage_monotone_degrade": false,
+      "diagnostic_only": true,
+      "gate_0p35_push": true,
+      "max_validated_age": "none",
+      "n_clusters": 23,
+      "n_flights": 23,
+      "n_rows": 1638,
+      "point_sigma_a_mps2": 1.1993330626785552,
+      "profile_nearly_flat": false,
+      "profile_u95_sigma_a_mps2": 1.2750000000000001,
+      "sigma_0_mps": 0.10994746759137086,
+      "target_set": "pooled_23",
+      "u95_conservative_mps2": 1.7098675259932024
+    }
+  },
+  "shadow_fit_criterion_commit": "02b32cca996a22f3a44a8757ce2486a747eb706e",
+  "source_artifacts": {
+    "task_a": "tuning\\taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z",
+    "task_b": "tuning\\taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z"
+  },
+  "wrong_sign": {
+    "base_liveness_pass": true,
+    "command_event_support": 9,
+    "historical_zero_green_artifacts_rescored": 5,
+    "legacy_status": "INVALID_TEST_WRONG_SUPPORT_AND_MASK",
+    "legacy_wrong_sign_rows": 28,
+    "new_event_step_beyond_slew": 1,
+    "new_excess_wrong_sign_events": 0,
+    "old_event_step_beyond_slew": 1,
+    "paired_common_support_events": 9,
+    "sign_evaluable_events": 7,
+    "trace_term_side_rows": 16,
+    "zero_neutral_events": 2
+  },
+  "wrong_sign_criterion_commit": "d0a73f028c265c428c1ceabbcb30b51cb2e66849"
+}

@@ -1,0 +1,4 @@
+diagnostic_only,reason_code,applies,anchor_policy,source_previous_verdict,replacement_status,machine_readable_status,evidence
+True,INVALID_FOR_RELEASE_MODEL_PRECONDITION,True,old_attenuated_anchor,"HOLD, DATA-INSUFFICIENT",REPLACES_DATA_INSUFFICIENT,OLD_BUILD_BLOCKED,"old residuals include deterministic signed offset, so a random-drift release model precondition is violated"
+True,KNOWN_SIGNED_DEFECT,True,old_attenuated_anchor,"HOLD, DATA-INSUFFICIENT",REPLACES_DATA_INSUFFICIENT,OLD_BUILD_BLOCKED,attenuated anchor defect is documented by delta-latch mechanism rows and old-vs-shadow b0 deltas
+True,OLD_BUILD_BLOCKED,True,old_attenuated_anchor,"HOLD, DATA-INSUFFICIENT",REPLACES_DATA_INSUFFICIENT,OLD_BUILD_BLOCKED,old shipping path is adverse evidence and not a release candidate

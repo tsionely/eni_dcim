@@ -1,0 +1,5 @@
+target_set,approaches_listed,approaches_analyzable,b0_new_abs_max_mps_exact,b0_new_auth1_abs_max_mps_exact,precision_note
+discovery_overlap_3,3,3,0.2305251782459188,0.020166649907647105,"exact CSV value, do not round into threshold-pass language"
+confirmatory_20,20,20,0.8588192627189799,0.8588192627189799,"exact CSV value, do not round into threshold-pass language"
+pooled_23,23,23,0.8588192627189799,0.8588192627189799,"exact CSV value, do not round into threshold-pass language"
+legacy_discovery_appendix_5_listed_4_analyzable,5,4,0.2305251782459188,0.020166649907647105,"exact CSV value, do not round into threshold-pass language"

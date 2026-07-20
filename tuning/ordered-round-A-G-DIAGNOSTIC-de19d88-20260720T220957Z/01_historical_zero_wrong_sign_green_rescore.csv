@@ -1,0 +1,6 @@
+artifact,historical_summary_claim,registered_definition,command_events,sign_evaluable_events,registered_wrong_sign_events,opposition_to_velocity_events,rescore_status
+terminal-ab-46e9a64-46e9a64-20260720T063932Z,wrong-sign rows 0,"sign(command) vs sign(e_z), deadband 0.02",104,75,0,0,PASS
+terminal-ab-4fc71bb-4fc71bb-20260720T072104Z,wrong-sign rows 0,"sign(command) vs sign(e_z), deadband 0.02",54,31,0,0,PASS
+terminal-ab-7b2626b-17fb31e-20260720T081707Z,wrong-sign rows 0,"sign(command) vs sign(e_z), deadband 0.02",201,129,0,0,PASS
+terminal-ab-b74cbbf-89ba2cf-20260720T073938Z,wrong-sign rows 0,"sign(command) vs sign(e_z), deadband 0.02",103,56,0,0,PASS
+terminal-ab-e16d506-e16d506-20260720T054614Z,wrong-sign rows 0,"sign(command) vs sign(e_z), deadband 0.02",0,0,0,0,PASS

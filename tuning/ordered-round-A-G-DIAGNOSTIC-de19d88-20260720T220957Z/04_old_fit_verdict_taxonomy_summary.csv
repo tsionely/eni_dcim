@@ -1,0 +1,2 @@
+source_previous_verdict,replacement_reason_codes,machine_readable_status,n_clusters,n_rows,point_sigma_a_mps2,profile_u95_sigma_a_mps2,cluster_bootstrap_u95_sigma_a_mps2,u95_release_sigma_a_mps2
+"HOLD, DATA-INSUFFICIENT",INVALID_FOR_RELEASE_MODEL_PRECONDITION;KNOWN_SIGNED_DEFECT;OLD_BUILD_BLOCKED,OLD_BUILD_BLOCKED,23,1638,1.3069277300036368,1.4000000000000001,1.7354300892950971,1.7354300892950971

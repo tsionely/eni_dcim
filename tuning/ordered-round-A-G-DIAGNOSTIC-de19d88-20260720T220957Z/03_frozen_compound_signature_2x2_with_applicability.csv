@@ -1,0 +1,17 @@
+funnel_applicability,frozen_compound_signature_positive,Y_eligible,approaches,eras
+era-structural,False,False,0,
+era-structural,False,True,0,
+era-structural,True,False,42,phase3b;phase3c;phase3d;phase3e;phase3f;phase3g;phase3h;phase3i;phase3j;phase4a;phase4b;phase4c
+era-structural,True,True,0,
+era-behavioral,False,False,20,phase5;phase5b;phase5c;phase5e;phase5f;phase6c;phase6f;phase6g;phase6h;phase6i;phase6j;phase6k;phase7m
+era-behavioral,False,True,0,
+era-behavioral,True,False,3,phase5;phase6i;phase6l
+era-behavioral,True,True,0,
+current-gate,False,False,90,phase5b;phase5c;phase5d;phase5e;phase5f;phase6a;phase6b;phase6c;phase6d;phase6e;phase6f;phase6g;phase6h;phase6i;phase6j;phase6k;phase6l;phase7m
+current-gate,False,True,23,phase5c;phase5d;phase5f;phase6a;phase6b;phase6d;phase6e;phase6f;phase6g;phase6h;phase6i;phase6j;phase6k;phase6l;phase7m
+current-gate,True,False,0,
+current-gate,True,True,0,
+all,False,False,110,phase5;phase5b;phase5c;phase5d;phase5e;phase5f;phase6a;phase6b;phase6c;phase6d;phase6e;phase6f;phase6g;phase6h;phase6i;phase6j;phase6k;phase6l;phase7m
+all,False,True,23,phase5c;phase5d;phase5f;phase6a;phase6b;phase6d;phase6e;phase6f;phase6g;phase6h;phase6i;phase6j;phase6k;phase6l;phase7m
+all,True,False,45,phase3b;phase3c;phase3d;phase3e;phase3f;phase3g;phase3h;phase3i;phase3j;phase4a;phase4b;phase4c;phase5;phase6i;phase6l
+all,True,True,0,
