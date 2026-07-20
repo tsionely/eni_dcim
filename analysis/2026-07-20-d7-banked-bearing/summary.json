@@ -1,0 +1,5056 @@
+{
+  "stats": {
+    "cross_errors": {
+      "n": 18,
+      "median": 72.74929577818796,
+      "p90": 139.24941234577147,
+      "p95": 145.51955810227247,
+      "q99": 160.53864964602224,
+      "max": 164.29342253195972,
+      "mean": 76.39618159273171,
+      "q99_plus_2": 162.53864964602224,
+      "hard_cap_deg": 12.0,
+      "KILL_BANK_PREDICTOR": true,
+      "recommended_cone_half_width": 12.0,
+      "recall_within_4deg": 0.05555555555555555,
+      "recall_within_6deg": 0.05555555555555555,
+      "recall_within_8deg": 0.05555555555555555,
+      "recall_within_10deg": 0.16666666666666666,
+      "recall_within_12deg": 0.16666666666666666,
+      "recall_within_15deg": 0.16666666666666666,
+      "recall_within_20deg": 0.2777777777777778
+    },
+    "cross_errors_all_approaches": {
+      "n": 66,
+      "median": 29.038274312567083,
+      "p90": 136.33222520235594,
+      "p95": 140.43052993433383,
+      "q99": 167.23823556752632,
+      "max": 172.70717406215016,
+      "mean": 44.2966109163303,
+      "q99_plus_2": 169.23823556752632,
+      "hard_cap_deg": 12.0,
+      "KILL_BANK_PREDICTOR": true,
+      "recommended_cone_half_width": 12.0,
+      "recall_within_4deg": 0.10606060606060606,
+      "recall_within_6deg": 0.12121212121212122,
+      "recall_within_8deg": 0.19696969696969696,
+      "recall_within_10deg": 0.24242424242424243,
+      "recall_within_12deg": 0.25757575757575757,
+      "recall_within_15deg": 0.2727272727272727,
+      "recall_within_20deg": 0.3939393939393939
+    },
+    "cross_errors_visible_only": {
+      "n": 18,
+      "median": 72.74929577818796,
+      "p90": 139.24941234577147,
+      "p95": 145.51955810227247,
+      "q99": 160.53864964602224,
+      "max": 164.29342253195972,
+      "mean": 76.39618159273171,
+      "q99_plus_2": 162.53864964602224,
+      "hard_cap_deg": 12.0,
+      "KILL_BANK_PREDICTOR": true,
+      "recommended_cone_half_width": 12.0,
+      "recall_within_4deg": 0.05555555555555555,
+      "recall_within_6deg": 0.05555555555555555,
+      "recall_within_8deg": 0.05555555555555555,
+      "recall_within_10deg": 0.16666666666666666,
+      "recall_within_12deg": 0.16666666666666666,
+      "recall_within_15deg": 0.16666666666666666,
+      "recall_within_20deg": 0.2777777777777778
+    },
+    "bank_errors": {
+      "n": 198,
+      "median": 45.201974906873744,
+      "p90": 143.18239238733145,
+      "p95": 145.09297232602745,
+      "q99": 176.88251309785565,
+      "max": 178.55549810066498,
+      "mean": 77.39594455425234,
+      "q99_plus_2": 178.88251309785565,
+      "hard_cap_deg": 12.0,
+      "KILL_BANK_PREDICTOR": true,
+      "recommended_cone_half_width": 12.0,
+      "recall_within_4deg": 0.0,
+      "recall_within_6deg": 0.0,
+      "recall_within_8deg": 0.0,
+      "recall_within_10deg": 0.0,
+      "recall_within_12deg": 0.0,
+      "recall_within_15deg": 0.010101010101010102,
+      "recall_within_20deg": 0.15656565656565657
+    }
+  },
+  "visibility": {
+    "n_approaches": 78,
+    "n_visible": 19,
+    "fraction": 0.24358974358974358,
+    "n_errors": 0
+  },
+  "ambiguity": {
+    "n_rival_pairs": 19,
+    "n_both_inside_12": 0,
+    "n_both_inside_8": 0,
+    "median_rival_sep_deg": 20.27052389403903,
+    "ambiguity_band_halfwidth_deg": null,
+    "pairs": [
+      {
+        "fid": "20260715T205845-fc86a160",
+        "true_err": 6.670525457684931,
+        "rival_err": 29.360838577228208,
+        "sep_deg": 36.03136403491317,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260715T205845-fc86a160",
+        "true_err": 6.670525457684931,
+        "rival_err": 29.360838577228208,
+        "sep_deg": 36.03136403491317,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T091107-debf3ec1",
+        "true_err": 132.54972764300732,
+        "rival_err": 138.60746735345913,
+        "sep_deg": 6.057739710451841,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T091239-debf3ec1",
+        "true_err": 29.241267653954992,
+        "rival_err": 45.01723227306317,
+        "sep_deg": 15.77596461910818,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T095722-a560c093",
+        "true_err": 129.51140199910267,
+        "rival_err": 140.068215586743,
+        "sep_deg": 90.42038241415429,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T095722-a560c093",
+        "true_err": 129.51140199910267,
+        "rival_err": 140.45551264686355,
+        "sep_deg": 90.0330853540338,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T142306-7223cc0c",
+        "true_err": 6.778506401136127,
+        "rival_err": 13.584704185192408,
+        "sep_deg": 6.80619778405628,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T142426-7223cc0c",
+        "true_err": 0.4198720421038047,
+        "rival_err": 19.850651851935226,
+        "sep_deg": 20.27052389403903,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260717T142426-7223cc0c",
+        "true_err": 0.4198720421038047,
+        "rival_err": 23.069446018254183,
+        "sep_deg": 23.489318060357988,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T144941-a76247fb",
+        "true_err": 8.400895620637897,
+        "rival_err": 15.817099709006612,
+        "sep_deg": 7.4162040883687155,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T144941-a76247fb",
+        "true_err": 8.400895620637897,
+        "rival_err": 18.96972998681116,
+        "sep_deg": 10.568834366173292,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T144941-a76247fb",
+        "true_err": 8.400895620637897,
+        "rival_err": 22.207885420403386,
+        "sep_deg": 13.806989799765518,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T150627-486b0765",
+        "true_err": 137.982079121281,
+        "rival_err": 138.0954592438157,
+        "sep_deg": 83.9224616349033,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T150627-486b0765",
+        "true_err": 137.982079121281,
+        "rival_err": 147.80753857844041,
+        "sep_deg": 74.21038230027858,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T150627-486b0765",
+        "true_err": 137.982079121281,
+        "rival_err": 151.18955388918164,
+        "sep_deg": 70.82836698953736,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T163649-f170ead6",
+        "true_err": 133.44238273393103,
+        "rival_err": 139.8386228242779,
+        "sep_deg": 6.396240090346879,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T163649-f170ead6",
+        "true_err": 133.44238273393103,
+        "rival_err": 140.91967834408882,
+        "sep_deg": 7.477295610157796,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T200816-f170ead6",
+        "true_err": 3.501503684252981,
+        "rival_err": 14.276597528014406,
+        "sep_deg": 10.775093843761425,
+        "both_inside_12": false,
+        "both_inside_8": false
+      },
+      {
+        "fid": "20260719T200816-f170ead6",
+        "true_err": 3.501503684252981,
+        "rival_err": 24.071332245419057,
+        "sep_deg": 20.569828561166048,
+        "both_inside_12": false,
+        "both_inside_8": false
+      }
+    ]
+  },
+  "flights": [
+    {
+      "fid": "20260714T202447-58cd98ad",
+      "fixture": "20260714T203252-phase3a-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T203252-phase3a-r2training\\20260714T202447-58cd98ad-flight.jsonl",
+      "t_pass_ff": 5.4485209,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 27.755687149846604,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 37
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -9.433538585460976,
+        "R": 12.096136807866856,
+        "elev_deg": 0.07719991636738104,
+        "error_vs_exit_deg": -37.18922573530759,
+        "n_cands": 4,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -37.18922573530759,
+      "abs_cross_error_deg": 37.18922573530759,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 224
+    },
+    {
+      "fid": "20260714T202743-58cd98ad",
+      "fixture": "20260714T203252-phase3a-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T203252-phase3a-r2training\\20260714T202743-58cd98ad-flight.jsonl",
+      "t_pass_ff": 3.1401462,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -166.0847150752647,
+        "source": "travel_median",
+        "n": 8,
+        "spread_deg": 2.326051666545368
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 35,
+        "n_far_in_window": 269
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 21.20811086258513,
+        "R": 8.955280738232293,
+        "elev_deg": -24.545243199707247,
+        "error_vs_exit_deg": -172.70717406215016,
+        "n_cands": 10,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -172.70717406215016,
+      "abs_cross_error_deg": 172.70717406215016,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1566
+    },
+    {
+      "fid": "20260714T210518-58cd98ad",
+      "fixture": "20260714T212450-phase3b-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T212450-phase3b-r2training\\20260714T210518-58cd98ad-flight.jsonl",
+      "t_pass_ff": 3.464152,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 5.970672763226137,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 346
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -29.346728996407627,
+        "R": 10.782207535816331,
+        "elev_deg": -0.2418414316073295,
+        "error_vs_exit_deg": -35.31740175963375,
+        "n_cands": 30,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -35.31740175963375,
+      "abs_cross_error_deg": 35.31740175963375,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1974
+    },
+    {
+      "fid": "20260714T211404-58cd98ad",
+      "fixture": "20260714T212450-phase3b-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T212450-phase3b-r2training\\20260714T211404-58cd98ad-flight.jsonl",
+      "t_pass_ff": 3.9448687,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -3.7296908942213842,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 39,
+        "n_far_unique": 26,
+        "n_near": 39,
+        "n_far_in_window": 314
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 43.17102242621666,
+        "R": 8.265774613953607,
+        "elev_deg": -1.7408976710437203,
+        "error_vs_exit_deg": 46.90071332043806,
+        "n_cands": 7,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 46.90071332043806,
+      "abs_cross_error_deg": 46.90071332043806,
+      "bank_samples": [
+        {
+          "t_ff": 3.1127888,
+          "R": 11.032059977082426,
+          "bearing": 36.31487480985157,
+          "elev": -0.9322271461641536,
+          "error_vs_exit_deg": 40.044565704072966,
+          "abs_error_vs_exit_deg": 40.044565704072966,
+          "error_vs_cross_truth_deg": -6.856147616365092,
+          "abs_error_vs_cross_truth_deg": 6.856147616365092
+        },
+        {
+          "t_ff": 3.123952,
+          "R": 11.032059977082426,
+          "bearing": 36.31487480985157,
+          "elev": -0.9322271461641536,
+          "error_vs_exit_deg": 40.044565704072966,
+          "abs_error_vs_exit_deg": 40.044565704072966,
+          "error_vs_cross_truth_deg": -6.856147616365092,
+          "abs_error_vs_cross_truth_deg": 6.856147616365092
+        },
+        {
+          "t_ff": 3.1341769,
+          "R": 11.032059977082426,
+          "bearing": 36.31487480985157,
+          "elev": -0.9322271461641536,
+          "error_vs_exit_deg": 40.044565704072966,
+          "abs_error_vs_exit_deg": 40.044565704072966,
+          "error_vs_cross_truth_deg": -6.856147616365092,
+          "abs_error_vs_cross_truth_deg": 6.856147616365092
+        },
+        {
+          "t_ff": 3.1416122,
+          "R": 11.48358588712033,
+          "bearing": 37.329766915575604,
+          "elev": -1.432870026430648,
+          "error_vs_exit_deg": 41.05945780979698,
+          "abs_error_vs_exit_deg": 41.05945780979698,
+          "error_vs_cross_truth_deg": -5.841255510641048,
+          "abs_error_vs_cross_truth_deg": 5.841255510641048
+        },
+        {
+          "t_ff": 3.1504226,
+          "R": 11.48358588712033,
+          "bearing": 37.329766915575604,
+          "elev": -1.432870026430648,
+          "error_vs_exit_deg": 41.05945780979698,
+          "abs_error_vs_exit_deg": 41.05945780979698,
+          "error_vs_cross_truth_deg": -5.841255510641048,
+          "abs_error_vs_cross_truth_deg": 5.841255510641048
+        },
+        {
+          "t_ff": 3.1636729,
+          "R": 11.48358588712033,
+          "bearing": 37.329766915575604,
+          "elev": -1.432870026430648,
+          "error_vs_exit_deg": 41.05945780979698,
+          "abs_error_vs_exit_deg": 41.05945780979698,
+          "error_vs_cross_truth_deg": -5.841255510641048,
+          "abs_error_vs_cross_truth_deg": 5.841255510641048
+        },
+        {
+          "t_ff": 3.1698895,
+          "R": 11.48358588712033,
+          "bearing": 37.329766915575604,
+          "elev": -1.432870026430648,
+          "error_vs_exit_deg": 41.05945780979698,
+          "abs_error_vs_exit_deg": 41.05945780979698,
+          "error_vs_cross_truth_deg": -5.841255510641048,
+          "abs_error_vs_cross_truth_deg": 5.841255510641048
+        },
+        {
+          "t_ff": 3.181285,
+          "R": 11.235146576466366,
+          "bearing": 38.05804218490802,
+          "elev": -3.1087962097334567,
+          "error_vs_exit_deg": 41.787733079129396,
+          "abs_error_vs_exit_deg": 41.787733079129396,
+          "error_vs_cross_truth_deg": -5.112980241308634,
+          "abs_error_vs_cross_truth_deg": 5.112980241308634
+        },
+        {
+          "t_ff": 3.1912837,
+          "R": 11.235146576466366,
+          "bearing": 38.05804218490802,
+          "elev": -3.1087962097334567,
+          "error_vs_exit_deg": 41.787733079129396,
+          "abs_error_vs_exit_deg": 41.787733079129396,
+          "error_vs_cross_truth_deg": -5.112980241308634,
+          "abs_error_vs_cross_truth_deg": 5.112980241308634
+        },
+        {
+          "t_ff": 3.2029076,
+          "R": 11.235146576466366,
+          "bearing": 38.05804218490802,
+          "elev": -3.1087962097334567,
+          "error_vs_exit_deg": 41.787733079129396,
+          "abs_error_vs_exit_deg": 41.787733079129396,
+          "error_vs_cross_truth_deg": -5.112980241308634,
+          "abs_error_vs_cross_truth_deg": 5.112980241308634
+        },
+        {
+          "t_ff": 3.2116028,
+          "R": 11.235146576466366,
+          "bearing": 38.05804218490802,
+          "elev": -3.1087962097334567,
+          "error_vs_exit_deg": 41.787733079129396,
+          "abs_error_vs_exit_deg": 41.787733079129396,
+          "error_vs_cross_truth_deg": -5.112980241308634,
+          "abs_error_vs_cross_truth_deg": 5.112980241308634
+        },
+        {
+          "t_ff": 3.2215194,
+          "R": 11.282002768099032,
+          "bearing": 39.105716010973325,
+          "elev": -4.959650929543414,
+          "error_vs_exit_deg": 42.8354069051947,
+          "abs_error_vs_exit_deg": 42.8354069051947,
+          "error_vs_cross_truth_deg": -4.065306415243327,
+          "abs_error_vs_cross_truth_deg": 4.065306415243327
+        },
+        {
+          "t_ff": 3.2314009,
+          "R": 11.282002768099032,
+          "bearing": 39.105716010973325,
+          "elev": -4.959650929543414,
+          "error_vs_exit_deg": 42.8354069051947,
+          "abs_error_vs_exit_deg": 42.8354069051947,
+          "error_vs_cross_truth_deg": -4.065306415243327,
+          "abs_error_vs_cross_truth_deg": 4.065306415243327
+        },
+        {
+          "t_ff": 3.2372162,
+          "R": 11.282002768099032,
+          "bearing": 39.105716010973325,
+          "elev": -4.959650929543414,
+          "error_vs_exit_deg": 42.8354069051947,
+          "abs_error_vs_exit_deg": 42.8354069051947,
+          "error_vs_cross_truth_deg": -4.065306415243327,
+          "abs_error_vs_cross_truth_deg": 4.065306415243327
+        },
+        {
+          "t_ff": 3.245879,
+          "R": 11.282002768099032,
+          "bearing": 39.105716010973325,
+          "elev": -4.959650929543414,
+          "error_vs_exit_deg": 42.8354069051947,
+          "abs_error_vs_exit_deg": 42.8354069051947,
+          "error_vs_cross_truth_deg": -4.065306415243327,
+          "abs_error_vs_cross_truth_deg": 4.065306415243327
+        },
+        {
+          "t_ff": 3.5439729,
+          "R": 9.998239428447206,
+          "bearing": 41.3719600344767,
+          "elev": 2.345137508378008,
+          "error_vs_exit_deg": 45.10165092869809,
+          "abs_error_vs_exit_deg": 45.10165092869809,
+          "error_vs_cross_truth_deg": -1.799062391739966,
+          "abs_error_vs_cross_truth_deg": 1.799062391739966
+        },
+        {
+          "t_ff": 3.5484771,
+          "R": 9.998239428447206,
+          "bearing": 41.3719600344767,
+          "elev": 2.345137508378008,
+          "error_vs_exit_deg": 45.10165092869809,
+          "abs_error_vs_exit_deg": 45.10165092869809,
+          "error_vs_cross_truth_deg": -1.799062391739966,
+          "abs_error_vs_cross_truth_deg": 1.799062391739966
+        },
+        {
+          "t_ff": 3.5581094,
+          "R": 9.998239428447206,
+          "bearing": 41.3719600344767,
+          "elev": 2.345137508378008,
+          "error_vs_exit_deg": 45.10165092869809,
+          "abs_error_vs_exit_deg": 45.10165092869809,
+          "error_vs_cross_truth_deg": -1.799062391739966,
+          "abs_error_vs_cross_truth_deg": 1.799062391739966
+        },
+        {
+          "t_ff": 3.5747462,
+          "R": 9.8896224132788,
+          "bearing": 41.463926632129485,
+          "elev": 2.3848180749761783,
+          "error_vs_exit_deg": 45.19361752635086,
+          "abs_error_vs_exit_deg": 45.19361752635086,
+          "error_vs_cross_truth_deg": -1.7070957940871665,
+          "abs_error_vs_cross_truth_deg": 1.7070957940871665
+        },
+        {
+          "t_ff": 3.5812236,
+          "R": 9.8896224132788,
+          "bearing": 41.463926632129485,
+          "elev": 2.3848180749761783,
+          "error_vs_exit_deg": 45.19361752635086,
+          "abs_error_vs_exit_deg": 45.19361752635086,
+          "error_vs_cross_truth_deg": -1.7070957940871665,
+          "abs_error_vs_cross_truth_deg": 1.7070957940871665
+        },
+        {
+          "t_ff": 3.5875852,
+          "R": 9.8896224132788,
+          "bearing": 41.463926632129485,
+          "elev": 2.3848180749761783,
+          "error_vs_exit_deg": 45.19361752635086,
+          "abs_error_vs_exit_deg": 45.19361752635086,
+          "error_vs_cross_truth_deg": -1.7070957940871665,
+          "abs_error_vs_cross_truth_deg": 1.7070957940871665
+        },
+        {
+          "t_ff": 3.6030171,
+          "R": 9.8896224132788,
+          "bearing": 41.463926632129485,
+          "elev": 2.3848180749761783,
+          "error_vs_exit_deg": 45.19361752635086,
+          "abs_error_vs_exit_deg": 45.19361752635086,
+          "error_vs_cross_truth_deg": -1.7070957940871665,
+          "abs_error_vs_cross_truth_deg": 1.7070957940871665
+        },
+        {
+          "t_ff": 3.6146403,
+          "R": 9.733993458235542,
+          "bearing": 41.47228401265236,
+          "elev": 2.7152872938409165,
+          "error_vs_exit_deg": 45.201974906873744,
+          "abs_error_vs_exit_deg": 45.201974906873744,
+          "error_vs_cross_truth_deg": -1.6987384135642856,
+          "abs_error_vs_cross_truth_deg": 1.6987384135642856
+        },
+        {
+          "t_ff": 3.6232372,
+          "R": 9.733993458235542,
+          "bearing": 41.47228401265236,
+          "elev": 2.7152872938409165,
+          "error_vs_exit_deg": 45.201974906873744,
+          "abs_error_vs_exit_deg": 45.201974906873744,
+          "error_vs_cross_truth_deg": -1.6987384135642856,
+          "abs_error_vs_cross_truth_deg": 1.6987384135642856
+        },
+        {
+          "t_ff": 3.6314068,
+          "R": 9.733993458235542,
+          "bearing": 41.47228401265236,
+          "elev": 2.7152872938409165,
+          "error_vs_exit_deg": 45.201974906873744,
+          "abs_error_vs_exit_deg": 45.201974906873744,
+          "error_vs_cross_truth_deg": -1.6987384135642856,
+          "abs_error_vs_cross_truth_deg": 1.6987384135642856
+        },
+        {
+          "t_ff": 3.6369002,
+          "R": 9.733993458235542,
+          "bearing": 41.47228401265236,
+          "elev": 2.7152872938409165,
+          "error_vs_exit_deg": 45.201974906873744,
+          "abs_error_vs_exit_deg": 45.201974906873744,
+          "error_vs_cross_truth_deg": -1.6987384135642856,
+          "abs_error_vs_cross_truth_deg": 1.6987384135642856
+        }
+      ],
+      "bank_abs_errors_deg": [
+        40.044565704072966,
+        40.044565704072966,
+        40.044565704072966,
+        41.05945780979698,
+        41.05945780979698,
+        41.05945780979698,
+        41.05945780979698,
+        41.787733079129396,
+        41.787733079129396,
+        41.787733079129396,
+        41.787733079129396,
+        42.8354069051947,
+        42.8354069051947,
+        42.8354069051947,
+        42.8354069051947,
+        45.10165092869809,
+        45.10165092869809,
+        45.10165092869809,
+        45.19361752635086,
+        45.19361752635086,
+        45.19361752635086,
+        45.19361752635086,
+        45.201974906873744,
+        45.201974906873744,
+        45.201974906873744,
+        45.201974906873744
+      ],
+      "n_dets": 2193
+    },
+    {
+      "fid": "20260715T045100-411f3135",
+      "fixture": "20260715T052244-phase3c-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T052244-phase3c-r2training\\20260715T045100-411f3135-flight.jsonl",
+      "t_pass_ff": 3.4318934,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -3.9165302923808816,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.4216135957917997
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 147
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 32.69499557684516,
+        "R": 11.948763699466774,
+        "elev_deg": -26.154291653010567,
+        "error_vs_exit_deg": 36.61152586922606,
+        "n_cands": 10,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 36.61152586922606,
+      "abs_cross_error_deg": 36.61152586922606,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1365
+    },
+    {
+      "fid": "20260715T045458-411f3135",
+      "fixture": "20260715T052244-phase3c-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T052244-phase3c-r2training\\20260715T045458-411f3135-flight.jsonl",
+      "t_pass_ff": 3.7918755,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -4.0943741451190885,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 245
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 29.325989742159496,
+        "R": 7.814673556108983,
+        "elev_deg": -2.4216792089884946,
+        "error_vs_exit_deg": 33.4203638872786,
+        "n_cands": 100,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 33.4203638872786,
+      "abs_cross_error_deg": 33.4203638872786,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 2119
+    },
+    {
+      "fid": "20260715T121747-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T135600-phase3d-r2training\\20260715T121747-22978559-flight.jsonl",
+      "t_pass_ff": 3.3561024,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -2.791668512810927,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 251
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 0.11088981992155338,
+        "R": 10.509789675933918,
+        "elev_deg": 7.5275544656256255,
+        "error_vs_exit_deg": 2.902558332732468,
+        "n_cands": 70,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 2.902558332732468,
+      "abs_cross_error_deg": 2.902558332732468,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 2663
+    },
+    {
+      "fid": "20260715T122040-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T135600-phase3d-r2training\\20260715T122040-22978559-flight.jsonl",
+      "t_pass_ff": 3.4996813,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -63.788744946420515,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 6,
+        "n_far_unique": 32,
+        "n_near": 6,
+        "n_far_in_window": 380
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 34.80913328951735,
+        "R": 7.442063788833866,
+        "elev_deg": 9.087311455339199,
+        "error_vs_exit_deg": 98.59787823593786,
+        "n_cands": 61,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 98.59787823593786,
+      "abs_cross_error_deg": 98.59787823593786,
+      "bank_samples": [
+        {
+          "t_ff": 2.6148838,
+          "R": 8.180365897615063,
+          "bearing": 26.706862950137047,
+          "elev": 21.535804159889807,
+          "error_vs_exit_deg": 90.49560789655754,
+          "abs_error_vs_exit_deg": 90.49560789655754,
+          "error_vs_cross_truth_deg": -8.102270339380311,
+          "abs_error_vs_cross_truth_deg": 8.102270339380311
+        },
+        {
+          "t_ff": 2.6223718,
+          "R": 8.180365897615063,
+          "bearing": 26.706862950137047,
+          "elev": 21.535804159889807,
+          "error_vs_exit_deg": 90.49560789655754,
+          "abs_error_vs_exit_deg": 90.49560789655754,
+          "error_vs_cross_truth_deg": -8.102270339380311,
+          "abs_error_vs_cross_truth_deg": 8.102270339380311
+        },
+        {
+          "t_ff": 2.6302606,
+          "R": 8.180365897615063,
+          "bearing": 26.706862950137047,
+          "elev": 21.535804159889807,
+          "error_vs_exit_deg": 90.49560789655754,
+          "abs_error_vs_exit_deg": 90.49560789655754,
+          "error_vs_cross_truth_deg": -8.102270339380311,
+          "abs_error_vs_cross_truth_deg": 8.102270339380311
+        },
+        {
+          "t_ff": 2.6446111,
+          "R": 7.978134232130102,
+          "bearing": 26.89125610088602,
+          "elev": 21.414569998914544,
+          "error_vs_exit_deg": 90.68000104730652,
+          "abs_error_vs_exit_deg": 90.68000104730652,
+          "error_vs_cross_truth_deg": -7.917877188631337,
+          "abs_error_vs_cross_truth_deg": 7.917877188631337
+        },
+        {
+          "t_ff": 2.651464,
+          "R": 7.978134232130102,
+          "bearing": 26.89125610088602,
+          "elev": 21.414569998914544,
+          "error_vs_exit_deg": 90.68000104730652,
+          "abs_error_vs_exit_deg": 90.68000104730652,
+          "error_vs_cross_truth_deg": -7.917877188631337,
+          "abs_error_vs_cross_truth_deg": 7.917877188631337
+        },
+        {
+          "t_ff": 2.6647539,
+          "R": 7.978134232130102,
+          "bearing": 26.89125610088602,
+          "elev": 21.414569998914544,
+          "error_vs_exit_deg": 90.68000104730652,
+          "abs_error_vs_exit_deg": 90.68000104730652,
+          "error_vs_cross_truth_deg": -7.917877188631337,
+          "abs_error_vs_cross_truth_deg": 7.917877188631337
+        },
+        {
+          "t_ff": 2.6702224,
+          "R": 7.919710590381366,
+          "bearing": 27.430490305431544,
+          "elev": 21.244050504114302,
+          "error_vs_exit_deg": 91.21923525185207,
+          "abs_error_vs_exit_deg": 91.21923525185207,
+          "error_vs_cross_truth_deg": -7.378642984085815,
+          "abs_error_vs_cross_truth_deg": 7.378642984085815
+        },
+        {
+          "t_ff": 2.6823864,
+          "R": 7.919710590381366,
+          "bearing": 27.430490305431544,
+          "elev": 21.244050504114302,
+          "error_vs_exit_deg": 91.21923525185207,
+          "abs_error_vs_exit_deg": 91.21923525185207,
+          "error_vs_cross_truth_deg": -7.378642984085815,
+          "abs_error_vs_cross_truth_deg": 7.378642984085815
+        },
+        {
+          "t_ff": 2.6919019,
+          "R": 7.919710590381366,
+          "bearing": 27.430490305431544,
+          "elev": 21.244050504114302,
+          "error_vs_exit_deg": 91.21923525185207,
+          "abs_error_vs_exit_deg": 91.21923525185207,
+          "error_vs_cross_truth_deg": -7.378642984085815,
+          "abs_error_vs_cross_truth_deg": 7.378642984085815
+        },
+        {
+          "t_ff": 2.7042623,
+          "R": 7.919710590381366,
+          "bearing": 27.430490305431544,
+          "elev": 21.244050504114302,
+          "error_vs_exit_deg": 91.21923525185207,
+          "abs_error_vs_exit_deg": 91.21923525185207,
+          "error_vs_cross_truth_deg": -7.378642984085815,
+          "abs_error_vs_cross_truth_deg": 7.378642984085815
+        },
+        {
+          "t_ff": 2.7134787,
+          "R": 7.953582873913437,
+          "bearing": 26.752421253726563,
+          "elev": 21.374665940452346,
+          "error_vs_exit_deg": 90.54116620014707,
+          "abs_error_vs_exit_deg": 90.54116620014707,
+          "error_vs_cross_truth_deg": -8.056712035790781,
+          "abs_error_vs_cross_truth_deg": 8.056712035790781
+        },
+        {
+          "t_ff": 2.7229697,
+          "R": 7.953582873913437,
+          "bearing": 26.752421253726563,
+          "elev": 21.374665940452346,
+          "error_vs_exit_deg": 90.54116620014707,
+          "abs_error_vs_exit_deg": 90.54116620014707,
+          "error_vs_cross_truth_deg": -8.056712035790781,
+          "abs_error_vs_cross_truth_deg": 8.056712035790781
+        },
+        {
+          "t_ff": 2.7307248,
+          "R": 7.953582873913437,
+          "bearing": 26.752421253726563,
+          "elev": 21.374665940452346,
+          "error_vs_exit_deg": 90.54116620014707,
+          "abs_error_vs_exit_deg": 90.54116620014707,
+          "error_vs_cross_truth_deg": -8.056712035790781,
+          "abs_error_vs_cross_truth_deg": 8.056712035790781
+        },
+        {
+          "t_ff": 2.741399,
+          "R": 7.953582873913437,
+          "bearing": 26.752421253726563,
+          "elev": 21.374665940452346,
+          "error_vs_exit_deg": 90.54116620014707,
+          "abs_error_vs_exit_deg": 90.54116620014707,
+          "error_vs_cross_truth_deg": -8.056712035790781,
+          "abs_error_vs_cross_truth_deg": 8.056712035790781
+        },
+        {
+          "t_ff": 2.8488192,
+          "R": 7.563905658370068,
+          "bearing": 27.769816310225973,
+          "elev": 21.32517511931954,
+          "error_vs_exit_deg": 91.5585612566465,
+          "abs_error_vs_exit_deg": 91.5585612566465,
+          "error_vs_cross_truth_deg": -7.039316979291385,
+          "abs_error_vs_cross_truth_deg": 7.039316979291385
+        },
+        {
+          "t_ff": 2.8596976,
+          "R": 7.563905658370068,
+          "bearing": 27.769816310225973,
+          "elev": 21.32517511931954,
+          "error_vs_exit_deg": 91.5585612566465,
+          "abs_error_vs_exit_deg": 91.5585612566465,
+          "error_vs_cross_truth_deg": -7.039316979291385,
+          "abs_error_vs_cross_truth_deg": 7.039316979291385
+        },
+        {
+          "t_ff": 2.8724636,
+          "R": 7.732514913154606,
+          "bearing": 27.754871424042367,
+          "elev": 22.42030958010533,
+          "error_vs_exit_deg": 91.54361637046287,
+          "abs_error_vs_exit_deg": 91.54361637046287,
+          "error_vs_cross_truth_deg": -7.0542618654749845,
+          "abs_error_vs_cross_truth_deg": 7.0542618654749845
+        },
+        {
+          "t_ff": 2.8762326,
+          "R": 7.732514913154606,
+          "bearing": 27.754871424042367,
+          "elev": 22.42030958010533,
+          "error_vs_exit_deg": 91.54361637046287,
+          "abs_error_vs_exit_deg": 91.54361637046287,
+          "error_vs_cross_truth_deg": -7.0542618654749845,
+          "abs_error_vs_cross_truth_deg": 7.0542618654749845
+        },
+        {
+          "t_ff": 2.892072,
+          "R": 7.732514913154606,
+          "bearing": 27.754871424042367,
+          "elev": 22.42030958010533,
+          "error_vs_exit_deg": 91.54361637046287,
+          "abs_error_vs_exit_deg": 91.54361637046287,
+          "error_vs_cross_truth_deg": -7.0542618654749845,
+          "abs_error_vs_cross_truth_deg": 7.0542618654749845
+        },
+        {
+          "t_ff": 2.9018159,
+          "R": 7.732514913154606,
+          "bearing": 27.754871424042367,
+          "elev": 22.42030958010533,
+          "error_vs_exit_deg": 91.54361637046287,
+          "abs_error_vs_exit_deg": 91.54361637046287,
+          "error_vs_cross_truth_deg": -7.0542618654749845,
+          "abs_error_vs_cross_truth_deg": 7.0542618654749845
+        },
+        {
+          "t_ff": 2.9084046,
+          "R": 7.633509895487469,
+          "bearing": 32.446409207429944,
+          "elev": 27.193000316092014,
+          "error_vs_exit_deg": 96.23515415385043,
+          "abs_error_vs_exit_deg": 96.23515415385043,
+          "error_vs_cross_truth_deg": -2.3627240820873965,
+          "abs_error_vs_cross_truth_deg": 2.3627240820873965
+        },
+        {
+          "t_ff": 2.9240424,
+          "R": 7.633509895487469,
+          "bearing": 32.446409207429944,
+          "elev": 27.193000316092014,
+          "error_vs_exit_deg": 96.23515415385043,
+          "abs_error_vs_exit_deg": 96.23515415385043,
+          "error_vs_cross_truth_deg": -2.3627240820873965,
+          "abs_error_vs_cross_truth_deg": 2.3627240820873965
+        },
+        {
+          "t_ff": 2.934884,
+          "R": 7.633509895487469,
+          "bearing": 32.446409207429944,
+          "elev": 27.193000316092014,
+          "error_vs_exit_deg": 96.23515415385043,
+          "abs_error_vs_exit_deg": 96.23515415385043,
+          "error_vs_cross_truth_deg": -2.3627240820873965,
+          "abs_error_vs_cross_truth_deg": 2.3627240820873965
+        },
+        {
+          "t_ff": 2.939925,
+          "R": 7.633509895487469,
+          "bearing": 32.446409207429944,
+          "elev": 27.193000316092014,
+          "error_vs_exit_deg": 96.23515415385043,
+          "abs_error_vs_exit_deg": 96.23515415385043,
+          "error_vs_cross_truth_deg": -2.3627240820873965,
+          "abs_error_vs_cross_truth_deg": 2.3627240820873965
+        },
+        {
+          "t_ff": 2.9737148,
+          "R": 8.62655541755106,
+          "bearing": 44.259852144831434,
+          "elev": 38.104546644373094,
+          "error_vs_exit_deg": 108.04859709125196,
+          "abs_error_vs_exit_deg": 108.04859709125196,
+          "error_vs_cross_truth_deg": 9.45071885531408,
+          "abs_error_vs_cross_truth_deg": 9.45071885531408
+        },
+        {
+          "t_ff": 2.9787581,
+          "R": 8.62655541755106,
+          "bearing": 44.259852144831434,
+          "elev": 38.104546644373094,
+          "error_vs_exit_deg": 108.04859709125196,
+          "abs_error_vs_exit_deg": 108.04859709125196,
+          "error_vs_cross_truth_deg": 9.45071885531408,
+          "abs_error_vs_cross_truth_deg": 9.45071885531408
+        },
+        {
+          "t_ff": 2.9930254,
+          "R": 8.62655541755106,
+          "bearing": 44.259852144831434,
+          "elev": 38.104546644373094,
+          "error_vs_exit_deg": 108.04859709125196,
+          "abs_error_vs_exit_deg": 108.04859709125196,
+          "error_vs_cross_truth_deg": 9.45071885531408,
+          "abs_error_vs_cross_truth_deg": 9.45071885531408
+        },
+        {
+          "t_ff": 3.0012542,
+          "R": 8.62655541755106,
+          "bearing": 44.259852144831434,
+          "elev": 38.104546644373094,
+          "error_vs_exit_deg": 108.04859709125196,
+          "abs_error_vs_exit_deg": 108.04859709125196,
+          "error_vs_cross_truth_deg": 9.45071885531408,
+          "abs_error_vs_cross_truth_deg": 9.45071885531408
+        },
+        {
+          "t_ff": 3.0129208,
+          "R": 8.491109282434945,
+          "bearing": 41.1507615345005,
+          "elev": 35.53307293679598,
+          "error_vs_exit_deg": 104.93950648092101,
+          "abs_error_vs_exit_deg": 104.93950648092101,
+          "error_vs_cross_truth_deg": 6.341628244983156,
+          "abs_error_vs_cross_truth_deg": 6.341628244983156
+        },
+        {
+          "t_ff": 3.0223255,
+          "R": 8.491109282434945,
+          "bearing": 41.1507615345005,
+          "elev": 35.53307293679598,
+          "error_vs_exit_deg": 104.93950648092101,
+          "abs_error_vs_exit_deg": 104.93950648092101,
+          "error_vs_cross_truth_deg": 6.341628244983156,
+          "abs_error_vs_cross_truth_deg": 6.341628244983156
+        },
+        {
+          "t_ff": 3.030087,
+          "R": 8.491109282434945,
+          "bearing": 41.1507615345005,
+          "elev": 35.53307293679598,
+          "error_vs_exit_deg": 104.93950648092101,
+          "abs_error_vs_exit_deg": 104.93950648092101,
+          "error_vs_cross_truth_deg": 6.341628244983156,
+          "abs_error_vs_cross_truth_deg": 6.341628244983156
+        },
+        {
+          "t_ff": 3.0367969,
+          "R": 8.491109282434945,
+          "bearing": 41.1507615345005,
+          "elev": 35.53307293679598,
+          "error_vs_exit_deg": 104.93950648092101,
+          "abs_error_vs_exit_deg": 104.93950648092101,
+          "error_vs_cross_truth_deg": 6.341628244983156,
+          "abs_error_vs_cross_truth_deg": 6.341628244983156
+        }
+      ],
+      "bank_abs_errors_deg": [
+        90.49560789655754,
+        90.49560789655754,
+        90.49560789655754,
+        90.68000104730652,
+        90.68000104730652,
+        90.68000104730652,
+        91.21923525185207,
+        91.21923525185207,
+        91.21923525185207,
+        91.21923525185207,
+        90.54116620014707,
+        90.54116620014707,
+        90.54116620014707,
+        90.54116620014707,
+        91.5585612566465,
+        91.5585612566465,
+        91.54361637046287,
+        91.54361637046287,
+        91.54361637046287,
+        91.54361637046287,
+        96.23515415385043,
+        96.23515415385043,
+        96.23515415385043,
+        96.23515415385043,
+        108.04859709125196,
+        108.04859709125196,
+        108.04859709125196,
+        108.04859709125196,
+        104.93950648092101,
+        104.93950648092101,
+        104.93950648092101,
+        104.93950648092101
+      ],
+      "n_dets": 2401
+    },
+    {
+      "fid": "20260715T122352-22978559",
+      "fixture": "20260715T135600-phase3d-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T135600-phase3d-r2training\\20260715T122352-22978559-flight.jsonl",
+      "t_pass_ff": 4.1282033,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -14.403937809565162,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.2638024173988534
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 278
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 5.151979309057626,
+        "R": 9.614853822801937,
+        "elev_deg": 11.137284116833516,
+        "error_vs_exit_deg": 19.5559171186228,
+        "n_cands": 11,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 19.5559171186228,
+      "abs_cross_error_deg": 19.5559171186228,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 2347
+    },
+    {
+      "fid": "20260715T185046-8e6cf1f5",
+      "fixture": "20260715T190627-phase3e-r2training-slow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T190627-phase3e-r2training-slow\\20260715T185046-8e6cf1f5-flight.jsonl",
+      "t_pass_ff": 3.4082346,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -2.6263120021491315,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.28742893057681806
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 188
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1992
+    },
+    {
+      "fid": "20260715T203300-8edfeec4",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T211420-phase3g-r2training\\20260715T203300-8edfeec4-flight.jsonl",
+      "t_pass_ff": 8.0401808,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 65.36124447807079,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 5,
+        "n_far_unique": 4,
+        "n_near": 35,
+        "n_far_in_window": 65
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -46.713467105790976,
+        "R": 9.591685930964498,
+        "elev_deg": 34.04830864577456,
+        "error_vs_exit_deg": -112.07471158386176,
+        "n_cands": 6,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -112.07471158386176,
+      "abs_cross_error_deg": 112.07471158386176,
+      "bank_samples": [
+        {
+          "t_ff": 6.3112929,
+          "R": 7.184824114246402,
+          "bearing": 40.458840400640995,
+          "elev": 19.899204410144268,
+          "error_vs_exit_deg": -24.902404077429793,
+          "abs_error_vs_exit_deg": 24.902404077429793,
+          "error_vs_cross_truth_deg": 87.17230750643193,
+          "abs_error_vs_cross_truth_deg": 87.17230750643193
+        },
+        {
+          "t_ff": 6.3237001,
+          "R": 7.184824114246402,
+          "bearing": 40.458840400640995,
+          "elev": 19.899204410144268,
+          "error_vs_exit_deg": -24.902404077429793,
+          "abs_error_vs_exit_deg": 24.902404077429793,
+          "error_vs_cross_truth_deg": 87.17230750643193,
+          "abs_error_vs_cross_truth_deg": 87.17230750643193
+        },
+        {
+          "t_ff": 6.3296789,
+          "R": 7.184824114246402,
+          "bearing": 40.458840400640995,
+          "elev": 19.899204410144268,
+          "error_vs_exit_deg": -24.902404077429793,
+          "abs_error_vs_exit_deg": 24.902404077429793,
+          "error_vs_cross_truth_deg": 87.17230750643193,
+          "abs_error_vs_cross_truth_deg": 87.17230750643193
+        },
+        {
+          "t_ff": 6.3379108,
+          "R": 7.184824114246402,
+          "bearing": 40.458840400640995,
+          "elev": 19.899204410144268,
+          "error_vs_exit_deg": -24.902404077429793,
+          "abs_error_vs_exit_deg": 24.902404077429793,
+          "error_vs_cross_truth_deg": 87.17230750643193,
+          "abs_error_vs_cross_truth_deg": 87.17230750643193
+        }
+      ],
+      "bank_abs_errors_deg": [
+        24.902404077429793,
+        24.902404077429793,
+        24.902404077429793,
+        24.902404077429793
+      ],
+      "n_dets": 2843
+    },
+    {
+      "fid": "20260715T205845-fc86a160",
+      "fixture": "20260715T211420-phase3g-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T211420-phase3g-r2training\\20260715T205845-fc86a160-flight.jsonl",
+      "t_pass_ff": 7.5082014,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -12.39939926962357,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 33
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -5.728873811938632,
+        "R": 5.434191311725825,
+        "elev_deg": 7.58271079724223,
+        "error_vs_exit_deg": 6.670525457684931,
+        "n_cands": 3,
+        "rival_bearings": [
+          -41.76023784685179,
+          -41.76023784685179
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 6.670525457684931,
+      "abs_cross_error_deg": 6.670525457684931,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 261
+    },
+    {
+      "fid": "20260715T213138-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T023148-phase3h-r2training\\20260715T213138-8edfeec4-flight.jsonl",
+      "t_pass_ff": 4.4041018,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 171.85312154816532,
+        "source": "travel_median",
+        "n": 9,
+        "spread_deg": 183.96948287433742
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 34,
+        "n_far_unique": 11,
+        "n_near": 61,
+        "n_far_in_window": 253
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 34.388926929349395,
+        "R": 9.43745918850383,
+        "elev_deg": 13.72075081066398,
+        "error_vs_exit_deg": -137.46419461881592,
+        "n_cands": 9,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -137.46419461881592,
+      "abs_cross_error_deg": 137.46419461881592,
+      "bank_samples": [
+        {
+          "t_ff": 4.070411,
+          "R": 9.050926839870707,
+          "bearing": 33.51090427867846,
+          "elev": 14.177488497835988,
+          "error_vs_exit_deg": -138.34221726948687,
+          "abs_error_vs_exit_deg": 138.34221726948687,
+          "error_vs_cross_truth_deg": -0.8780226506709425,
+          "abs_error_vs_cross_truth_deg": 0.8780226506709425
+        },
+        {
+          "t_ff": 4.0832202,
+          "R": 9.050926839870707,
+          "bearing": 33.51090427867846,
+          "elev": 14.177488497835988,
+          "error_vs_exit_deg": -138.34221726948687,
+          "abs_error_vs_exit_deg": 138.34221726948687,
+          "error_vs_cross_truth_deg": -0.8780226506709425,
+          "abs_error_vs_cross_truth_deg": 0.8780226506709425
+        },
+        {
+          "t_ff": 4.0910403,
+          "R": 9.050926839870707,
+          "bearing": 33.51090427867846,
+          "elev": 14.177488497835988,
+          "error_vs_exit_deg": -138.34221726948687,
+          "abs_error_vs_exit_deg": 138.34221726948687,
+          "error_vs_cross_truth_deg": -0.8780226506709425,
+          "abs_error_vs_cross_truth_deg": 0.8780226506709425
+        },
+        {
+          "t_ff": 4.1035949,
+          "R": 9.22827071487689,
+          "bearing": 33.492751209342366,
+          "elev": 14.192098058201099,
+          "error_vs_exit_deg": -138.36037033882295,
+          "abs_error_vs_exit_deg": 138.36037033882295,
+          "error_vs_cross_truth_deg": -0.8961757200070224,
+          "abs_error_vs_cross_truth_deg": 0.8961757200070224
+        },
+        {
+          "t_ff": 4.1106165,
+          "R": 9.22827071487689,
+          "bearing": 33.492751209342366,
+          "elev": 14.192098058201099,
+          "error_vs_exit_deg": -138.36037033882295,
+          "abs_error_vs_exit_deg": 138.36037033882295,
+          "error_vs_cross_truth_deg": -0.8961757200070224,
+          "abs_error_vs_cross_truth_deg": 0.8961757200070224
+        },
+        {
+          "t_ff": 4.1169468,
+          "R": 9.22827071487689,
+          "bearing": 33.492751209342366,
+          "elev": 14.192098058201099,
+          "error_vs_exit_deg": -138.36037033882295,
+          "abs_error_vs_exit_deg": 138.36037033882295,
+          "error_vs_cross_truth_deg": -0.8961757200070224,
+          "abs_error_vs_cross_truth_deg": 0.8961757200070224
+        },
+        {
+          "t_ff": 4.1261906,
+          "R": 9.22827071487689,
+          "bearing": 33.492751209342366,
+          "elev": 14.192098058201099,
+          "error_vs_exit_deg": -138.36037033882295,
+          "abs_error_vs_exit_deg": 138.36037033882295,
+          "error_vs_cross_truth_deg": -0.8961757200070224,
+          "abs_error_vs_cross_truth_deg": 0.8961757200070224
+        },
+        {
+          "t_ff": 4.1630863,
+          "R": 9.43745918850383,
+          "bearing": 34.388926929349395,
+          "elev": 13.72075081066398,
+          "error_vs_exit_deg": -137.46419461881592,
+          "abs_error_vs_exit_deg": 137.46419461881592,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 4.1707271,
+          "R": 9.43745918850383,
+          "bearing": 34.388926929349395,
+          "elev": 13.72075081066398,
+          "error_vs_exit_deg": -137.46419461881592,
+          "abs_error_vs_exit_deg": 137.46419461881592,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 4.1831791,
+          "R": 9.43745918850383,
+          "bearing": 34.388926929349395,
+          "elev": 13.72075081066398,
+          "error_vs_exit_deg": -137.46419461881592,
+          "abs_error_vs_exit_deg": 137.46419461881592,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 4.1891051,
+          "R": 9.43745918850383,
+          "bearing": 34.388926929349395,
+          "elev": 13.72075081066398,
+          "error_vs_exit_deg": -137.46419461881592,
+          "abs_error_vs_exit_deg": 137.46419461881592,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        138.34221726948687,
+        138.34221726948687,
+        138.34221726948687,
+        138.36037033882295,
+        138.36037033882295,
+        138.36037033882295,
+        138.36037033882295,
+        137.46419461881592,
+        137.46419461881592,
+        137.46419461881592,
+        137.46419461881592
+      ],
+      "n_dets": 1512
+    },
+    {
+      "fid": "20260715T213225-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T023148-phase3h-r2training\\20260715T213225-8edfeec4-flight.jsonl",
+      "t_pass_ff": 4.1000743,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -10.512081547368844,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.7130262883811387
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 251
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 7.431373104477142,
+        "R": 7.638237566482477,
+        "elev_deg": 12.196649462213095,
+        "error_vs_exit_deg": 17.943454651845997,
+        "n_cands": 37,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 17.943454651845997,
+      "abs_cross_error_deg": 17.943454651845997,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 2014
+    },
+    {
+      "fid": "20260715T213406-fc86a160",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T023148-phase3h-r2training\\20260715T213406-fc86a160-flight.jsonl",
+      "t_pass_ff": 3.1685236,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 1.98701235352839,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.63452691507166
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 384
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -14.993114530532557,
+        "R": 3.2052706956024384,
+        "elev_deg": 2.7210632792961316,
+        "error_vs_exit_deg": -16.98012688406095,
+        "n_cands": 102,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -16.98012688406095,
+      "abs_cross_error_deg": 16.98012688406095,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 2887
+    },
+    {
+      "fid": "20260716T022502-8edfeec4",
+      "fixture": "20260716T023148-phase3h-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T023148-phase3h-r2training\\20260716T022502-8edfeec4-flight.jsonl",
+      "t_pass_ff": 4.9200053,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 21,
+        "n_far_unique": 19,
+        "n_near": 21,
+        "n_far_in_window": 252
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 44.79974421410404,
+        "R": 8.072732321854007,
+        "elev_deg": 27.408363744466932,
+        "error_vs_exit_deg": -135.20025578589596,
+        "n_cands": 17,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -135.20025578589596,
+      "abs_cross_error_deg": 135.20025578589596,
+      "bank_samples": [
+        {
+          "t_ff": 3.5220164,
+          "R": 9.516953178361518,
+          "bearing": 42.6392614604577,
+          "elev": 27.275050019080822,
+          "error_vs_exit_deg": -137.3607385395423,
+          "abs_error_vs_exit_deg": 137.3607385395423,
+          "error_vs_cross_truth_deg": -2.1604827536463347,
+          "abs_error_vs_cross_truth_deg": 2.1604827536463347
+        },
+        {
+          "t_ff": 3.5319024,
+          "R": 9.516953178361518,
+          "bearing": 42.6392614604577,
+          "elev": 27.275050019080822,
+          "error_vs_exit_deg": -137.3607385395423,
+          "abs_error_vs_exit_deg": 137.3607385395423,
+          "error_vs_cross_truth_deg": -2.1604827536463347,
+          "abs_error_vs_cross_truth_deg": 2.1604827536463347
+        },
+        {
+          "t_ff": 3.5420694,
+          "R": 9.516953178361518,
+          "bearing": 42.6392614604577,
+          "elev": 27.275050019080822,
+          "error_vs_exit_deg": -137.3607385395423,
+          "abs_error_vs_exit_deg": 137.3607385395423,
+          "error_vs_cross_truth_deg": -2.1604827536463347,
+          "abs_error_vs_cross_truth_deg": 2.1604827536463347
+        },
+        {
+          "t_ff": 3.55228,
+          "R": 9.516953178361518,
+          "bearing": 42.6392614604577,
+          "elev": 27.275050019080822,
+          "error_vs_exit_deg": -137.3607385395423,
+          "abs_error_vs_exit_deg": 137.3607385395423,
+          "error_vs_cross_truth_deg": -2.1604827536463347,
+          "abs_error_vs_cross_truth_deg": 2.1604827536463347
+        },
+        {
+          "t_ff": 3.5605142,
+          "R": 9.570879321963059,
+          "bearing": 43.042514232001125,
+          "elev": 26.962169938733588,
+          "error_vs_exit_deg": -136.9574857679989,
+          "abs_error_vs_exit_deg": 136.9574857679989,
+          "error_vs_cross_truth_deg": -1.7572299821028992,
+          "abs_error_vs_cross_truth_deg": 1.7572299821028992
+        },
+        {
+          "t_ff": 3.5704027,
+          "R": 9.570879321963059,
+          "bearing": 43.042514232001125,
+          "elev": 26.962169938733588,
+          "error_vs_exit_deg": -136.9574857679989,
+          "abs_error_vs_exit_deg": 136.9574857679989,
+          "error_vs_cross_truth_deg": -1.7572299821028992,
+          "abs_error_vs_cross_truth_deg": 1.7572299821028992
+        },
+        {
+          "t_ff": 3.5784945,
+          "R": 9.570879321963059,
+          "bearing": 43.042514232001125,
+          "elev": 26.962169938733588,
+          "error_vs_exit_deg": -136.9574857679989,
+          "abs_error_vs_exit_deg": 136.9574857679989,
+          "error_vs_cross_truth_deg": -1.7572299821028992,
+          "abs_error_vs_cross_truth_deg": 1.7572299821028992
+        },
+        {
+          "t_ff": 3.5851721,
+          "R": 9.570879321963059,
+          "bearing": 43.042514232001125,
+          "elev": 26.962169938733588,
+          "error_vs_exit_deg": -136.9574857679989,
+          "abs_error_vs_exit_deg": 136.9574857679989,
+          "error_vs_cross_truth_deg": -1.7572299821028992,
+          "abs_error_vs_cross_truth_deg": 1.7572299821028992
+        },
+        {
+          "t_ff": 3.6539328,
+          "R": 8.793809144222342,
+          "bearing": 43.88749182556794,
+          "elev": 29.10475500394698,
+          "error_vs_exit_deg": -136.11250817443207,
+          "abs_error_vs_exit_deg": 136.11250817443207,
+          "error_vs_cross_truth_deg": -0.9122523885361034,
+          "abs_error_vs_cross_truth_deg": 0.9122523885361034
+        },
+        {
+          "t_ff": 3.6625875,
+          "R": 8.793809144222342,
+          "bearing": 43.88749182556794,
+          "elev": 29.10475500394698,
+          "error_vs_exit_deg": -136.11250817443207,
+          "abs_error_vs_exit_deg": 136.11250817443207,
+          "error_vs_cross_truth_deg": -0.9122523885361034,
+          "abs_error_vs_cross_truth_deg": 0.9122523885361034
+        },
+        {
+          "t_ff": 3.6735291,
+          "R": 8.793809144222342,
+          "bearing": 43.88749182556794,
+          "elev": 29.10475500394698,
+          "error_vs_exit_deg": -136.11250817443207,
+          "abs_error_vs_exit_deg": 136.11250817443207,
+          "error_vs_cross_truth_deg": -0.9122523885361034,
+          "abs_error_vs_cross_truth_deg": 0.9122523885361034
+        },
+        {
+          "t_ff": 3.6820587,
+          "R": 8.701484816549016,
+          "bearing": 45.019038376186096,
+          "elev": 31.90342785407667,
+          "error_vs_exit_deg": -134.9809616238139,
+          "abs_error_vs_exit_deg": 134.9809616238139,
+          "error_vs_cross_truth_deg": 0.21929416208206476,
+          "abs_error_vs_cross_truth_deg": 0.21929416208206476
+        },
+        {
+          "t_ff": 3.6887193,
+          "R": 8.701484816549016,
+          "bearing": 45.019038376186096,
+          "elev": 31.90342785407667,
+          "error_vs_exit_deg": -134.9809616238139,
+          "abs_error_vs_exit_deg": 134.9809616238139,
+          "error_vs_cross_truth_deg": 0.21929416208206476,
+          "abs_error_vs_cross_truth_deg": 0.21929416208206476
+        },
+        {
+          "t_ff": 3.7033695,
+          "R": 8.701484816549016,
+          "bearing": 45.019038376186096,
+          "elev": 31.90342785407667,
+          "error_vs_exit_deg": -134.9809616238139,
+          "abs_error_vs_exit_deg": 134.9809616238139,
+          "error_vs_cross_truth_deg": 0.21929416208206476,
+          "abs_error_vs_cross_truth_deg": 0.21929416208206476
+        },
+        {
+          "t_ff": 3.7123088,
+          "R": 8.701484816549016,
+          "bearing": 45.019038376186096,
+          "elev": 31.90342785407667,
+          "error_vs_exit_deg": -134.9809616238139,
+          "abs_error_vs_exit_deg": 134.9809616238139,
+          "error_vs_cross_truth_deg": 0.21929416208206476,
+          "abs_error_vs_cross_truth_deg": 0.21929416208206476
+        },
+        {
+          "t_ff": 3.782455,
+          "R": 7.900047353903317,
+          "bearing": 43.76214833805238,
+          "elev": 23.69447867166432,
+          "error_vs_exit_deg": -136.23785166194762,
+          "abs_error_vs_exit_deg": 136.23785166194762,
+          "error_vs_cross_truth_deg": -1.037595876051654,
+          "abs_error_vs_cross_truth_deg": 1.037595876051654
+        },
+        {
+          "t_ff": 3.7936553,
+          "R": 7.900047353903317,
+          "bearing": 43.76214833805238,
+          "elev": 23.69447867166432,
+          "error_vs_exit_deg": -136.23785166194762,
+          "abs_error_vs_exit_deg": 136.23785166194762,
+          "error_vs_cross_truth_deg": -1.037595876051654,
+          "abs_error_vs_cross_truth_deg": 1.037595876051654
+        },
+        {
+          "t_ff": 3.7995572,
+          "R": 7.900047353903317,
+          "bearing": 43.76214833805238,
+          "elev": 23.69447867166432,
+          "error_vs_exit_deg": -136.23785166194762,
+          "abs_error_vs_exit_deg": 136.23785166194762,
+          "error_vs_cross_truth_deg": -1.037595876051654,
+          "abs_error_vs_cross_truth_deg": 1.037595876051654
+        },
+        {
+          "t_ff": 3.8143867,
+          "R": 7.900047353903317,
+          "bearing": 43.76214833805238,
+          "elev": 23.69447867166432,
+          "error_vs_exit_deg": -136.23785166194762,
+          "abs_error_vs_exit_deg": 136.23785166194762,
+          "error_vs_cross_truth_deg": -1.037595876051654,
+          "abs_error_vs_cross_truth_deg": 1.037595876051654
+        }
+      ],
+      "bank_abs_errors_deg": [
+        137.3607385395423,
+        137.3607385395423,
+        137.3607385395423,
+        137.3607385395423,
+        136.9574857679989,
+        136.9574857679989,
+        136.9574857679989,
+        136.9574857679989,
+        136.11250817443207,
+        136.11250817443207,
+        136.11250817443207,
+        134.9809616238139,
+        134.9809616238139,
+        134.9809616238139,
+        134.9809616238139,
+        136.23785166194762,
+        136.23785166194762,
+        136.23785166194762,
+        136.23785166194762
+      ],
+      "n_dets": 1903
+    },
+    {
+      "fid": "20260716T113216-8edfeec4",
+      "fixture": "20260716T115732-phase3i-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T115732-phase3i-r2training\\20260716T113216-8edfeec4-flight.jsonl",
+      "t_pass_ff": 3.4713251,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -6.133580853077443,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.8581565582983943
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 81
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 26.726124900531666,
+        "R": 9.118112494003693,
+        "elev_deg": 23.919090511081755,
+        "error_vs_exit_deg": 32.85970575360909,
+        "n_cands": 10,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 32.85970575360909,
+      "abs_cross_error_deg": 32.85970575360909,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 662
+    },
+    {
+      "fid": "20260716T130659-8edfeec4",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T130659-8edfeec4-flight.jsonl",
+      "t_pass_ff": 4.140217,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -10.979747610039599,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.036140693093788
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 200
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 17.642028361897854,
+        "R": 11.542233220866004,
+        "elev_deg": 4.919416532298954,
+        "error_vs_exit_deg": 28.62177597193744,
+        "n_cands": 59,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 28.62177597193744,
+      "abs_cross_error_deg": 28.62177597193744,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1623
+    },
+    {
+      "fid": "20260716T131137-2ca531c3",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T131137-2ca531c3-flight.jsonl",
+      "t_pass_ff": 3.7574043,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": -2.4910057646382535,
+        "source": "travel_median",
+        "n": 8,
+        "spread_deg": 37.831914238011635
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 244
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 29.35831968719464,
+        "R": 6.8391402604029325,
+        "elev_deg": 28.152451358431346,
+        "error_vs_exit_deg": 31.849325451832897,
+        "n_cands": 38,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 31.849325451832897,
+      "abs_cross_error_deg": 31.849325451832897,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1932
+    },
+    {
+      "fid": "20260716T131630-8edfeec4",
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T131630-8edfeec4-flight.jsonl",
+      "t_pass_ff": 4.732278,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 1,
+        "n_far_unique": 2,
+        "n_near": 1,
+        "n_far_in_window": 21
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 15.706577468040273,
+        "R": 9.390766434080225,
+        "elev_deg": 18.0695428814798,
+        "error_vs_exit_deg": -164.29342253195972,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -164.29342253195972,
+      "abs_cross_error_deg": 164.29342253195972,
+      "bank_samples": [
+        {
+          "t_ff": 4.1437988,
+          "R": 9.705297692610333,
+          "bearing": 15.64974503291475,
+          "elev": 19.550766422000706,
+          "error_vs_exit_deg": -164.35025496708525,
+          "abs_error_vs_exit_deg": 164.35025496708525,
+          "error_vs_cross_truth_deg": -0.05683243512552849,
+          "abs_error_vs_cross_truth_deg": 0.05683243512552849
+        },
+        {
+          "t_ff": 4.2490134,
+          "R": 9.390766434080225,
+          "bearing": 15.706577468040273,
+          "elev": 18.0695428814798,
+          "error_vs_exit_deg": -164.29342253195972,
+          "abs_error_vs_exit_deg": 164.29342253195972,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        164.35025496708525,
+        164.29342253195972
+      ],
+      "n_dets": 118
+    },
+    {
+      "fid": "20260716T133531-927a4c97",
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T135229-phase4a-r2training-chain\\20260716T133531-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.1838954,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 3.873949610054874,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.526537941913539
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 158
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 33.77474315426965,
+        "R": 8.870129741074706,
+        "elev_deg": 3.293621691942486,
+        "error_vs_exit_deg": 29.900793544214764,
+        "n_cands": 94,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 29.900793544214764,
+      "abs_cross_error_deg": 29.900793544214764,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1306
+    },
+    {
+      "fid": "20260716T134842-927a4c97",
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T135229-phase4a-r2training-chain\\20260716T134842-927a4c97-flight.jsonl",
+      "t_pass_ff": 5.4358423,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 9,
+        "n_far_in_window": 37
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -39.003485013773414,
+        "R": 8.693138632136607,
+        "elev_deg": 14.626029748458052,
+        "error_vs_exit_deg": 140.9965149862266,
+        "n_cands": 12,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 140.9965149862266,
+      "abs_cross_error_deg": 140.9965149862266,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1024
+    },
+    {
+      "fid": "20260716T143604-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T144305-phase4b-r2training-chain\\20260716T143604-927a4c97-flight.jsonl",
+      "t_pass_ff": 8.468015,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -16.534960746273757,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 8.01376783742766
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 36
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1465
+    },
+    {
+      "fid": "20260716T143739-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T144305-phase4b-r2training-chain\\20260716T143739-927a4c97-flight.jsonl",
+      "t_pass_ff": 4.0161737,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -15.73247602248365,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.7248701341727575
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 110
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 13.10280494869552,
+        "R": 6.90127601304201,
+        "elev_deg": 6.033084010770422,
+        "error_vs_exit_deg": 28.835280971179174,
+        "n_cands": 14,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 28.835280971179174,
+      "abs_cross_error_deg": 28.835280971179174,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1323
+    },
+    {
+      "fid": "20260716T143915-927a4c97",
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T144305-phase4b-r2training-chain\\20260716T143915-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.0041093,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -29.043116783764134,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 13.17267297325169
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 155
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1139
+    },
+    {
+      "fid": "20260716T153853-927a4c97",
+      "fixture": "20260716T154946-phase4b-r2training-chain-v2",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T154946-phase4b-r2training-chain-v2\\20260716T153853-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.4999211,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 4.647401701193121,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.9739684703885629
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 222
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 24.6280129736814,
+        "R": 10.18803603168635,
+        "elev_deg": 24.833599649677403,
+        "error_vs_exit_deg": 19.98061127248829,
+        "n_cands": 105,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 19.98061127248829,
+      "abs_cross_error_deg": 19.98061127248829,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1215
+    },
+    {
+      "fid": "20260716T164931-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T174215-phase4c-r2training-chain\\20260716T164931-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.3118386,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -3.8849446008665653,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.8786269807337463
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 235
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -3.5076591607885286,
+        "R": 14.90868117885261,
+        "elev_deg": 4.6002500639038075,
+        "error_vs_exit_deg": 0.3772854400780261,
+        "n_cands": 23,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 0.3772854400780261,
+      "abs_cross_error_deg": 0.3772854400780261,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 10543
+    },
+    {
+      "fid": "20260716T165306-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T174215-phase4c-r2training-chain\\20260716T165306-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.7123019,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 18.681988781420703,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.3034001393335295
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 433
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 26.60998713910954,
+        "R": 9.929049560577827,
+        "elev_deg": 15.476563705317375,
+        "error_vs_exit_deg": 7.9279983576888355,
+        "n_cands": 57,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 7.9279983576888355,
+      "abs_cross_error_deg": 7.9279983576888355,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 11406
+    },
+    {
+      "fid": "20260716T165535-927a4c97",
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T174215-phase4c-r2training-chain\\20260716T165535-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.7719086,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -2.403831744905311,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.320305191429644
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 314
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 13.158397934948459,
+        "R": 8.458073900891732,
+        "elev_deg": 11.13366521025827,
+        "error_vs_exit_deg": 15.562229679853772,
+        "n_cands": 152,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 15.562229679853772,
+      "abs_cross_error_deg": 15.562229679853772,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 10924
+    },
+    {
+      "fid": "20260716T203450-2ca531c3",
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T212744-phase5-closerange-frames\\20260716T203450-2ca531c3-flight.jsonl",
+      "t_pass_ff": 3.7719298,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -1.5786198542591454,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.34395245769743843
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 15,
+        "n_far_unique": 20,
+        "n_near": 15,
+        "n_far_in_window": 220
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 17.84318554234345,
+        "R": 10.039153185415403,
+        "elev_deg": 16.056758795480274,
+        "error_vs_exit_deg": 19.421805396602593,
+        "n_cands": 43,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 19.421805396602593,
+      "abs_cross_error_deg": 19.421805396602593,
+      "bank_samples": [
+        {
+          "t_ff": 3.0135154,
+          "R": 11.504551762572957,
+          "bearing": 13.425678393278302,
+          "elev": 17.337180349876885,
+          "error_vs_exit_deg": 15.004298247537434,
+          "abs_error_vs_exit_deg": 15.004298247537434,
+          "error_vs_cross_truth_deg": -4.417507149065159,
+          "abs_error_vs_cross_truth_deg": 4.417507149065159
+        },
+        {
+          "t_ff": 3.0186107,
+          "R": 11.504551762572957,
+          "bearing": 13.425678393278302,
+          "elev": 17.337180349876885,
+          "error_vs_exit_deg": 15.004298247537434,
+          "abs_error_vs_exit_deg": 15.004298247537434,
+          "error_vs_cross_truth_deg": -4.417507149065159,
+          "abs_error_vs_cross_truth_deg": 4.417507149065159
+        },
+        {
+          "t_ff": 3.0294648,
+          "R": 11.504551762572957,
+          "bearing": 13.425678393278302,
+          "elev": 17.337180349876885,
+          "error_vs_exit_deg": 15.004298247537434,
+          "abs_error_vs_exit_deg": 15.004298247537434,
+          "error_vs_cross_truth_deg": -4.417507149065159,
+          "abs_error_vs_cross_truth_deg": 4.417507149065159
+        },
+        {
+          "t_ff": 3.0366599,
+          "R": 11.504551762572957,
+          "bearing": 13.425678393278302,
+          "elev": 17.337180349876885,
+          "error_vs_exit_deg": 15.004298247537434,
+          "abs_error_vs_exit_deg": 15.004298247537434,
+          "error_vs_cross_truth_deg": -4.417507149065159,
+          "abs_error_vs_cross_truth_deg": 4.417507149065159
+        },
+        {
+          "t_ff": 3.0858205,
+          "R": 10.782482326357885,
+          "bearing": 14.746264666713667,
+          "elev": 14.097147356207714,
+          "error_vs_exit_deg": 16.3248845209728,
+          "abs_error_vs_exit_deg": 16.3248845209728,
+          "error_vs_cross_truth_deg": -3.0969208756297917,
+          "abs_error_vs_cross_truth_deg": 3.0969208756297917
+        },
+        {
+          "t_ff": 3.0950824,
+          "R": 10.782482326357885,
+          "bearing": 14.746264666713667,
+          "elev": 14.097147356207714,
+          "error_vs_exit_deg": 16.3248845209728,
+          "abs_error_vs_exit_deg": 16.3248845209728,
+          "error_vs_cross_truth_deg": -3.0969208756297917,
+          "abs_error_vs_cross_truth_deg": 3.0969208756297917
+        },
+        {
+          "t_ff": 3.3310081,
+          "R": 10.458397074435515,
+          "bearing": 17.562065871322144,
+          "elev": 19.4085522844382,
+          "error_vs_exit_deg": 19.140685725581278,
+          "abs_error_vs_exit_deg": 19.140685725581278,
+          "error_vs_cross_truth_deg": -0.2811196710213153,
+          "abs_error_vs_cross_truth_deg": 0.2811196710213153
+        },
+        {
+          "t_ff": 3.3376108,
+          "R": 10.458397074435515,
+          "bearing": 17.562065871322144,
+          "elev": 19.4085522844382,
+          "error_vs_exit_deg": 19.140685725581278,
+          "abs_error_vs_exit_deg": 19.140685725581278,
+          "error_vs_cross_truth_deg": -0.2811196710213153,
+          "abs_error_vs_cross_truth_deg": 0.2811196710213153
+        },
+        {
+          "t_ff": 3.3627236,
+          "R": 10.349243839562675,
+          "bearing": 17.31313923339577,
+          "elev": 18.866398602687166,
+          "error_vs_exit_deg": 18.89175908765492,
+          "abs_error_vs_exit_deg": 18.89175908765492,
+          "error_vs_cross_truth_deg": -0.530046308947675,
+          "abs_error_vs_cross_truth_deg": 0.530046308947675
+        },
+        {
+          "t_ff": 3.3678666,
+          "R": 10.349243839562675,
+          "bearing": 17.31313923339577,
+          "elev": 18.866398602687166,
+          "error_vs_exit_deg": 18.89175908765492,
+          "abs_error_vs_exit_deg": 18.89175908765492,
+          "error_vs_cross_truth_deg": -0.530046308947675,
+          "abs_error_vs_cross_truth_deg": 0.530046308947675
+        },
+        {
+          "t_ff": 3.3771968,
+          "R": 10.349243839562675,
+          "bearing": 17.31313923339577,
+          "elev": 18.866398602687166,
+          "error_vs_exit_deg": 18.89175908765492,
+          "abs_error_vs_exit_deg": 18.89175908765492,
+          "error_vs_cross_truth_deg": -0.530046308947675,
+          "abs_error_vs_cross_truth_deg": 0.530046308947675
+        },
+        {
+          "t_ff": 3.3943555,
+          "R": 10.220629282739425,
+          "bearing": 17.318074937810103,
+          "elev": 17.705942563022667,
+          "error_vs_exit_deg": 18.89669479206924,
+          "abs_error_vs_exit_deg": 18.89669479206924,
+          "error_vs_cross_truth_deg": -0.5251106045333529,
+          "abs_error_vs_cross_truth_deg": 0.5251106045333529
+        },
+        {
+          "t_ff": 3.4009863,
+          "R": 10.220629282739425,
+          "bearing": 17.318074937810103,
+          "elev": 17.705942563022667,
+          "error_vs_exit_deg": 18.89669479206924,
+          "abs_error_vs_exit_deg": 18.89669479206924,
+          "error_vs_cross_truth_deg": -0.5251106045333529,
+          "abs_error_vs_cross_truth_deg": 0.5251106045333529
+        },
+        {
+          "t_ff": 3.4097807,
+          "R": 10.220629282739425,
+          "bearing": 17.318074937810103,
+          "elev": 17.705942563022667,
+          "error_vs_exit_deg": 18.89669479206924,
+          "abs_error_vs_exit_deg": 18.89669479206924,
+          "error_vs_cross_truth_deg": -0.5251106045333529,
+          "abs_error_vs_cross_truth_deg": 0.5251106045333529
+        },
+        {
+          "t_ff": 3.421112,
+          "R": 10.124615428466958,
+          "bearing": 17.50595562889889,
+          "elev": 16.654259257123204,
+          "error_vs_exit_deg": 19.084575483158034,
+          "abs_error_vs_exit_deg": 19.084575483158034,
+          "error_vs_cross_truth_deg": -0.33722991344455977,
+          "abs_error_vs_cross_truth_deg": 0.33722991344455977
+        },
+        {
+          "t_ff": 3.4318378,
+          "R": 10.124615428466958,
+          "bearing": 17.50595562889889,
+          "elev": 16.654259257123204,
+          "error_vs_exit_deg": 19.084575483158034,
+          "abs_error_vs_exit_deg": 19.084575483158034,
+          "error_vs_cross_truth_deg": -0.33722991344455977,
+          "abs_error_vs_cross_truth_deg": 0.33722991344455977
+        },
+        {
+          "t_ff": 3.4445017,
+          "R": 10.039153185415403,
+          "bearing": 17.84318554234345,
+          "elev": 16.056758795480274,
+          "error_vs_exit_deg": 19.421805396602593,
+          "abs_error_vs_exit_deg": 19.421805396602593,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 3.4509944,
+          "R": 10.039153185415403,
+          "bearing": 17.84318554234345,
+          "elev": 16.056758795480274,
+          "error_vs_exit_deg": 19.421805396602593,
+          "abs_error_vs_exit_deg": 19.421805396602593,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 3.4631576,
+          "R": 10.039153185415403,
+          "bearing": 17.84318554234345,
+          "elev": 16.056758795480274,
+          "error_vs_exit_deg": 19.421805396602593,
+          "abs_error_vs_exit_deg": 19.421805396602593,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 3.4704832,
+          "R": 10.039153185415403,
+          "bearing": 17.84318554234345,
+          "elev": 16.056758795480274,
+          "error_vs_exit_deg": 19.421805396602593,
+          "abs_error_vs_exit_deg": 19.421805396602593,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        15.004298247537434,
+        15.004298247537434,
+        15.004298247537434,
+        15.004298247537434,
+        16.3248845209728,
+        16.3248845209728,
+        19.140685725581278,
+        19.140685725581278,
+        18.89175908765492,
+        18.89175908765492,
+        18.89175908765492,
+        18.89669479206924,
+        18.89669479206924,
+        18.89669479206924,
+        19.084575483158034,
+        19.084575483158034,
+        19.421805396602593,
+        19.421805396602593,
+        19.421805396602593,
+        19.421805396602593
+      ],
+      "n_dets": 1001
+    },
+    {
+      "fid": "20260717T090941-debf3ec1",
+      "fixture": "20260717T092008-phase5b-confirm",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T092008-phase5b-confirm\\20260717T090941-debf3ec1-flight.jsonl",
+      "t_pass_ff": 3.5957503,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -4.368052856105096,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 44
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 40.3476458200974,
+        "R": 11.75551204074138,
+        "elev_deg": 5.602503889489569,
+        "error_vs_exit_deg": 44.71569867620249,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 44.71569867620249,
+      "abs_cross_error_deg": 44.71569867620249,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 244
+    },
+    {
+      "fid": "20260717T091107-debf3ec1",
+      "fixture": "20260717T092008-phase5b-confirm",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T092008-phase5b-confirm\\20260717T091107-debf3ec1-flight.jsonl",
+      "t_pass_ff": 5.9717648,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 58
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -47.45027235699269,
+        "R": 3.670577699130119,
+        "elev_deg": 47.25384832080359,
+        "error_vs_exit_deg": 132.54972764300732,
+        "n_cands": 5,
+        "rival_bearings": [
+          -41.39253264654084
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 132.54972764300732,
+      "abs_cross_error_deg": 132.54972764300732,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 280
+    },
+    {
+      "fid": "20260717T091239-debf3ec1",
+      "fixture": "20260717T092008-phase5b-confirm",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T092008-phase5b-confirm\\20260717T091239-debf3ec1-flight.jsonl",
+      "t_pass_ff": 3.5201789,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -5.4451600921243335,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 4.224305800636558
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 12,
+        "n_far_in_window": 51
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 23.79610756183065,
+        "R": 8.979495723202657,
+        "elev_deg": 32.80579174198943,
+        "error_vs_exit_deg": 29.241267653954992,
+        "n_cands": 2,
+        "rival_bearings": [
+          39.57207218093884
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 29.241267653954992,
+      "abs_cross_error_deg": 29.241267653954992,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 252
+    },
+    {
+      "fid": "20260717T095722-a560c093",
+      "fixture": "20260717T100347-phase5c-ownership",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T100347-phase5c-ownership\\20260717T095722-a560c093-flight.jsonl",
+      "t_pass_ff": 3.9437495,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 4,
+        "n_far_unique": 11,
+        "n_near": 4,
+        "n_far_in_window": 73
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 50.48859800089732,
+        "R": 7.2894001635594305,
+        "elev_deg": 40.50418170935293,
+        "error_vs_exit_deg": -129.51140199910267,
+        "n_cands": 5,
+        "rival_bearings": [
+          -39.931784413256985,
+          -39.54448735313646
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -129.51140199910267,
+      "abs_cross_error_deg": 129.51140199910267,
+      "bank_samples": [
+        {
+          "t_ff": 3.2341243,
+          "R": 9.36145943918661,
+          "bearing": 35.03146016125493,
+          "elev": 26.912967643649896,
+          "error_vs_exit_deg": -144.96853983874507,
+          "abs_error_vs_exit_deg": 144.96853983874507,
+          "error_vs_cross_truth_deg": -15.4571378396424,
+          "abs_error_vs_cross_truth_deg": 15.4571378396424
+        },
+        {
+          "t_ff": 3.2783425,
+          "R": 9.493039926625816,
+          "bearing": 34.86359210635956,
+          "elev": 26.988616279795533,
+          "error_vs_exit_deg": -145.13640789364044,
+          "abs_error_vs_exit_deg": 145.13640789364044,
+          "error_vs_cross_truth_deg": -15.625005894537765,
+          "abs_error_vs_cross_truth_deg": 15.625005894537765
+        },
+        {
+          "t_ff": 3.3086844,
+          "R": 9.381869608407154,
+          "bearing": 34.894149586308814,
+          "elev": 27.490978365720277,
+          "error_vs_exit_deg": -145.1058504136912,
+          "abs_error_vs_exit_deg": 145.1058504136912,
+          "error_vs_cross_truth_deg": -15.594448414588499,
+          "abs_error_vs_cross_truth_deg": 15.594448414588499
+        },
+        {
+          "t_ff": 3.34002,
+          "R": 9.445757054145194,
+          "bearing": 34.909300277677914,
+          "elev": 28.026457427629843,
+          "error_vs_exit_deg": -145.09069972232209,
+          "abs_error_vs_exit_deg": 145.09069972232209,
+          "error_vs_cross_truth_deg": -15.579297723219412,
+          "abs_error_vs_cross_truth_deg": 15.579297723219412
+        },
+        {
+          "t_ff": 3.3699205,
+          "R": 9.293000681591447,
+          "bearing": 35.07104933458787,
+          "elev": 28.504945255226847,
+          "error_vs_exit_deg": -144.92895066541212,
+          "abs_error_vs_exit_deg": 144.92895066541212,
+          "error_vs_cross_truth_deg": -15.417548666309443,
+          "abs_error_vs_cross_truth_deg": 15.417548666309443
+        },
+        {
+          "t_ff": 3.5015478,
+          "R": 8.934283006605316,
+          "bearing": 36.95077754596711,
+          "elev": 17.869980844673147,
+          "error_vs_exit_deg": -143.0492224540329,
+          "abs_error_vs_exit_deg": 143.0492224540329,
+          "error_vs_cross_truth_deg": -13.537820454930227,
+          "abs_error_vs_cross_truth_deg": 13.537820454930227
+        },
+        {
+          "t_ff": 3.5685528,
+          "R": 7.925373480790289,
+          "bearing": 40.56292485726559,
+          "elev": 13.175782438565498,
+          "error_vs_exit_deg": -139.43707514273441,
+          "abs_error_vs_exit_deg": 139.43707514273441,
+          "error_vs_cross_truth_deg": -9.925673143631741,
+          "abs_error_vs_cross_truth_deg": 9.925673143631741
+        },
+        {
+          "t_ff": 3.6144041,
+          "R": 8.628979474807082,
+          "bearing": 43.07498923637051,
+          "elev": 29.955312620324698,
+          "error_vs_exit_deg": -136.92501076362947,
+          "abs_error_vs_exit_deg": 136.92501076362947,
+          "error_vs_cross_truth_deg": -7.413608764526799,
+          "abs_error_vs_cross_truth_deg": 7.413608764526799
+        },
+        {
+          "t_ff": 3.6327612,
+          "R": 8.585606333875209,
+          "bearing": 43.95033718919267,
+          "elev": 37.70925816396157,
+          "error_vs_exit_deg": -136.04966281080732,
+          "abs_error_vs_exit_deg": 136.04966281080732,
+          "error_vs_cross_truth_deg": -6.538260811704646,
+          "abs_error_vs_cross_truth_deg": 6.538260811704646
+        },
+        {
+          "t_ff": 3.6771539,
+          "R": 7.076041625419583,
+          "bearing": 48.419296830833495,
+          "elev": 40.39867672681506,
+          "error_vs_exit_deg": -131.5807031691665,
+          "abs_error_vs_exit_deg": 131.5807031691665,
+          "error_vs_cross_truth_deg": -2.0693011700638237,
+          "abs_error_vs_cross_truth_deg": 2.0693011700638237
+        },
+        {
+          "t_ff": 3.7111709,
+          "R": 7.2894001635594305,
+          "bearing": 50.48859800089732,
+          "elev": 40.50418170935293,
+          "error_vs_exit_deg": -129.51140199910267,
+          "abs_error_vs_exit_deg": 129.51140199910267,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        144.96853983874507,
+        145.13640789364044,
+        145.1058504136912,
+        145.09069972232209,
+        144.92895066541212,
+        143.0492224540329,
+        139.43707514273441,
+        136.92501076362947,
+        136.04966281080732,
+        131.5807031691665,
+        129.51140199910267
+      ],
+      "n_dets": 297
+    },
+    {
+      "fid": "20260717T095851-a560c093",
+      "fixture": "20260717T100347-phase5c-ownership",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T100347-phase5c-ownership\\20260717T095851-a560c093-flight.jsonl",
+      "t_pass_ff": 3.2764726,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 2.2687348299431083,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.0128684733478999
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 69
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 3.113270966113068,
+        "R": 7.930463872443425,
+        "elev_deg": 5.273840964886153,
+        "error_vs_exit_deg": 0.8445361361699497,
+        "n_cands": 24,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 0.8445361361699497,
+      "abs_cross_error_deg": 0.8445361361699497,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 237
+    },
+    {
+      "fid": "20260717T100017-a560c093",
+      "fixture": "20260717T100347-phase5c-ownership",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T100347-phase5c-ownership\\20260717T100017-a560c093-flight.jsonl",
+      "t_pass_ff": 3.4517593,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -6.240327382332213,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.13823447666518174
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 45
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 31.163743186957813,
+        "R": 9.375973347430758,
+        "elev_deg": 11.271793676395136,
+        "error_vs_exit_deg": 37.40407056929001,
+        "n_cands": 4,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 37.40407056929001,
+      "abs_cross_error_deg": 37.40407056929001,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 312
+    },
+    {
+      "fid": "20260717T101837-7223cc0c",
+      "fixture": "20260717T102447-phase5d-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T102447-phase5d-vertical\\20260717T101837-7223cc0c-flight.jsonl",
+      "t_pass_ff": 4.7319267,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 12.46304481786709,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.3776015313648955
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 61
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -24.678518660398645,
+        "R": 4.175267009845017,
+        "elev_deg": 5.639729922604425,
+        "error_vs_exit_deg": -37.14156347826574,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -37.14156347826574,
+      "abs_cross_error_deg": 37.14156347826574,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 226
+    },
+    {
+      "fid": "20260717T102007-7223cc0c",
+      "fixture": "20260717T102447-phase5d-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T102447-phase5d-vertical\\20260717T102007-7223cc0c-flight.jsonl",
+      "t_pass_ff": 3.4035741,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -0.3520785108184703,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.032252617673727724
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 62
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 38.436544058487456,
+        "R": 8.936063747253852,
+        "elev_deg": 5.337472188807378,
+        "error_vs_exit_deg": 38.788622569305915,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 38.788622569305915,
+      "abs_cross_error_deg": 38.788622569305915,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 211
+    },
+    {
+      "fid": "20260717T102132-7223cc0c",
+      "fixture": "20260717T102447-phase5d-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T102447-phase5d-vertical\\20260717T102132-7223cc0c-flight.jsonl",
+      "t_pass_ff": 13.1998387,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 1
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 276
+    },
+    {
+      "fid": "20260717T142306-7223cc0c",
+      "fixture": "20260717T143144-phase5e-shadow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T143144-phase5e-shadow\\20260717T142306-7223cc0c-flight.jsonl",
+      "t_pass_ff": 3.7478006,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 12.850415125239138,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 51
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 19.628921526375265,
+        "R": 4.553243718680898,
+        "elev_deg": 14.397326230171469,
+        "error_vs_exit_deg": 6.778506401136127,
+        "n_cands": 9,
+        "rival_bearings": [
+          26.43511931043155
+        ],
+        "ambiguous": true
+      },
+      "cross_error_vs_exit_deg": 6.778506401136127,
+      "abs_cross_error_deg": 6.778506401136127,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 248
+    },
+    {
+      "fid": "20260717T142426-7223cc0c",
+      "fixture": "20260717T143144-phase5e-shadow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T143144-phase5e-shadow\\20260717T142426-7223cc0c-flight.jsonl",
+      "t_pass_ff": 2.8600784,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -2.5422950271435605,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.4631341496968644
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 61
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -2.9621670692473763,
+        "R": 11.298904258217517,
+        "elev_deg": 10.502184270813855,
+        "error_vs_exit_deg": -0.4198720421038047,
+        "n_cands": 3,
+        "rival_bearings": [
+          17.308356824791666,
+          20.52715099111062
+        ],
+        "ambiguous": true
+      },
+      "cross_error_vs_exit_deg": -0.4198720421038047,
+      "abs_cross_error_deg": 0.4198720421038047,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 227
+    },
+    {
+      "fid": "20260717T142546-7223cc0c",
+      "fixture": "20260717T143144-phase5e-shadow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T143144-phase5e-shadow\\20260717T142546-7223cc0c-flight.jsonl",
+      "t_pass_ff": 3.4799887,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 7.559987859010291,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.48199659635063874
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 45
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 247
+    },
+    {
+      "fid": "20260717T151002-a9753343",
+      "fixture": "20260717T152216-phase5f-terminal",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T152216-phase5f-terminal\\20260717T151002-a9753343-flight.jsonl",
+      "t_pass_ff": 3.4679636,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -2.9450691591884905,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.11617384311351531
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 70
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 27.392179992384026,
+        "R": 8.861409554792468,
+        "elev_deg": 11.363159834698493,
+        "error_vs_exit_deg": 30.337249151572507,
+        "n_cands": 16,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 30.337249151572507,
+      "abs_cross_error_deg": 30.337249151572507,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 246
+    },
+    {
+      "fid": "20260717T151126-a9753343",
+      "fixture": "20260717T152216-phase5f-terminal",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T152216-phase5f-terminal\\20260717T151126-a9753343-flight.jsonl",
+      "t_pass_ff": 3.6447249,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -14.443535986734325,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.8633489267719003
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 44
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 22.17168574783825,
+        "R": 7.70041228163503,
+        "elev_deg": 10.159074616632681,
+        "error_vs_exit_deg": 36.61522173457257,
+        "n_cands": 2,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 36.61522173457257,
+      "abs_cross_error_deg": 36.61522173457257,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 269
+    },
+    {
+      "fid": "20260717T151254-e179e097",
+      "fixture": "20260717T152216-phase5f-terminal",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T152216-phase5f-terminal\\20260717T151254-e179e097-flight.jsonl",
+      "t_pass_ff": 3.6006712,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 15.062486625857824,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.49183140476252873
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 87
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 14.7520752418335,
+        "R": 8.598543370222236,
+        "elev_deg": 25.973306992464117,
+        "error_vs_exit_deg": -0.3104113840243201,
+        "n_cands": 24,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -0.3104113840243201,
+      "abs_cross_error_deg": 0.3104113840243201,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 267
+    },
+    {
+      "fid": "20260717T151717-e179e097",
+      "fixture": "20260717T152216-phase5f-terminal",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T152216-phase5f-terminal\\20260717T151717-e179e097-flight.jsonl",
+      "t_pass_ff": 3.3842095,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 4.267649637078795,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.052867148594414104
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 5,
+        "n_far_unique": 7,
+        "n_near": 5,
+        "n_far_in_window": 73
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 24.863594934594765,
+        "R": 9.710925749049869,
+        "elev_deg": 22.566977121430483,
+        "error_vs_exit_deg": 20.595945297515982,
+        "n_cands": 14,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 20.595945297515982,
+      "abs_cross_error_deg": 20.595945297515982,
+      "bank_samples": [
+        {
+          "t_ff": 2.5374796,
+          "R": 11.801736366324203,
+          "bearing": 24.063355038673162,
+          "elev": 22.22163106559937,
+          "error_vs_exit_deg": 19.795705401594375,
+          "abs_error_vs_exit_deg": 19.795705401594375,
+          "error_vs_cross_truth_deg": -0.8002398959216066,
+          "abs_error_vs_cross_truth_deg": 0.8002398959216066
+        },
+        {
+          "t_ff": 2.5726269,
+          "R": 11.582605122755815,
+          "bearing": 23.840588162109572,
+          "elev": 21.57123993345241,
+          "error_vs_exit_deg": 19.572938525030793,
+          "abs_error_vs_exit_deg": 19.572938525030793,
+          "error_vs_cross_truth_deg": -1.0230067724851892,
+          "abs_error_vs_cross_truth_deg": 1.0230067724851892
+        },
+        {
+          "t_ff": 2.747079,
+          "R": 11.042498088510476,
+          "bearing": 24.411712478449232,
+          "elev": 18.253530436658888,
+          "error_vs_exit_deg": 20.14406284137044,
+          "abs_error_vs_exit_deg": 20.14406284137044,
+          "error_vs_cross_truth_deg": -0.45188245614554035,
+          "abs_error_vs_cross_truth_deg": 0.45188245614554035
+        },
+        {
+          "t_ff": 2.9294512,
+          "R": 10.717042816521168,
+          "bearing": 24.763322278655718,
+          "elev": 23.639874953826983,
+          "error_vs_exit_deg": 20.49567264157693,
+          "abs_error_vs_exit_deg": 20.49567264157693,
+          "error_vs_cross_truth_deg": -0.10027265593905099,
+          "abs_error_vs_cross_truth_deg": 0.10027265593905099
+        },
+        {
+          "t_ff": 2.9433593,
+          "R": 10.482887072812943,
+          "bearing": 24.79196044538672,
+          "elev": 23.23044609211368,
+          "error_vs_exit_deg": 20.524310808307916,
+          "abs_error_vs_exit_deg": 20.524310808307916,
+          "error_vs_cross_truth_deg": -0.07163448920803717,
+          "abs_error_vs_cross_truth_deg": 0.07163448920803717
+        },
+        {
+          "t_ff": 3.0738136,
+          "R": 9.895158875499767,
+          "bearing": 25.045388931368173,
+          "elev": 22.644738357594225,
+          "error_vs_exit_deg": 20.777739294289375,
+          "abs_error_vs_exit_deg": 20.777739294289375,
+          "error_vs_cross_truth_deg": 0.1817939967734219,
+          "abs_error_vs_cross_truth_deg": 0.1817939967734219
+        },
+        {
+          "t_ff": 3.1104177,
+          "R": 9.710925749049869,
+          "bearing": 24.863594934594765,
+          "elev": 22.566977121430483,
+          "error_vs_exit_deg": 20.595945297515982,
+          "abs_error_vs_exit_deg": 20.595945297515982,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        19.795705401594375,
+        19.572938525030793,
+        20.14406284137044,
+        20.49567264157693,
+        20.524310808307916,
+        20.777739294289375,
+        20.595945297515982
+      ],
+      "n_dets": 240
+    },
+    {
+      "fid": "20260717T153048-927a4c97",
+      "fixture": "20260717T154500-phase6a-control-old",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154500-phase6a-control-old\\20260717T153048-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.531902,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -8.194679656274749,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.19162789212198916
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 155
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 35.626517733467004,
+        "R": 11.231263244396489,
+        "elev_deg": 12.76888845557787,
+        "error_vs_exit_deg": 43.82119738974177,
+        "n_cands": 27,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 43.82119738974177,
+      "abs_cross_error_deg": 43.82119738974177,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1778
+    },
+    {
+      "fid": "20260717T153307-927a4c97",
+      "fixture": "20260717T154500-phase6a-control-old",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154500-phase6a-control-old\\20260717T153307-927a4c97-flight.jsonl",
+      "t_pass_ff": 3.14397,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 5.4414377952600566,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.459193622801555
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 121
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 1419
+    },
+    {
+      "fid": "20260717T153748-d946830d",
+      "fixture": "20260717T154501-phase6a-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154501-phase6a-dash\\20260717T153748-d946830d-flight.jsonl",
+      "t_pass_ff": 4.8399538,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 79
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 41.267425221344496,
+        "R": 11.198892615358549,
+        "elev_deg": 16.09211609844886,
+        "error_vs_exit_deg": -138.7325747786555,
+        "n_cands": 12,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -138.7325747786555,
+      "abs_cross_error_deg": 138.7325747786555,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 352
+    },
+    {
+      "fid": "20260717T153903-d946830d",
+      "fixture": "20260717T154501-phase6a-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154501-phase6a-dash\\20260717T153903-d946830d-flight.jsonl",
+      "t_pass_ff": 3.3281703,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -14.00100008111636,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.0389093825429292
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 59
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 20.769869877204417,
+        "R": 10.7671990368679,
+        "elev_deg": 7.710271575976356,
+        "error_vs_exit_deg": 34.77086995832076,
+        "n_cands": 19,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 34.77086995832076,
+      "abs_cross_error_deg": 34.77086995832076,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 263
+    },
+    {
+      "fid": "20260719T074950-fab49fbf",
+      "fixture": "20260719T080320-phase6b-aligned-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T080320-phase6b-aligned-dash\\20260719T074950-fab49fbf-flight.jsonl",
+      "t_pass_ff": 4.6839555,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -0.4134977386120539,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.038155410509815746
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 25
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 312
+    },
+    {
+      "fid": "20260719T075333-fab49fbf",
+      "fixture": "20260719T080320-phase6b-aligned-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T080320-phase6b-aligned-dash\\20260719T075333-fab49fbf-flight.jsonl",
+      "t_pass_ff": 4.1239269,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 6,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 10,
+        "n_far_unique": 6,
+        "n_near": 12,
+        "n_far_in_window": 61
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 37.79347679708409,
+        "R": 9.623613085003841,
+        "elev_deg": 15.16164592063525,
+        "error_vs_exit_deg": -142.20652320291592,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -142.20652320291592,
+      "abs_cross_error_deg": 142.20652320291592,
+      "bank_samples": [
+        {
+          "t_ff": 3.6739925,
+          "R": 9.765711130715118,
+          "bearing": 37.1175028717774,
+          "elev": 24.74345808241352,
+          "error_vs_exit_deg": -142.8824971282226,
+          "abs_error_vs_exit_deg": 142.8824971282226,
+          "error_vs_cross_truth_deg": -0.6759739253066925,
+          "abs_error_vs_cross_truth_deg": 0.6759739253066925
+        },
+        {
+          "t_ff": 3.7066013,
+          "R": 9.6318171155249,
+          "bearing": 37.358610501665375,
+          "elev": 22.423723233188976,
+          "error_vs_exit_deg": -142.64138949833463,
+          "abs_error_vs_exit_deg": 142.64138949833463,
+          "error_vs_cross_truth_deg": -0.4348662954187148,
+          "abs_error_vs_cross_truth_deg": 0.4348662954187148
+        },
+        {
+          "t_ff": 3.732776,
+          "R": 9.71745384955071,
+          "bearing": 37.60094842899138,
+          "elev": 21.28402720031632,
+          "error_vs_exit_deg": -142.3990515710086,
+          "abs_error_vs_exit_deg": 142.3990515710086,
+          "error_vs_cross_truth_deg": -0.19252836809272367,
+          "abs_error_vs_cross_truth_deg": 0.19252836809272367
+        },
+        {
+          "t_ff": 3.7658995,
+          "R": 9.562268064147593,
+          "bearing": 37.6494476440849,
+          "elev": 20.444001905921134,
+          "error_vs_exit_deg": -142.3505523559151,
+          "abs_error_vs_exit_deg": 142.3505523559151,
+          "error_vs_cross_truth_deg": -0.14402915299919528,
+          "abs_error_vs_cross_truth_deg": 0.14402915299919528
+        },
+        {
+          "t_ff": 3.8038155,
+          "R": 9.370695493408547,
+          "bearing": 37.94099918048975,
+          "elev": 18.12014997642764,
+          "error_vs_exit_deg": -142.05900081951026,
+          "abs_error_vs_exit_deg": 142.05900081951026,
+          "error_vs_cross_truth_deg": 0.14752238340565782,
+          "abs_error_vs_cross_truth_deg": 0.14752238340565782
+        },
+        {
+          "t_ff": 3.835683,
+          "R": 9.623613085003841,
+          "bearing": 37.79347679708409,
+          "elev": 15.16164592063525,
+          "error_vs_exit_deg": -142.20652320291592,
+          "abs_error_vs_exit_deg": 142.20652320291592,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        142.8824971282226,
+        142.64138949833463,
+        142.3990515710086,
+        142.3505523559151,
+        142.05900081951026,
+        142.20652320291592
+      ],
+      "n_dets": 254
+    },
+    {
+      "fid": "20260719T080255-fab49fbf",
+      "fixture": "20260719T080320-phase6b-aligned-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T080320-phase6b-aligned-dash\\20260719T080255-fab49fbf-flight.jsonl",
+      "t_pass_ff": 3.6276137,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -1.4417558804954482,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.018113376003853876
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 4,
+        "n_far_unique": 5,
+        "n_near": 6,
+        "n_far_in_window": 64
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 31.524498226639345,
+        "R": 9.980408705686532,
+        "elev_deg": 29.7146157845271,
+        "error_vs_exit_deg": 32.9662541071348,
+        "n_cands": 15,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 32.9662541071348,
+      "abs_cross_error_deg": 32.9662541071348,
+      "bank_samples": [
+        {
+          "t_ff": 3.238923,
+          "R": 10.147378743216242,
+          "bearing": 29.872210046099816,
+          "elev": 33.98941205653161,
+          "error_vs_exit_deg": 31.313965926595273,
+          "abs_error_vs_exit_deg": 31.313965926595273,
+          "error_vs_cross_truth_deg": -1.6522881805395286,
+          "abs_error_vs_cross_truth_deg": 1.6522881805395286
+        },
+        {
+          "t_ff": 3.2692687,
+          "R": 10.251458323423687,
+          "bearing": 30.306091897108104,
+          "elev": 30.637230755066135,
+          "error_vs_exit_deg": 31.747847777603567,
+          "abs_error_vs_exit_deg": 31.747847777603567,
+          "error_vs_cross_truth_deg": -1.2184063295312342,
+          "abs_error_vs_cross_truth_deg": 1.2184063295312342
+        },
+        {
+          "t_ff": 3.3046871,
+          "R": 10.134340976382658,
+          "bearing": 30.839937044525033,
+          "elev": 29.587232758980587,
+          "error_vs_exit_deg": 32.28169292502048,
+          "abs_error_vs_exit_deg": 32.28169292502048,
+          "error_vs_cross_truth_deg": -0.6845611821143223,
+          "abs_error_vs_cross_truth_deg": 0.6845611821143223
+        },
+        {
+          "t_ff": 3.3395786,
+          "R": 9.980408705686532,
+          "bearing": 31.524498226639345,
+          "elev": 29.7146157845271,
+          "error_vs_exit_deg": 32.9662541071348,
+          "abs_error_vs_exit_deg": 32.9662541071348,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        },
+        {
+          "t_ff": 3.3650054,
+          "R": 9.926689824408705,
+          "bearing": 32.0447626838776,
+          "elev": 29.863087992969298,
+          "error_vs_exit_deg": 33.48651856437306,
+          "abs_error_vs_exit_deg": 33.48651856437306,
+          "error_vs_cross_truth_deg": 0.5202644572382553,
+          "abs_error_vs_cross_truth_deg": 0.5202644572382553
+        }
+      ],
+      "bank_abs_errors_deg": [
+        31.313965926595273,
+        31.747847777603567,
+        32.28169292502048,
+        32.9662541071348,
+        33.48651856437306
+      ],
+      "n_dets": 239
+    },
+    {
+      "fid": "20260719T121141-f186c83e",
+      "fixture": "20260719T121704-phase6c-true-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T121704-phase6c-true-vertical\\20260719T121141-f186c83e-flight.jsonl",
+      "t_pass_ff": 8.1358372,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -1.207046169168559,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.027446713038792314
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 0
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 301
+    },
+    {
+      "fid": "20260719T121258-f186c83e",
+      "fixture": "20260719T121704-phase6c-true-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T121704-phase6c-true-vertical\\20260719T121258-f186c83e-flight.jsonl",
+      "t_pass_ff": 3.7202221,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 0.7667640791065181,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.2222769027361985
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 31
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 27.9045969206346,
+        "R": 11.95218600615214,
+        "elev_deg": 3.521182952964221,
+        "error_vs_exit_deg": 27.13783284152808,
+        "n_cands": 2,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 27.13783284152808,
+      "abs_cross_error_deg": 27.13783284152808,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 215
+    },
+    {
+      "fid": "20260719T121637-f186c83e",
+      "fixture": "20260719T121704-phase6c-true-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T121704-phase6c-true-vertical\\20260719T121637-f186c83e-flight.jsonl",
+      "t_pass_ff": 4.1281187,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 8.196976430601218,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 42
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 42.039845878105744,
+        "R": 9.522751252593153,
+        "elev_deg": 13.152547390651705,
+        "error_vs_exit_deg": 33.84286944750454,
+        "n_cands": 5,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 33.84286944750454,
+      "abs_cross_error_deg": 33.84286944750454,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 222
+    },
+    {
+      "fid": "20260719T134326-2477345e",
+      "fixture": "20260719T134835-phase6d-fiction-guards",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T134835-phase6d-fiction-guards\\20260719T134326-2477345e-flight.jsonl",
+      "t_pass_ff": 3.9160899,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 6.127541320120017,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.6392338112115086
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 26
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 9.097603866337765,
+        "R": 8.120340657184439,
+        "elev_deg": 8.097628181371284,
+        "error_vs_exit_deg": 2.970062546217747,
+        "n_cands": 13,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 2.970062546217747,
+      "abs_cross_error_deg": 2.970062546217747,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 375
+    },
+    {
+      "fid": "20260719T134446-2477345e",
+      "fixture": "20260719T134835-phase6d-fiction-guards",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T134835-phase6d-fiction-guards\\20260719T134446-2477345e-flight.jsonl",
+      "t_pass_ff": 4.1558322,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -1.932995388461455,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.1455863321398876
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 37
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 12.889692835784306,
+        "R": 9.567155490104899,
+        "elev_deg": 1.5687462076610745,
+        "error_vs_exit_deg": 14.822688224245752,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 14.822688224245752,
+      "abs_cross_error_deg": 14.822688224245752,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 230
+    },
+    {
+      "fid": "20260719T134714-2477345e",
+      "fixture": "20260719T134835-phase6d-fiction-guards",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T134835-phase6d-fiction-guards\\20260719T134714-2477345e-flight.jsonl",
+      "t_pass_ff": 5.8721245,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": -0.5020012355545989,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.5689326364993491
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 72
+      },
+      "successor_at_crossing": {
+        "bearing_deg": -17.663524888039763,
+        "R": 5.315679909349281,
+        "elev_deg": 7.220250725540514,
+        "error_vs_exit_deg": -17.161523652485158,
+        "n_cands": 24,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -17.161523652485158,
+      "abs_cross_error_deg": 17.161523652485158,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 162
+    },
+    {
+      "fid": "20260719T142919-a76247fb",
+      "fixture": "20260719T143556-phase6e-aim-tfv1",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T143556-phase6e-aim-tfv1\\20260719T142919-a76247fb-flight.jsonl",
+      "t_pass_ff": 6.8839427,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -45.0596682166365,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.0272624470465743
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 54
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 257
+    },
+    {
+      "fid": "20260719T143404-a76247fb",
+      "fixture": "20260719T143556-phase6e-aim-tfv1",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T143556-phase6e-aim-tfv1\\20260719T143404-a76247fb-flight.jsonl",
+      "t_pass_ff": 4.8636444,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 24.946980338067466,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 12,
+        "n_far_unique": 9,
+        "n_near": 28,
+        "n_far_in_window": 34
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 40.13553383589599,
+        "R": 9.326496997936799,
+        "elev_deg": 26.23594683510218,
+        "error_vs_exit_deg": 15.188553497828536,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 15.188553497828536,
+      "abs_cross_error_deg": 15.188553497828536,
+      "bank_samples": [
+        {
+          "t_ff": 3.3662747,
+          "R": 9.66125155603609,
+          "bearing": 39.35538373627484,
+          "elev": 27.29960092996016,
+          "error_vs_exit_deg": 14.408403398207383,
+          "abs_error_vs_exit_deg": 14.408403398207383,
+          "error_vs_cross_truth_deg": -0.780150099621153,
+          "abs_error_vs_cross_truth_deg": 0.780150099621153
+        },
+        {
+          "t_ff": 3.4032946,
+          "R": 9.41747104038692,
+          "bearing": 39.72789972208456,
+          "elev": 24.89532228156625,
+          "error_vs_exit_deg": 14.780919384017096,
+          "abs_error_vs_exit_deg": 14.780919384017096,
+          "error_vs_cross_truth_deg": -0.4076341138114401,
+          "abs_error_vs_cross_truth_deg": 0.4076341138114401
+        },
+        {
+          "t_ff": 3.4343154,
+          "R": 9.624752608322728,
+          "bearing": 39.99715703929816,
+          "elev": 23.738408695980965,
+          "error_vs_exit_deg": 15.050176701230697,
+          "abs_error_vs_exit_deg": 15.050176701230697,
+          "error_vs_cross_truth_deg": -0.1383767965978393,
+          "abs_error_vs_cross_truth_deg": 0.1383767965978393
+        },
+        {
+          "t_ff": 3.4731864,
+          "R": 9.645420529697171,
+          "bearing": 40.84029596211913,
+          "elev": 23.878563438709698,
+          "error_vs_exit_deg": 15.893315624051667,
+          "abs_error_vs_exit_deg": 15.893315624051667,
+          "error_vs_cross_truth_deg": 0.7047621262231303,
+          "abs_error_vs_cross_truth_deg": 0.7047621262231303
+        },
+        {
+          "t_ff": 3.5065129,
+          "R": 9.272468954629414,
+          "bearing": 41.968623826939144,
+          "elev": 24.313509637861745,
+          "error_vs_exit_deg": 17.02164348887169,
+          "abs_error_vs_exit_deg": 17.02164348887169,
+          "error_vs_cross_truth_deg": 1.8330899910431526,
+          "abs_error_vs_cross_truth_deg": 1.8330899910431526
+        },
+        {
+          "t_ff": 3.5282153,
+          "R": 9.388859807309741,
+          "bearing": 42.84949881221594,
+          "elev": 24.970085157397293,
+          "error_vs_exit_deg": 17.90251847414848,
+          "abs_error_vs_exit_deg": 17.90251847414848,
+          "error_vs_cross_truth_deg": 2.713964976319943,
+          "abs_error_vs_cross_truth_deg": 2.713964976319943
+        },
+        {
+          "t_ff": 3.5643574,
+          "R": 8.693417605566841,
+          "bearing": 43.68578488803303,
+          "elev": 25.40900855788055,
+          "error_vs_exit_deg": 18.73880454996555,
+          "abs_error_vs_exit_deg": 18.73880454996555,
+          "error_vs_cross_truth_deg": 3.5502510521370425,
+          "abs_error_vs_cross_truth_deg": 3.5502510521370425
+        },
+        {
+          "t_ff": 3.6005432,
+          "R": 8.17507496304269,
+          "bearing": 43.95985104741362,
+          "elev": 25.214034318565957,
+          "error_vs_exit_deg": 19.012870709346146,
+          "abs_error_vs_exit_deg": 19.012870709346146,
+          "error_vs_cross_truth_deg": 3.824317211517638,
+          "abs_error_vs_cross_truth_deg": 3.824317211517638
+        },
+        {
+          "t_ff": 4.635074,
+          "R": 9.326496997936799,
+          "bearing": 40.13553383589599,
+          "elev": 26.23594683510218,
+          "error_vs_exit_deg": 15.188553497828536,
+          "abs_error_vs_exit_deg": 15.188553497828536,
+          "error_vs_cross_truth_deg": 0.0,
+          "abs_error_vs_cross_truth_deg": 0.0
+        }
+      ],
+      "bank_abs_errors_deg": [
+        14.408403398207383,
+        14.780919384017096,
+        15.050176701230697,
+        15.893315624051667,
+        17.02164348887169,
+        17.90251847414848,
+        18.73880454996555,
+        19.012870709346146,
+        15.188553497828536
+      ],
+      "n_dets": 246
+    },
+    {
+      "fid": "20260719T143525-a76247fb",
+      "fixture": "20260719T143556-phase6e-aim-tfv1",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T143556-phase6e-aim-tfv1\\20260719T143525-a76247fb-flight.jsonl",
+      "t_pass_ff": 8.412282,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -0.37636001802406177,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.07373548829163262
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 52
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 5.729689985027769,
+        "R": 10.895853894446892,
+        "elev_deg": 2.772378823592546,
+        "error_vs_exit_deg": 6.10605000305182,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 6.10605000305182,
+      "abs_cross_error_deg": 6.10605000305182,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 308
+    },
+    {
+      "fid": "20260719T144540-a76247fb",
+      "fixture": "20260719T145242-phase6f-repeat",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T145242-phase6f-repeat\\20260719T144540-a76247fb-flight.jsonl",
+      "t_pass_ff": 8.5082623,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 3.3278195525476035,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.11222445902616807
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 24
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 142
+    },
+    {
+      "fid": "20260719T144941-a76247fb",
+      "fixture": "20260719T145242-phase6f-repeat",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T145242-phase6f-repeat\\20260719T144941-a76247fb-flight.jsonl",
+      "t_pass_ff": 4.1718958,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -6.283956643070868,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 4,
+        "n_far_unique": 5,
+        "n_near": 14,
+        "n_far_in_window": 39
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 2.116938977567019,
+        "R": 7.462470061736022,
+        "elev_deg": 12.93124822242331,
+        "error_vs_exit_deg": 8.400895620637897,
+        "n_cands": 16,
+        "rival_bearings": [
+          9.53314306593574,
+          12.685773343740307,
+          15.923928777332529
+        ],
+        "ambiguous": true
+      },
+      "cross_error_vs_exit_deg": 8.400895620637897,
+      "abs_cross_error_deg": 8.400895620637897,
+      "bank_samples": [
+        {
+          "t_ff": 3.8542574,
+          "R": 9.85623826540834,
+          "bearing": 25.04666404183931,
+          "elev": 21.687098308573834,
+          "error_vs_exit_deg": 31.330620684910173,
+          "abs_error_vs_exit_deg": 31.330620684910173,
+          "error_vs_cross_truth_deg": 22.929725064272304,
+          "abs_error_vs_cross_truth_deg": 22.929725064272304
+        },
+        {
+          "t_ff": 3.869322,
+          "R": 9.926738409513252,
+          "bearing": 25.384227833245433,
+          "elev": 21.062363235377706,
+          "error_vs_exit_deg": 31.6681844763163,
+          "abs_error_vs_exit_deg": 31.6681844763163,
+          "error_vs_cross_truth_deg": 23.2672888556784,
+          "abs_error_vs_cross_truth_deg": 23.2672888556784
+        },
+        {
+          "t_ff": 3.9066142,
+          "R": 9.81454625657335,
+          "bearing": 25.842989838833173,
+          "elev": 20.891651572628742,
+          "error_vs_exit_deg": 32.12694648190404,
+          "abs_error_vs_exit_deg": 32.12694648190404,
+          "error_vs_cross_truth_deg": 23.726050861266145,
+          "abs_error_vs_cross_truth_deg": 23.726050861266145
+        },
+        {
+          "t_ff": 3.938004,
+          "R": 9.599051923194928,
+          "bearing": 26.365324767485284,
+          "elev": 20.95168121368477,
+          "error_vs_exit_deg": 32.64928141055614,
+          "abs_error_vs_exit_deg": 32.64928141055614,
+          "error_vs_cross_truth_deg": 24.248385789918274,
+          "abs_error_vs_cross_truth_deg": 24.248385789918274
+        },
+        {
+          "t_ff": 3.96979,
+          "R": 9.476297825143046,
+          "bearing": 26.830879594876947,
+          "elev": 20.66809506233352,
+          "error_vs_exit_deg": 33.11483623794783,
+          "abs_error_vs_exit_deg": 33.11483623794783,
+          "error_vs_cross_truth_deg": 24.71394061730993,
+          "abs_error_vs_cross_truth_deg": 24.71394061730993
+        }
+      ],
+      "bank_abs_errors_deg": [
+        31.330620684910173,
+        31.6681844763163,
+        32.12694648190404,
+        32.64928141055614,
+        33.11483623794783
+      ],
+      "n_dets": 437
+    },
+    {
+      "fid": "20260719T145122-a76247fb",
+      "fixture": "20260719T145242-phase6f-repeat",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T145242-phase6f-repeat\\20260719T145122-a76247fb-flight.jsonl",
+      "t_pass_ff": 3.9443067,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 1.1739072932123182,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.11096913772270756
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 51
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 23.95128607975016,
+        "R": 9.199450609969652,
+        "elev_deg": 12.753557270464032,
+        "error_vs_exit_deg": 22.777378786537838,
+        "n_cands": 14,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 22.777378786537838,
+      "abs_cross_error_deg": 22.777378786537838,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 286
+    },
+    {
+      "fid": "20260719T150627-486b0765",
+      "fixture": "20260719T151340-phase6g-terminal-live",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T151340-phase6g-terminal-live\\20260719T150627-486b0765-flight.jsonl",
+      "t_pass_ff": 4.6846289,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 5,
+        "n_far_unique": 2,
+        "n_near": 12,
+        "n_far_in_window": 38
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 42.017920878718996,
+        "R": 3.317913148099001,
+        "elev_deg": 17.735339739998366,
+        "error_vs_exit_deg": -137.982079121281,
+        "n_cands": 11,
+        "rival_bearings": [
+          -41.90454075618431,
+          -32.19246142155958,
+          -28.810446110818358
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -137.982079121281,
+      "abs_cross_error_deg": 137.982079121281,
+      "bank_samples": [
+        {
+          "t_ff": 4.0613107,
+          "R": 8.993707024887065,
+          "bearing": 2.2967992119750114,
+          "elev": 13.43557881720123,
+          "error_vs_exit_deg": -177.703200788025,
+          "abs_error_vs_exit_deg": 177.703200788025,
+          "error_vs_cross_truth_deg": -39.72112166674398,
+          "abs_error_vs_cross_truth_deg": 39.72112166674398
+        },
+        {
+          "t_ff": 4.2308885,
+          "R": 8.420090492647661,
+          "bearing": -3.1428689956547515,
+          "elev": 13.890761474412725,
+          "error_vs_exit_deg": 176.85713100434526,
+          "abs_error_vs_exit_deg": 176.85713100434526,
+          "error_vs_cross_truth_deg": -45.160789874373734,
+          "abs_error_vs_cross_truth_deg": 45.160789874373734
+        }
+      ],
+      "bank_abs_errors_deg": [
+        177.703200788025,
+        176.85713100434526
+      ],
+      "n_dets": 333
+    },
+    {
+      "fid": "20260719T151000-486b0765",
+      "fixture": "20260719T151340-phase6g-terminal-live",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T151340-phase6g-terminal-live\\20260719T151000-486b0765-flight.jsonl",
+      "t_pass_ff": 5.2799546,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 15.154729728935207,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 2.1889588800511603
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 28
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 36.200380627584465,
+        "R": 14.96642622069898,
+        "elev_deg": 10.298175818178423,
+        "error_vs_exit_deg": 21.045650898649257,
+        "n_cands": 1,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 21.045650898649257,
+      "abs_cross_error_deg": 21.045650898649257,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 266
+    },
+    {
+      "fid": "20260719T151227-49448448",
+      "fixture": "20260719T151340-phase6g-terminal-live",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T151340-phase6g-terminal-live\\20260719T151227-49448448-flight.jsonl",
+      "t_pass_ff": 4.184231,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 0.5752775826789202,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.5051644778282988
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 41
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 11.587670078212843,
+        "R": 7.881943412025197,
+        "elev_deg": 4.890569606478652,
+        "error_vs_exit_deg": 11.01239249553393,
+        "n_cands": 19,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 11.01239249553393,
+      "abs_cross_error_deg": 11.01239249553393,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 363
+    },
+    {
+      "fid": "20260719T154704-f170ead6",
+      "fixture": "20260719T164956-phase6h-first-enable",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T154704-f170ead6-flight.jsonl",
+      "t_pass_ff": 6.4800424,
+      "pass_source": "closest_state",
+      "exit": {
+        "bearing_deg": 5.459200182628109,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 1.4380603008837651
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 20
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 96
+    },
+    {
+      "fid": "20260719T160537-f170ead6",
+      "fixture": "20260719T164956-phase6h-first-enable",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6-flight.jsonl",
+      "t_pass_ff": 3.7571,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": -0.4978927866103442,
+        "source": "travel_median",
+        "n": 8,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 12,
+        "n_far_unique": 8,
+        "n_near": 15,
+        "n_far_in_window": 61
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 8.381050268233087,
+        "R": 5.872604724270243,
+        "elev_deg": 29.553730921141582,
+        "error_vs_exit_deg": 8.878943054843432,
+        "n_cands": 18,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 8.878943054843432,
+      "abs_cross_error_deg": 8.878943054843432,
+      "bank_samples": [
+        {
+          "t_ff": 3.0073958,
+          "R": 9.929245695529746,
+          "bearing": 33.572947776792994,
+          "elev": 19.374608056659962,
+          "error_vs_exit_deg": 34.07084056340335,
+          "abs_error_vs_exit_deg": 34.07084056340335,
+          "error_vs_cross_truth_deg": 25.19189750855992,
+          "abs_error_vs_cross_truth_deg": 25.19189750855992
+        },
+        {
+          "t_ff": 3.0296016,
+          "R": 9.705968879014673,
+          "bearing": 33.74735711980808,
+          "elev": 17.769023415502815,
+          "error_vs_exit_deg": 34.24524990641842,
+          "abs_error_vs_exit_deg": 34.24524990641842,
+          "error_vs_cross_truth_deg": 25.36630685157499,
+          "abs_error_vs_cross_truth_deg": 25.36630685157499
+        },
+        {
+          "t_ff": 3.0757469,
+          "R": 10.026481699879408,
+          "bearing": 34.01522898303963,
+          "elev": 18.13634414242369,
+          "error_vs_exit_deg": 34.513121769649956,
+          "abs_error_vs_exit_deg": 34.513121769649956,
+          "error_vs_cross_truth_deg": 25.634178714806524,
+          "abs_error_vs_cross_truth_deg": 25.634178714806524
+        },
+        {
+          "t_ff": 3.5696157,
+          "R": 8.701704525536623,
+          "bearing": 40.3802634222017,
+          "elev": 29.913814558219414,
+          "error_vs_exit_deg": 40.878156208812044,
+          "abs_error_vs_exit_deg": 40.878156208812044,
+          "error_vs_cross_truth_deg": 31.99921315396861,
+          "abs_error_vs_cross_truth_deg": 31.99921315396861
+        },
+        {
+          "t_ff": 3.6049604,
+          "R": 8.604550166722223,
+          "bearing": 40.82340947720533,
+          "elev": 30.26028844539386,
+          "error_vs_exit_deg": 41.32130226381568,
+          "abs_error_vs_exit_deg": 41.32130226381568,
+          "error_vs_cross_truth_deg": 32.44235920897225,
+          "abs_error_vs_cross_truth_deg": 32.44235920897225
+        },
+        {
+          "t_ff": 3.6376809,
+          "R": 8.131440388133873,
+          "bearing": 40.61688510485587,
+          "elev": 29.138971660058207,
+          "error_vs_exit_deg": 41.11477789146622,
+          "abs_error_vs_exit_deg": 41.11477789146622,
+          "error_vs_cross_truth_deg": 32.235834836622786,
+          "abs_error_vs_cross_truth_deg": 32.235834836622786
+        },
+        {
+          "t_ff": 3.6696706,
+          "R": 7.838090924672822,
+          "bearing": 40.78873731203415,
+          "elev": 28.356298057351342,
+          "error_vs_exit_deg": 41.28663009864448,
+          "abs_error_vs_exit_deg": 41.28663009864448,
+          "error_vs_cross_truth_deg": 32.40768704380105,
+          "abs_error_vs_cross_truth_deg": 32.40768704380105
+        },
+        {
+          "t_ff": 3.7027574,
+          "R": 7.4958017635692205,
+          "bearing": 40.700078024506354,
+          "elev": 28.134775599419974,
+          "error_vs_exit_deg": 41.197970811116704,
+          "abs_error_vs_exit_deg": 41.197970811116704,
+          "error_vs_cross_truth_deg": 32.31902775627327,
+          "abs_error_vs_cross_truth_deg": 32.31902775627327
+        }
+      ],
+      "bank_abs_errors_deg": [
+        34.07084056340335,
+        34.24524990641842,
+        34.513121769649956,
+        40.878156208812044,
+        41.32130226381568,
+        41.11477789146622,
+        41.28663009864448,
+        41.197970811116704
+      ],
+      "n_dets": 300
+    },
+    {
+      "fid": "20260719T163649-f170ead6",
+      "fixture": "20260719T164956-phase6h-first-enable",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.2576177,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": 169.82141169384994,
+        "source": "travel_median",
+        "n": 8,
+        "spread_deg": 6.9826657838018775
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 3,
+        "n_far_unique": 11,
+        "n_near": 9,
+        "n_far_in_window": 59
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 36.37902895991891,
+        "R": 7.633660989912802,
+        "elev_deg": 53.76688663368242,
+        "error_vs_exit_deg": -133.44238273393103,
+        "n_cands": 17,
+        "rival_bearings": [
+          29.982788869572033,
+          28.901733349761116
+        ],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -133.44238273393103,
+      "abs_cross_error_deg": 133.44238273393103,
+      "bank_samples": [
+        {
+          "t_ff": 3.7046101,
+          "R": 9.359187379112782,
+          "bearing": 26.40164083209292,
+          "elev": 21.972252334613547,
+          "error_vs_exit_deg": -143.41977086175703,
+          "abs_error_vs_exit_deg": 143.41977086175703,
+          "error_vs_cross_truth_deg": -9.977388127826003,
+          "abs_error_vs_cross_truth_deg": 9.977388127826003
+        },
+        {
+          "t_ff": 3.7369272,
+          "R": 9.40769646183049,
+          "bearing": 26.46350612661601,
+          "elev": 22.599654021426737,
+          "error_vs_exit_deg": -143.35790556723393,
+          "abs_error_vs_exit_deg": 143.35790556723393,
+          "error_vs_cross_truth_deg": -9.915522833302902,
+          "abs_error_vs_cross_truth_deg": 9.915522833302902
+        },
+        {
+          "t_ff": 3.769538,
+          "R": 9.347703888833035,
+          "bearing": 26.538437155636647,
+          "elev": 22.99526485272746,
+          "error_vs_exit_deg": -143.2829745382133,
+          "abs_error_vs_exit_deg": 143.2829745382133,
+          "error_vs_cross_truth_deg": -9.840591804282269,
+          "abs_error_vs_cross_truth_deg": 9.840591804282269
+        },
+        {
+          "t_ff": 3.8035625,
+          "R": 9.106656063591641,
+          "bearing": 26.62822495281204,
+          "elev": 22.171222187467894,
+          "error_vs_exit_deg": -143.1931867410379,
+          "abs_error_vs_exit_deg": 143.1931867410379,
+          "error_vs_cross_truth_deg": -9.750804007106865,
+          "abs_error_vs_cross_truth_deg": 9.750804007106865
+        },
+        {
+          "t_ff": 3.8428439,
+          "R": 9.11517215572243,
+          "bearing": 26.643645458106963,
+          "elev": 21.710028620152336,
+          "error_vs_exit_deg": -143.17776623574298,
+          "abs_error_vs_exit_deg": 143.17776623574298,
+          "error_vs_cross_truth_deg": -9.735383501811953,
+          "abs_error_vs_cross_truth_deg": 9.735383501811953
+        },
+        {
+          "t_ff": 3.8684596,
+          "R": 8.967631159368931,
+          "bearing": 26.05649687546436,
+          "elev": 22.031270251892366,
+          "error_vs_exit_deg": -143.7649148183856,
+          "abs_error_vs_exit_deg": 143.7649148183856,
+          "error_vs_cross_truth_deg": -10.322532084454565,
+          "abs_error_vs_cross_truth_deg": 10.322532084454565
+        },
+        {
+          "t_ff": 3.9034594,
+          "R": 8.974446530442979,
+          "bearing": 26.85134595054293,
+          "elev": 22.340675435760836,
+          "error_vs_exit_deg": -142.970065743307,
+          "abs_error_vs_exit_deg": 142.970065743307,
+          "error_vs_cross_truth_deg": -9.527683009375977,
+          "abs_error_vs_cross_truth_deg": 9.527683009375977
+        },
+        {
+          "t_ff": 3.9778352,
+          "R": 8.972922261534682,
+          "bearing": 26.297966657760472,
+          "elev": 22.389846670561496,
+          "error_vs_exit_deg": -143.52344503608947,
+          "abs_error_vs_exit_deg": 143.52344503608947,
+          "error_vs_cross_truth_deg": -10.081062302158443,
+          "abs_error_vs_cross_truth_deg": 10.081062302158443
+        },
+        {
+          "t_ff": 4.0096367,
+          "R": 8.983022617610747,
+          "bearing": 25.766999607419983,
+          "elev": 20.86487775608604,
+          "error_vs_exit_deg": -144.05441208642995,
+          "abs_error_vs_exit_deg": 144.05441208642995,
+          "error_vs_cross_truth_deg": -10.612029352498922,
+          "abs_error_vs_cross_truth_deg": 10.612029352498922
+        },
+        {
+          "t_ff": 4.0370459,
+          "R": 8.723085650094497,
+          "bearing": 24.512323630740575,
+          "elev": 18.1516707814409,
+          "error_vs_exit_deg": -145.30908806310936,
+          "abs_error_vs_exit_deg": 145.30908806310936,
+          "error_vs_cross_truth_deg": -11.86670532917833,
+          "abs_error_vs_cross_truth_deg": 11.86670532917833
+        },
+        {
+          "t_ff": 4.0731321,
+          "R": 8.3357147635627,
+          "bearing": 24.587787732374718,
+          "elev": 6.367605671075882,
+          "error_vs_exit_deg": -145.23362396147522,
+          "abs_error_vs_exit_deg": 145.23362396147522,
+          "error_vs_cross_truth_deg": -11.791241227544191,
+          "abs_error_vs_cross_truth_deg": 11.791241227544191
+        }
+      ],
+      "bank_abs_errors_deg": [
+        143.41977086175703,
+        143.35790556723393,
+        143.2829745382133,
+        143.1931867410379,
+        143.17776623574298,
+        143.7649148183856,
+        142.970065743307,
+        143.52344503608947,
+        144.05441208642995,
+        145.30908806310936,
+        145.23362396147522
+      ],
+      "n_dets": 419
+    },
+    {
+      "fid": "20260719T173050-f170ead6",
+      "fixture": "20260719T173811-phase6i-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T173811-phase6i-rate-ab\\20260719T173050-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.5642775,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 180.0,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 7,
+        "n_far_unique": 2,
+        "n_near": 12,
+        "n_far_in_window": 25
+      },
+      "successor_at_crossing": null,
+      "cross_error_vs_exit_deg": null,
+      "abs_cross_error_deg": null,
+      "bank_samples": [
+        {
+          "t_ff": 3.7020021,
+          "R": 9.253942331028108,
+          "bearing": -1.4445018993350158,
+          "elev": 22.99439663236892,
+          "error_vs_exit_deg": 178.55549810066498,
+          "abs_error_vs_exit_deg": 178.55549810066498,
+          "error_vs_cross_truth_deg": null,
+          "abs_error_vs_cross_truth_deg": null
+        },
+        {
+          "t_ff": 3.7368117,
+          "R": 9.09861592812095,
+          "bearing": -3.640685282459747,
+          "elev": 22.122011949104966,
+          "error_vs_exit_deg": 176.35931471754026,
+          "abs_error_vs_exit_deg": 176.35931471754026,
+          "error_vs_cross_truth_deg": null,
+          "abs_error_vs_cross_truth_deg": null
+        }
+      ],
+      "bank_abs_errors_deg": [
+        178.55549810066498,
+        176.35931471754026
+      ],
+      "n_dets": 231
+    },
+    {
+      "fid": "20260719T173427-50f9dcc8",
+      "fixture": "20260719T173811-phase6i-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T173811-phase6i-rate-ab\\20260719T173427-50f9dcc8-flight.jsonl",
+      "t_pass_ff": 8.2999266,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": 6.096505044345497,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 70
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 0.5953189822760555,
+        "R": 7.009232414491775,
+        "elev_deg": 13.132676735542216,
+        "error_vs_exit_deg": -5.501186062069451,
+        "n_cands": 21,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": -5.501186062069451,
+      "abs_cross_error_deg": 5.501186062069451,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 406
+    },
+    {
+      "fid": "20260719T200816-f170ead6",
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T200816-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.0068052,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": 0.5616709188511886,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.18047005149198486
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 9,
+        "n_far_unique": 13,
+        "n_near": 9,
+        "n_far_in_window": 68
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 4.06317460310418,
+        "R": 7.884133875100651,
+        "elev_deg": 38.45748522329881,
+        "error_vs_exit_deg": 3.501503684252981,
+        "n_cands": 8,
+        "rival_bearings": [
+          14.8382684468656,
+          24.63300316427024
+        ],
+        "ambiguous": true
+      },
+      "cross_error_vs_exit_deg": 3.501503684252981,
+      "abs_cross_error_deg": 3.501503684252981,
+      "bank_samples": [
+        {
+          "t_ff": 3.1338552,
+          "R": 10.894526315507084,
+          "bearing": 37.495413391707324,
+          "elev": 23.860018527604034,
+          "error_vs_exit_deg": 36.933742472856125,
+          "abs_error_vs_exit_deg": 36.933742472856125,
+          "error_vs_cross_truth_deg": 33.432238788603144,
+          "abs_error_vs_cross_truth_deg": 33.432238788603144
+        },
+        {
+          "t_ff": 3.1686578,
+          "R": 10.668153385609779,
+          "bearing": 37.682667924108316,
+          "elev": 24.274048752138093,
+          "error_vs_exit_deg": 37.120997005257124,
+          "abs_error_vs_exit_deg": 37.120997005257124,
+          "error_vs_cross_truth_deg": 33.61949332100414,
+          "abs_error_vs_cross_truth_deg": 33.61949332100414
+        },
+        {
+          "t_ff": 3.1967414,
+          "R": 10.398307219612397,
+          "bearing": 37.953795751819754,
+          "elev": 24.56157360818429,
+          "error_vs_exit_deg": 37.39212483296856,
+          "abs_error_vs_exit_deg": 37.39212483296856,
+          "error_vs_cross_truth_deg": 33.89062114871558,
+          "abs_error_vs_cross_truth_deg": 33.89062114871558
+        },
+        {
+          "t_ff": 3.2340963,
+          "R": 10.67617530778136,
+          "bearing": 38.139015484867855,
+          "elev": 24.034572324104232,
+          "error_vs_exit_deg": 37.57734456601668,
+          "abs_error_vs_exit_deg": 37.57734456601668,
+          "error_vs_cross_truth_deg": 34.07584088176367,
+          "abs_error_vs_cross_truth_deg": 34.07584088176367
+        },
+        {
+          "t_ff": 3.3383786,
+          "R": 10.494083226309401,
+          "bearing": 39.264695083908414,
+          "elev": 25.71770149624677,
+          "error_vs_exit_deg": 38.70302416505723,
+          "abs_error_vs_exit_deg": 38.70302416505723,
+          "error_vs_cross_truth_deg": 35.20152048080422,
+          "abs_error_vs_cross_truth_deg": 35.20152048080422
+        },
+        {
+          "t_ff": 3.3651198,
+          "R": 10.108530016683805,
+          "bearing": 39.3105357881095,
+          "elev": 27.701277979390525,
+          "error_vs_exit_deg": 38.74886486925831,
+          "abs_error_vs_exit_deg": 38.74886486925831,
+          "error_vs_cross_truth_deg": 35.24736118500533,
+          "abs_error_vs_cross_truth_deg": 35.24736118500533
+        },
+        {
+          "t_ff": 3.3991977,
+          "R": 10.06894309797179,
+          "bearing": 39.39654488726146,
+          "elev": 27.45368176628768,
+          "error_vs_exit_deg": 38.83487396841028,
+          "abs_error_vs_exit_deg": 38.83487396841028,
+          "error_vs_cross_truth_deg": 35.3333702841573,
+          "abs_error_vs_cross_truth_deg": 35.3333702841573
+        },
+        {
+          "t_ff": 3.4329492,
+          "R": 9.882040177602828,
+          "bearing": 39.83210150980965,
+          "elev": 26.409719362596903,
+          "error_vs_exit_deg": 39.270430590958455,
+          "abs_error_vs_exit_deg": 39.270430590958455,
+          "error_vs_cross_truth_deg": 35.768926906705474,
+          "abs_error_vs_cross_truth_deg": 35.768926906705474
+        },
+        {
+          "t_ff": 3.4677222,
+          "R": 9.666961762447412,
+          "bearing": 40.19706829392667,
+          "elev": 26.36456191653006,
+          "error_vs_exit_deg": 39.635397375075485,
+          "abs_error_vs_exit_deg": 39.635397375075485,
+          "error_vs_cross_truth_deg": 36.133893690822504,
+          "abs_error_vs_cross_truth_deg": 36.133893690822504
+        },
+        {
+          "t_ff": 3.5022352,
+          "R": 9.89890166507641,
+          "bearing": 40.50776378000213,
+          "elev": 26.987220535860125,
+          "error_vs_exit_deg": 39.94609286115093,
+          "abs_error_vs_exit_deg": 39.94609286115093,
+          "error_vs_cross_truth_deg": 36.44458917689795,
+          "abs_error_vs_cross_truth_deg": 36.44458917689795
+        },
+        {
+          "t_ff": 3.5302177,
+          "R": 9.680461267398854,
+          "bearing": 40.65638747889439,
+          "elev": 27.008165829607908,
+          "error_vs_exit_deg": 40.094716560043196,
+          "abs_error_vs_exit_deg": 40.094716560043196,
+          "error_vs_cross_truth_deg": 36.593212875790215,
+          "abs_error_vs_cross_truth_deg": 36.593212875790215
+        },
+        {
+          "t_ff": 3.5669693,
+          "R": 9.427695309326893,
+          "bearing": 40.811162545975904,
+          "elev": 27.42996117488799,
+          "error_vs_exit_deg": 40.24949162712471,
+          "abs_error_vs_exit_deg": 40.24949162712471,
+          "error_vs_cross_truth_deg": 36.74798794287173,
+          "abs_error_vs_cross_truth_deg": 36.74798794287173
+        },
+        {
+          "t_ff": 3.977116,
+          "R": 8.762656172618874,
+          "bearing": 43.15353738947975,
+          "elev": 25.478197615003857,
+          "error_vs_exit_deg": 42.59186647062856,
+          "abs_error_vs_exit_deg": 42.59186647062856,
+          "error_vs_cross_truth_deg": 39.09036278637558,
+          "abs_error_vs_cross_truth_deg": 39.09036278637558
+        }
+      ],
+      "bank_abs_errors_deg": [
+        36.933742472856125,
+        37.120997005257124,
+        37.39212483296856,
+        37.57734456601668,
+        38.70302416505723,
+        38.74886486925831,
+        38.83487396841028,
+        39.270430590958455,
+        39.635397375075485,
+        39.94609286115093,
+        40.094716560043196,
+        40.24949162712471,
+        42.59186647062856
+      ],
+      "n_dets": 325
+    },
+    {
+      "fid": "20260719T201630-f170ead6",
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201630-f170ead6-flight.jsonl",
+      "t_pass_ff": 4.3319045,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -2.732575477761894,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 33
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 3.2797232074148948,
+        "R": 8.174138247458993,
+        "elev_deg": 5.787846836607407,
+        "error_vs_exit_deg": 6.012298685176802,
+        "n_cands": 15,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 6.012298685176802,
+      "abs_cross_error_deg": 6.012298685176802,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 439
+    },
+    {
+      "fid": "20260719T201851-50f9dcc8",
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8-flight.jsonl",
+      "t_pass_ff": 4.5110314,
+      "pass_source": "hud",
+      "exit": {
+        "bearing_deg": -3.8621715049101666,
+        "source": "travel_median",
+        "n": 8,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": true,
+      "visibility": {
+        "n_concurrent_windows": 5,
+        "n_far_unique": 5,
+        "n_near": 13,
+        "n_far_in_window": 56
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 24.64163337130443,
+        "R": 7.419977257347275,
+        "elev_deg": 23.654811603122532,
+        "error_vs_exit_deg": 28.503804876214588,
+        "n_cands": 16,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 28.503804876214588,
+      "abs_cross_error_deg": 28.503804876214588,
+      "bank_samples": [
+        {
+          "t_ff": 3.9616553,
+          "R": 8.660397140887664,
+          "bearing": 22.35912795037693,
+          "elev": 18.802237905509084,
+          "error_vs_exit_deg": 26.221299455287095,
+          "abs_error_vs_exit_deg": 26.221299455287095,
+          "error_vs_cross_truth_deg": -2.2825054209274924,
+          "abs_error_vs_cross_truth_deg": 2.2825054209274924
+        },
+        {
+          "t_ff": 4.0008958,
+          "R": 9.09147438382781,
+          "bearing": 22.805065111565774,
+          "elev": 18.838940488534906,
+          "error_vs_exit_deg": 26.667236616475947,
+          "abs_error_vs_exit_deg": 26.667236616475947,
+          "error_vs_cross_truth_deg": -1.8365682597386694,
+          "abs_error_vs_cross_truth_deg": 1.8365682597386694
+        },
+        {
+          "t_ff": 4.0308288,
+          "R": 8.987655420227624,
+          "bearing": 23.198347910412863,
+          "elev": 19.513081925192832,
+          "error_vs_exit_deg": 27.06051941532303,
+          "abs_error_vs_exit_deg": 27.06051941532303,
+          "error_vs_cross_truth_deg": -1.443285460891559,
+          "abs_error_vs_cross_truth_deg": 1.443285460891559
+        },
+        {
+          "t_ff": 4.0629161,
+          "R": 8.98852535990093,
+          "bearing": 23.59929005576724,
+          "elev": 20.559474015448938,
+          "error_vs_exit_deg": 27.461461560677407,
+          "abs_error_vs_exit_deg": 27.461461560677407,
+          "error_vs_cross_truth_deg": -1.042343315537181,
+          "abs_error_vs_cross_truth_deg": 1.042343315537181
+        },
+        {
+          "t_ff": 4.0983013,
+          "R": 8.825858327597405,
+          "bearing": 23.98433900292646,
+          "elev": 21.487782210116766,
+          "error_vs_exit_deg": 27.846510507836626,
+          "abs_error_vs_exit_deg": 27.846510507836626,
+          "error_vs_cross_truth_deg": -0.6572943683779613,
+          "abs_error_vs_cross_truth_deg": 0.6572943683779613
+        }
+      ],
+      "bank_abs_errors_deg": [
+        26.221299455287095,
+        26.667236616475947,
+        27.06051941532303,
+        27.461461560677407,
+        27.846510507836626
+      ],
+      "n_dets": 449
+    },
+    {
+      "fid": "20260719T202445-f170ead6",
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202445-f170ead6-flight.jsonl",
+      "t_pass_ff": 3.5200877,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -1.4026956417912717,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.0
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 60
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 7.5033981568535,
+        "R": 9.25254349141116,
+        "elev_deg": 2.230972447599673,
+        "error_vs_exit_deg": 8.906093798644775,
+        "n_cands": 20,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 8.906093798644775,
+      "abs_cross_error_deg": 8.906093798644775,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 239
+    },
+    {
+      "fid": "20260719T202720-50f9dcc8",
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202720-50f9dcc8-flight.jsonl",
+      "t_pass_ff": 3.8879865,
+      "pass_source": "tz_signflip",
+      "exit": {
+        "bearing_deg": -20.057118898008067,
+        "source": "travel_median",
+        "n": 7,
+        "spread_deg": 0.3139279576853191
+      },
+      "gate2_visible_pre_cross": false,
+      "visibility": {
+        "n_concurrent_windows": 0,
+        "n_far_unique": 0,
+        "n_near": 0,
+        "n_far_in_window": 38
+      },
+      "successor_at_crossing": {
+        "bearing_deg": 22.410720715000547,
+        "R": 8.622072743310643,
+        "elev_deg": 4.782474837100353,
+        "error_vs_exit_deg": 42.46783961300861,
+        "n_cands": 3,
+        "rival_bearings": [],
+        "ambiguous": false
+      },
+      "cross_error_vs_exit_deg": 42.46783961300861,
+      "abs_cross_error_deg": 42.46783961300861,
+      "bank_samples": [],
+      "bank_abs_errors_deg": [],
+      "n_dets": 289
+    }
+  ],
+  "hard_cap_deg": 12.0,
+  "primary_error_set": "visible_only"
+}

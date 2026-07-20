@@ -1,0 +1,1769 @@
+{
+  "fixtures": [
+    {
+      "fixture": "20260714T203252-phase3a-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T203252-phase3a-r2training",
+      "flights": [
+        {
+          "id": "20260714T202447-58cd98ad",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.5020347117447653,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260714T202743-58cd98ad",
+          "gates": 0,
+          "clips": 1,
+          "env": 7,
+          "closest_direct_r": null,
+          "closest_state_r": 1.3955593249738634,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260714T212450-phase3b-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260714T212450-phase3b-r2training",
+      "flights": [
+        {
+          "id": "20260714T210518-58cd98ad",
+          "gates": 0,
+          "clips": 12,
+          "env": 0,
+          "closest_direct_r": null,
+          "closest_state_r": 0.8731553312032575,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260714T211404-58cd98ad",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.3060949058963292,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260715T052244-phase3c-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T052244-phase3c-r2training",
+      "flights": [
+        {
+          "id": "20260715T045100-411f3135",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": null,
+          "closest_state_r": 1.1178335711390086,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T045458-411f3135",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.1714315402228998,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260715T135600-phase3d-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T135600-phase3d-r2training",
+      "flights": [
+        {
+          "id": "20260715T121747-22978559",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.35618584425949784,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T122040-22978559",
+          "gates": 0,
+          "clips": 0,
+          "env": 32,
+          "closest_direct_r": null,
+          "closest_state_r": 0.2538586980841819,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T122352-22978559",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.131180840041377,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260715T190627-phase3e-r2training-slow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T190627-phase3e-r2training-slow",
+      "flights": [
+        {
+          "id": "20260715T185046-8e6cf1f5",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 1.4524990433387768,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260715T200734-phase3f-r2training-slow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T200734-phase3f-r2training-slow",
+      "flights": [
+        {
+          "id": "20260715T195033-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 15,
+          "closest_direct_r": null,
+          "closest_state_r": 1.5286614067293676,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260715T211420-phase3g-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260715T211420-phase3g-r2training",
+      "flights": [
+        {
+          "id": "20260715T203300-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 19,
+          "closest_direct_r": null,
+          "closest_state_r": 0.4481966754014821,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T204925-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 1.9825360609078475,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T205124-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 1.841601671086468,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T205845-fc86a160",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.053827381065637725,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T023148-phase3h-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T023148-phase3h-r2training",
+      "flights": [
+        {
+          "id": "20260715T213138-8edfeec4",
+          "gates": 0,
+          "clips": 11,
+          "env": 0,
+          "closest_direct_r": null,
+          "closest_state_r": 0.48193094212439436,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T213225-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 4,
+          "closest_direct_r": null,
+          "closest_state_r": 0.7198620219561636,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260715T213406-fc86a160",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.20896223969713767,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T022502-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 19,
+          "closest_direct_r": null,
+          "closest_state_r": 0.4984270808067039,
+          "multi_gate_windows": 2,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T115732-phase3i-r2training",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T115732-phase3i-r2training",
+      "flights": [
+        {
+          "id": "20260716T031114-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 1.554743244735217,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T113216-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 17,
+          "closest_direct_r": null,
+          "closest_state_r": 1.2311557654306196,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T132549-phase3j-r2training-rerun",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun",
+      "flights": [
+        {
+          "id": "20260716T130659-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": null,
+          "closest_state_r": 0.8871688081776545,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T131137-2ca531c3",
+          "gates": 1,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.10285874582309801,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T131630-8edfeec4",
+          "gates": 0,
+          "clips": 0,
+          "env": 0,
+          "closest_direct_r": null,
+          "closest_state_r": 0.44573827093644924,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T135229-phase4a-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T135229-phase4a-r2training-chain",
+      "flights": [
+        {
+          "id": "20260716T133531-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 8,
+          "closest_direct_r": null,
+          "closest_state_r": 1.1963884958511386,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T134842-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 35,
+          "closest_direct_r": null,
+          "closest_state_r": 0.18022396425511159,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T144305-phase4b-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T144305-phase4b-r2training-chain",
+      "flights": [
+        {
+          "id": "20260716T143604-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.13631414365889225,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T143739-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.0934368894459485,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T143915-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.5708107405935128,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T145727-phase4b-partial",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T145727-phase4b-partial",
+      "flights": [
+        {
+          "id": "20260716T143604-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.13631414365889225,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T143739-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.0934368894459485,
+          "multi_gate_windows": 1,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T143915-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.5708107405935128,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T154946-phase4b-r2training-chain-v2",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T154946-phase4b-r2training-chain-v2",
+      "flights": [
+        {
+          "id": "20260716T153853-927a4c97",
+          "gates": 0,
+          "clips": 2,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.0616963671027494,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T174215-phase4c-r2training-chain",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T174215-phase4c-r2training-chain",
+      "flights": [
+        {
+          "id": "20260716T164931-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.163812774688702,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T165306-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.03450142988516941,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T165535-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.06174039453165481,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260716T212744-phase5-closerange-frames",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T212744-phase5-closerange-frames",
+      "flights": [
+        {
+          "id": "20260716T203450-2ca531c3",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.030753529518360436,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        },
+        {
+          "id": "20260716T212408-2ca531c3",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 1.9781088268446971,
+          "multi_gate_windows": 0,
+          "slice": false,
+          "slice_files": []
+        }
+      ],
+      "slice_count": 0
+    },
+    {
+      "fixture": "20260717T092008-phase5b-confirm",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T092008-phase5b-confirm",
+      "flights": [
+        {
+          "id": "20260717T090941-debf3ec1",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": null,
+          "closest_state_r": 0.04076349410133332,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T090941-debf3ec1_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T091107-debf3ec1",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.3103637400226387,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T091107-debf3ec1_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T091239-debf3ec1",
+          "gates": 0,
+          "clips": 4,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.6874427260126161,
+          "multi_gate_windows": 1,
+          "slice": true,
+          "slice_files": [
+            "20260717T091239-debf3ec1_takeoff_to_end.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260717T100347-phase5c-ownership",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T100347-phase5c-ownership",
+      "flights": [
+        {
+          "id": "20260717T095722-a560c093",
+          "gates": 0,
+          "clips": 1,
+          "env": 4,
+          "closest_direct_r": null,
+          "closest_state_r": 0.40521158670420254,
+          "multi_gate_windows": 2,
+          "slice": true,
+          "slice_files": [
+            "20260717T095722-a560c093_takeoff_to_end.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T095851-a560c093",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.8448936538673332,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T095851-a560c093_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T100017-a560c093",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.057276914761926166,
+          "multi_gate_windows": 1,
+          "slice": true,
+          "slice_files": [
+            "20260717T100017-a560c093_takeoff_to_end_full.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260717T102447-phase5d-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T102447-phase5d-vertical",
+      "flights": [
+        {
+          "id": "20260717T101837-7223cc0c",
+          "gates": 0,
+          "clips": 0,
+          "env": 10,
+          "closest_direct_r": null,
+          "closest_state_r": 0.13966756455105248,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T101837-7223cc0c_takeoff_to_end.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T102007-7223cc0c",
+          "gates": 0,
+          "clips": 0,
+          "env": 36,
+          "closest_direct_r": null,
+          "closest_state_r": 0.06601776350408291,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T102007-7223cc0c_takeoff_to_end.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T102132-7223cc0c",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.8831699123275069,
+          "multi_gate_windows": 1,
+          "slice": true,
+          "slice_files": [
+            "20260717T102132-7223cc0c_takeoff_to_end.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260717T143144-phase5e-shadow",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T143144-phase5e-shadow",
+      "flights": [
+        {
+          "id": "20260717T142306-7223cc0c",
+          "gates": 0,
+          "clips": 1,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.06875116601886012,
+          "multi_gate_windows": 1,
+          "slice": true,
+          "slice_files": [
+            "20260717T142306-7223cc0c_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T142426-7223cc0c",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": null,
+          "closest_state_r": 0.043947958406413704,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T142426-7223cc0c_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T142546-7223cc0c",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": null,
+          "closest_state_r": 0.04912238727758401,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T142546-7223cc0c_takeoff_to_end_full.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260717T152216-phase5f-terminal",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T152216-phase5f-terminal",
+      "flights": [
+        {
+          "id": "20260717T151002-a9753343",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.03905278153018183,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T151002-a9753343_takeoff_to_end_wide0p5.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T151126-a9753343",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.09433967827924068,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T151126-a9753343_takeoff_to_end.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T151254-e179e097",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.07552587890227556,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T151254-e179e097_takeoff_to_end_wide3p0.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T151717-e179e097",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.024927387698968594,
+          "multi_gate_windows": 2,
+          "slice": true,
+          "slice_files": [
+            "20260717T151717-e179e097_takeoff_to_end_wide1p5.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 4
+    },
+    {
+      "fixture": "20260717T154500-phase6a-control-old",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154500-phase6a-control-old",
+      "flights": [
+        {
+          "id": "20260717T153048-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 5,
+          "closest_direct_r": null,
+          "closest_state_r": 0.025390075611387508,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T153048-927a4c97_takeoff_to_end_full.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T153307-927a4c97",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.766486781313263,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T153307-927a4c97_takeoff_to_end_full.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 2
+    },
+    {
+      "fixture": "20260717T154501-phase6a-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260717T154501-phase6a-dash",
+      "flights": [
+        {
+          "id": "20260717T153748-d946830d",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 1.0086244322053994,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T153748-d946830d_takeoff_to_end.aigprec"
+          ]
+        },
+        {
+          "id": "20260717T153903-d946830d",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": null,
+          "closest_state_r": 0.9901459962766693,
+          "multi_gate_windows": 0,
+          "slice": true,
+          "slice_files": [
+            "20260717T153903-d946830d_takeoff_to_end_full.aigprec"
+          ]
+        }
+      ],
+      "slice_count": 2
+    },
+    {
+      "fixture": "20260719T080320-phase6b-aligned-dash",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T080320-phase6b-aligned-dash",
+      "flights": [
+        {
+          "id": "20260719T074950-fab49fbf",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": 4.123,
+          "closest_state_r": 0.252,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "approach",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T074950-fab49fbf_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T075333-fab49fbf",
+          "gates": 0,
+          "clips": 1,
+          "env": 1,
+          "closest_direct_r": 0.822,
+          "closest_state_r": 0.822,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "retreat",
+            "recover",
+            "approach",
+            "search",
+            "approach"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T075333-fab49fbf_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 2
+        },
+        {
+          "id": "20260719T080255-fab49fbf",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 1.032,
+          "closest_state_r": 0.272,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "retreat",
+            "search",
+            "approach",
+            "commit",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T080255-fab49fbf_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 2
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T121704-phase6c-true-vertical",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T121704-phase6c-true-vertical",
+      "flights": [
+        {
+          "id": "20260719T121141-f186c83e",
+          "gates": 0,
+          "clips": 0,
+          "env": 27,
+          "closest_direct_r": 0.847,
+          "closest_state_r": 0.193,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "recover",
+            "commit",
+            "retreat",
+            "commit",
+            "retreat",
+            "search",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T121141-f186c83e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 2
+        },
+        {
+          "id": "20260719T121258-f186c83e",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 3.952,
+          "closest_state_r": 0.919,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "align",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T121258-f186c83e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T121637-f186c83e",
+          "gates": 0,
+          "clips": 0,
+          "env": 12,
+          "closest_direct_r": 1.756,
+          "closest_state_r": 0.201,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "commit",
+            "retreat",
+            "search",
+            "align",
+            "commit",
+            "recover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T121637-f186c83e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T134835-phase6d-fiction-guards",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T134835-phase6d-fiction-guards",
+      "flights": [
+        {
+          "id": "20260719T134326-2477345e",
+          "gates": 0,
+          "clips": 9,
+          "env": 1,
+          "closest_direct_r": 0.736,
+          "closest_state_r": 0.184,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "align",
+            "commit",
+            "recover",
+            "commit",
+            "retreat",
+            "search"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T134326-2477345e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 3
+        },
+        {
+          "id": "20260719T134446-2477345e",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": 1.16,
+          "closest_state_r": 0.245,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "commit"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T134446-2477345e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T134714-2477345e",
+          "gates": 0,
+          "clips": 0,
+          "env": 0,
+          "closest_direct_r": 3.747,
+          "closest_state_r": 0.358,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "approach",
+            "commit",
+            "retreat",
+            "approach",
+            "search",
+            "commit",
+            "retreat",
+            "search"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T134714-2477345e_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T143556-phase6e-aim-tfv1",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T143556-phase6e-aim-tfv1",
+      "flights": [
+        {
+          "id": "20260719T142919-a76247fb",
+          "gates": 0,
+          "clips": 0,
+          "env": 17,
+          "closest_direct_r": 2.091,
+          "closest_state_r": 0.314,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "recover",
+            "approach",
+            "commit",
+            "retreat",
+            "search"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T142919-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T143404-a76247fb",
+          "gates": 0,
+          "clips": 2,
+          "env": 1,
+          "closest_direct_r": 0.632,
+          "closest_state_r": 0.27,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "recover",
+            "commit",
+            "retreat",
+            "search",
+            "align",
+            "commit"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T143404-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 3
+        },
+        {
+          "id": "20260719T143525-a76247fb",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 1.991,
+          "closest_state_r": 0.038,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "approach",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T143525-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T145242-phase6f-repeat",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T145242-phase6f-repeat",
+      "flights": [
+        {
+          "id": "20260719T144540-a76247fb",
+          "gates": 0,
+          "clips": 0,
+          "env": 0,
+          "closest_direct_r": 3.118,
+          "closest_state_r": 0.054,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "approach",
+            "align",
+            "commit",
+            "retreat",
+            "commit",
+            "retreat",
+            "search",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T144540-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T144941-a76247fb",
+          "gates": 0,
+          "clips": 0,
+          "env": 303,
+          "closest_direct_r": 0.658,
+          "closest_state_r": 0.06,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "approach",
+            "commit",
+            "retreat",
+            "recover",
+            "search",
+            "commit",
+            "retreat",
+            "recover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T144941-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T145122-a76247fb",
+          "gates": 0,
+          "clips": 0,
+          "env": 142,
+          "closest_direct_r": 0.799,
+          "closest_state_r": 0.014,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "recover",
+            "search",
+            "recover",
+            "search",
+            "approach",
+            "recover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T145122-a76247fb_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T151340-phase6g-terminal-live",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T151340-phase6g-terminal-live",
+      "flights": [
+        {
+          "id": "20260719T150627-486b0765",
+          "gates": 0,
+          "clips": 0,
+          "env": 44,
+          "closest_direct_r": 1.044,
+          "closest_state_r": 0.027,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "recover",
+            "commit",
+            "retreat",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T150627-486b0765_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T151000-486b0765",
+          "gates": 0,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": 1.748,
+          "closest_state_r": 0.12,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "recover",
+            "search",
+            "commit"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T151000-486b0765_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T151227-49448448",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 3.781,
+          "closest_state_r": 0.314,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "approach",
+            "commit",
+            "retreat"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T151227-49448448_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T164956-phase6h-first-enable",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable",
+      "flights": [
+        {
+          "id": "20260719T154704-f170ead6",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 4.064,
+          "closest_state_r": 0.676,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "approach",
+            "commit",
+            "retreat",
+            "search"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T154704-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T160537-f170ead6",
+          "gates": 1,
+          "clips": 0,
+          "env": 3,
+          "closest_direct_r": 0.687,
+          "closest_state_r": 0.03,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "approach",
+            "align",
+            "approach",
+            "align",
+            "commit",
+            "retreat",
+            "recover",
+            "hover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T160537-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T163649-f170ead6",
+          "gates": 1,
+          "clips": 2,
+          "env": 1,
+          "closest_direct_r": 0.856,
+          "closest_state_r": 0.032,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "recover",
+            "commit",
+            "retreat",
+            "search",
+            "approach",
+            "align",
+            "approach",
+            "align",
+            "commit",
+            "retreat"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T163649-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 3
+        }
+      ],
+      "slice_count": 3
+    },
+    {
+      "fixture": "20260719T173811-phase6i-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T173811-phase6i-rate-ab",
+      "flights": [
+        {
+          "id": "20260719T173050-f170ead6",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 1.388,
+          "closest_state_r": 0.541,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "retreat",
+            "search",
+            "approach",
+            "search",
+            "align"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T173050-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T173427-50f9dcc8",
+          "gates": 0,
+          "clips": 0,
+          "env": 4,
+          "closest_direct_r": 1.611,
+          "closest_state_r": 0.068,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "align",
+            "commit",
+            "retreat",
+            "align",
+            "commit",
+            "retreat",
+            "recover"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T173427-50f9dcc8_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 2
+    },
+    {
+      "fixture": "20260719T204430-phase6i-r-rate-ab",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab",
+      "flights": [
+        {
+          "id": "20260719T200816-f170ead6",
+          "gates": 1,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": 0.635,
+          "closest_state_r": 0.106,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "commit",
+            "approach",
+            "align",
+            "commit",
+            "retreat",
+            "recover",
+            "approach",
+            "search",
+            "align",
+            "commit",
+            "retreat"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T200816-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 3
+        },
+        {
+          "id": "20260719T201630-f170ead6",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 3.669,
+          "closest_state_r": 0.028,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "align",
+            "commit",
+            "retreat",
+            "approach",
+            "commit",
+            "retreat",
+            "search"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T201630-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        },
+        {
+          "id": "20260719T201851-50f9dcc8",
+          "gates": 1,
+          "clips": 0,
+          "env": 29,
+          "closest_direct_r": 0.903,
+          "closest_state_r": 0.037,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "recover",
+            "commit",
+            "search",
+            "approach",
+            "recover",
+            "approach",
+            "align",
+            "commit",
+            "retreat",
+            "recover",
+            "search",
+            "approach",
+            "commit"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T201851-50f9dcc8_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T202445-f170ead6",
+          "gates": 0,
+          "clips": 0,
+          "env": 1,
+          "closest_direct_r": 0.8,
+          "closest_state_r": 0.021,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "commit",
+            "retreat",
+            "search",
+            "align",
+            "commit",
+            "retreat"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T202445-f170ead6_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 1
+        },
+        {
+          "id": "20260719T202720-50f9dcc8",
+          "gates": 0,
+          "clips": 0,
+          "env": 2,
+          "closest_direct_r": 2.104,
+          "closest_state_r": 0.064,
+          "phase_sequence": [
+            "hover",
+            "takeoff",
+            "align",
+            "commit",
+            "retreat",
+            "search",
+            "approach"
+          ],
+          "slice": true,
+          "slice_files": [
+            "20260719T202720-50f9dcc8_takeoff_to_end.aigprec"
+          ],
+          "multi_gate_windows": 0
+        }
+      ],
+      "slice_count": 6
+    }
+  ],
+  "recent_logs": [
+    {
+      "id": "20260719T202720-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202607-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202445-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202332-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202226-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202113-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T202007-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T201851-50f9dcc8",
+      "gates_passed": 1
+    },
+    {
+      "id": "20260719T201749-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T201630-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T201038-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T200931-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T200816-f170ead6",
+      "gates_passed": 1
+    },
+    {
+      "id": "20260719T200705-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T200555-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T200450-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T200347-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T173427-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T173316-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T173205-50f9dcc8",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T173050-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T172942-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T164548-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T164433-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T164321-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T164153-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T164032-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163920-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163807-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163649-f170ead6",
+      "gates_passed": 1
+    },
+    {
+      "id": "20260719T163525-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163416-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163304-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163151-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T163035-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T162853-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T162747-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T162631-f170ead6",
+      "gates_passed": 0
+    },
+    {
+      "id": "20260719T162511-f170ead6",
+      "gates_passed": 0
+    }
+  ]
+}
