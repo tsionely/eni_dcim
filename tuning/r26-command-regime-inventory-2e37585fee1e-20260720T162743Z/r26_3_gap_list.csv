@@ -1,0 +1,7 @@
+regime,definition,physical_evidence_count,covered,gap,route_if_gap
+up_steps,physical TERM vz_up >= +0.03 m/s,0,False,True,closed-loop simulator fixture required
+down_steps,physical TERM vz_up <= -0.03 m/s,28,True,False,
+up_down_triangular,episode command-sign sequence contains up then later down,0,False,True,closed-loop simulator fixture required
+down_up_triangular,episode command-sign sequence contains down then later up,0,False,True,closed-loop simulator fixture required
+saturation,abs(vz_up or v_bz_applied) >= 0.95 * vz_max (0.600 m/s),3,True,False,
+authority_limited,rate_anchor_quality present and < 0.999,0,False,True,closed-loop simulator fixture required

@@ -1,0 +1,37 @@
+{
+  "classification": {
+    "authority_quality_threshold": 0.999,
+    "command_active_mps": 0.03,
+    "episode_gap_s": 0.35,
+    "physical_row_rule": "topic=term_status, owner=term, engaged=true, ready=true, vz_up and v_bz_applied numeric",
+    "saturation_fraction": 0.95,
+    "step_delta_mps": 0.03
+  },
+  "flight_logs_scanned": 156,
+  "gaps": [
+    "up_steps",
+    "up_down_triangular",
+    "down_up_triangular",
+    "authority_limited"
+  ],
+  "physical_term_episodes": 1,
+  "physical_term_rows": 28,
+  "recordings_with_physical_term_status": 1,
+  "regime_totals": {
+    "authority_limited": 0,
+    "diagnostic_down_slope_steps": 2,
+    "diagnostic_down_up_slope_triangular": 1,
+    "diagnostic_up_down_slope_triangular": 0,
+    "diagnostic_up_slope_steps": 11,
+    "down_command_rows": 28,
+    "down_steps": 28,
+    "down_up_triangular": 0,
+    "saturation": 3,
+    "up_command_rows": 0,
+    "up_down_triangular": 0,
+    "up_steps": 0
+  },
+  "repo_head": "2e37585fee1e4349266c0c3c7126309db4bd42bf",
+  "shadow_only_excluded_recordings": 45,
+  "vz_max_mps": 0.6
+}
