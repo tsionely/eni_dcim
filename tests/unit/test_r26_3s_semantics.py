@@ -198,6 +198,17 @@ def test_authority_limited_follows_reversibility_split():
     assert owner == TERM_OWNER
     assert v_bz == 0.0 and vz_up == 0.0         # neutral, TERM-owned
     assert not g.rate_expired_prenoreturn       # not the abort branch
+    # Neutral through the NORMAL limiter, never a hard step
+    # (disposition amendment): from a nonzero achieved value the
+    # applied target SLEWS toward zero — bounded decay, TERM-owned.
+    owner2, v_bz2, vz_up2 = terminal_override(
+        a, _state(ts_next + DT, level_pitch=-0.85),
+        np.array([1.8, 0.0, 0.0]), True, 0.9, 0.55, 0.30, DT,
+        feature=_feature(ts_next + DT, 0.08), feature_age_s=0.01,
+        oracle=g, pitch_cal_rad=-0.85)
+    assert owner2 == TERM_OWNER
+    assert vz_up2 == pytest.approx(0.30 - 2.0 * DT, abs=1e-9)  # slewing
+    assert v_bz2 == pytest.approx(-vz_up2 / np.cos(-0.85), abs=1e-9)
 
 
 @pytest.mark.parametrize("cal", [-0.311, -0.35])

@@ -500,7 +500,10 @@ class App:
                             rate_expired_prenoreturn=(
                                 term_oracle.rate_expired_prenoreturn),
                             pre_owner_term_eligible=(
-                                term_oracle.pre_owner_term_eligible)))
+                                term_oracle.pre_owner_term_eligible),
+                            pre_owner_term_eligible_record=(
+                                term_oracle.pre_owner_term_eligible_record),
+                            term_command_applied=term_v_bz is not None))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

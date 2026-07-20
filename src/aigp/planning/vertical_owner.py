@@ -298,6 +298,28 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                 # eligibility from this, never from post-treatment
                 # trajectories that TERM itself may have shaped.
                 oracle.pre_owner_term_eligible = True
+                if oracle.pre_owner_term_eligible_record is None:
+                    # IMMUTABLE first-latch provenance (RESPONSE43/44
+                    # disposition): evaluated from the pre-arbitration
+                    # snapshot, never set or amended retroactively.
+                    oracle.pre_owner_term_eligible_record = {
+                        "gate_lock_epoch": oracle.epoch,
+                        "exposure_ts_ns": (int(feature.ts_ns)
+                                           if feature is not None
+                                           else None),
+                        "control_ts_ns": int(state.ts_ns),
+                        "position_source": oracle.active_source,
+                        "rate_source": ("FULL_RATE_ANCHOR"
+                                        if oracle.active_source
+                                        == "SIDE_PAIR" else "FULL_QUAD"),
+                        "admission_score": oracle.last_admission_score,
+                        "anchor_age_s": (oracle.anchor_age_s(
+                            float(state.ts_ns) / 1e9)
+                            if oracle.rate_anchor_ts is not None
+                            else None),
+                        "phase": phase_hint,
+                        "feature_age_s": feature_age_s,
+                    }
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,
                          feature_age_s=state.gate_rel_age_s,
@@ -327,8 +349,14 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # stays in shadow. Anchor invalid/expired => neutral rate
             # — option (c) as (a)'s automatic floor.
             now_s = float(state.ts_ns) / 1e9
-            oracle.note_applied(now_s, prev_vz_up
-                                if prev_vz_up is not None else 0.0)
+            # Command-validity distinction (RESPONSE43/44 disposition,
+            # binding): ZERO is a physical command; None is ABSENCE of
+            # TERM actuation. A tick in which TERM supplied no plant
+            # input appends NOTHING to the achieved ring — a synthetic
+            # zero would later be read by the feed-forward as a real
+            # commanded stop that the plant never received.
+            if prev_vz_up is not None:
+                oracle.note_applied(now_s, float(prev_vz_up))
             age = oracle.anchor_age_s(now_s)
             # Runtime maintenance score (ruling SS6): authority ends
             # when the AGED score fails the corridor, not merely at a
@@ -480,7 +508,15 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         #   post-no-return: TERM remains the applied owner with a
         #     neutral command — never a handback to believed altitude.
         if arbiter.latched:
-            return owner, 0.0, 0.0
+            # Neutral is phase-specific and passes through the NORMAL
+            # limiter — never a hard command step (disposition
+            # amendment): slew the applied target toward zero from the
+            # last achieved value. |v_bz| stays bounded (<= vz_max/0.7)
+            # and decays; TERM remains the applied owner.
+            vz_neutral = slew_up_velocity(
+                prev_vz_up if prev_vz_up is not None else 0.0,
+                0.0, dt, az_max, az_max)
+            return owner, float(-vz_neutral / cos_tilt), float(vz_neutral)
         if oracle is not None:
             oracle.rate_expired_prenoreturn = True
         return owner, None, None
@@ -545,6 +581,7 @@ class TerminalOracle:
         self.shadow_forecast: dict | None = None       # old/new pair (§5)
         self.rate_expired_prenoreturn = False
         self.pre_owner_term_eligible = False   # latched pre-actuation door
+        self.pre_owner_term_eligible_record: dict | None = None
         self.anchor_applied_ref: float | None = None
         self._applied_ring: list[tuple[float, float]] = []
         self._anchor_e0: float | None = None
@@ -579,6 +616,7 @@ class TerminalOracle:
         self.shadow_forecast = None
         self.rate_expired_prenoreturn = False
         self.pre_owner_term_eligible = False
+        self.pre_owner_term_eligible_record = None
         self.anchor_applied_ref = None
         self._applied_ring = []
         self._anchor_e0: float | None = None

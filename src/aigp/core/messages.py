@@ -253,6 +253,16 @@ class TermStatus:
     # was applied this attempt. ITT eligibility reads THIS, never
     # post-treatment trajectories.
     pre_owner_term_eligible: bool = False
+    # Immutable first-latch provenance for the marker (RESPONSE43/44
+    # disposition): epoch, exposure/control ts, sources, admission
+    # score, anchor age, phase, feature age at the pre-arbitration
+    # snapshot. Never amended retroactively.
+    pre_owner_term_eligible_record: dict | None = None
+    # Plant truth at the command boundary (RESPONSE43/44 disposition):
+    # True iff TERM physically supplied this tick's vertical command.
+    # owner names the ARBITER's selection; this names what the plant
+    # received. Zero is a physical command; None/False is absence.
+    term_command_applied: bool = False
 
 
 @dataclass(frozen=True, slots=True)

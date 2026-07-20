@@ -1059,6 +1059,23 @@ def test_pre_owner_term_eligible_latches_before_actuation():
             saw_pre_actuation_latch = True     # door read while ALT
     assert owner == TERM_OWNER and saw_pre_actuation_latch
     assert g.pre_owner_term_eligible
+    # Immutable first-latch provenance (RESPONSE43/44 disposition):
+    # captured at the pre-arbitration snapshot, never amended.
+    rec = g.pre_owner_term_eligible_record
+    assert rec is not None
+    assert rec["position_source"] == "FULL_QUAD"
+    assert rec["admission_score"] is not None
+    assert rec["phase"] == "position"
+    first_ts = rec["control_ts_ns"]
+    # Later eligible ticks must NOT rewrite the record.
+    f_more = TerminalFeature(ts_ns=int(8 * 0.04e9),
+                             y_top_px=180.0 - 0.5 * span, span_px=span,
+                             center_x_px=320.0, cert_status="certified",
+                             mode="FULL_QUAD")
+    terminal_override(a, st(), np.array([1.8, 0.0, 0.0]), True, 0.6,
+                      0.55, None, 0.04, feature=f_more,
+                      feature_age_s=0.02, oracle=g)
+    assert g.pre_owner_term_eligible_record["control_ts_ns"] == first_ts
     # Admission-blocked approach (e ~ -0.45): the door never opens and
     # the marker never lies about availability.
     b = make_arbiter()
