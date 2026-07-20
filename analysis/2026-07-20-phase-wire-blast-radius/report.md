@@ -1,8 +1,8 @@
-# Phase-wire blast radius � tau-at-TERM retro audit
+# Phase-wire blast radius — tau-at-TERM retro audit
 
-RESPONSE34 �3: before the fix, `terminal_override` passed constant `position` to the arbiter;
+RESPONSE34 §3: before the fix, `terminal_override` passed constant `position` to the arbiter;
 no-return latch never engaged; first-capture-in-damping existed only in unit tests.
-Corrected wire: `guidance_phase(tau_s, �)` with `position_until_s=0.45`.
+Corrected wire: `guidance_phase(tau_s, ...)` with `position_until_s=0.45`.
 
 ## RETRO_VERDICT: **NO_CHANGE**
 
@@ -11,7 +11,7 @@ No first-capture at tau<=0.45 in archive; handbacks at low tau do not imply reco
 ## Data mined
 - Flight logs scanned: **1248**
 - Shadow CSVs with `shadow_owner`: **16**
-- TERM-owned rows � live: **604**, replay: **95**, total: **699**
+- TERM-owned rows — live: **604**, replay: **95**, total: **699**
 
 ## Tau while TERM owned (seconds)
 - All rows with tau: **679**
@@ -27,12 +27,12 @@ No first-capture at tau<=0.45 in archive; handbacks at low tau do not imply reco
 
 ## Episodes (gap >0.5s or new flight splits)
 - Episodes: **19**
-- Episodes with any tick tau ? 0.45: **4**
-- First-capture (episode start) tau ? 0.45: **0**
+- Episodes with any tick tau ≤ 0.45: **4**
+- First-capture (episode start) tau ≤ 0.45: **0**
 
-## Handbacks (live term_status TERM?ALT)
+## Handbacks (live term_status TERM→ALT)
 - Total handbacks: **13**
-- Handbacks at tau ? 0.45: **0**
+- Handbacks at tau ≤ 0.45: **0**
 
 ## Deliverables
 - `term_owned_ticks.csv`
