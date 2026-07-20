@@ -498,7 +498,9 @@ class App:
                             shadow_vz_up=term_oracle.shadow_anchor_vz,
                             shadow_forecast=term_oracle.shadow_forecast,
                             rate_expired_prenoreturn=(
-                                term_oracle.rate_expired_prenoreturn)))
+                                term_oracle.rate_expired_prenoreturn),
+                            pre_owner_term_eligible=(
+                                term_oracle.pre_owner_term_eligible)))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

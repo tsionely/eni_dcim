@@ -1024,6 +1024,59 @@ def test_dual_read_shadow_anchor_removes_policy_scaling():
         -(1.0 - auth) * g.rate_anchor_v_raw, abs=1e-9)
 
 
+def test_pre_owner_term_eligible_latches_before_actuation():
+    """RESPONSE41/42 disposition §4: the ITT availability marker
+    latches when the COMMON observer satisfies the legal door while
+    the owner is still ALT — before any TERM command exists — and an
+    admission-blocked approach never sets it. reset() clears it (the
+    marker is per-attempt)."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 284.0
+    a = make_arbiter()
+    g = TerminalOracle()
+    saw_pre_actuation_latch = False
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="FULL_QUAD")
+        was_alt = a.owner == ALT_OWNER
+        owner, _, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 0.6, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g)
+        if was_alt and g.pre_owner_term_eligible:
+            saw_pre_actuation_latch = True     # door read while ALT
+    assert owner == TERM_OWNER and saw_pre_actuation_latch
+    assert g.pre_owner_term_eligible
+    # Admission-blocked approach (e ~ -0.45): the door never opens and
+    # the marker never lies about availability.
+    b = make_arbiter()
+    g2 = TerminalOracle()
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span + 0.45 * span / 1.6,
+                            span_px=span, center_x_px=320.0,
+                            cert_status="certified", mode="FULL_QUAD")
+        owner2, _, _ = terminal_override(
+            b, st(), np.array([1.8, 0.0, 0.0]), True, 0.6, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g2)
+    assert owner2 == ALT_OWNER and not g2.pre_owner_term_eligible
+    # Per-attempt: the planner-side reset clears the latch.
+    g.reset()
+    assert not g.pre_owner_term_eligible
+
+
 def test_dual_read_purity_no_actuating_side_effects():
     """Advisory-20 binding purity invariant: enable vs disable of the
     dual-read instrument must leave everything actuating bit-for-bit

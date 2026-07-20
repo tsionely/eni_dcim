@@ -29,9 +29,11 @@ DT = 0.02                          # 50Hz commit tick
 LEVEL_PITCH = -0.311
 # Mandatory mock-domain control (advisory-21): the calibration is the
 # DOMAIN'S OWN, common to every arm — this rig's rest pitch IS its trim
-# truth, so pitch_cal == level_pitch here (the real rig's -0.33 belongs
-# to the real domain; carrying it into the mock re-creates the trim
-# fiction the mock A/B was voided for).
+# truth, so pitch_cal == level_pitch here. The REAL rig's production
+# trim constant belongs to the real domain; carrying it into the mock
+# re-creates the trim fiction the mock A/B was voided for, and the
+# calibration-isolation fixture below scans this module to prove the
+# production literal never appears here.
 MOCK_PITCH_CAL = LEVEL_PITCH
 COS_TILT = float(np.cos(LEVEL_PITCH))
 
@@ -78,7 +80,8 @@ def _feature(ts_s: float, e_z: float, mode: str = "FULL_QUAD"):
 def run_episode(e0_m: float, ticks: int = 120, tau_s: float = 0.9,
                 vz_max: float = 0.6, az_max: float = 2.0,
                 withhold_full_after: int | None = None,
-                level_pitch: float = LEVEL_PITCH):
+                level_pitch: float = LEVEL_PITCH,
+                pitch_cal: float = MOCK_PITCH_CAL):
     """Drive the production terminal chain against the plant. Returns
     per-tick rows: (ts, e_true, owner, v_bz, vz_up)."""
     a = VerticalOwnerArbiter()
@@ -101,7 +104,7 @@ def run_episode(e0_m: float, ticks: int = 120, tau_s: float = 0.9,
         owner, v_bz, vz_up = terminal_override(
             a, st, np.array([1.8, 0.0, 0.0]), True, tau_s, 0.55, prev,
             DT, feature=f, feature_age_s=0.01, oracle=g,
-            vz_max=vz_max, az_max=az_max, pitch_cal_rad=MOCK_PITCH_CAL)
+            vz_max=vz_max, az_max=az_max, pitch_cal_rad=pitch_cal)
         if owner == TERM_OWNER and v_bz is not None:
             plant.step(v_bz, DT)               # physical response
         rows.append((ts, plant.e_z, owner, v_bz, vz_up))
@@ -165,13 +168,54 @@ def test_slew_ordering_and_achieved_command():
         assert max(abs(r[4]) for r in owned) <= 0.6 + 1e-9
 
 
-def test_authority_limited_branch_never_amplifies():
-    """[MOCK/SEMANTIC] authority_limited: outside the recorded tilt
-    envelope (cos_tilt < 0.7) the chain must refuse the vertical —
-    v_bz None while TERM may own, no exception, no unbounded
-    amplification — the legacy channel keeps the tick."""
-    rows, _, _ = run_episode(+0.10, level_pitch=-0.85)  # cos ~ 0.66
-    assert all(r[3] is None for r in rows)      # never actuates vertical
+def test_authority_limited_follows_reversibility_split():
+    """[MOCK/SEMANTIC] authority_limited (disposition §6 amendment):
+    outside the recorded tilt envelope the branch follows the SAME
+    reversibility split as the age ceiling. Pre-no-return: TERM never
+    actuates the vertical, the hold/abort request is raised (the
+    planner guards feasibility), and the achieved thread carries None
+    — a command that never reached the plant can NEVER later read as
+    a real rate change. Post-no-return: TERM remains the applied
+    owner with a NEUTRAL command — no handback to believed
+    altitude."""
+    rows, g, a = run_episode(+0.08, level_pitch=-0.85,  # cos ~ 0.66
+                             pitch_cal=-0.85)
+    owned_ticks = [r for r in rows if r[2] == TERM_OWNER]
+    assert len(owned_ticks) > 20                # ownership still happens
+    assert all(r[3] is None for r in rows)      # vertical never actuates
+    assert all(r[4] is None for r in owned_ticks)   # achieved thread None
+    assert g.rate_expired_prenoreturn           # hold/abort raised
+    assert not a.latched
+    # Post-no-return: latch the schedule, tick once more — TERM keeps
+    # the vertical with a neutral command and the request stays down.
+    a.latched = True
+    ts_next = rows[-1][0] + DT
+    f = _feature(ts_next, 0.08)
+    owner, v_bz, vz_up = terminal_override(
+        a, _state(ts_next, level_pitch=-0.85), np.array([1.8, 0.0, 0.0]),
+        True, 0.9, 0.55, None, DT, feature=f, feature_age_s=0.01,
+        oracle=g, pitch_cal_rad=-0.85)
+    assert owner == TERM_OWNER
+    assert v_bz == 0.0 and vz_up == 0.0         # neutral, TERM-owned
+    assert not g.rate_expired_prenoreturn       # not the abort branch
+
+
+@pytest.mark.parametrize("cal", [-0.311, -0.35])
+def test_mock_calibration_is_common_arm(cal):
+    """[MOCK/SEMANTIC] Permanent calibration invariant (disposition
+    §5): the mock rig's rest calibration enters BOTH command arms
+    identically — either honest rig calibration captures and closes
+    in both directions — and the REAL rig's production trim literal
+    never appears in this module (scanned), so changing the real
+    constant cannot change any mock result."""
+    for e0 in (+0.08, -0.08):
+        rows, _, _ = run_episode(e0, level_pitch=cal, pitch_cal=cal)
+        assert len(_owned(rows)) > 40
+        assert abs(rows[-1][1]) < 0.5 * abs(e0)
+    import pathlib
+    src = pathlib.Path(__file__).read_text()
+    banned = "-0.3" + "3"                       # built, not written: the
+    assert banned not in src                    # production literal is absent
 
 
 def test_source_transition_is_not_vehicle_response():

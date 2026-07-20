@@ -248,6 +248,11 @@ class TermStatus:
     # Pre-no-return validated-age expiry (RESPONSE32 disposition
     # branch semantics): the tick raised the hold/abort flag.
     rate_expired_prenoreturn: bool = False
+    # Pre-actuation availability (RESPONSE41/42 disposition §4): the
+    # common observer satisfied the legal door before any TERM command
+    # was applied this attempt. ITT eligibility reads THIS, never
+    # post-treatment trajectories.
+    pre_owner_term_eligible: bool = False
 
 
 @dataclass(frozen=True, slots=True)

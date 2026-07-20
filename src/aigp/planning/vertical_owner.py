@@ -237,6 +237,12 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # already-plausible arrival, it does not rescue the opening's edge.
     # Once TERM owns, the latch/loss-grace semantics govern instead.
     capture_ok = certified
+    if oracle is not None:
+        # Per-tick recompute: the hold/abort request never lingers
+        # stale from a previous tick's condition (the SIDE-age and
+        # authority-limited branches below re-raise it while their
+        # conditions persist).
+        oracle.rate_expired_prenoreturn = False
     if oracle is not None and arbiter.owner != TERM_OWNER:
         # Conservative first-live authority policy (RESPONSE19
         # disposition SS3): only the highest-fidelity rung may open the
@@ -284,6 +290,14 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                                                 + 0.06)
             oracle.last_tau_s = float(tau_s)
             capture_ok = oracle.last_admission_score <= corridor_m
+            if capture_ok:
+                # Pre-actuation availability marker (RESPONSE41/42
+                # disposition §4): latches when the COMMON observer
+                # satisfies the legal door BEFORE any TERM command is
+                # applied — the intention-to-treat analysis reads
+                # eligibility from this, never from post-treatment
+                # trajectories that TERM itself may have shaped.
+                oracle.pre_owner_term_eligible = True
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,
                          feature_age_s=state.gate_rel_age_s,
@@ -455,7 +469,21 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     if cos_tilt < 0.7:
         # Outside the recorded tilt envelope: vertical_authority_limited
         # — never amplify the command without bound (advisory SS2).
-        return owner, None, prev_vz_up
+        # Branch semantics per the RESPONSE41/42 disposition §6 — the
+        # same reversibility split as the age ceiling:
+        #   pre-no-return: TERM does not apply; hold/abort requested
+        #     while reversal is feasible (planner guards the band);
+        #     the achieved thread returns None so the feed-forward can
+        #     NEVER read a command that never reached the plant as a
+        #     real rate change (note_applied then records 0.0 — the
+        #     actual effective TERM contribution).
+        #   post-no-return: TERM remains the applied owner with a
+        #     neutral command — never a handback to believed altitude.
+        if arbiter.latched:
+            return owner, 0.0, 0.0
+        if oracle is not None:
+            oracle.rate_expired_prenoreturn = True
+        return owner, None, None
     v_bz = -vz_up / cos_tilt
     return owner, float(v_bz), float(vz_up)
 
@@ -516,6 +544,7 @@ class TerminalOracle:
         self.shadow_anchor_vz: float | None = None     # dual-read forecast
         self.shadow_forecast: dict | None = None       # old/new pair (§5)
         self.rate_expired_prenoreturn = False
+        self.pre_owner_term_eligible = False   # latched pre-actuation door
         self.anchor_applied_ref: float | None = None
         self._applied_ring: list[tuple[float, float]] = []
         self._anchor_e0: float | None = None
@@ -549,6 +578,7 @@ class TerminalOracle:
         self.shadow_anchor_vz = None
         self.shadow_forecast = None
         self.rate_expired_prenoreturn = False
+        self.pre_owner_term_eligible = False
         self.anchor_applied_ref = None
         self._applied_ring = []
         self._anchor_e0: float | None = None
