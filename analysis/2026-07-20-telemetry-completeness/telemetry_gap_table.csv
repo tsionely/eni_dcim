@@ -1,0 +1,32 @@
+field,where,blocks_c4,status,in_code,in_sample_log,why,notes
+gate_lock_epoch,term|feature|state,True,MISSING,False,False,epoch hygiene; wrong-epoch metrology adjudication,
+exposure_id,feature|term,True,PRESENT,True,True,exact-exposure pairing FULL/SIDE; switch legality,proxy=feature.ts_ns (exact-exposure pairing)
+cert_status,feature|detection,True,PRESENT,True,True,probation-out + identity; already on feature,
+psi_age,feature|term (SIDE),True,MISSING,False,False,S4 disposition; orientation-prior age on side rung,
+fresh_tail_n,term,True,MISSING,False,False,ready predicate audit (n/span/gap of contiguous tail),TerminalOracle.history_stats() computes; not on TermStatus
+fresh_tail_span_s,term,True,MISSING,False,False,ready predicate audit,TerminalOracle.history_stats() computes; not on TermStatus
+fresh_tail_max_gap_s,term,True,MISSING,False,False,ready predicate audit,TerminalOracle.history_stats() computes; not on TermStatus
+ready,term_status,True,PRESENT,True,True,TERM_READY adjudication,
+ready_legacy,term_status,False,CODE_ONLY,True,False,dual-readiness A/B; nice for semantic check,on TermStatus dataclass; older logs predate field; PRESENT in TermStatus on HEAD — sample fixture predates field
+e_z_raw,term,True,MISSING,False,False,pre-clamp / pre-admission measurement,
+e_z_accepted,term,True,MISSING,False,False,post-door accepted e (or null if rejected),TermStatus.e_z is effective only
+e_z,term_status,True,PRESENT,True,True,oracle effective e_z (present but conflates raw/accepted),
+sigma_e,term,True,MISSING,False,False,admission corridor + crossing test,oracle.sigmas_for_active() exists; not logged
+sigma_v,term,True,MISSING,False,False,admission / rate authority,oracle.sigmas_for_active() exists; not logged
+source_mode,term_status,True,CODE_ONLY,True,False,active rung FULL_QUAD|SIDE_PAIR,on TermStatus; phase6l sample may predate; PRESENT in TermStatus on HEAD — sample fixture predates field
+transition_fields,term,True,MISSING,False,False,"from/to source, reason, overlap median Δe at switch",
+tau_s,term,True,MISSING,False,False,admission horizon / guidance,
+t_tail_s,term,False,MISSING,False,False,admission parameter; static config OK if logged once,
+admission_score,term,True,MISSING,False,False,corridor residual that passed/failed capture,
+owner,term_status,True,PRESENT,True,True,alt|term actuating owner,
+shadow_owner,shadow_terminal,False,PRESENT,True,True,shadow vs applied; present on Topic.SHADOW,
+applied_owner,term_status.owner + v_bz_applied,True,PRESENT,True,True,live adjudication (phase6i lesson),
+rate_source,term_status,True,CODE_ONLY,True,False,FULL_QUAD vs FULL_RATE_ANCHOR provenance split,PRESENT in TermStatus on HEAD — sample fixture predates field
+rate_anchor_age_s,term_status,True,CODE_ONLY,True,False,anchor age / invalidation for (a) ruling,PRESENT in TermStatus on HEAD — sample fixture predates field
+rate_anchor_valid,term,True,MISSING,False,False,falsification monitor outcome,oracle.rate_anchor_valid exists; not on TermStatus
+rate_anchor_exposure_id,term,False,MISSING,False,False,nice; ties anchor to exposure,
+feature.mode,feature,True,PRESENT,True,True,FULL_QUAD|SIDE_PAIR|ROW_ONLY,
+feature.span_px,feature,True,PRESENT,True,True,scale gate product,
+feature.y_top_px,feature,True,PRESENT,True,True,e_z row formula,
+engaged,term_status,True,PRESENT,True,True,2.5m engagement gate,
+v_bz_applied,term_status,True,PRESENT,True,True,what actually replaced legacy vertical,

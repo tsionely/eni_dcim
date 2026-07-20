@@ -1,0 +1,429 @@
+{
+  "ask": "telemetry completeness audit (cohort-4 gate row 11)",
+  "TermStatus_fields_HEAD": [
+    "e_z",
+    "engaged",
+    "owner",
+    "rate_anchor_age_s",
+    "rate_source",
+    "ready",
+    "ready_legacy",
+    "source_mode",
+    "ts_ns",
+    "v_bz_applied",
+    "vz_up"
+  ],
+  "TerminalFeature_fields_HEAD": [
+    "center_x_px",
+    "cert_status",
+    "mode",
+    "span_px",
+    "ts_ns",
+    "y_top_px"
+  ],
+  "sample_log_topics": {
+    "state": [
+      "gate_center_px",
+      "gate_rel",
+      "gate_rel_age_s",
+      "healthy",
+      "image_size",
+      "level_pitch",
+      "level_roll",
+      "omega",
+      "q_att",
+      "ts_ns",
+      "v_world"
+    ],
+    "detection": [
+      "center_px",
+      "cert_status",
+      "confidence",
+      "corners_px",
+      "image_size",
+      "rel_pose",
+      "ts_ns"
+    ],
+    "feature": [
+      "center_x_px",
+      "cert_status",
+      "mode",
+      "span_px",
+      "ts_ns",
+      "y_top_px"
+    ],
+    "term_status": [
+      "e_z",
+      "engaged",
+      "owner",
+      "ready",
+      "ts_ns",
+      "v_bz_applied",
+      "vz_up"
+    ]
+  },
+  "tuning_term_csv_cols_example": [
+    "e_z",
+    "engaged",
+    "feature_cert_status",
+    "feature_mode",
+    "feature_span_px",
+    "gate_age_s",
+    "lateral_m",
+    "owner",
+    "pitch_t_rad",
+    "range_m",
+    "ready",
+    "row",
+    "sign_bad_vbz_vs_ez",
+    "span_x_range",
+    "true_dz_m",
+    "ts_ns",
+    "v_bz_applied",
+    "visible_scale_gate_reject",
+    "vz_up"
+  ],
+  "n_mandatory": 31,
+  "n_present": 12,
+  "n_missing_block_c4": 13,
+  "n_shipped_pending_flight": 4,
+  "n_missing_nice": 3,
+  "missing_block_c4": [
+    "gate_lock_epoch",
+    "psi_age",
+    "fresh_tail_n",
+    "fresh_tail_span_s",
+    "fresh_tail_max_gap_s",
+    "e_z_raw",
+    "e_z_accepted",
+    "sigma_e",
+    "sigma_v",
+    "transition_fields",
+    "tau_s",
+    "admission_score",
+    "rate_anchor_valid"
+  ],
+  "missing_nice_to_have": [
+    "ready_legacy",
+    "t_tail_s",
+    "rate_anchor_exposure_id"
+  ],
+  "shipped_code_awaiting_head_flight": [
+    "ready_legacy",
+    "source_mode",
+    "rate_source",
+    "rate_anchor_age_s"
+  ],
+  "rows": [
+    {
+      "field": "gate_lock_epoch",
+      "where": "term|feature|state",
+      "blocks_c4": true,
+      "why": "epoch hygiene; wrong-epoch metrology adjudication",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "exposure_id",
+      "where": "feature|term",
+      "blocks_c4": true,
+      "why": "exact-exposure pairing FULL/SIDE; switch legality",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": "proxy=feature.ts_ns (exact-exposure pairing)"
+    },
+    {
+      "field": "cert_status",
+      "where": "feature|detection",
+      "blocks_c4": true,
+      "why": "probation-out + identity; already on feature",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "psi_age",
+      "where": "feature|term (SIDE)",
+      "blocks_c4": true,
+      "why": "S4 disposition; orientation-prior age on side rung",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "fresh_tail_n",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "ready predicate audit (n/span/gap of contiguous tail)",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "TerminalOracle.history_stats() computes; not on TermStatus"
+    },
+    {
+      "field": "fresh_tail_span_s",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "ready predicate audit",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "TerminalOracle.history_stats() computes; not on TermStatus"
+    },
+    {
+      "field": "fresh_tail_max_gap_s",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "ready predicate audit",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "TerminalOracle.history_stats() computes; not on TermStatus"
+    },
+    {
+      "field": "ready",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "TERM_READY adjudication",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "ready_legacy",
+      "where": "term_status",
+      "blocks_c4": false,
+      "why": "dual-readiness A/B; nice for semantic check",
+      "in_code": true,
+      "in_sample_log": false,
+      "status": "CODE_ONLY",
+      "notes": "on TermStatus dataclass; older logs predate field; PRESENT in TermStatus on HEAD \u2014 sample fixture predates field"
+    },
+    {
+      "field": "e_z_raw",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "pre-clamp / pre-admission measurement",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "e_z_accepted",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "post-door accepted e (or null if rejected)",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "TermStatus.e_z is effective only"
+    },
+    {
+      "field": "e_z",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "oracle effective e_z (present but conflates raw/accepted)",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "sigma_e",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "admission corridor + crossing test",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "oracle.sigmas_for_active() exists; not logged"
+    },
+    {
+      "field": "sigma_v",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "admission / rate authority",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "oracle.sigmas_for_active() exists; not logged"
+    },
+    {
+      "field": "source_mode",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "active rung FULL_QUAD|SIDE_PAIR",
+      "in_code": true,
+      "in_sample_log": false,
+      "status": "CODE_ONLY",
+      "notes": "on TermStatus; phase6l sample may predate; PRESENT in TermStatus on HEAD \u2014 sample fixture predates field"
+    },
+    {
+      "field": "transition_fields",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "from/to source, reason, overlap median \u0394e at switch",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "tau_s",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "admission horizon / guidance",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "t_tail_s",
+      "where": "term",
+      "blocks_c4": false,
+      "why": "admission parameter; static config OK if logged once",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "admission_score",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "corridor residual that passed/failed capture",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "owner",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "alt|term actuating owner",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "shadow_owner",
+      "where": "shadow_terminal",
+      "blocks_c4": false,
+      "why": "shadow vs applied; present on Topic.SHADOW",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "applied_owner",
+      "where": "term_status.owner + v_bz_applied",
+      "blocks_c4": true,
+      "why": "live adjudication (phase6i lesson)",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "rate_source",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "FULL_QUAD vs FULL_RATE_ANCHOR provenance split",
+      "in_code": true,
+      "in_sample_log": false,
+      "status": "CODE_ONLY",
+      "notes": "PRESENT in TermStatus on HEAD \u2014 sample fixture predates field"
+    },
+    {
+      "field": "rate_anchor_age_s",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "anchor age / invalidation for (a) ruling",
+      "in_code": true,
+      "in_sample_log": false,
+      "status": "CODE_ONLY",
+      "notes": "PRESENT in TermStatus on HEAD \u2014 sample fixture predates field"
+    },
+    {
+      "field": "rate_anchor_valid",
+      "where": "term",
+      "blocks_c4": true,
+      "why": "falsification monitor outcome",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": "oracle.rate_anchor_valid exists; not on TermStatus"
+    },
+    {
+      "field": "rate_anchor_exposure_id",
+      "where": "term",
+      "blocks_c4": false,
+      "why": "nice; ties anchor to exposure",
+      "in_code": false,
+      "in_sample_log": false,
+      "status": "MISSING",
+      "notes": ""
+    },
+    {
+      "field": "feature.mode",
+      "where": "feature",
+      "blocks_c4": true,
+      "why": "FULL_QUAD|SIDE_PAIR|ROW_ONLY",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "feature.span_px",
+      "where": "feature",
+      "blocks_c4": true,
+      "why": "scale gate product",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "feature.y_top_px",
+      "where": "feature",
+      "blocks_c4": true,
+      "why": "e_z row formula",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "engaged",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "2.5m engagement gate",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    },
+    {
+      "field": "v_bz_applied",
+      "where": "term_status",
+      "blocks_c4": true,
+      "why": "what actually replaced legacy vertical",
+      "in_code": true,
+      "in_sample_log": true,
+      "status": "PRESENT",
+      "notes": ""
+    }
+  ]
+}
