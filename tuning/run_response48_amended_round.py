@@ -513,13 +513,13 @@ def historical_zero_green_rescore(out_dir: Path) -> dict[str, int]:
             for row in rows:
                 if row.get("owner") != "term":
                     continue
-                cmd = fnum(row.get("v_bz_applied"))
-                if cmd is None:
-                    cmd = fnum(row.get("vz_up"))
+                # TermStatus carries both the semantic vertical/up command
+                # (`vz_up`) and the body-z adapter channel (`v_bz_applied`).
+                # The registered criterion is sign(command) vs sign(e), so
+                # use the world/up command; body-z remains telemetry.
+                cmd = fnum(row.get("vz_up"))
                 e = fnum(row.get("e_z"))
                 vel = fnum(row.get("truth_vz_up_mps"))
-                if vel is None:
-                    vel = fnum(row.get("vz_up"))
                 if cmd is None or e is None:
                     continue
                 total_events += 1
@@ -537,11 +537,12 @@ def historical_zero_green_rescore(out_dir: Path) -> dict[str, int]:
                     "term_status_csv": str(csv_path.relative_to(ROOT)),
                     "row": row.get("row", ""),
                     "ts_ns": row.get("ts_ns", ""),
-                    "cmd_col": "v_bz_applied" if fnum(row.get("v_bz_applied")) is not None else "vz_up",
+                    "cmd_col": "vz_up",
                     "cmd_mps": cmd,
                     "needed_e_col": "e_z",
                     "needed_e_m": e,
                     "registered_wrong_sign": bad,
+                    "body_z_adapter_v_bz_applied": row.get("v_bz_applied", ""),
                     "opposition_to_velocity_rate": ov,
                 })
         artifact_rows.append({
