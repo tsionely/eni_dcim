@@ -1,0 +1,7 @@
+CHECKER TRANSCRIPT v3 — evidence packet 5c69823 (hardened contract)
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json 02b32cca996a22f3a44a8757ce2486a747eb706e
+reviewed tip (full hash; HEAD == tip enforced; clean tree enforced): 02b32cca996a22f3a44a8757ce2486a747eb706e
+--- git status --porcelain (empty = clean) ---
+--- output ---
+MANIFEST VERIFIES (RELEASE-GRADE)
+exit status: 0
