@@ -1,0 +1,2 @@
+repo_head,source_dir,response31_path,n_flights,n_clusters,n_rows,max_validated_age,verdict,verdict_note,additional_clusters_needed_min,data_insufficient_note
+7c3b875492e6c9cd68023f12c3b9736bf1dfd49a,C:\Users\tsion\Projects\eni_dcim_qa\tuning\hold-lift-r26-3b554f3-35bfa6d-20260720T121704Z,C:\Users\tsion\Projects\eni_dcim_qa\docs\thinktank\RESPONSE31.md,1,1,16,none,"HOLD, DATA-INSUFFICIENT",n_clusters=1 < 6; cluster bootstrap U95 is degenerate/not release-valid.,5,n_clusters=1; release requires >= 6 independent clusters.

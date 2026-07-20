@@ -1,0 +1,7 @@
+age_bin,n,n_flights,coverage,worst_flight,status
+0p00-0p10,0,0,,,DATA-INSUFFICIENT: need >=2 flights for LOFO
+0p10-0p20,3,1,,20260720T071112-cd18c5fb,DATA-INSUFFICIENT: need >=2 flights for LOFO
+0p20-0p30,6,1,,20260720T071112-cd18c5fb,DATA-INSUFFICIENT: need >=2 flights for LOFO
+0p30-0p40,6,1,,20260720T071112-cd18c5fb,DATA-INSUFFICIENT: need >=2 flights for LOFO
+0p40-0p50,1,1,,20260720T071112-cd18c5fb,DATA-INSUFFICIENT: need >=2 flights for LOFO
+gt0p50,0,0,,,DATA-INSUFFICIENT: need >=2 flights for LOFO

@@ -1,0 +1,2 @@
+estimator,nu,sigma_0_mps,sigma_a_mps2,u95_sigma_a_mps2,bootstrap_valid,bootstrap_note
+student_t_scale_nu5_constrained,5.0,0.010780744639639388,0.14285714285714285,0.14285714285714285,False,DATA-INSUFFICIENT: cluster bootstrap degenerate/prohibited for release

@@ -1,0 +1,2 @@
+n,sigma_0_mps,sigma_a_mps2,real_below_pseudo_floor,note
+256,0.09291436335464075,0.0,True,FULL-only pseudo anchors/evaluations use non-overlapping 0.35s windows.

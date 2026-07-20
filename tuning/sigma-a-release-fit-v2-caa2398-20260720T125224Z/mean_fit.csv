@@ -1,0 +1,2 @@
+b0_mps,b1_mps_per_s,b0_ci_low_mps,b0_ci_median_mps,b0_ci_high_mps,b1_ci_low_mps_per_s,b1_ci_median_mps_per_s,b1_ci_high_mps_per_s,mean_fit_residual_rms_mps,deterministic_note
+-0.5879878308556216,0.6190952635084276,-0.5879878308556216,-0.5879878308556216,-0.5879878308556216,0.6190952635084276,0.6190952635084276,0.6190952635084276,0.052669250714329034,"DETERMINISTIC-SUSPECT: point b1 is nonzero, but cluster CI is invalid with one cluster; do not fold this signed trend into sigma."

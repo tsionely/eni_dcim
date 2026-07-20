@@ -12,6 +12,7 @@ Artifacts:
 - P4 wall-clock: `tuning/hold-lift-p4-3b554f3-3942837-20260720T115546Z/`
 - R26 reference provenance pin: `tuning/hold-lift-r26-3b554f3-35bfa6d-20260720T121704Z/`
 - SIGMA_A deconvolution: `tuning/sigma-a-deconv-caa2398-20260720T123324Z/`
+- SIGMA_A release fit v2: `tuning/sigma-a-release-fit-v2-caa2398-20260720T125224Z/`
 
 ## 0. Reference Provenance Pin Rerun
 
@@ -59,6 +60,26 @@ Age-bin counts:
 | `0.30-0.50s` | 7 | `0.374` | `1.310` |
 
 Verdict: under the deconvolved variance model, the true age-growing drift term is not supported by these samples and the `sigma_a <= 0.35` gate lives. Caveat: `sigma_ref=0.437` is above the expected `0.15-0.30 m/s` oracle-slope sanity band, so the estimator-change note should go to advisors with an explicit reference/anchor-rate-offset warning rather than as an unconditional clean pass.
+
+## 0C. SIGMA_A Release Fit v2
+
+Rerun on repo HEAD `7c3b875492e6c9cd68023f12c3b9736bf1dfd49a` after reading `docs/thinktank/RESPONSE31.md`. Scope stayed CSV-only on the existing `caa2398` oracle-reference residuals; no replay/campaign/simulator was launched.
+
+Release columns:
+
+| n_flights | n_clusters | n_rows | point sigma_a | U95(sigma_a) | sigma_0 | pseudo floor sigma_0 | b0 | b1 | max validated age | verdict |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|
+| 1 | 1 | 16 | `0.143` | `0.143` degenerate/not release-valid | `0.011` | `0.093` | `-0.588` | `0.619` | `none` | `HOLD, DATA-INSUFFICIENT` |
+
+Constrained release instrument: Student-t scale model (`nu=5`) with nonnegative `sigma_0` and `sigma_a`, mean-centered by `mu(a)=b0+b1*a`. Cluster bootstrap is degenerate because the artifact has one independent FULL->SIDE transition cluster; release requires at least 6 clusters, so at least 5 more independent replay transition clusters are needed.
+
+Sensitivity row: the previous Theil-Sen `r^2` vs `a^2` fit is retained only as `RETIRED-AS-RELEASE` (`sigma_0=0.437`, `sigma_a=0.000`).
+
+Mean/regime result: point `b1=0.619 m/s per s` and non-empty command regimes have nonzero signed means (`flat_no_ff n=13 mean=-0.437`, `slew_limited n=3 mean=-0.262`). With one cluster this is not release-stable, but it is a deterministic-model suspect and is not folded into sigma.
+
+Pseudo-transition floor: FULL-only pseudo anchors/evaluations produced `n=256`, `sigma_0=0.093`, `sigma_a=0.000`; the real fit's `sigma_0=0.011` sits below this floor, so this is a sanity blocker unless more clusters overturn it.
+
+LOFO/max-age: not valid with one flight; max validated age remains `none`. The in-sample fallback monotone ceiling `B_rate_drift(age)` is advisory-only: `0.046` for 0.1-0.3s, `0.073` for 0.3-0.4s, `0.128` for 0.4-0.5s and >0.5s.
 
 ## 1. SIGMA_A Corrected With Percentile Envelope
 
