@@ -126,13 +126,18 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | No
             if key not in keys:
                 keys.append(key)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=keys)
+        writer = csv.DictWriter(f, fieldnames=keys, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
 
+def write_text(path: Path, text: str) -> None:
+    with path.open("w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
 def write_json(path: Path, data: Any) -> None:
-    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    write_text(path, json.dumps(data, indent=2, sort_keys=True) + "\n")
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -546,7 +551,8 @@ def run(args: argparse.Namespace) -> Path:
         "artifact_manifest": manifest_path.relative_to(ROOT).as_posix(),
     }
     write_json(out_dir / "summary.json", summary)
-    (out_dir / "summary.md").write_text(
+    write_text(
+        out_dir / "summary.md",
         "\n".join([
             "# ADJUDICATIVE REGENERATION ROUND",
             "",
@@ -575,7 +581,6 @@ def run(args: argparse.Namespace) -> Path:
             "The artifact manifest lists output paths and SHA-256 digests.",
             "",
         ]),
-        encoding="utf-8",
     )
     print(out_dir)
     return out_dir
