@@ -414,6 +414,13 @@ class App:
                         term_v_bz = v_bz
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
+                            # Single-owner invariant 2: while TERM owns
+                            # the vertical, the legacy damper is silent
+                            # AND TRACKS the applied command, so a
+                            # pre-no-return handback resumes bumplessly
+                            # from the applied value, never a latent
+                            # accumulated trim.
+                            planner.track_applied_vz(float(v_bz), now_ns)
                     if terminal_enable:
                         # Adjudication record: the REAL channel, never
                         # the shadow (phase6i lesson).

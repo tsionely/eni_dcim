@@ -137,11 +137,15 @@ def test_no_arm_rule_vetoes_double_climb():
 
 def test_no_arm_rule_arms_insurance_when_vertical_neutral():
     """When the hold is NOT climbing at gap entry, the sink insurance
-    still arms (the phase3h sink class remains covered)."""
+    still arms (the phase3h sink class remains covered). The case is
+    NEUTRAL by design: under the signed damper invariant the cap
+    bounds the AGGREGATE, so in a saturated-descent corner the
+    insurance legitimately consumes budget instead of stacking — the
+    covered class lives in the non-saturated regime, pinned here."""
     p = planner()
-    # Gate slightly below aim: hold is ~neutral/descending at entry.
-    neutral = [0.0, 0.35, 1.8]
-    assert p.plan(0, "race", make_state(gate_t=neutral, center_px=(320, 220)),
+    # Gate essentially at aim: trim deadbanded, insurance fully visible.
+    neutral = [0.0, 0.14, 1.8]
+    assert p.plan(0, "race", make_state(gate_t=neutral, center_px=(320, 200)),
                   None).phase == "commit"
     sp_seen = p.plan(int(0.1e9), "race", make_state(gate_t=neutral, age_s=0.0), None)
     sp_blind = p.plan(int(0.2e9), "race", make_state(gate_t=neutral, age_s=0.5), None)
@@ -487,3 +491,47 @@ def test_commit_vz_damper_bounds_oscillation_but_trims_deficit():
                                 center_px=(320, 160)), None)
         assert sp.phase == "commit"
     assert sp.v_body[2] < -0.05                 # NED: climbing, not muted
+
+
+def test_damper_caps_aggregate_including_insurance():
+    """Signed damper invariant 1: the 0.35 cap and the 1.5 slew bound
+    the AGGREGATE legacy vertical — trim PLUS sink insurance. A long
+    blind gap with a saturated climb trim must not turn the cap into
+    0.45. In the non-saturated regime the insurance still expresses
+    (the no-arm covered class stays covered)."""
+    p = planner()
+    # Weak-climb entry arms the top-up insurance at gap entry.
+    weak = [0.0, 0.19, 1.8]
+    assert p.plan(0, "race", make_state(gate_t=weak, center_px=(320, 150)),
+                  None).phase == "commit"
+    p.plan(int(0.1e9), "race", make_state(gate_t=weak, age_s=0.0), None)
+    # Blind gap with the dead-reckoned deficit GROWING: trim saturates.
+    vzs = []
+    for i, y in enumerate((-0.3, -0.5, -0.6), start=2):
+        sp = p.plan(int(i * 0.1e9), "race",
+                    make_state(gate_t=[0.0, y, 1.6], age_s=0.5), None)
+        assert sp.phase == "commit"
+        vzs.append(float(sp.v_body[2]))
+    assert all(abs(v) <= 0.351 for v in vzs), vzs
+    deltas = [abs(b - a) for a, b in zip(vzs, vzs[1:])]
+    assert max(deltas) <= 0.16, deltas
+
+
+def test_track_applied_vz_makes_handback_bumpless():
+    """Signed damper invariant 2: while TERM owns, the legacy damper
+    tracks the APPLIED vertical; on handback the legacy command resumes
+    within one slew step of the applied value instead of jumping from a
+    latent trim."""
+    p = planner()
+    assert p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 2.2],
+                                        center_px=(320, 180)),
+                  None).phase == "commit"
+    # TERM owned the last ticks and applied +0.5 (descending trim).
+    p.track_applied_vz(0.5, int(0.2e9))
+    # Handback: next legacy tick wants ~0 (centered) but must slew from
+    # the APPLIED 0.5, not jump.
+    sp = p.plan(int(0.3e9), "race",
+                make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180)),
+                None)
+    assert sp.phase == "commit"
+    assert sp.v_body[2] >= 0.5 - 0.16               # one slew step at most

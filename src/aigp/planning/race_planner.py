@@ -222,17 +222,24 @@ class RacePlanner:
         self._align_until_ns = None
 
     def _damp_commit_vz(self, vz: float, tdz_err: float,
-                        now_ns: int) -> float:
+                        now_ns: int, insurance: float = 0.0) -> float:
         """Deadband + cap + slew for the in-commit vertical (NED z).
 
         The commit vertical is a trim on a pre-aligned entry; chasing
         the velocity-estimate sawtooth at full hold authority is what
         bobbed the gate out of frame (cohort-2 P1). Inside the
-        deadband the vertical is ZERO; outside it is capped and its
-        rate of change bounded so estimate noise cannot ring the
-        airframe."""
+        deadband the trim is ZERO. The cap and the slew bound the
+        AGGREGATE legacy command — trim PLUS the once-decided sink
+        insurance — per the signed damper invariant: the insurance
+        consumes command budget, it must not silently turn the 0.35
+        cap into 0.45 in a long blind gap with a saturated trim; and
+        two separate slew limiters can compose into a larger physical
+        slope than either. In the non-saturated regime (where the
+        no-arm covered class actually lives) the insurance passes
+        through unchanged."""
         if abs(tdz_err) < self.commit_vz_deadband_m:
             vz = 0.0
+        vz = vz - insurance                    # NED: insurance climbs
         vz = float(np.clip(vz, -self.commit_vz_cap, self.commit_vz_cap))
         if (self._commit_vz_prev is not None
                 and self._commit_vz_prev_ns is not None):
@@ -243,6 +250,15 @@ class RacePlanner:
         self._commit_vz_prev = vz
         self._commit_vz_prev_ns = now_ns
         return vz
+
+    def track_applied_vz(self, vz: float, now_ns: int) -> None:
+        """Inactive-controller tracking (single-owner contract,
+        signed damper invariant 2): while TERM owns the vertical the
+        legacy damper contributes nothing AND tracks the APPLIED
+        command, so a pre-no-return handback resumes bumplessly from
+        the applied value instead of a latent accumulated trim."""
+        self._commit_vz_prev = float(vz)
+        self._commit_vz_prev_ns = now_ns
 
     def _retreat_setpoint(self, state: StateEstimate,
                           climb_bias: float = 0.0) -> Setpoint:
@@ -443,14 +459,9 @@ class RacePlanner:
                         climb = max(0.0, -float(extra[2]))   # NED: -z up
                         self._gap_bias = max(0.0, self.blind_climb_bias - climb)
                     v_next = direction * self.commit_speed + extra
-                    # Damper governs the HOLD/steering vertical; the
-                    # once-decided, bounded (<=0.1) sink insurance rides
-                    # ON TOP — capping it away would silently disarm the
-                    # no-arm rule's covered class (phase3h sink).
                     v_next[2] = self._damp_commit_vz(
-                        float(v_next[2]), tdz - au, now_ns)
-                    if self._gap_bias:
-                        v_next[2] -= self._gap_bias
+                        float(v_next[2]), tdz - au, now_ns,
+                        insurance=self._gap_bias or 0.0)
                     self._commit_v_body = v_next
                 yaw = 0.0
                 if gate is not None and gate.t[2] > 0.3:
