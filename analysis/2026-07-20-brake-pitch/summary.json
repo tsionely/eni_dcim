@@ -1,0 +1,492 @@
+{
+  "ask": "brake-pitch columns on loss-frame table (cohorts 1\u20133)",
+  "cam_elev_deg": 11.2,
+  "r_drop_predictions_m": {
+    "6.0": 3.7,
+    "8.0": 4.5
+  },
+  "loss_band_m": [
+    3.0,
+    4.5
+  ],
+  "adjudication": {
+    "verdict": "FILE_CLOSES \u2014 bottom-edge exits occur without brake nose-up (pitch<3\u00b0 majority); FOV/geometry dominates; queued brake-pitch fix not justified by this table",
+    "pitch_adjudicates": false,
+    "queued_fix": false,
+    "n_band": 6,
+    "n_bottom": 4,
+    "n_side": 0,
+    "n_none": 2,
+    "mean_pitch_bottom": -3.8324059334663456,
+    "mean_pitch_nonbottom": -4.276961505652821,
+    "n_brake_bottom": 0,
+    "n_brake_nonbottom": 0,
+    "frac_brake_among_bottom": 0.0,
+    "r_drop_ref": {
+      "6.0": 3.7,
+      "8.0": 4.5
+    },
+    "cam_elev_deg": 11.2
+  },
+  "rows": [
+    {
+      "cohort": "cohort1",
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260719T200816-f170ead6",
+      "loss_mode": "held_or_reacq",
+      "loss_t_ff": null,
+      "R_last_near": 2.4208585661030377,
+      "R_believed_at_loss": null,
+      "R_for_band": 2.4208585661030377,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -10.656463774471721,
+      "roll_att_deg": -7.0396015772434755,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": false,
+      "center_px": [
+        312.25,
+        262.0
+      ]
+    },
+    {
+      "cohort": "cohort1",
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260719T201038-50f9dcc8",
+      "loss_mode": "no_commit",
+      "loss_t_ff": null,
+      "R_last_near": null,
+      "R_believed_at_loss": null,
+      "R_for_band": null,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": null,
+      "roll_att_deg": null,
+      "bbox_bottom_row": null,
+      "exit_border": "none",
+      "fov_touches": [],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": false,
+      "center_px": null
+    },
+    {
+      "cohort": "cohort1",
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260719T201630-f170ead6",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.1122555,
+      "R_last_near": 3.668889613136039,
+      "R_believed_at_loss": 3.0661420688868923,
+      "R_for_band": 3.668889613136039,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": 0.09036786409062476,
+      "roll_att_deg": 9.96891770052075,
+      "bbox_bottom_row": 452.9322755905176,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        383.8469855142402,
+        360.85824406381255
+      ]
+    },
+    {
+      "cohort": "cohort1",
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260719T201851-50f9dcc8",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 4.1641427,
+      "R_last_near": 1.0804009911374195,
+      "R_believed_at_loss": 0.6284579865928759,
+      "R_for_band": 1.0804009911374195,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -0.6831965221906121,
+      "roll_att_deg": -0.8952469757076453,
+      "bbox_bottom_row": 450.5828124565854,
+      "exit_border": "bottom+side",
+      "fov_touches": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        303.1566175177388,
+        225.39965248966456
+      ]
+    },
+    {
+      "cohort": "cohort1",
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260719T202445-f170ead6",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 2.3201761,
+      "R_last_near": 4.955953801800678,
+      "R_believed_at_loss": 3.0760070681205325,
+      "R_for_band": 4.955953801800678,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -1.926155948918064,
+      "roll_att_deg": -1.9023534767912653,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        339.5,
+        337.25
+      ]
+    },
+    {
+      "cohort": "cohort1",
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260719T202720-50f9dcc8",
+      "loss_mode": "held_or_reacq",
+      "loss_t_ff": 2.1080617,
+      "R_last_near": 5.28459132757967,
+      "R_believed_at_loss": 4.652171111220177,
+      "R_for_band": 5.28459132757967,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -4.362794282959311,
+      "roll_att_deg": 7.187799572665776,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": false,
+      "center_px": [
+        399.0,
+        308.75
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260720T053402-f170ead6",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.1316993,
+      "R_last_near": 4.036410292233415,
+      "R_believed_at_loss": 3.2929361317290553,
+      "R_for_band": 4.036410292233415,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": -6.4354771273582605,
+      "roll_att_deg": 0.3096323141539314,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        314.5,
+        289.5
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260720T053514-5cebc2b2",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.516219,
+      "R_last_near": 4.239381720579434,
+      "R_believed_at_loss": 2.0459801856454303,
+      "R_for_band": 4.239381720579434,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": -1.9070029504932131,
+      "roll_att_deg": 2.783303096345481,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        325.25,
+        300.5
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260720T053635-f170ead6",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.9186764,
+      "R_last_near": 1.8954099622632488,
+      "R_believed_at_loss": 1.166766431559505,
+      "R_for_band": 1.8954099622632488,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": 3.0160682110312504,
+      "roll_att_deg": -0.8369841383760215,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "top",
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": true,
+      "r_drop_pred_m": 3.7,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        452.25,
+        202.25
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260720T053745-5cebc2b2",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 4.5442413,
+      "R_last_near": 2.93283765864465,
+      "R_believed_at_loss": 1.5750620507872957,
+      "R_for_band": 2.93283765864465,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -2.718492759354318,
+      "roll_att_deg": 0.48816145615044687,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        292.0,
+        267.0
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260720T053905-f170ead6",
+      "loss_mode": "far_gate_contest",
+      "loss_t_ff": 3.1720731,
+      "R_last_near": 4.404762285340096,
+      "R_believed_at_loss": 3.8001346405361205,
+      "R_for_band": 4.404762285340096,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": -6.024521933543489,
+      "roll_att_deg": -5.680560458681757,
+      "bbox_bottom_row": 333.0,
+      "exit_border": "none",
+      "fov_touches": [],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        258.75,
+        266.25
+      ]
+    },
+    {
+      "cohort": "cohort2",
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260720T054016-5cebc2b2",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.9404269,
+      "R_last_near": 1.8104360593831428,
+      "R_believed_at_loss": 0.4421486359722752,
+      "R_for_band": 1.8104360593831428,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -2.332845582372934,
+      "roll_att_deg": 1.1836213581133155,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom+side",
+      "fov_touches": [
+        "left",
+        "top",
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        95.0,
+        179.5
+      ]
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 1,
+      "arm": "control",
+      "fid": "20260720T071008-5b501b4c",
+      "loss_mode": "no_commit",
+      "loss_t_ff": null,
+      "R_last_near": null,
+      "R_believed_at_loss": null,
+      "R_for_band": null,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": null,
+      "roll_att_deg": null,
+      "bbox_bottom_row": null,
+      "exit_border": "none",
+      "fov_touches": [],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": false,
+      "center_px": null
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 2,
+      "arm": "live",
+      "fid": "20260720T071112-cd18c5fb",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 4.1531845,
+      "R_last_near": 1.43560134820293,
+      "R_believed_at_loss": 1.4257393976633967,
+      "R_for_band": 1.43560134820293,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -1.3754392453733226,
+      "roll_att_deg": 13.520728631654109,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "top",
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        297.0,
+        150.0
+      ]
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 3,
+      "arm": "control",
+      "fid": "20260720T071220-5b501b4c",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 2.7882115,
+      "R_last_near": 4.263677534809125,
+      "R_believed_at_loss": 3.530801066883713,
+      "R_for_band": 4.263677534809125,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": -7.077511520104532,
+      "roll_att_deg": 0.4755207310425109,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        328.75,
+        299.25
+      ]
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 4,
+      "arm": "live",
+      "fid": "20260720T071333-cd18c5fb",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 3.7062648,
+      "R_last_near": 1.9075132709974922,
+      "R_believed_at_loss": 0.43875065997536705,
+      "R_for_band": 1.9075132709974922,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": -3.4514593329646877,
+      "roll_att_deg": -1.618705764790051,
+      "bbox_bottom_row": 359.0,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "top",
+        "bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        87.0,
+        184.0
+      ]
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 5,
+      "arm": "control",
+      "fid": "20260720T071439-5b501b4c",
+      "loss_mode": "fov_leave",
+      "loss_t_ff": 1.9201487,
+      "R_last_near": null,
+      "R_believed_at_loss": 5.126539900520659,
+      "R_for_band": 5.126539900520659,
+      "in_3_4p5_band": false,
+      "pitch_att_deg": 2.315605818150768,
+      "roll_att_deg": 2.9646467408130306,
+      "bbox_bottom_row": null,
+      "exit_border": "bottom",
+      "fov_touches": [
+        "near_bottom"
+      ],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": null
+    },
+    {
+      "cohort": "cohort3",
+      "slot": 6,
+      "arm": "live",
+      "fid": "20260720T071545-cd18c5fb",
+      "loss_mode": "detector_drop_or_lock_reject",
+      "loss_t_ff": 3.1410746,
+      "R_last_near": 3.2525661975616336,
+      "R_believed_at_loss": 3.121020536630135,
+      "R_for_band": 3.2525661975616336,
+      "in_3_4p5_band": true,
+      "pitch_att_deg": -2.5294010777621527,
+      "roll_att_deg": -0.04836184090691172,
+      "bbox_bottom_row": 321.0,
+      "exit_border": "none",
+      "fov_touches": [],
+      "brake_like_pitch_ge3": false,
+      "r_drop_pred_m": null,
+      "vision_died_no_reacq": true,
+      "center_px": [
+        332.75,
+        257.75
+      ]
+    }
+  ]
+}
