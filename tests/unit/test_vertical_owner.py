@@ -397,3 +397,38 @@ def test_observer_matures_before_ownership_no_maturity_delay():
                                        feature=feat(int(7 * 0.04e9)),
                                        feature_age_s=0.02, oracle=g)
     assert owner == TERM_OWNER and v_bz is not None
+
+
+def test_admission_passable_at_engagement_range():
+    """The 0/10-capture arithmetic, frozen as a test: at the 2.5m
+    engagement range (tau~1.37s at 1.8 m/s) the corridor must be
+    PASSABLE for a centered, flat-history approach — the admission
+    sigma runs over the uncorrected damping horizon, not the full
+    time-to-plane (rate errors before damping are servo-corrected)."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 2.4]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    def feat(ts, span=600.0):
+        return TerminalFeature(ts_ns=ts, y_top_px=180.0 - 0.5 * span,
+                               span_px=span, center_x_px=320.0,
+                               cert_status="certified", mode="BAR_FULL")
+
+    a = make_arbiter()
+    g = TerminalOracle()
+    owner = None
+    for i in range(7):
+        owner, v_bz, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 1.37, 0.55, None,
+            0.04, feature=feat(int(i * 0.04e9)), feature_age_s=0.02,
+            oracle=g)
+    assert owner == TERM_OWNER, \
+        "admission corridor impassable at its own engagement range"

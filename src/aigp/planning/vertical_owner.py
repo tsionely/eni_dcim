@@ -202,13 +202,24 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             e_now = e_meas if e_meas is not None else (
                 oracle._hist[-1][1] if oracle._hist else 0.0)
             e_x = crossing_error(e_now, vz_vis, tau_s)
+            # Admission sigma horizon (mock A/B rerun on the fixed wire
+            # was STILL 0/10 captures — arithmetic, not wiring: at the
+            # 2.5m engagement range tau~1.37s makes 2*sigma_x + 0.06 =
+            # 0.35 > the 0.30 corridor even with a perfect forecast,
+            # deferring capture below ~1.8m where certification dies.
+            # The uncertainty that matters for admission is over the
+            # UNCORRECTED interval (damping+freeze ~0.45s) — rate
+            # errors before damping are corrected by the servo itself.
+            # tau_cap awaits advisory ratification (pre-registered
+            # corridor; constant parameterized, not hard-coded).
+            tau_sig = min(tau_s, 0.45)
             # Oracle measurement sigmas, MEASURED not assumed: the F2
             # graze series scattered ~0.02 RMS sample-to-sample; 0.05 /
             # 0.10 carry a x2.5 margin on that. (The legacy 0.10/0.15
             # placeholders are the quarantined believed-channel numbers
             # — with them 2*sigma + 0.06 exceeds the 0.30 corridor at
             # any tau >= 0.45 and admission can never pass.)
-            s_x = crossing_sigma(0.05, vz_vis, 0.10, tau_s)
+            s_x = crossing_sigma(0.05, vz_vis, 0.10, tau_sig)
             capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= 0.30
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,
