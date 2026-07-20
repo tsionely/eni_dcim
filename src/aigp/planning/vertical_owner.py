@@ -303,17 +303,37 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # horizon and falsifiable by SIDE positions; SIDE's slope
             # stays in shadow. Anchor invalid/expired => neutral rate
             # — option (c) as (a)'s automatic floor.
-            age = oracle.anchor_age_s(float(state.ts_ns) / 1e9)
-            if oracle.rate_anchor_valid and age <= tau_s + 0.5:
+            now_s = float(state.ts_ns) / 1e9
+            oracle.note_applied(now_s, prev_vz_up
+                                if prev_vz_up is not None else 0.0)
+            age = oracle.anchor_age_s(now_s)
+            # Runtime maintenance score (ruling SS6): authority ends
+            # when the AGED score fails the corridor, not merely at a
+            # fixed age. sigma_a is the configured ceiling (0.35)
+            # until the harness-measured value replaces it.
+            sig_e, _ = oracle.sigmas()
+            h_m = min(tau_s, t_tail_s)
+            sv_maint = float(np.sqrt(0.10 ** 2 + (age * 0.35) ** 2)) \
+                if age != float("inf") else float("inf")
+            score_ok = (2.0 * float(np.sqrt(sig_e ** 2
+                                            + (h_m * sv_maint) ** 2))
+                        + 0.06 <= corridor_m)
+            if oracle.rate_anchor_valid and age <= tau_s + 0.5 and score_ok:
                 # FEED-FORWARD (mandatory per the ruling — and the
                 # first sigma_a run proved why: without it every
                 # commanded servo correction counted as unmodeled,
                 # 1.956 m/s^2 of it): the physics moved by our own
                 # applied commands since the anchor; add that known
                 # delta on top of the frozen measurement.
-                if (oracle.anchor_applied_ref is None
-                        and prev_vz_up is not None):
-                    oracle.anchor_applied_ref = float(prev_vz_up)
+                if oracle.anchor_applied_ref is None:
+                    # Exposure-aligned: the applied target AT the
+                    # anchor's exposure time (ring lookup), falling
+                    # back to the current applied only when the ring
+                    # has no coverage there.
+                    ref = oracle.applied_at(oracle.rate_anchor_ts)
+                    if ref is None and prev_vz_up is not None:
+                        ref = float(prev_vz_up)
+                    oracle.anchor_applied_ref = ref
                 ff = ((float(prev_vz_up) - oracle.anchor_applied_ref)
                       if (prev_vz_up is not None
                           and oracle.anchor_applied_ref is not None)
@@ -428,6 +448,7 @@ class TerminalOracle:
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
         self.anchor_applied_ref: float | None = None
+        self._applied_ring: list[tuple[float, float]] = []
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
         self.epoch = 0
@@ -455,6 +476,7 @@ class TerminalOracle:
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
         self.anchor_applied_ref = None
+        self._applied_ring = []
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
         self.epoch += 1
@@ -694,6 +716,27 @@ class TerminalOracle:
                 and gap <= self.max_gap_s
                 and self.v_z_visual() is not None
                 and not self.disarmed)
+
+    def note_applied(self, ts_s: float, vz_up: float) -> None:
+        """Record the COMPLETED applied world-up target (post owner/
+        clamp/slew, pre body-z) for exposure-aligned anchor lookup —
+        the command delta must be measured from the anchor's EXPOSURE
+        time, not the later transition tick, or camera latency turns
+        into a fictitious command delta."""
+        if not self._applied_ring or ts_s > self._applied_ring[-1][0]:
+            self._applied_ring.append((ts_s, float(vz_up)))
+            if len(self._applied_ring) > 64:
+                del self._applied_ring[:-64]
+
+    def applied_at(self, ts_s: float) -> float | None:
+        """Applied world-up target at-or-before ts (None if unknown)."""
+        best = None
+        for t, v in self._applied_ring:
+            if t <= ts_s:
+                best = v
+            else:
+                break
+        return best
 
     def anchor_age_s(self, now_s: float | None = None) -> float:
         """Age of the FULL rate anchor vs CURRENT time (R26 telemetry
