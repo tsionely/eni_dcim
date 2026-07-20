@@ -312,16 +312,16 @@
   "claim": "ORDERED A-G wrong-sign archaeology and corrected paired command-event re-score",
   "criterion_registered_at": "d0a73f028c265c428c1ceabbcb30b51cb2e66849",
   "artifact_path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_definition_scorecard.csv",
-  "artifact_sha256": "a35aae51628c3ee84817109bfad0cfd3d1e965cdcd4f3cff302b94fe2cc82fec",
-  "generator_commit": "de19d881ce8fa0ddc27dd71d7306d0d366c43e90",
+  "artifact_sha256": "9d37fbeae5101da6226c3d566db2fd8d44778bcf788ea21a837db0c2ec13533f",
+  "generator_commit": "bf324a8706281f9096495272e5f2be6ecd0df4ba",
   "generator_command": "python tuning/run_response48_amended_round.py",
   "independent_unit": "physical_approach",
   "independent_n": 1,
   "attempted_n": 1,
   "analyzable_n": 1,
-  "result": "legacy 28 invalid-test formula disclosed; old=0 new=0 registered wrong-sign violations over 9 command events",
+  "result": "legacy 28 invalid-test formula disclosed; old=0 new=0 registered wrong-sign violations over 9 command events; PASS at 1/1 is fixture-level only",
   "status": "REPORTED",
-  "evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f"
+  "evidence_commit": "cd745de9648155f82b94e281d29113300bcd9ec2"
  },
  {
   "board_row": 21,
@@ -354,5 +354,21 @@
   "result": "Y_eligible=23/178; current-gate denominator=113; current-gate eligible=23; signature positives=45",
   "status": "REPORTED",
   "evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f"
+ },
+ {
+  "board_row": 23,
+  "claim": "Task E fixture-level verdict scope carried by the approach-level restamp artifact",
+  "criterion_registered_at": "d0a73f028c265c428c1ceabbcb30b51cb2e66849",
+  "artifact_path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_approach_level_rescore.csv",
+  "artifact_sha256": "6dd0e66205a2b0ae0850bcee306b07dc51b429e7a1b8b684dc98742250602689",
+  "generator_commit": "bf324a8706281f9096495272e5f2be6ecd0df4ba",
+  "generator_command": "python tuning/run_response48_amended_round.py",
+  "independent_unit": "physical_approach",
+  "independent_n": 1,
+  "attempted_n": 1,
+  "analyzable_n": 1,
+  "result": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
+  "status": "REPORTED",
+  "evidence_commit": "cd745de9648155f82b94e281d29113300bcd9ec2"
  }
 ]
