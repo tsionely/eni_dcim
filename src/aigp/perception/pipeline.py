@@ -71,8 +71,18 @@ class PerceptionAgent(Agent):
                     # certification is per-target (FA=0 manifest case 3).
                     r_fix = float(np.linalg.norm(detection.rel_pose.t))
                     if prior is None or abs(r_fix - prior) <= 0.4 * prior:
-                        self.tracker.certificate.on_full_quad(detection.ts_ns)
+                        self.tracker.certificate.on_full_quad(
+                            detection.ts_ns,
+                            z_m=float(detection.rel_pose.t[2]))
                         anchored = True
+                    else:
+                        # Prediction-INCONSISTENT fix = a different
+                        # target: the certificate never survives a
+                        # target change (the silent-inheritance root of
+                        # the successor-certificate fiction — the audit
+                        # found this wire missing).
+                        self.tracker.certificate.on_relock_or_collision()
+                        self._side_armed = False
                 self.bus.publish_latest(Topic.DETECTION, detection)
                 if anchored:
                     # Pixel-row oracle from the full quad itself (enable

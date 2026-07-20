@@ -217,3 +217,29 @@ def test_center_hint_reanchors_stale_prior():
     if det_no is not None:
         assert abs(det.rel_pose.t[0] - truth[0]) <= \
             abs(det_no.rel_pose.t[0] - truth[0]) + 1e-6
+
+
+def test_certificate_boundary_pinned_semantics():
+    """Cert-boundary audit (NOT_EQUIVALENT -> patched): a NEW identity
+    may be certified only at range >= 1.6m; PROBATION promotes to
+    CERTIFIED only at >= 1.6m; a fresh full quad below the promote
+    floor cannot birth a certificate, while a HELD certificate is
+    maintained by the same quad. The certificate never survives a
+    relock/target change."""
+    from aigp.perception.certificate import SidePairCertificate
+
+    c = SidePairCertificate()
+    # Fresh full quad BELOW the promote floor: refused.
+    c.on_full_quad(1000, z_m=1.2)
+    assert c.status_at(1000) == "none"
+    # Fresh full quad at/above the floor: certified.
+    c.on_full_quad(2000, z_m=2.0)
+    assert c.status_at(2000) == "certified"
+    # The same held certificate is maintained below the floor.
+    c.on_full_quad(3000, z_m=1.2)
+    assert c.status_at(3000) == "certified"
+    # Relock/target change: never inherited.
+    c.on_relock_or_collision()
+    assert c.status_at(3001) == "none"
+    c.on_full_quad(4000, z_m=1.2)          # successor cannot self-certify
+    assert c.status_at(4000) == "none"

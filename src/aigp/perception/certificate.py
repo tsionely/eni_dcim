@@ -37,7 +37,8 @@ class SidePairCertificate:
     def __init__(self, chain_gap_s: float = 0.15, scale_min: float = 0.65,
                  scale_max: float = 1.5, min_support: float = 0.4,
                  width_agree: float = 0.5, promote_after: int = 3,
-                 terminal_floor_m: float = 1.4) -> None:
+                 terminal_floor_m: float = 1.4,
+                 promote_floor_m: float = 1.6) -> None:
         self.chain_gap_s = chain_gap_s
         self.scale_min = scale_min
         self.scale_max = scale_max
@@ -45,15 +46,27 @@ class SidePairCertificate:
         self.width_agree = width_agree
         self.promote_after = promote_after
         self.terminal_floor = terminal_floor_m
+        self.promote_floor = promote_floor_m
         self._status = NONE
         self._last_ok_ns: int | None = None
         self._clean_streak = 0
 
     # ------------------------------------------------------------- events
 
-    def on_full_quad(self, ts_ns: int) -> None:
-        """A fully-gated detector quad re-anchors certification."""
-        self._status = CERTIFIED
+    def on_full_quad(self, ts_ns: int, z_m: float | None = None) -> None:
+        """A fully-gated detector quad anchors certification — with the
+        pinned boundary semantics (cert-boundary audit, NOT_EQUIVALENT
+        finding): a NEW identity may be certified only at/above
+        promote_floor (1.6m); between the floors an ESTABLISHED
+        certificate is maintained/re-anchored; below terminal_floor a
+        held certificate refreshes continuity only. A fresh identity
+        can never be born in the final approach band."""
+        if self._status == NONE:
+            if z_m is not None and z_m < self.promote_floor:
+                return                     # refuse fresh certification
+            self._status = CERTIFIED
+        else:
+            self._status = CERTIFIED       # maintain/re-anchor held id
         self._last_ok_ns = ts_ns
         self._clean_streak = 0
 
@@ -83,7 +96,7 @@ class SidePairCertificate:
                 self._clean_streak += 1
                 # Terminal rule: below the floor, PROBATION is the ceiling.
                 if (self._clean_streak >= self.promote_after
-                        and z_prior_m > self.terminal_floor):
+                        and z_prior_m >= self.promote_floor):
                     self._status = CERTIFIED
             # CERTIFIED stays certified; NONE with a live chain cannot
             # happen (chain requires a prior anchor).
