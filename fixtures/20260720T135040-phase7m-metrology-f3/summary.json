@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "flight_id": "20260720T135008-9aa0ef5c",
+    "result": {
+      "finished": false,
+      "aborted": true,
+      "abort_reason": "environment collision (impulse=11.2)",
+      "gates_passed": 0,
+      "lap_time_s": null,
+      "gate_clips": 0,
+      "env_hits": 12,
+      "duration_s": 19.580126799992286,
+      "loop_overrun_frac": 0.008580183861082738,
+      "loop_stats": {
+        "ticks": 4895,
+        "overruns": 42,
+        "overrun_frac": 0.008580183861082738,
+        "max_late_us": 8049
+      },
+      "flight_id": "20260720T135008-9aa0ef5c",
+      "log_dir": "logs\\20260720T135008-9aa0ef5c"
+    },
+    "terminal_enable_resolved": false,
+    "term_status_ticks": 0,
+    "feature_ticks": 264,
+    "shadow_ticks": 318,
+    "detection_ticks": 394,
+    "detections_below_3p5m": 89,
+    "detections_below_2p5m": 60,
+    "closest_direct": {
+      "range_m": 0.814,
+      "t_rel_s": 11.949,
+      "center_px": [
+        320.5,
+        70.5
+      ]
+    },
+    "unique_frames_after_takeoff": 492,
+    "disabled_proven": true
+  },
+  "slice": {
+    "fid": "20260720T135008-9aa0ef5c",
+    "slice": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase7m_slices\\20260720T135008-9aa0ef5c_takeoff_to_end.aigprec",
+    "unique_frames": 493,
+    "span_s": 16.4,
+    "bytes": 23142558,
+    "truncated_at_45mb": false
+  }
+}
