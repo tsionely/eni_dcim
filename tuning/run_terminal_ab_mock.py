@@ -32,8 +32,8 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-OUT_DIR = ROOT / "tuning" / f"terminal-ab-f10b35c-{HEAD_SHORT}-{RUN_STAMP}"
-RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"terminal-ab-f10b35c-{HEAD_SHORT}-{RUN_STAMP}"
+OUT_DIR = ROOT / "tuning" / f"terminal-ab-be0c779-{HEAD_SHORT}-{RUN_STAMP}"
+RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"terminal-ab-be0c779-{HEAD_SHORT}-{RUN_STAMP}"
 
 
 ARMS = [
