@@ -36,6 +36,7 @@ from aigp.planning.vertical_terminal import (  # noqa: E402
     compute_terminal_guidance,
     crossing_error,
     crossing_sigma,
+    robust_slope,
 )
 from run_l1_perception_replay import (  # noqa: E402
     TARGETS,
@@ -55,6 +56,9 @@ FULL_SIGMA_E_M = 0.05
 FULL_SIGMA_V_MPS = 0.10
 TAIL_S = 0.50
 CORRIDOR_M = 0.30
+SIGMA_MIN_AGE_S = 0.10
+WITHHELD_FULL_WINDOW_S = 0.35
+WITHHELD_FULL_FALLBACK_WINDOW_S = 0.50
 
 
 def source_commit(source_ref: str) -> tuple[str, str, list[str]]:
@@ -205,6 +209,77 @@ def exact_pairs(rows: list[dict]) -> list[dict]:
             "residual_e_m": float(row["e_meas"]) - float(frow["e_meas"]),
         })
     return pairs
+
+
+def full_observation_series(rows: list[dict]) -> list[dict]:
+    by_ts: dict[int, dict] = {}
+    for row in rows:
+        if (
+            row.get("feature_mode") != "FULL_QUAD"
+            or row.get("cert_status") != "certified"
+            or fnum(row.get("e_meas")) is None
+            or row.get("feature_ts_ns") in ("", None)
+        ):
+            continue
+        ts_ns = int(row["feature_ts_ns"])
+        if ts_ns in by_ts:
+            continue
+        by_ts[ts_ns] = {
+            "feature_ts_ns": ts_ns,
+            "ts_s": ts_ns / 1e9,
+            "flight": row.get("flight", ""),
+            "frame_id": row.get("frame_id", ""),
+            "range_z_m": row.get("range_z_m", ""),
+            "e_z": float(row["e_meas"]),
+        }
+    return sorted(by_ts.values(), key=lambda r: int(r["feature_ts_ns"]))
+
+
+def withheld_full_vz_ref(
+    full_series: list[dict],
+    now_ts_s: float,
+    drop_full_after_ts_ns: int | None,
+) -> dict:
+    blank = {
+        "oracle_ref_vz_up_mps": "",
+        "oracle_ref_n": 0,
+        "oracle_ref_span_s": "",
+        "oracle_ref_window_s": "",
+        "oracle_ref_first_ts_ns": "",
+        "oracle_ref_last_ts_ns": "",
+    }
+    if drop_full_after_ts_ns is None:
+        return blank
+
+    def fit(window_s: float) -> dict | None:
+        pts = [
+            row for row in full_series
+            if int(row["feature_ts_ns"]) >= int(drop_full_after_ts_ns)
+            and abs(float(row["ts_s"]) - now_ts_s) <= window_s
+        ]
+        if len(pts) < 4:
+            return None
+        slope = robust_slope(
+            [float(row["ts_s"]) for row in pts],
+            [float(row["e_z"]) for row in pts],
+        )
+        if slope is None:
+            return None
+        span_s = float(pts[-1]["ts_s"]) - float(pts[0]["ts_s"])
+        return {
+            "oracle_ref_vz_up_mps": -float(slope),
+            "oracle_ref_n": len(pts),
+            "oracle_ref_span_s": span_s,
+            "oracle_ref_window_s": window_s,
+            "oracle_ref_first_ts_ns": int(pts[0]["feature_ts_ns"]),
+            "oracle_ref_last_ts_ns": int(pts[-1]["feature_ts_ns"]),
+        }
+
+    return (
+        fit(WITHHELD_FULL_WINDOW_S)
+        or fit(WITHHELD_FULL_FALLBACK_WINDOW_S)
+        or blank
+    )
 
 
 def rms(values: list[float]) -> float | None:
@@ -431,7 +506,8 @@ def admission_metrics(params: ParamSet, oracle: TerminalOracle, row: dict,
 
 def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
                         drop_full_after_ts_ns: int | None,
-                        side_sigma_e_m: float) -> tuple[list[dict], list[dict]]:
+                        side_sigma_e_m: float,
+                        full_series: list[dict] | None = None) -> tuple[list[dict], list[dict]]:
     oracle = TerminalOracle()
     arbiter = VerticalOwnerArbiter()
     timeline = []
@@ -550,7 +626,13 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
                 "terminal_vz_up_mps": "",
                 "terminal_vz_goal_mps": "",
             }
+        oracle_ref = withheld_full_vz_ref(
+            full_series or [],
+            ts_s,
+            drop_full_after_ts_ns,
+        )
         truth_v = fnum(row.get("truth_vz_up_mps"))
+        oracle_truth_v = fnum(oracle_ref.get("oracle_ref_vz_up_mps"))
         anchor_v = fnum(oracle.rate_anchor_v)
         rate_hold = fnum(command_info.get("rate_hold_corrected_mps"))
         age = rate_anchor_age(oracle, ts_s)
@@ -566,9 +648,19 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
             if truth_v is not None and rate_hold is not None and age > 1e-6
             else ""
         )
+        rate_error_oracle = (
+            oracle_truth_v - rate_hold
+            if oracle_truth_v is not None and rate_hold is not None and age > 1e-6
+            else ""
+        )
         sigma_a_sample = (
             float(rate_error) / age
             if fnum(rate_error) is not None and age > 1e-6
+            else ""
+        )
+        sigma_a_oracle_sample = (
+            float(rate_error_oracle) / age
+            if fnum(rate_error_oracle) is not None and age > 1e-6
             else ""
         )
         sigma_a_anchor_only_sample = (
@@ -610,10 +702,22 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
             "rate_anchor_v_mps": oracle.rate_anchor_v if oracle.rate_anchor_v is not None else "",
             **command_info,
             "truth_vz_up_mps": row.get("truth_vz_up_mps", ""),
+            "reference_old_provenance": "flight_log_state.v_world_level_frame",
+            "reference_old_vz_up_mps": row.get("truth_vz_up_mps", ""),
+            "reference_oracle_provenance": (
+                "withheld_full_quad_theil_sen"
+                if fnum(oracle_ref.get("oracle_ref_vz_up_mps")) is not None
+                else ""
+            ),
+            **oracle_ref,
             "rate_error_anchor_only_mps": rate_error_anchor_only,
             "sigma_a_anchor_only_sample_mps2": sigma_a_anchor_only_sample,
             "rate_error_mps": rate_error,
             "sigma_a_sample_mps2": sigma_a_sample,
+            "rate_error_old_mps": rate_error,
+            "sigma_a_old_sample_mps2": sigma_a_sample,
+            "rate_error_oracle_mps": rate_error_oracle,
+            "sigma_a_oracle_sample_mps2": sigma_a_oracle_sample,
             "applied_e_z": applied_e_z,
             "transition_id": transition_id if transition_id else "",
         })
@@ -795,6 +899,109 @@ def heldout_age_coverage(rows: list[dict]) -> list[dict]:
             "corridor_pass": (floor <= CORRIDOR_M) if fnum(floor) is not None else "",
         })
     return out
+
+
+def sigma_rows_for_reference(
+    trial_rows: list[dict],
+    sample_key: str,
+    error_key: str,
+) -> list[dict]:
+    out = []
+    for row in trial_rows:
+        age = fnum(row.get("rate_anchor_age_s"))
+        sample = fnum(row.get(sample_key))
+        if (
+            not str(row.get("trial", "")).startswith("anchor_drop_")
+            or row.get("shadow_owner") != TERM_OWNER
+            or row.get("active_source") != "SIDE_PAIR"
+            or sample is None
+            or age is None
+            or age < SIGMA_MIN_AGE_S
+        ):
+            continue
+        rec = dict(row)
+        rec["sigma_a_sample_mps2"] = sample
+        rec["rate_error_mps"] = row.get(error_key, "")
+        rec["sigma_regime"] = "switch_adjacent" if age < 0.20 else "maintenance"
+        out.append(rec)
+    return out
+
+
+def age_bin_percentile_envelope(rows: list[dict]) -> list[dict]:
+    labels = ["all", "0p10-0p20", "0p20-0p30", "0p30-0p50", "gte0p50"]
+    out = []
+    for label in labels:
+        group = []
+        for row in rows:
+            age = fnum(row.get("rate_anchor_age_s"))
+            sample = fnum(row.get("sigma_a_sample_mps2"))
+            if age is None or sample is None or age < SIGMA_MIN_AGE_S:
+                continue
+            if label != "all" and age_bin(age) != label:
+                continue
+            group.append(row)
+        samples = [abs(float(r["sigma_a_sample_mps2"])) for r in group]
+        out.append({
+            "age_bin": label,
+            "n": len(samples),
+            "p50_abs_sigma_a_mps2": percentile(samples, 50) if samples else "",
+            "p80_abs_sigma_a_mps2": percentile(samples, 80) if samples else "",
+            "p90_abs_sigma_a_mps2": percentile(samples, 90) if samples else "",
+            "p95_abs_sigma_a_mps2": percentile(samples, 95) if samples else "",
+            "p99_abs_sigma_a_mps2": percentile(samples, 99) if samples else "",
+            "max_abs_sigma_a_mps2": max(samples) if samples else "",
+        })
+    return out
+
+
+def reference_metric_row(label: str, provenance: str, rows: list[dict]) -> dict:
+    samples = [
+        float(r["sigma_a_sample_mps2"]) for r in rows
+        if fnum(r.get("sigma_a_sample_mps2")) is not None
+    ]
+    errors = [
+        float(r["rate_error_mps"]) for r in rows
+        if fnum(r.get("rate_error_mps")) is not None
+    ]
+    abs_samples = [abs(v) for v in samples]
+    ref_ns = [
+        int(float(r["oracle_ref_n"])) for r in rows
+        if fnum(r.get("oracle_ref_n")) is not None
+    ]
+    return {
+        "reference": label,
+        "provenance": provenance,
+        "n": len(samples),
+        "rate_error_rms_mps": rms(errors) if errors else "",
+        "sigma_a_rms_mps2_audit_only": rms(samples) if samples else "",
+        "p50_abs_sigma_a_mps2": percentile(abs_samples, 50) if abs_samples else "",
+        "p80_abs_sigma_a_mps2": percentile(abs_samples, 80) if abs_samples else "",
+        "p90_abs_sigma_a_mps2": percentile(abs_samples, 90) if abs_samples else "",
+        "p95_abs_sigma_a_mps2": percentile(abs_samples, 95) if abs_samples else "",
+        "p99_abs_sigma_a_mps2": percentile(abs_samples, 99) if abs_samples else "",
+        "max_abs_sigma_a_mps2": max(abs_samples) if abs_samples else "",
+        "oracle_ref_n_min": min(ref_ns) if ref_ns else "",
+        "oracle_ref_n_median": statistics.median(ref_ns) if ref_ns else "",
+    }
+
+
+def reference_age_bin_comparison(old_rows: list[dict], oracle_rows: list[dict]) -> list[dict]:
+    old_by_bin = {row["age_bin"]: row for row in age_bin_percentile_envelope(old_rows)}
+    oracle_by_bin = {row["age_bin"]: row for row in age_bin_percentile_envelope(oracle_rows)}
+    rows = []
+    for label in ["all", "0p10-0p20", "0p20-0p30", "0p30-0p50", "gte0p50"]:
+        old = old_by_bin.get(label, {})
+        oracle = oracle_by_bin.get(label, {})
+        rows.append({
+            "age_bin": label,
+            "old_n": old.get("n", 0),
+            "old_p95_abs_sigma_a_mps2": old.get("p95_abs_sigma_a_mps2", ""),
+            "old_p99_abs_sigma_a_mps2": old.get("p99_abs_sigma_a_mps2", ""),
+            "oracle_n": oracle.get("n", 0),
+            "oracle_p95_abs_sigma_a_mps2": oracle.get("p95_abs_sigma_a_mps2", ""),
+            "oracle_p99_abs_sigma_a_mps2": oracle.get("p99_abs_sigma_a_mps2", ""),
+        })
+    return rows
 
 
 def summarize_age_distribution(trial_rows: list[dict], transitions: list[dict]) -> dict:
@@ -1062,11 +1269,48 @@ def write_report(out_dir: Path, summary: dict) -> None:
         f"Repo HEAD: `{summary['repo_head']}`.",
         f"Non-tuning delta from `{summary['source_ref']}`: `{summary['non_tuning_delta_from_source']}`.",
         "",
+        "## Reference Provenance Pin",
+        "",
+        f"- Old reference: {summary['reference_pin']['old_reference']}.",
+        f"- Warning: {summary['reference_pin']['old_reference_warning']}",
+        f"- Oracle reference: {summary['reference_pin']['oracle_reference']}",
+        f"- Fit statistic: {summary['reference_pin']['fit_statistic']}; "
+        f"age < {fmt(summary['reference_pin']['near_zero_age_excluded_below_s'])}s excluded.",
+        "",
+        "| Reference | n | p50 | p80 | p90 | p95 | p99 | RMS audit | provenance |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in summary["reference_comparison"]:
+        lines.append(
+            f"| `{row['reference']}` | {row['n']} | "
+            f"{fmt(row['p50_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p80_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p90_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p95_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p99_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['sigma_a_rms_mps2_audit_only'])} | "
+            f"{row['provenance']} |"
+        )
+    lines.extend([
+        "",
+        "| Age bin | old n | old p95 | old p99 | oracle n | oracle p95 | oracle p99 |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ])
+    for row in summary["reference_age_comparison"]:
+        lines.append(
+            f"| `{row['age_bin']}` | {row['old_n']} | "
+            f"{fmt(row['old_p95_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['old_p99_abs_sigma_a_mps2'])} | "
+            f"{row['oracle_n']} | {fmt(row['oracle_p95_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['oracle_p99_abs_sigma_a_mps2'])} |"
+        )
+    lines.extend([
+        "",
         "## R26-1 Liveness",
         "",
         "| Trial | Drop frame | First capture R | TERM/SIDE rows | Side captures | Side max score | Min side R | Transitions | Verdict |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---|",
-    ]
+    ])
     for row in summary["trial_summary"]:
         if not str(row["trial"]).startswith("anchor_drop_"):
             continue
@@ -1086,6 +1330,8 @@ def write_report(out_dir: Path, summary: dict) -> None:
         f"Overall R26-1 verdict: `{summary['r26_1_verdict']}`.",
         "",
         "## R26-2/3 Sigma-a",
+        "",
+        "Primary table uses the withheld-FULL oracle reference. RMS columns are audit-only; the fitted sigma_a is the percentile envelope above.",
         "",
         "| Anchor age bin | n | age range | corrected err RMS | corrected sigma_a RMS | anchor-only sigma_a RMS | centered |",
         "|---|---:|---|---:|---:|---:|---:|",
@@ -1221,18 +1467,28 @@ def write_report(out_dir: Path, summary: dict) -> None:
         f"{fmt(summary['elapsed_anchor_age_min_s'])}-{fmt(summary['elapsed_anchor_age_max_s'])}; "
         f"now-based advances `{summary['now_anchor_age_advances_flag']}`; "
         f"frozen/no-now static `{summary['frozen_no_now_static_flag']}`.",
-        f"Feed-forward corrected sigma_a: `{fmt(summary['measured_sigma_a_mps2'])}`; "
-        f"anchor-only comparison: `{fmt(summary['measured_anchor_only_sigma_a_mps2'])}`.",
+        f"Feed-forward corrected sigma_a oracle p95: "
+        f"`{fmt(summary['measured_sigma_a_oracle_p95_mps2'])}` "
+        f"(oracle RMS audit `{fmt(summary['measured_sigma_a_oracle_rms_mps2_audit_only'])}`); "
+        f"old state-v_world p95 `{fmt(summary['measured_sigma_a_old_p95_mps2'])}` "
+        f"(old RMS audit `{fmt(summary['measured_sigma_a_old_rms_mps2_audit_only'])}`); "
+        f"anchor-only old-reference comparison: `{fmt(summary['measured_anchor_only_sigma_a_mps2'])}`.",
         f"Applied-command audit: logged applied vz range "
         f"{fmt(summary['logged_applied_vz_min_mps'])}-{fmt(summary['logged_applied_vz_max_mps'])}; "
         f"feed-forward range "
         f"{fmt(summary['feed_forward_min_mps'])}-{fmt(summary['feed_forward_max_mps'])} "
         f"(RMS `{fmt(summary['feed_forward_rms_mps'])}`).",
         "",
-        "Artifacts: `features_f2.csv`, `anchor_trial_rows.csv`, "
+        "Artifacts: `features_f2.csv`, `full_observation_series.csv`, "
+        "`anchor_trial_rows.csv`, "
         "`anchor_trial_summary.csv`, `anchor_transitions.csv`, "
-        "`sigma_a_rows.csv`, `sigma_a_summary.csv`, `sigma_regime_summary.csv`, "
-        "`sigma_percentile_envelope.csv`, `heldout_age_coverage.csv`, "
+        "`sigma_a_rows.csv`, `sigma_a_old_rows.csv`, `sigma_a_oracle_rows.csv`, "
+        "`sigma_a_summary.csv`, `sigma_a_old_summary.csv`, "
+        "`sigma_regime_summary.csv`, `sigma_percentile_envelope.csv`, "
+        "`sigma_age_percentile_envelope.csv`, `sigma_old_percentile_envelope.csv`, "
+        "`sigma_old_age_percentile_envelope.csv`, `heldout_age_coverage.csv`, "
+        "`heldout_old_age_coverage.csv`, `reference_comparison.csv`, "
+        "`reference_age_comparison.csv`, "
         "`age_distribution.csv`, `anchor_age_sweep.csv`, `floor_table.csv`, "
         "`r26_command_change_fixtures.csv`, `r26_micro_rows.csv`, "
         "`r26_micro_summary.csv`, and `summary.json`.",
@@ -1257,13 +1513,15 @@ def main(argv: list[str] | None = None) -> int:
     rows, meta = run_video_replay(params, target)
     attach_flight_signals(params, rows, target)
     write_csv(out_dir / "features_f2.csv", rows)
+    full_series = full_observation_series(rows)
+    write_csv(out_dir / "full_observation_series.csv", full_series)
 
     pairs = exact_pairs(rows)
     side_sigma_e = rms_centered([float(p["residual_e_m"]) for p in pairs])
     side_sigma_e = max(SIDE_SIGMA_E_FLOOR_M, float(side_sigma_e or SIDE_SIGMA_E_FLOOR_M))
 
     baseline_rows, baseline_transitions = replay_anchor_trial(
-        params, rows, "baseline_no_drop", None, side_sigma_e)
+        params, rows, "baseline_no_drop", None, side_sigma_e, full_series)
     baseline_summary = summarize_trial(baseline_rows, baseline_transitions)
     captures = [r for r in baseline_rows if r.get("shadow_capture")
                 and r.get("active_source") == "FULL_QUAD"]
@@ -1285,7 +1543,7 @@ def main(argv: list[str] | None = None) -> int:
     for pair in candidates:
         label = f"anchor_drop_frame_{pair['frame_id']}"
         trial_rows, transitions = replay_anchor_trial(
-            params, rows, label, int(pair["feature_ts_ns"]), side_sigma_e)
+            params, rows, label, int(pair["feature_ts_ns"]), side_sigma_e, full_series)
         for tr in trial_rows:
             tr["candidate_frame_id"] = pair["frame_id"]
             tr["candidate_range_z_m"] = pair["range_z_m"]
@@ -1316,27 +1574,42 @@ def main(argv: list[str] | None = None) -> int:
         for r in legal_trials
     )
 
-    sigma_a_rows = [
-        r for r in all_trial_rows
-        if str(r.get("trial", "")).startswith("anchor_drop_")
-        and r.get("shadow_owner") == TERM_OWNER
-        and r.get("active_source") == "SIDE_PAIR"
-        and fnum(r.get("sigma_a_sample_mps2")) is not None
-        and fnum(r.get("rate_anchor_age_s")) is not None
-        and float(r["rate_anchor_age_s"]) >= 0.10
-    ]
-    for row in sigma_a_rows:
-        age = fnum(row.get("rate_anchor_age_s"))
-        row["sigma_regime"] = (
-            "switch_adjacent"
-            if age is not None and age < 0.20
-            else "maintenance"
-        )
+    sigma_a_old_rows = sigma_rows_for_reference(
+        all_trial_rows,
+        "sigma_a_old_sample_mps2",
+        "rate_error_old_mps",
+    )
+    sigma_a_oracle_rows = sigma_rows_for_reference(
+        all_trial_rows,
+        "sigma_a_oracle_sample_mps2",
+        "rate_error_oracle_mps",
+    )
+    sigma_a_rows = sigma_a_oracle_rows
     write_csv(out_dir / "sigma_a_rows.csv", sigma_a_rows)
+    write_csv(out_dir / "sigma_a_old_rows.csv", sigma_a_old_rows)
+    write_csv(out_dir / "sigma_a_oracle_rows.csv", sigma_a_oracle_rows)
     sigma_a_summary = summarize_sigma_a(sigma_a_rows)
     sigma_regime_summary = summarize_sigma_regimes(sigma_a_rows)
     sigma_percentile = percentile_envelope(sigma_a_rows)
+    sigma_age_percentile = age_bin_percentile_envelope(sigma_a_rows)
     heldout_coverage = heldout_age_coverage(sigma_a_rows)
+    sigma_a_old_summary = summarize_sigma_a(sigma_a_old_rows)
+    sigma_old_percentile = percentile_envelope(sigma_a_old_rows)
+    sigma_old_age_percentile = age_bin_percentile_envelope(sigma_a_old_rows)
+    heldout_old_coverage = heldout_age_coverage(sigma_a_old_rows)
+    reference_comparison = [
+        reference_metric_row(
+            "old_state_v_world",
+            "flight_log state.v_world de-tilted to the stored level frame",
+            sigma_a_old_rows,
+        ),
+        reference_metric_row(
+            "withheld_full_oracle",
+            "withheld FULL_QUAD e_z Theil-Sen slope around each scoring instant",
+            sigma_a_oracle_rows,
+        ),
+    ]
+    reference_age_comparison = reference_age_bin_comparison(sigma_a_old_rows, sigma_a_oracle_rows)
     age_distribution = summarize_age_distribution(all_trial_rows, all_transitions)
     code_ages = [float(r["rate_anchor_age_s"]) for r in sigma_a_rows
                  if fnum(r.get("rate_anchor_age_s")) is not None]
@@ -1349,13 +1622,33 @@ def main(argv: list[str] | None = None) -> int:
     logged_applied_vz = [float(r["logged_applied_vz_up_mps"]) for r in sigma_a_rows
                          if fnum(r.get("logged_applied_vz_up_mps")) is not None]
     measured_sigma_a = next(
+        (
+            fnum(r["p95_abs_sigma_a_mps2"])
+            for r in sigma_age_percentile
+            if r["age_bin"] == "all"
+        ),
+        None,
+    )
+    measured_sigma_a_oracle_rms = next(
         (fnum(r["sigma_a_rms_mps2"]) for r in sigma_a_summary if r["age_bin"] == "all"),
+        None,
+    )
+    measured_sigma_a_old_rms = next(
+        (fnum(r["sigma_a_rms_mps2"]) for r in sigma_a_old_summary if r["age_bin"] == "all"),
+        None,
+    )
+    measured_sigma_a_old_p95 = next(
+        (
+            fnum(r["p95_abs_sigma_a_mps2"])
+            for r in sigma_old_age_percentile
+            if r["age_bin"] == "all"
+        ),
         None,
     )
     measured_anchor_only_sigma_a = next(
         (
             fnum(r["sigma_a_anchor_only_rms_mps2"])
-            for r in sigma_a_summary
+            for r in sigma_a_old_summary
             if r["age_bin"] == "all"
         ),
         None,
@@ -1363,9 +1656,16 @@ def main(argv: list[str] | None = None) -> int:
     floors = floor_table(measured_sigma_a)
     age_sweep = anchor_age_sweep(measured_sigma_a, max(code_ages) if code_ages else None)
     write_csv(out_dir / "sigma_a_summary.csv", sigma_a_summary)
+    write_csv(out_dir / "sigma_a_old_summary.csv", sigma_a_old_summary)
     write_csv(out_dir / "sigma_regime_summary.csv", sigma_regime_summary)
     write_csv(out_dir / "sigma_percentile_envelope.csv", sigma_percentile)
+    write_csv(out_dir / "sigma_age_percentile_envelope.csv", sigma_age_percentile)
+    write_csv(out_dir / "sigma_old_percentile_envelope.csv", sigma_old_percentile)
+    write_csv(out_dir / "sigma_old_age_percentile_envelope.csv", sigma_old_age_percentile)
     write_csv(out_dir / "heldout_age_coverage.csv", heldout_coverage)
+    write_csv(out_dir / "heldout_old_age_coverage.csv", heldout_old_coverage)
+    write_csv(out_dir / "reference_comparison.csv", reference_comparison)
+    write_csv(out_dir / "reference_age_comparison.csv", reference_age_comparison)
     write_csv(out_dir / "age_distribution.csv", [age_distribution])
     write_csv(out_dir / "anchor_age_sweep.csv", age_sweep)
     write_csv(out_dir / "floor_table.csv", floors)
@@ -1387,6 +1687,22 @@ def main(argv: list[str] | None = None) -> int:
         "repo_head": head,
         "non_tuning_delta_from_source": source_delta,
         "flight_meta": meta,
+        "reference_pin": {
+            "old_reference": "flight_log state.v_world de-tilted to the stored level frame",
+            "old_reference_warning": (
+                "Believed-state channel; not the ruling-specified sigma_a reference "
+                "when caged-gravity sawtooth is present."
+            ),
+            "oracle_reference": (
+                "WITHHELD FULL_QUAD oracle: Theil-Sen slope of withheld full e_z "
+                "observations around each scoring instant; v_z_up=-slope(e_z)."
+            ),
+            "oracle_window_s": WITHHELD_FULL_WINDOW_S,
+            "oracle_fallback_window_s": WITHHELD_FULL_FALLBACK_WINDOW_S,
+            "near_zero_age_excluded_below_s": SIGMA_MIN_AGE_S,
+            "fit_statistic": "p95_abs_sigma_a_mps2 percentile envelope, not RMS",
+        },
+        "full_observation_count": len(full_series),
         "exact_pair_count": len(pairs),
         "side_sigma_e_m": side_sigma_e,
         "first_capture_range_m": first_capture_range,
@@ -1396,11 +1712,22 @@ def main(argv: list[str] | None = None) -> int:
         "trial_summary": trial_summary,
         "r26_1_verdict": "PASS" if r26_1_pass else "FAIL",
         "sigma_a_summary": sigma_a_summary,
+        "sigma_a_old_summary": sigma_a_old_summary,
         "sigma_regime_summary": sigma_regime_summary,
         "sigma_percentile_envelope": sigma_percentile,
+        "sigma_age_percentile_envelope": sigma_age_percentile,
+        "sigma_old_percentile_envelope": sigma_old_percentile,
+        "sigma_old_age_percentile_envelope": sigma_old_age_percentile,
         "heldout_age_coverage": heldout_coverage,
+        "heldout_old_age_coverage": heldout_old_coverage,
+        "reference_comparison": reference_comparison,
+        "reference_age_comparison": reference_age_comparison,
         "age_distribution": age_distribution,
         "measured_sigma_a_mps2": measured_sigma_a,
+        "measured_sigma_a_oracle_p95_mps2": measured_sigma_a,
+        "measured_sigma_a_oracle_rms_mps2_audit_only": measured_sigma_a_oracle_rms,
+        "measured_sigma_a_old_p95_mps2": measured_sigma_a_old_p95,
+        "measured_sigma_a_old_rms_mps2_audit_only": measured_sigma_a_old_rms,
         "measured_anchor_only_sigma_a_mps2": measured_anchor_only_sigma_a,
         "anchor_age_sweep": age_sweep,
         "floor_table": floors,

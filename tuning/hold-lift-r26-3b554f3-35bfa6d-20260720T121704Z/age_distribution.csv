@@ -1,0 +1,2 @@
+transition_age_n,transition_age_min_s,transition_age_median_s,transition_age_max_s,maintain_age_n,maintain_age_max_s,authorized_age_max_s,damping_onset_age_s,worst_continuous_score,score_p95
+1,0.1667172908782959,0.1667172908782959,0.1667172908782959,16,0.430652379989624,0.430652379989624,0.3960843086242676,0.26997547058308446,0.26997547058308446

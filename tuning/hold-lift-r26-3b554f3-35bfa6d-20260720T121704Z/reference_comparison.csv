@@ -1,0 +1,3 @@
+reference,provenance,n,rate_error_rms_mps,sigma_a_rms_mps2_audit_only,p50_abs_sigma_a_mps2,p80_abs_sigma_a_mps2,p90_abs_sigma_a_mps2,p95_abs_sigma_a_mps2,p99_abs_sigma_a_mps2,max_abs_sigma_a_mps2,oracle_ref_n_min,oracle_ref_n_median
+old_state_v_world,flight_log state.v_world de-tilted to the stored level frame,16,0.49811729628161905,1.9557607427881463,0.9573353308226236,2.536314497500249,3.4954187611603484,4.454523024820448,4.454523024820448,4.454523024820448,10,12.0
+withheld_full_oracle,withheld FULL_QUAD e_z Theil-Sen slope around each scoring instant,16,0.4104152148880635,1.6138844610011946,1.463160303913972,1.905434222672501,2.2467317520418537,2.340311169172686,2.564901770286682,2.6210494205651815,10,12.0

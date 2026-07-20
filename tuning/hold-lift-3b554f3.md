@@ -10,6 +10,28 @@ Artifacts:
 
 - R26/SIGMA_A: `tuning/hold-lift-r26-3b554f3-3942837-20260720T115535Z/`
 - P4 wall-clock: `tuning/hold-lift-p4-3b554f3-3942837-20260720T115546Z/`
+- R26 reference provenance pin: `tuning/hold-lift-r26-3b554f3-35bfa6d-20260720T121704Z/`
+
+## 0. Reference Provenance Pin Rerun
+
+Rerun on repo HEAD `35bfa6d9d1bbd2bbce036c7fe3089d0d587c47b5` confirmed the previous `truth-v_z` reference was the believed-state `state.v_world` channel de-tilted into the stored level frame. That old channel is now audit-only because it carries the known caged-gravity sawtooth risk.
+
+The ruling-specified reference is now computed as withheld FULL_QUAD oracle velocity: Theil-Sen slope over withheld full-quad `e_z` observations around each scoring instant, with `v_z_up = -slope(e_z)`. The fit uses p95 absolute sigma_a by age bin, excluding anchor age `<0.10s`; RMS is reported only as an audit number.
+
+| Reference | n | p50 | p80 | p90 | p95 | p99 | RMS audit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `old_state_v_world` | 16 | `0.957` | `2.536` | `3.495` | `4.455` | `4.455` | `1.956` |
+| `withheld_full_oracle` | 16 | `1.463` | `1.905` | `2.247` | `2.340` | `2.565` | `1.614` |
+
+Age-bin p95 comparison:
+
+| Age bin | old p95 | oracle p95 |
+|---|---:|---:|
+| `0.10-0.20s` | `0.646` | `2.584` |
+| `0.20-0.30s` | `4.455` | `1.905` |
+| `0.30-0.50s` | `1.226` | `1.310` |
+
+Verdict: the old reference substantially inflated the all-up p95 (`4.455 -> 2.340 m/s^2`) and the old RMS (`1.956`) was partly reference noise. However, the withheld-FULL oracle p95 is still well above the `0.35 m/s^2` drift-model gate, so R26-2/3 remains `FAIL` on this configuration rather than being cleared by the reference correction alone.
 
 ## 1. SIGMA_A Corrected With Percentile Envelope
 

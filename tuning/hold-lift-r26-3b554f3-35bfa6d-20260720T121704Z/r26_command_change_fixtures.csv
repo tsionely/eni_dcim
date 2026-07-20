@@ -1,0 +1,5 @@
+scenario,active_source,rate_anchor_valid,rate_anchor_ts_s,rate_anchor_age_s,rate_anchor_v_mps,applied_at_anchor_lookup_mps,anchor_applied_ref_mps,applied_now_mps,expected_feed_forward_mps,measured_feed_forward_mps,hold_rate_mps,verdict
+constant,SIDE_PAIR,True,0.28,0.28,0.07466666666666674,0.1,0.1,0.1,0.0,0.0,0.07466666666666674,PASS
+step_up_after_anchor,SIDE_PAIR,True,0.28,0.28,0.07466666666666674,0.0,0.0,0.3,0.3,0.3,0.3746666666666667,PASS
+step_down_after_anchor,SIDE_PAIR,True,0.28,0.28,0.07466666666666674,0.0,0.0,-0.2,-0.2,-0.2,-0.12533333333333327,PASS
+triangular_return,SIDE_PAIR,True,0.28,0.28,0.07466666666666674,0.0,0.0,0.0,0.0,0.0,0.07466666666666674,PASS
