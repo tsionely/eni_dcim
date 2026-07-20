@@ -58,6 +58,10 @@ LEGACY_E_DEADBAND = 0.03
 LEGACY_PRODUCT_EPS = -1e-6
 STEP_THRESHOLD_MPS = 0.08
 CORRIDOR_M = 0.30
+FIXTURE_LEVEL_SCOPE = (
+    "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, "
+    "four correlated variants), not population evidence."
+)
 
 
 def git(*args: str) -> str:
@@ -361,6 +365,11 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "new_excess_wrong_sign_events": excess,
             "equivalence_margin": 0,
             "wrong_sign_clause_result": "PASS" if excess == 0 and new_v == 0 else "FAIL_CLOSED",
+            "verdict_scope_language": (
+                FIXTURE_LEVEL_SCOPE
+                if excess == 0 and new_v == 0
+                else "FAIL_CLOSED at fixture scope; no population evidence claimed."
+            ),
             "old_opposition_to_velocity_events": old_opp,
             "new_opposition_to_velocity_events": new_opp,
             "opposition_to_velocity_rate_delta": (
@@ -378,6 +387,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "events": len({(r.get("flight_id"), r.get("trial"), r.get("mono_ns")) for r in term_rows}),
             "violations": len(legacy_flagged),
             "status": "INVALID_TEST_WRONG_SUPPORT_AND_MASK",
+            "verdict_scope_language": "not a converted registered-definition verdict",
             "formula": "terminal_vz_up_mps vs e_meas; abs(e_meas)>0.03; trace rows as units",
         },
         {
@@ -387,6 +397,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "events": len(paired_rows),
             "violations": sum(1 for r in paired_rows if r["old_wrong_sign_needed"]),
             "status": "PASS" if not any(r["old_wrong_sign_needed"] for r in paired_rows) else "FAIL",
+            "verdict_scope_language": FIXTURE_LEVEL_SCOPE,
             "formula": "shadow_vz_cmd_old_mps vs applied_e_z; abs both >0.02; event support",
         },
         {
@@ -396,6 +407,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "events": len(paired_rows),
             "violations": sum(1 for r in paired_rows if r["new_wrong_sign_needed"]),
             "status": "PASS" if not any(r["new_wrong_sign_needed"] for r in paired_rows) else "FAIL_CLOSED",
+            "verdict_scope_language": FIXTURE_LEVEL_SCOPE,
             "formula": "shadow_vz_cmd_new_mps vs applied_e_z; abs both >0.02; event support",
         },
         {
@@ -405,6 +417,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "events": len(paired_rows),
             "violations": sum(1 for r in paired_rows if r["old_opposition_to_velocity_rate"]),
             "status": "TELEMETRY_ONLY",
+            "verdict_scope_language": "telemetry descriptor only; no pass/fail or population claim",
             "formula": "shadow_vz_cmd_old_mps vs truth_vz_up_mps; descriptor only",
         },
         {
@@ -414,6 +427,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
             "events": len(paired_rows),
             "violations": sum(1 for r in paired_rows if r["new_opposition_to_velocity_rate"]),
             "status": "TELEMETRY_ONLY",
+            "verdict_scope_language": "telemetry descriptor only; no pass/fail or population claim",
             "formula": "shadow_vz_cmd_new_mps vs truth_vz_up_mps; descriptor only",
         },
     ]
@@ -459,6 +473,7 @@ def archaeology_and_rescore(task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
         f"- Criterion file: `{WRONG_SIGN_CRITERION.relative_to(ROOT)}`.",
         f"- Criterion commit: `{last_commit_for(WRONG_SIGN_CRITERION)}`.",
         f"- Corrected wrong-sign clause result on paired common support: `{approach_rows[0]['wrong_sign_clause_result'] if approach_rows else 'NO_SUPPORT'}`.",
+        f"- Verdict scope: {FIXTURE_LEVEL_SCOPE}",
         f"- Historical zero-wrong-sign artifacts re-scored: `{historical['artifacts']}`.",
         "",
     ]
@@ -1103,6 +1118,7 @@ def run(args: argparse.Namespace) -> Path:
         f"- Sign-evaluable events: `{wrong['sign_evaluable_events']}`.",
         f"- Zero/neutral events on support: `{wrong['zero_neutral_events']}`.",
         f"- New excess wrong-sign events on paired common support: `{wrong['new_excess_wrong_sign_events']}`.",
+        f"- Verdict scope: {FIXTURE_LEVEL_SCOPE}",
         f"- Historical zero-wrong-sign artifacts re-scored: `{wrong['historical_zero_green_artifacts_rescored']}`.",
         "",
         "## 2. Shadow Residual v2.1 Fit",
