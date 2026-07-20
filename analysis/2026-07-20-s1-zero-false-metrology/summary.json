@@ -1,0 +1,70 @@
+{
+  "ask": "S1 zero-false-metrology on successor-cert + projected-row",
+  "head_note": "scale gate + cert boundary (5a9aa79) + probation-out",
+  "n_scale_fiction_close_total": 14,
+  "projected_row": {
+    "n_projected_row_injected": 6,
+    "n_projected_row_accepts": 0
+  },
+  "pinned_scale_gate": {
+    "pinned_successor_103px_rejected": true,
+    "pinned_honest_388px_accepted": true
+  },
+  "gate": {
+    "false_metric_accepts": 0,
+    "false_TERM_READY": 0,
+    "wrong_epoch_accepts": 0,
+    "required": {
+      "false_metric_accepts": 0,
+      "false_TERM_READY": 0,
+      "wrong_epoch_accepts": 0
+    }
+  },
+  "cert_reanchor_anomaly": {
+    "n": 2,
+    "note": "status_at timed out to NONE while _status stayed CERTIFIED; on_full_quad then MAINTAIN-reanchored fiction below 1.6m. Metrology still refused (scale gate). Patch addendum: treat status_at==NONE as fresh-identity path in on_full_quad.",
+    "blocks_S1_metrology_gate": false
+  },
+  "verdict": "PASS",
+  "flights": [
+    {
+      "fid": "20260719T201630-f170ead6",
+      "short": "201630",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201630-f170ead6-flight.jsonl",
+      "n_close_feature_rows": 10,
+      "n_scale_fiction_close": 4,
+      "n_false_metric_accepts": 0,
+      "n_false_TERM_READY": 0,
+      "n_wrong_epoch_accepts": 0,
+      "n_cert_reanchor_anomaly": 1,
+      "n_probation_attempts": 6,
+      "n_probation_accepts": 0
+    },
+    {
+      "fid": "20260719T202445-f170ead6",
+      "short": "202445",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202445-f170ead6-flight.jsonl",
+      "n_close_feature_rows": 17,
+      "n_scale_fiction_close": 7,
+      "n_false_metric_accepts": 0,
+      "n_false_TERM_READY": 0,
+      "n_wrong_epoch_accepts": 0,
+      "n_cert_reanchor_anomaly": 1,
+      "n_probation_attempts": 0,
+      "n_probation_accepts": 0
+    },
+    {
+      "fid": "20260719T202720-50f9dcc8",
+      "short": "202720",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T202720-50f9dcc8-flight.jsonl",
+      "n_close_feature_rows": 14,
+      "n_scale_fiction_close": 3,
+      "n_false_metric_accepts": 0,
+      "n_false_TERM_READY": 0,
+      "n_wrong_epoch_accepts": 0,
+      "n_cert_reanchor_anomaly": 0,
+      "n_probation_attempts": 0,
+      "n_probation_accepts": 0
+    }
+  ]
+}
