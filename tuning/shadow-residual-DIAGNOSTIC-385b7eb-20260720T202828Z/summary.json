@@ -1,0 +1,63 @@
+{
+  "artifacts": [
+    "DIAGNOSTIC_old_vs_shadow_release_fit.csv",
+    "DIAGNOSTIC_shadow_b0_new_per_cluster.csv",
+    "DIAGNOSTIC_wrong_sign_formula.md",
+    "DIAGNOSTIC_wrong_sign_scorecard.csv",
+    "DIAGNOSTIC_Y_eligible_by_era.csv",
+    "DIAGNOSTIC_frozen_compound_signature_2x2.csv"
+  ],
+  "diagnostic_only": true,
+  "ledger": {
+    "Y_eligible": 23,
+    "approaches": 178,
+    "failure_reason_counts": {
+      "FULL_BELOW_3P5_NOT_EZ_USABLE": 24,
+      "NO_CERTIFIED_FULL_BELOW_3P5": 53,
+      "NO_CLOSE_FEATURE_EPOCH_LE4P5": 45,
+      "NO_LEGAL_FULL_RATE_ANCHOR": 3,
+      "NO_LEGAL_SIDE_MAINTENANCE_INTERVAL": 10,
+      "NO_PARALLEL_SIDE_PRODUCTION": 20,
+      "OK": 23
+    },
+    "signature_positive": 45
+  },
+  "old_path": {
+    "cluster_bootstrap_u95_sigma_a_mps2": "1.7354300892950971",
+    "coverage_monotone_degrade": "False",
+    "loao_pushes_over_gate": "True",
+    "max_validated_age": "none",
+    "n_clusters": "23",
+    "n_flights": "23",
+    "n_rows": "1638",
+    "point_sigma_a_mps2": "1.3069277300036368",
+    "profile_nearly_flat": "False",
+    "profile_u95_sigma_a_mps2": "1.4000000000000001",
+    "pseudo_sigma_0_mps": "0.013697768148201908",
+    "pseudo_sigma_a_mps2": "4.305708208859055e-09",
+    "sigma_0_mps": "0.08397546969730924",
+    "u95_release_sigma_a_mps2": "1.7354300892950971",
+    "verdict": "HOLD, DATA-INSUFFICIENT"
+  },
+  "repo_head": "385b7ebd4795fc74c9d17ed95c3bd45b33e5a329",
+  "shadow_fit": {
+    "cluster_bootstrap_u95_sigma_a_mps2": 1.7098675259932024,
+    "coverage_monotone_degrade": false,
+    "max_validated_age": "none",
+    "n_clusters": 23,
+    "n_flights": 23,
+    "n_rows": 1638,
+    "point_sigma_a_mps2": 1.1993330626785552,
+    "profile_u95_sigma_a_mps2": 1.2750000000000001,
+    "sigma_0_mps": 0.10994746759137086,
+    "u95_release_sigma_a_mps2": 1.7098675259932024
+  },
+  "task_a_source": "tuning\\taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z",
+  "task_b_source": "tuning\\taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z",
+  "wrong_sign": {
+    "base_liveness_pass": true,
+    "legacy_wrong_sign_rows": 28,
+    "needed_correction_new_shadow_wrong_sign_rows": 0,
+    "needed_correction_old_actual_wrong_sign_rows": 0
+  }
+}

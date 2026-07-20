@@ -1,0 +1,2 @@
+diagnostic_only,n_flights,n_clusters,n_rows,point_sigma_a_mps2,profile_u95_sigma_a_mps2,cluster_bootstrap_u95_sigma_a_mps2,u95_release_sigma_a_mps2,sigma_0_mps,profile_nearly_flat,max_validated_age,coverage_monotone_degrade,label
+True,23,23,1638,1.1993330626785552,1.2750000000000001,1.7098675259932024,1.7098675259932024,0.10994746759137086,False,none,False,DIAGNOSTIC_SHADOW_RESIDUALS_NOT_RELEASE

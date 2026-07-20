@@ -1,0 +1,2 @@
+cluster_bootstrap_n,cluster_bootstrap_u95_sigma_a_mps2,cluster_bootstrap_sigma_a_min_mps2,cluster_bootstrap_sigma_a_max_mps2,b0_ci_low_mps,b0_ci_median_mps,b0_ci_high_mps,b1_ci_low_mps_per_s,b1_ci_median_mps_per_s,b1_ci_high_mps_per_s
+2200,1.7098675259932024,0.0,2.5049696617891084,-0.06661736144012445,0.03553332319396755,0.18184134031428542,-0.5067875359054321,-0.03227268417857336,0.40437184633763856
