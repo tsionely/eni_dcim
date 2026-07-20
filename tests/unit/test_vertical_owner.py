@@ -873,3 +873,21 @@ def test_anchor_falsified_by_contradictory_side_positions():
         g.observe(ts, 0.34 - 0.10 * t0 + 0.6 * (ts - t0 + 0.5),
                   source="SIDE_PAIR")
     assert not g.rate_anchor_valid
+
+
+def test_anchor_age_grows_with_time_not_observations():
+    """R26 telemetry finding: the anchor age must grow with CURRENT
+    time even when observations pause — a frozen age kept a stale
+    anchor 'young' during blindness, the unsafe direction."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    for i in range(8):
+        ts = i * 0.04
+        g.observe(ts, 0.30 - 0.10 * ts, source="FULL_QUAD")
+        g.observe(ts, 0.34 - 0.10 * ts, source="SIDE_PAIR")
+    for i in range(8, 14):
+        g.observe(i * 0.04, 0.34 - 0.10 * i * 0.04, source="SIDE_PAIR")
+    assert g.active_source == "SIDE_PAIR" and g.rate_anchor_valid
+    a1 = g.anchor_age_s(14 * 0.04)
+    a2 = g.anchor_age_s(14 * 0.04 + 0.3)     # no new observations
+    assert a2 == pytest.approx(a1 + 0.3, abs=1e-6)

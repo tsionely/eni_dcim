@@ -457,7 +457,7 @@ class App:
                                          if term_oracle.active_source
                                          == "SIDE_PAIR" else "FULL_QUAD"),
                             rate_anchor_age_s=(
-                                term_oracle.anchor_age_s()
+                                term_oracle.anchor_age_s(now_ns / 1e9)
                                 if term_oracle.rate_anchor_ts is not None
                                 else None),
                             rate_anchor_valid=term_oracle.rate_anchor_valid,

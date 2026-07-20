@@ -303,9 +303,22 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # horizon and falsifiable by SIDE positions; SIDE's slope
             # stays in shadow. Anchor invalid/expired => neutral rate
             # — option (c) as (a)'s automatic floor.
-            age = oracle.anchor_age_s()
+            age = oracle.anchor_age_s(float(state.ts_ns) / 1e9)
             if oracle.rate_anchor_valid and age <= tau_s + 0.5:
-                v_z_up = float(oracle.rate_anchor_v)
+                # FEED-FORWARD (mandatory per the ruling — and the
+                # first sigma_a run proved why: without it every
+                # commanded servo correction counted as unmodeled,
+                # 1.956 m/s^2 of it): the physics moved by our own
+                # applied commands since the anchor; add that known
+                # delta on top of the frozen measurement.
+                if (oracle.anchor_applied_ref is None
+                        and prev_vz_up is not None):
+                    oracle.anchor_applied_ref = float(prev_vz_up)
+                ff = ((float(prev_vz_up) - oracle.anchor_applied_ref)
+                      if (prev_vz_up is not None
+                          and oracle.anchor_applied_ref is not None)
+                      else 0.0)
+                v_z_up = float(oracle.rate_anchor_v) + ff
             else:
                 v_z_up = 0.0
         else:
@@ -414,6 +427,7 @@ class TerminalOracle:
         self.rate_anchor_v: float | None = None
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
+        self.anchor_applied_ref: float | None = None
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
         self.epoch = 0
@@ -440,6 +454,7 @@ class TerminalOracle:
         self.rate_anchor_v: float | None = None
         self.rate_anchor_ts: float | None = None
         self.rate_anchor_valid = False
+        self.anchor_applied_ref = None
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
         self.epoch += 1
@@ -605,6 +620,7 @@ class TerminalOracle:
                 self.rate_anchor_ts = (self._hist[-1][0]
                                        if self._hist else ts_s)
                 self.rate_anchor_valid = sl is not None
+                self.anchor_applied_ref = None
                 self._anchor_e0 = e_meas
                 self._anchor_breaches = 0
                 self._hist, self._hist_other = self._hist_other, self._hist
@@ -637,6 +653,7 @@ class TerminalOracle:
                 self.rate_anchor_v = None      # FULL rate authority back
                 self.rate_anchor_ts = None
                 self.rate_anchor_valid = False
+                self.anchor_applied_ref = None
                 self._anchor_e0 = None
                 self._anchor_breaches = 0
                 return True
@@ -678,14 +695,17 @@ class TerminalOracle:
                 and self.v_z_visual() is not None
                 and not self.disarmed)
 
-    def anchor_age_s(self) -> float:
-        """Age of the FULL rate anchor: newest accepted exposure ts
-        minus the anchor's FULL exposure ts. SIDE observations advance
-        the clock but never the anchor."""
+    def anchor_age_s(self, now_s: float | None = None) -> float:
+        """Age of the FULL rate anchor vs CURRENT time (R26 telemetry
+        finding: aging vs newest-accepted-exposure froze the age the
+        moment observations paused — keeping a stale anchor 'young'
+        exactly during blindness, the unsafe direction). SIDE
+        observations never reset the anchor; only time grows it."""
         if self.rate_anchor_ts is None:
             return float("inf")
-        newest = self._hist[-1][0] if self._hist else self.rate_anchor_ts
-        return max(0.0, newest - self.rate_anchor_ts)
+        if now_s is None:
+            now_s = self._hist[-1][0] if self._hist else self.rate_anchor_ts
+        return max(0.0, now_s - self.rate_anchor_ts)
 
     def ready_legacy(self) -> bool:
         """The PRE-correction readiness (whole-attempt gap statistic),
