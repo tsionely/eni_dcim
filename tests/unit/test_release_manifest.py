@@ -82,6 +82,25 @@ def test_rows_never_units(tmp_path):
     assert any("independent_n" in f for f in fails)
 
 
+def test_checkpoint_lineage_pair_and_digest(tmp_path):
+    """Channel-1 §3 appendix: 'recomputed from the checkpoints' must
+    be provable — the input-manifest pair travels together and its
+    digest must match, so a report layer can never silently read a
+    different intermediate than the computation wrote."""
+    art = REPO / "config" / "params_default.json"
+    good = hashlib.sha256(art.read_bytes()).hexdigest()
+    fails = check_manifest(_write(tmp_path, [
+        _row(board_row=1, input_manifest_path="config/params_default.json"),
+        _row(board_row=2, input_manifest_path="config/params_default.json",
+             input_manifest_sha256="0" * 64),
+        _row(board_row=3, input_manifest_path="config/params_default.json",
+             input_manifest_sha256=good),
+    ]), REPO)
+    assert any("row 1" in f and "pair" in f for f in fails)
+    assert any("row 2" in f and "digest mismatch" in f for f in fails)
+    assert not any("row 3" in f for f in fails)
+
+
 def test_accounting_pair_and_identity(tmp_path):
     """Hardening 5.1: attempted/analyzable travel together, and
     independent_n == analyzable_n unless a typed accounting_mode

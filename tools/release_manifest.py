@@ -183,6 +183,28 @@ def check_manifest(manifest_path: str | Path,
                         repo, ev, reviewed_tip):
                     failures.append(f"{rid}: evidence_commit is not an "
                                     "ancestor of the reviewed tip")
+        # Checkpoint/input lineage (channel-1 §3 appendix): when a row
+        # claims recomputation from intermediate state, the claim is
+        # PROVABLE — input_manifest_path + input_manifest_sha256
+        # travel as a pair, and the digest must match the committed
+        # bytes, so a fresh report layer can never silently read a
+        # different intermediate than the computation wrote.
+        imp, ims = (row.get("input_manifest_path"),
+                    row.get("input_manifest_sha256"))
+        if (imp in (None, "")) != (ims in (None, "")):
+            failures.append(f"{rid}: input_manifest_path and "
+                            "input_manifest_sha256 are a pair — "
+                            "supply both or neither")
+        elif imp not in (None, ""):
+            src = ev if ev not in (None, "") else None
+            got = (_sha256_at_commit(repo, src, imp) if src
+                   else (_sha256(repo / imp) if (repo / imp).exists()
+                         else None))
+            if got is None:
+                failures.append(f"{rid}: input manifest absent: {imp}")
+            elif got != ims:
+                failures.append(f"{rid}: input manifest digest "
+                                f"mismatch: {imp}")
         # Attempted/analyzable accounting (hardening 5.1 — the unit-
         # count error class becomes machine-impossible, not merely
         # discouraged): the pair travels together, and unless a typed
