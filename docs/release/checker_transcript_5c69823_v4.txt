@@ -1,0 +1,7 @@
+CHECKER TRANSCRIPT v4 — evidence packet 5c69823 (self-binding active)
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json acb3ba6248ad3cd5f2ec306e6621aef2bb7608b0
+reviewed tip: acb3ba6248ad3cd5f2ec306e6621aef2bb7608b0
+--- git status --porcelain (empty = clean) ---
+--- output ---
+MANIFEST VERIFIES (RELEASE-GRADE)
+exit status: 0

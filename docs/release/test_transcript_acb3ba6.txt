@@ -1,0 +1,8 @@
+TEST-SUITE TRANSCRIPT — reviewed tip acb3ba6248ad3cd5f2ec306e6621aef2bb7608b0
+invocation: python -m pytest tests/unit -q
+environment: Python 3.11.15, Linux 6.18.5
+--- git status --porcelain (empty = clean) ---
+--- output tail ---
+.......................................................................  [100%]
+215 passed in 5.68s
+exit status: 0
