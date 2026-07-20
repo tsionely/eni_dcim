@@ -1,0 +1,4 @@
+era,n_flights,n_legal,n_SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP,n_NO_CERTIFIED_FULL_BELOW_3P5,rate_legal,rate_SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP,rate_NO_CERTIFIED_FULL_BELOW_3P5,rate_any_censored,Y_eligible,Y_eligible_note
+archive,6,3,1,2,0.5,0.16666666666666666,0.3333333333333333,0.5,0.5,legal-transition approaches / total approaches (1 attempt per flight in this census)
+metrology,4,2,1,1,0.5,0.25,0.25,0.5,0.5,legal-transition approaches / total approaches (1 attempt per flight in this census)
+all,10,5,2,3,0.5,0.2,0.3,0.5,0.5,legal-transition approaches / total approaches (1 attempt per flight in this census)

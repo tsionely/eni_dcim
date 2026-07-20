@@ -1,0 +1,379 @@
+{
+  "response_refs": [
+    "RESPONSE38 \u00a71",
+    "RESPONSE39",
+    "advisory-20B \u00a71.2/\u00a71.3"
+  ],
+  "repo_tip_requested": "bb0dbcf",
+  "features_source": "tuning\\archive-harvest-release-fit-v21-6fe13e3-6fe13e3-20260720T144339Z\\features_archive.csv",
+  "n_flights": 10,
+  "n_legal": 5,
+  "n_censored": 5,
+  "mechanisms": {
+    "LEGAL": 5,
+    "SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP": 2,
+    "NO_CERTIFIED_FULL_BELOW_3P5": 3
+  },
+  "Y_eligible": {
+    "archive": 0.5,
+    "metrology": 0.5,
+    "all": 0.5
+  },
+  "discriminator_contrast": {
+    "certified_full_end_range_m": {
+      "legal": {
+        "n": 5,
+        "median": 4.347982401412674,
+        "min": 2.9110505094641344,
+        "max": 5.278756824277082,
+        "mean": 4.2724846659667195
+      },
+      "censored": {
+        "n": 5,
+        "median": 5.225145824776412,
+        "min": 5.187492645427993,
+        "max": 5.290143068966311,
+        "mean": 5.232792668879067
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 5.225145824776412,
+        "min": 5.187492645427993,
+        "max": 5.290143068966311,
+        "mean": 5.234260513056905
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 5.23059090261231,
+        "min": 5.190725455895457,
+        "max": 5.270456349329163,
+        "mean": 5.23059090261231
+      }
+    },
+    "full_dies_above_4p5": {
+      "legal_rate": 0.4,
+      "censored_rate": 1.0,
+      "dropout_funnel_rate": 1.0,
+      "scale_funnel_rate": 1.0
+    },
+    "n_full_gaps": {
+      "legal": {
+        "n": 5,
+        "median": 1,
+        "min": 0,
+        "max": 1,
+        "mean": 0.8
+      },
+      "censored": {
+        "n": 5,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "mean": 1.0
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "mean": 1.0
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 1.0,
+        "min": 1,
+        "max": 1,
+        "mean": 1.0
+      }
+    },
+    "first_full_gap_range_m": {
+      "legal": {
+        "n": 4,
+        "median": 5.187631794605366,
+        "min": 3.8041822371409286,
+        "max": 5.432448388094526,
+        "mean": 4.902973553611546
+      },
+      "censored": {
+        "n": 5,
+        "median": 5.5286978610297375,
+        "min": 5.270456349329163,
+        "max": 6.016439657383309,
+        "mean": 5.542597114913503
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 5.5286978610297375,
+        "min": 5.311288118654485,
+        "max": 6.016439657383309,
+        "mean": 5.618808545689177
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 5.428279968749994,
+        "min": 5.270456349329163,
+        "max": 5.586103588170824,
+        "mean": 5.428279968749994
+      }
+    },
+    "speed_xy_median_mps": {
+      "legal": {
+        "n": 5,
+        "median": 1.5995252621940115,
+        "min": 0.4015576055340636,
+        "max": 1.6672296251689531,
+        "mean": 1.150210187002099
+      },
+      "censored": {
+        "n": 5,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0
+      }
+    },
+    "speed_xy_median_le5_mps": {
+      "legal": {
+        "n": 5,
+        "median": 1.6618357834840498,
+        "min": 1.3938225450669703,
+        "max": 1.732053960102274,
+        "mean": 1.5898964926208847
+      },
+      "censored": {
+        "n": 5,
+        "median": 0.4190811235574047,
+        "min": 0.0,
+        "max": 3.158344462272095,
+        "mean": 0.8182744745492236
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0.5139467869166183,
+        "min": 0.0,
+        "max": 3.158344462272095,
+        "mean": 1.2240970830629043
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 0.20954056177870234,
+        "min": 0.0,
+        "max": 0.4190811235574047,
+        "mean": 0.20954056177870234
+      }
+    },
+    "entry_x_m": {
+      "legal": {
+        "n": 5,
+        "median": 0.05253022122156009,
+        "min": 0.018115539990577755,
+        "max": 0.0900221784514146,
+        "mean": 0.051025932227259464
+      },
+      "censored": {
+        "n": 5,
+        "median": 0.022817303181004767,
+        "min": -0.0002987260336648012,
+        "max": 0.06510584807147868,
+        "mean": 0.026947861525404987
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0.022817303181004767,
+        "min": -0.0002987260336648012,
+        "max": 0.02429757922720152,
+        "mean": 0.015605385458180495
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 0.04396157562624172,
+        "min": 0.022817303181004767,
+        "max": 0.06510584807147868,
+        "mean": 0.04396157562624172
+      }
+    },
+    "lateral_abs_x_median_le5_m": {
+      "legal": {
+        "n": 5,
+        "median": 0.2756721362510969,
+        "min": 0.03442606711222922,
+        "max": 0.5843672722942566,
+        "mean": 0.3231221958150644
+      },
+      "censored": {
+        "n": 5,
+        "median": 0.37209739501013694,
+        "min": 0.18094431365045255,
+        "max": 3.883881217533713,
+        "mean": 1.0773580104690492
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0.37209739501013694,
+        "min": 0.3691060442405569,
+        "max": 0.5807610819103869,
+        "mean": 0.4406548403870269
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 2.032412765592083,
+        "min": 0.18094431365045255,
+        "max": 3.883881217533713,
+        "mean": 2.032412765592083
+      }
+    },
+    "bloom_undersized_frac": {
+      "legal": {
+        "n": 5,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.09090909090909091,
+        "mean": 0.025
+      },
+      "censored": {
+        "n": 5,
+        "median": 0.027777777777777776,
+        "min": 0.0,
+        "max": 0.203125,
+        "mean": 0.06382761437908498
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.08823529411764706,
+        "mean": 0.029411764705882356
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 0.1154513888888889,
+        "min": 0.027777777777777776,
+        "max": 0.203125,
+        "mean": 0.1154513888888889
+      }
+    },
+    "n_side_rows_le5": {
+      "legal": {
+        "n": 5,
+        "median": 27,
+        "min": 9,
+        "max": 41,
+        "mean": 23.8
+      },
+      "censored": {
+        "n": 5,
+        "median": 4,
+        "min": 0,
+        "max": 8,
+        "mean": 3.6
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 6,
+        "mean": 2.0
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 6.0,
+        "min": 4,
+        "max": 8,
+        "mean": 6.0
+      }
+    },
+    "n_scale_gate_le_3p5": {
+      "legal": {
+        "n": 5,
+        "median": 0,
+        "min": 0,
+        "max": 5,
+        "mean": 1.2
+      },
+      "censored": {
+        "n": 5,
+        "median": 0,
+        "min": 0,
+        "max": 11,
+        "mean": 2.4
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "mean": 0.0
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 6.0,
+        "min": 1,
+        "max": 11,
+        "mean": 6.0
+      }
+    },
+    "closest_certified_full_m": {
+      "legal": {
+        "n": 5,
+        "median": 1.185409259667424,
+        "min": -0.8334916678566519,
+        "max": 2.9110505094641344,
+        "mean": 1.421273982639128
+      },
+      "censored": {
+        "n": 5,
+        "median": 3.748470846892272,
+        "min": 1.24343725135097,
+        "max": 4.5730690923464765,
+        "mean": 3.3581131211053985
+      },
+      "dropout_funnel": {
+        "n": 3,
+        "median": 4.314456083022236,
+        "min": 3.748470846892272,
+        "max": 4.5730690923464765,
+        "mean": 4.211998674086995
+      },
+      "scale_funnel": {
+        "n": 2,
+        "median": 2.0772847916330046,
+        "min": 1.24343725135097,
+        "max": 2.9111323319150393,
+        "mean": 2.0772847916330046
+      }
+    }
+  },
+  "f4_end_range_discrimination": {
+    "legal_end_range_median_m": 4.347982401412674,
+    "legal_end_range_max_m": 5.278756824277082,
+    "dropout_end_range_median_m": 5.225145824776412,
+    "dropout_end_range_min_m": 5.187492645427993,
+    "scale_end_range_median_m": 5.23059090261231,
+    "f4_finding_discriminates_dropout_vs_legal": false,
+    "threshold_probe_m": 4.5,
+    "legal_above_4p5": 2,
+    "dropout_above_4p5": 3,
+    "scale_above_4p5": 2
+  },
+  "p2_read": {
+    "finding": "certified_full_end_range_m cleanly separates legal (median 4.347982401412674, max 5.278756824277082) from NO_CERTIFIED_FULL_BELOW_3P5 dropout funnel (median 5.225145824776412, min 5.187492645427993)",
+    "f4_finding_discriminates": false,
+    "p2_hold_through_band_supported": false,
+    "note": "P2 (hold/slow when FULL drops before 4.5 m) is the tanks-visible profile decision that reads off this table: legal approaches keep continuous certified FULL into/below the 3.5 m band; dropout-censored approaches lose it above ~4.5 m."
+  },
+  "scale_funnel_note": "SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP flights CAN have continuous FULL deep into the band (or even below 3.5) \u2014 their kill is e_reject=scale_gate, not end-range. End-range is the dropout discriminator; scale_gate count is the scale-funnel discriminator."
+}
