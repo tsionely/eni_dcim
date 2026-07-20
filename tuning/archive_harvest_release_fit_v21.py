@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tuning"))
 
 from aigp.core.params import ParamSet  # noqa: E402
 from aigp.main import apply_patches  # noqa: E402
-from aigp.planning.vertical_terminal import robust_slope  # noqa: E402
+from aigp.planning.vertical_terminal import compute_terminal_guidance, robust_slope  # noqa: E402
 from run_anchor_r26 import (  # noqa: E402
     attach_flight_signals,
     full_observation_series,
@@ -289,6 +289,51 @@ def slope_rate(hist: list[dict]) -> tuple[float | None, int, float, float]:
     return -float(slope), len(set(times)), span, auth
 
 
+def forecast_pair(params: ParamSet, row: dict, e_z: float,
+                  old_vz: float, new_vz: float) -> dict:
+    r_z = fnum(row.get("range_z_m"))
+    speed = fnum(row.get("setpoint_speed_xy_mps"))
+    if r_z is None or speed is None or speed <= 0.05:
+        return {
+            "shadow_tau_s": "",
+            "shadow_e_z_cmd_m": "",
+            "shadow_e_cross_old_m": "",
+            "shadow_e_cross_new_m": "",
+            "shadow_vz_cmd_old_mps": "",
+            "shadow_vz_cmd_new_mps": "",
+            "shadow_command_delta_mps": "",
+            "shadow_e_cross_delta_m": "",
+        }
+    tau_s = max(0.0, r_z / speed)
+    cmd_clamp = float(params.get("planner.terminal.cmd_clamp_m", default=0.10))
+    margin = float(params.get("planner.terminal.margin_m", default=0.55))
+    vz_max = float(params.get("planner.terminal.vz_max_mps", default=0.6))
+    az_max = float(params.get("planner.terminal.az_max_mps2", default=3.0))
+    e_cmd = float(np.clip(e_z, -cmd_clamp, cmd_clamp))
+    old = compute_terminal_guidance(e_z=e_cmd, sigma_e=0.10, v_z=old_vz,
+                                    sigma_v=0.15, tau_s=tau_s,
+                                    margin_m=margin, vz_max=vz_max,
+                                    az_max=az_max)
+    new = compute_terminal_guidance(e_z=e_cmd, sigma_e=0.10, v_z=new_vz,
+                                    sigma_v=0.15, tau_s=tau_s,
+                                    margin_m=margin, vz_max=vz_max,
+                                    az_max=az_max)
+    old_cmd = old["vz_cmd"]
+    new_cmd = new["vz_cmd"]
+    return {
+        "shadow_tau_s": tau_s,
+        "shadow_e_z_cmd_m": e_cmd,
+        "shadow_e_cross_old_m": old["e_cross"],
+        "shadow_e_cross_new_m": new["e_cross"],
+        "shadow_vz_cmd_old_mps": old_cmd if old_cmd is not None else "",
+        "shadow_vz_cmd_new_mps": new_cmd if new_cmd is not None else "",
+        "shadow_command_delta_mps": (
+            new_cmd - old_cmd if old_cmd is not None and new_cmd is not None else ""
+        ),
+        "shadow_e_cross_delta_m": old["e_cross"] - new["e_cross"],
+    }
+
+
 def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> tuple[list[dict], list[dict]]:
     samples = []
     cluster_rows = []
@@ -336,10 +381,12 @@ def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> 
                 applied_now = fnum(side.get("setpoint_vz_up_mps"))
                 ff = (applied_now - anchor_applied) if applied_now is not None else 0.0
                 v_hold = v_anchor + ff
+                v_shadow = v_latch_true + ff
                 rv = v_ref - v_hold
                 regime = "authority_limited" if auth < 0.95 else (
                     "up" if ff > 0.02 else "down" if ff < -0.02 else "flat_no_ff"
                 )
+                e_side = float(side["e_meas"])
                 sample = {
                     "approach_id": app["approach_id"],
                     "cluster_id": app["approach_id"],
@@ -357,6 +404,7 @@ def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> 
                     "rv2_m2ps2": rv * rv,
                     "v_ref_oracle_mps": v_ref,
                     "v_hold_mps": v_hold,
+                    "v_shadow_hold_mps": v_shadow,
                     "residual_sign_convention": "r_v = v_ref_oracle - (v_anchor_old + feed_forward)",
                     "v_latch_mps": v_latch_true,
                     "v_latch_true_mps": v_latch_true,
@@ -376,6 +424,7 @@ def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> 
                     "oracle_ref_n": oracle_ref.get("oracle_ref_n", ""),
                     "oracle_ref_span_s": oracle_ref.get("oracle_ref_span_s", ""),
                 }
+                sample.update(forecast_pair(params, side, e_side, v_hold, v_shadow))
                 samples.append(sample)
         app_samples = [s for s in samples if s["approach_id"] == app["approach_id"]]
         b0, b1 = fit_mean_values(app_samples)
