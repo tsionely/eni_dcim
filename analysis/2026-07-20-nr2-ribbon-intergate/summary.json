@@ -1,0 +1,92 @@
+{
+  "ask": "N-R2 extended R1 ribbon inter-gate",
+  "flights": [
+    {
+      "label": "try15",
+      "fid": "20260719T160537-f170ead6",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6-flight.jsonl",
+      "vision": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T160537-f170ead6_takeoff_to_end.aigprec",
+      "vision_source": "takeoff_to_end",
+      "decode_mode": "mono_takeoff",
+      "t_pass_ff": 3.7571,
+      "t_death_ff": 9.9958999,
+      "intergate_duration_s": 6.2387999,
+      "ribbon": {
+        "n_frames": 94,
+        "cyan_frames": 58,
+        "cyan_pct": 61.702127659574465,
+        "longest_absent_gap_s": 2.4015063000000003,
+        "a7_height": {
+          "cyan_mean_row": 259.18338869259236,
+          "horizon_mean_row": 226.07275154706332,
+          "offset_px_mean": 33.110637145529054,
+          "offset_px_median": 36.48544939850096,
+          "offset_px_std": 49.32091537887689,
+          "frac_above_horizon": 0.3103448275862069,
+          "note": "offset = cyan_mean_row - horizon; <0 \u21d2 cyan above horizon"
+        },
+        "t_span_s": 6.1994833
+      }
+    },
+    {
+      "label": "try39",
+      "fid": "20260719T163649-f170ead6",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6-flight.jsonl",
+      "vision": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6_takeoff_to_end.aigprec",
+      "vision_source": "takeoff_to_end",
+      "decode_mode": "mono_takeoff",
+      "t_pass_ff": 4.2576177,
+      "t_death_ff": 13.8743804,
+      "intergate_duration_s": 9.616762699999999,
+      "ribbon": {
+        "n_frames": 145,
+        "cyan_frames": 116,
+        "cyan_pct": 80.0,
+        "longest_absent_gap_s": 1.735049,
+        "a7_height": {
+          "cyan_mean_row": 300.5326381366008,
+          "horizon_mean_row": 186.83002763771262,
+          "offset_px_mean": 113.70261049888819,
+          "offset_px_median": 84.4958751357385,
+          "offset_px_std": 62.029915157074015,
+          "frac_above_horizon": 0.0,
+          "note": "offset = cyan_mean_row - horizon; <0 \u21d2 cyan above horizon"
+        },
+        "t_span_s": 9.6027749
+      }
+    },
+    {
+      "label": "milestone_131137",
+      "fid": "20260716T131137-2ca531c3",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260716T132549-phase3j-r2training-rerun\\20260716T131137-2ca531c3-flight.jsonl",
+      "vision": "C:\\Users\\tsion\\Projects\\eni_dcim_phase1\\logs\\20260716T131137-2ca531c3\\vision.aigprec",
+      "vision_source": "full_vision",
+      "decode_mode": "mono_takeoff",
+      "t_pass_ff": 3.7574043,
+      "t_death_ff": 17.1731807,
+      "intergate_duration_s": 13.415776399999999,
+      "ribbon": {
+        "n_frames": 135,
+        "cyan_frames": 51,
+        "cyan_pct": 37.77777777777778,
+        "longest_absent_gap_s": 7.796424699999999,
+        "a7_height": {
+          "cyan_mean_row": 262.11146764195,
+          "horizon_mean_row": 176.4416101023488,
+          "offset_px_mean": 85.66985753960127,
+          "offset_px_median": 72.87788489048745,
+          "offset_px_std": 63.5685626058369,
+          "frac_above_horizon": 0.0196078431372549,
+          "note": "offset = cyan_mean_row - horizon; <0 \u21d2 cyan above horizon"
+        },
+        "t_span_s": 13.3958939
+      }
+    }
+  ],
+  "aggregate": {
+    "n_ok": 3,
+    "mean_cyan_pct": 59.82663514578408,
+    "max_longest_gap_s": 7.796424699999999,
+    "mean_offset_px": 64.61973647490898
+  }
+}
