@@ -3,7 +3,7 @@
 ## Verdict
 
 - **Fixtures**: `['20260720T071602-phase6l-cohort-3']`
-- **(a) Vision survival past 3 m**: phase6l 2/6; cohort-1 held 3/6; cohort-2 held 0/6; claim_met=`True`
+- **(a) Vision survival past 3 m**: phase6l 1/6; cohort-1 held 3/6; cohort-2 held 0/6; claim_met=`True`
 - **(b) Blind-brake 4.3–4.8 m cluster**: flights_with_hit=`1`, events=`2`, vanished=`False`
 - **(c) R5 live-arm extension**: hud_passes=`0`, scored_exp=`0`, rearm_met=`False`
 - **(d) Fork metric** (non-blind, <1.1 m ⇒ pass): trigger `0` / nonblind `3`; pass given trigger=`None`
@@ -13,11 +13,11 @@
 | fid | arm | past_3m | vision_death | closest_R | blind | fork | gates | cluster |
 |---|---|:---:|:---:|---:|:---:|:---:|---:|---:|
 | `20260720T071008-5b501b4c` | control | n | n | nan | n | n | 0 | 0 |
-| `20260720T071112-cd18c5fb` | live | Y | Y | 1.36 | n | n | 0 | 0 |
-| `20260720T071220-5b501b4c` | control | n | Y | 2.68 | Y | n | 0 | 0 |
-| `20260720T071333-cd18c5fb` | live | n | Y | 0.15 | Y | n | 0 | 0 |
+| `20260720T071112-cd18c5fb` | live | Y | Y | 1.44 | n | n | 0 | 0 |
+| `20260720T071220-5b501b4c` | control | n | Y | 4.26 | Y | n | 0 | 0 |
+| `20260720T071333-cd18c5fb` | live | n | Y | 1.91 | Y | n | 0 | 0 |
 | `20260720T071439-5b501b4c` | control | n | Y | 4.65 | Y | n | 0 | 2 |
-| `20260720T071545-cd18c5fb` | live | Y | Y | 2.55 | n | n | 0 | 0 |
+| `20260720T071545-cd18c5fb` | live | n | Y | 3.24 | n | n | 0 | 0 |
 
 ## Method
 

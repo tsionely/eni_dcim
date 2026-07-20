@@ -1,13 +1,13 @@
 {
   "phase6l_landed": true,
   "fixtures": [
-    "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3"
+    "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3"
   ],
   "a_vision_survival_past_3m": {
     "phase6l": {
-      "n_survived": 2,
+      "n_survived": 1,
       "n": 6,
-      "frac": 0.3333333333333333
+      "frac": 0.16666666666666666
     },
     "cohort1_held_vision": {
       "n": 3,
@@ -127,19 +127,19 @@
         "fid": "20260720T071112-cd18c5fb",
         "cohort": "cold_phase6l_live",
         "error": "no_hud_pass",
-        "path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl"
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl"
       },
       {
         "fid": "20260720T071333-cd18c5fb",
         "cohort": "cold_phase6l_live",
         "error": "no_hud_pass",
-        "path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071333-cd18c5fb-flight.jsonl"
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071333-cd18c5fb-flight.jsonl"
       },
       {
         "fid": "20260720T071545-cd18c5fb",
         "cohort": "cold_phase6l_live",
         "error": "no_hud_pass",
-        "path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071545-cd18c5fb-flight.jsonl"
+        "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071545-cd18c5fb-flight.jsonl"
       }
     ]
   },
@@ -155,8 +155,8 @@
       "slot": 1,
       "arm": "control",
       "fid": "20260720T071008-5b501b4c",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071008-5b501b4c-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071008-5b501b4c-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "error": "no_commit",
@@ -176,8 +176,8 @@
       "slot": 2,
       "arm": "live",
       "fid": "20260720T071112-cd18c5fb",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "commit_start_s": 2.1802059,
@@ -267,9 +267,9 @@
       "fork": {
         "commit_start": 2.1802059,
         "commit_end": 4.2002672,
-        "closest_R": 1.3571450042142181,
-        "closest_t": 4.2002564,
-        "closest_source": "state",
+        "closest_R": 1.43560134820293,
+        "closest_t": 4.1531845,
+        "closest_source": "det",
         "max_age": 0.0647996,
         "max_age_inf": false,
         "blind_first_commit": false,
@@ -298,8 +298,8 @@
       "slot": 3,
       "arm": "control",
       "fid": "20260720T071220-5b501b4c",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071220-5b501b4c-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071220-5b501b4c-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "commit_start_s": 2.4082163,
@@ -393,9 +393,9 @@
       "fork": {
         "commit_start": 2.4082163,
         "commit_end": 3.1481669,
-        "closest_R": 2.6807908851041873,
-        "closest_t": 3.1481582,
-        "closest_source": "state",
+        "closest_R": 4.263677534809125,
+        "closest_t": 2.5280752,
+        "closest_source": "det",
         "max_age": 0.609209224,
         "max_age_inf": false,
         "blind_first_commit": true,
@@ -417,8 +417,8 @@
       "slot": 4,
       "arm": "live",
       "fid": "20260720T071333-cd18c5fb",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071333-cd18c5fb-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071333-cd18c5fb-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "commit_start_s": 1.7201028,
@@ -513,9 +513,9 @@
       "fork": {
         "commit_start": 1.7201028,
         "commit_end": 3.9598963,
-        "closest_R": 0.14510594494955148,
-        "closest_t": 3.8798672,
-        "closest_source": "state",
+        "closest_R": 1.9075132709974922,
+        "closest_t": 3.7062648,
+        "closest_source": "det",
         "max_age": null,
         "max_age_inf": true,
         "blind_first_commit": true,
@@ -537,8 +537,8 @@
       "slot": 5,
       "arm": "control",
       "fid": "20260720T071439-5b501b4c",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071439-5b501b4c-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071439-5b501b4c-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "commit_start_s": 1.5201054,
@@ -636,8 +636,8 @@
       "slot": 6,
       "arm": "live",
       "fid": "20260720T071545-cd18c5fb",
-      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3",
-      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071545-cd18c5fb-flight.jsonl",
+      "fixture": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3",
+      "log_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071545-cd18c5fb-flight.jsonl",
       "gates_passed": 0,
       "vision_death": {
         "commit_start_s": 2.5760752,
@@ -718,13 +718,13 @@
       },
       "vision_died_no_reacq": true,
       "loss_mode": "detector_drop_or_lock_reject",
-      "survived_past_3m": true,
+      "survived_past_3m": false,
       "fork": {
         "commit_start": 2.5760752,
         "commit_end": 3.3961758,
-        "closest_R": 2.549600316076677,
-        "closest_t": 3.3761881,
-        "closest_source": "state",
+        "closest_R": 3.238014172726004,
+        "closest_t": 3.1111301,
+        "closest_source": "det",
         "max_age": 0.057793368,
         "max_age_inf": false,
         "blind_first_commit": false,

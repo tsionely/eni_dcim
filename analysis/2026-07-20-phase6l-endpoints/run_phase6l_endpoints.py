@@ -111,16 +111,13 @@ def first_commit_closest(log: dict) -> dict:
             if state_min is None or s["R"] < state_min["R"]:
                 state_min = s
     det_min = min(near, key=lambda d: d["R"]) if near else None
-    closest = None
-    if det_min and state_min:
-        closest = det_min if det_min["R"] <= state_min["R"] else {
-            "R": state_min["R"], "t_ff": state_min["t_ff"], "source": "state"}
-        if closest is det_min:
-            closest = {**det_min, "source": "det"}
-    elif det_min:
+    # Prefer detection for closest (believed state can phantom-coast to 0.15)
+    if det_min is not None:
         closest = {**det_min, "source": "det"}
-    elif state_min:
+    elif state_min is not None:
         closest = {"R": state_min["R"], "t_ff": state_min["t_ff"], "source": "state"}
+    else:
+        closest = None
 
     # Blind during first commit?
     max_age = 0.0
@@ -214,16 +211,15 @@ def analyze_phase6l_flight(meta: dict) -> dict:
     fork = first_commit_closest(log)
     brakes = blind_brake_ranges(log)
     gp = gates_passed(meta["fid"], fixture)
-    survived_past_3 = False
-    ln = (vd.get("vision_death") or {}).get("last_near_detection") or {}
-    # Survival past 3m: got a near fix with R<3 without vision death,
-    # OR closest during commit < 3 with age fresh
-    if fork.get("closest_R") is not None and fork["closest_R"] < 3.0:
-        if not fork.get("blind_first_commit"):
-            survived_past_3 = True
-    if (not vd.get("vision_died_no_reacq")
-            and ln.get("R") is not None and ln["R"] < 3.0):
-        survived_past_3 = True
+    fork = first_commit_closest(log)
+    # (a) Vision survival past 3m: reached R<3m during first commit
+    # with age still inside the blindness budget (not a DR coast).
+    survived_past_3 = bool(
+        fork.get("closest_R") is not None
+        and fork["closest_R"] < 3.0
+        and not fork.get("blind_first_commit")
+        and fork.get("closest_source") == "det"
+    )
 
     return {
         **meta,
