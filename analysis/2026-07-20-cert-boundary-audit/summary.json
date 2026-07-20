@@ -1,0 +1,84 @@
+{
+  "ask": "certificate-boundary audit (cohort-4 gate)",
+  "verdict": "NOT_EQUIVALENT",
+  "n_not_equivalent": 3,
+  "n_aligned": 2,
+  "audit": {
+    "head_cited": "2aa8b9c",
+    "pinned_semantics": {
+      "promote_new_min_m": 1.6,
+      "maintain_band_m": [
+        1.4,
+        1.6
+      ],
+      "continuity_only_below_m": 1.4,
+      "no_inherit_across_gate_lock_epoch": true,
+      "no_inherit_across_successor_on_geometry_alone": true
+    },
+    "implementation": {
+      "certificate_py": "src/aigp/perception/certificate.py",
+      "close_tracker_py": "src/aigp/perception/close_tracker.py",
+      "pipeline_py": "src/aigp/perception/pipeline.py",
+      "tests": "tests/unit/test_certificate.py"
+    },
+    "findings": [
+      {
+        "id": "F1_promote_floor_is_1p4_not_1p6",
+        "severity": "NOT_EQUIVALENT",
+        "detail": "SidePairCertificate.terminal_floor_m defaults to 1.4 (certificate.py ctor ~L39\u201347). Promotion from PROBATION\u2192CERTIFIED requires z_prior_m > terminal_floor (L85\u201387). There is NO 1.6m promotion floor: a broken chain can be re-promoted to CERTIFIED anywhere in (1.4, \u221e), including the maintain-only band (1.4, 1.6].",
+        "lines": [
+          "src/aigp/perception/certificate.py:39-47",
+          "src/aigp/perception/certificate.py:85-87"
+        ],
+        "pinned_requires": "new promotion only at range >= 1.6m"
+      },
+      {
+        "id": "F2_on_full_quad_bypasses_range_floors",
+        "severity": "NOT_EQUIVALENT",
+        "detail": "on_full_quad() sets _status=CERTIFIED unconditionally (L54\u201358) with no range argument. Pipeline calls it on prediction-consistent full quads (pipeline.py ~L66\u201374) at ANY range \u2014 including <1.4m and 1.4\u20131.6m. That is a NEW certification / re-anchor path, not maintain-only.",
+        "lines": [
+          "src/aigp/perception/certificate.py:54-58",
+          "src/aigp/perception/pipeline.py:66-74"
+        ],
+        "pinned_requires": "full-quad anchor/promotion also respects >=1.6 for NEW identity; below 1.6 only maintain an already-held cert"
+      },
+      {
+        "id": "F3_on_relock_or_collision_never_wired",
+        "severity": "NOT_EQUIVALENT",
+        "detail": "on_relock_or_collision() clears the certificate (L60\u201364) and is unit-tested, but Grep shows ZERO production callers outside tests/unit/test_certificate.py. Gate-lock epoch changes and successor transitions in state_estimator / planner do NOT clear the cert. A plausible side-pair update() can therefore MAINTAIN or even re-enter PROBATION/CERTIFIED across a target change \u2014 exactly the inheritance failure the pin forbids.",
+        "lines": [
+          "src/aigp/perception/certificate.py:60-64",
+          "tests/unit/test_certificate.py:97"
+        ],
+        "pinned_requires": "certificate must never be inherited across gate-lock epoch or successor transition"
+      },
+      {
+        "id": "F4_geometry_alone_reopens_probation_below_1p4",
+        "severity": "PARTIAL",
+        "detail": "update() when chain is broken but scale/barness/support look right sets PROBATION (L90\u201394) at ANY z_prior, including <1.4m. Promotion to CERTIFIED is blocked below 1.4 (F1), but a NEW probationary identity can still be opened from NONE by geometry alone after a chain gap \u2014 weaker than 'continuity-only / no new identity/epoch'.",
+        "lines": [
+          "src/aigp/perception/certificate.py:90-94",
+          "src/aigp/perception/certificate.py:80-87"
+        ],
+        "pinned_requires": "below 1.4m: maintain under continuity gates only; no new identity/epoch"
+      },
+      {
+        "id": "F5_maintain_path_above_floor_ok",
+        "severity": "ALIGNED",
+        "detail": "When already CERTIFIED and chain+invariants hold, status stays CERTIFIED without re-checking a 1.6 floor (L80\u201389 clean-streak branch only promotes from PROBATION). Maintenance of an established certificate is therefore allowed in 1.4\u20131.6 once held \u2014 matching the maintain half of the pin \u2014 but see F1/F2 for illegal NEW promotes.",
+        "lines": [
+          "src/aigp/perception/certificate.py:80-89"
+        ]
+      },
+      {
+        "id": "F6_tracker_feeds_update_with_prior_z",
+        "severity": "ALIGNED_WIRING",
+        "detail": "GateCloseTracker.track() calls certificate.update with z_prior_m=float(prior.t[2]) (close_tracker.py ~L201\u2013205). Range gating therefore uses believed prior depth, which is the correct input IF the floors were 1.6/1.4 as pinned.",
+        "lines": [
+          "src/aigp/perception/close_tracker.py:201-205"
+        ]
+      }
+    ]
+  },
+  "patch_spec_path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\analysis\\2026-07-20-cert-boundary-audit\\patch_spec.md"
+}
