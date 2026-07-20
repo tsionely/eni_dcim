@@ -370,5 +370,53 @@
   "result": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
   "status": "REPORTED",
   "evidence_commit": "cd745de9648155f82b94e281d29113300bcd9ec2"
+ },
+ {
+  "board_row": 24,
+  "claim": "RESPONSE53 closure-read report layer: 3/20/23 shadow partition from checkpoints",
+  "criterion_registered_at": "02b32cca996a22f3a44a8757ce2486a747eb706e",
+  "artifact_path": "tuning/response53-closure-read-DIAGNOSTIC-4b8e56d-20260720T225320Z/closure_read_shadow_fit_by_set.csv",
+  "artifact_sha256": "95d97f593995f98f64392b76d4ba752595bd01d430db8299d01cebf58c21a499",
+  "generator_commit": "4b8e56de3df1fcf2e91de321dfa11ae869b82db2",
+  "generator_command": "python tuning/run_response53_closure_report.py",
+  "independent_unit": "physical_approach",
+  "independent_n": 23,
+  "attempted_n": 23,
+  "analyzable_n": 23,
+  "result": "report layer generator postdates 181f41f; closure read uses discovery_overlap_3 / confirmatory_20 / pooled_23",
+  "status": "REPORTED",
+  "evidence_commit": "08f52b86bf18ece66337a176c3262a854d8dcbee"
+ },
+ {
+  "board_row": 25,
+  "claim": "RESPONSE53 event-support re-score with 9/7/2 accounting and R26-1 fixture-level rider",
+  "criterion_registered_at": "d0a73f028c265c428c1ceabbcb30b51cb2e66849",
+  "artifact_path": "tuning/response53-closure-read-DIAGNOSTIC-4b8e56d-20260720T225320Z/closure_read_event_support_accounting.csv",
+  "artifact_sha256": "f646a0ac3a757bd573b6a580bb572544d83e0609a931936dbb6bb480fa447e28",
+  "generator_commit": "4b8e56de3df1fcf2e91de321dfa11ae869b82db2",
+  "generator_command": "python tuning/run_response53_closure_report.py",
+  "independent_unit": "physical_approach",
+  "independent_n": 1,
+  "attempted_n": 1,
+  "analyzable_n": 1,
+  "result": "16 trace rows -> 9 command events -> 7 sign-evaluable + 2 zero-on-support; PASS at 1/1 is fixture-level, not population evidence",
+  "status": "REPORTED",
+  "evidence_commit": "08f52b86bf18ece66337a176c3262a854d8dcbee"
+ },
+ {
+  "board_row": 26,
+  "claim": "RESPONSE53 closure-read artifact manifest for checkpoint-derived report layer",
+  "criterion_registered_at": "02b32cca996a22f3a44a8757ce2486a747eb706e",
+  "artifact_path": "tuning/response53-closure-read-DIAGNOSTIC-4b8e56d-20260720T225320Z/closure_read_artifact_manifest.csv",
+  "artifact_sha256": "246c25eb50c50de2ba04fba2786dc7f601115f7e5076f851161aaf00e5bf5fdb",
+  "generator_commit": "4b8e56de3df1fcf2e91de321dfa11ae869b82db2",
+  "generator_command": "python tuning/run_response53_closure_report.py",
+  "independent_unit": "report_layer_artifact",
+  "independent_n": 8,
+  "attempted_n": 8,
+  "analyzable_n": 8,
+  "result": "report-only artifacts generated from checkpointed A-G outputs; no resampling rerun required",
+  "status": "REPORTED",
+  "evidence_commit": "08f52b86bf18ece66337a176c3262a854d8dcbee"
  }
 ]
