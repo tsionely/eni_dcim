@@ -1,0 +1,5 @@
+flight,fid,dz,h_up_lt,h_down_lt,grade,truth_source,gate_clips,R,age,status,note
+milestone_first_clean_pass,20260716T131137-2ca531c3,0.1,0.7000000000000001,0.9,A_canonical,miss_map_true_vertical / milestone autopsy (closest STATE crossing vector),0,0.103,,OK,first clean pass; think-tank anchor h_up < 0.70
+phase6h_try15_clean,20260719T160537-f170ead6,0.016133749292011466,0.7838662507079885,0.8161337492920115,A_logged,state true_world_dz at closest fresh approach,0,0.03027481226164171,0.280423688,OK,phase6h clean pass (clips=0)
+phase6i_slot1_pass,20260719T200816-f170ead6,-0.08122632237369756,0.8812263223736976,0.7187736776263025,A_logged,state true_world_dz at closest fresh approach,0,0.2860863726689012,0.18347732,OK,phase6i-r inventory clean pass
+phase6i_slot4_pass,20260719T201851-50f9dcc8,-0.03424548212886582,0.8342454821288658,0.7657545178711342,A_logged,state true_world_dz at closest fresh approach,0,0.2480237166839157,0.333818056,OK,phase6i-r inventory clean pass
