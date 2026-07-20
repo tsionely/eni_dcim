@@ -26,10 +26,30 @@ the new (shadow) path may introduce NO violation absent in the old
 path at the same timestamp. Any nonzero paired excess = regression
 flag; row 4 fails closed, no averaging, no rate argument.
 
-**Off-support disposition (amendment, registered while the re-score
-artifact still does not exist — channel-1 row question):** the
-common support is DEFINED by the disclosed 16->13 mask accounting.
-Rows outside it are not excused by lacking a pair:
+**Support definition (second amendment, still pre-evidence —
+channel-2 correction order): support is counted in UNIQUE COMMAND
+EVENTS, never trace rows, and ZERO IS A COMMAND.** The earlier
+"16->13 mask accounting" formulation is WITHDRAWN — it conflated
+trace rows with events and treated command == 0.0 as absence,
+violating two of this program's own laws (rows-are-not-units;
+zero-is-a-command / only None is absence). The layered accounting
+for the current R26-1 fixture, binding on the artifact:
+
+- TRACEABILITY LAYER: 16 populated CSV rows (feature/feature_side
+  duplication retained for provenance);
+- COMMAND-EVENT SUPPORT: 9 unique events, keyed at minimum by
+  (flight_id, trial, mono_ns), selecting the fed=True event row;
+- SIGN-EVALUABLE SUBSET: 7 events outside the 0.02 m/s command
+  deadband;
+- ZERO/NEUTRAL SUBSET: 2 events with command == 0.0 — ON SUPPORT,
+  scored as nonviolations;
+- OFF SUPPORT: ONLY events whose candidate command is absent/None,
+  or failing a separately pre-registered availability predicate.
+  A numeric zero may NEVER be used as an absence test.
+
+The verdict accounting deduplicates to the nine events and
+publishes both the 9-event support and the 7-event sign-evaluable
+subset. Off-support events are not excused by lacking a pair:
 
 - a NEW-path violation on an off-support row ALSO fails row 4
   closed — the safety criterion is absolute for the candidate path,

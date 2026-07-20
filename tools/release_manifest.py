@@ -98,6 +98,18 @@ def check_manifest(manifest_path: str | Path,
             failures.append("working tree not clean at verification "
                             "time — the transcript would not describe "
                             "a committed state")
+        # Hardening 5.4: the checkout being verified must BE the
+        # reviewed tip — a clean checkout of some other commit would
+        # verify a different history while claiming this one.
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo,
+                              capture_output=True, text=True
+                              ).stdout.strip()
+        tip_full = subprocess.run(["git", "rev-parse", reviewed_tip],
+                                  cwd=repo, capture_output=True,
+                                  text=True).stdout.strip()
+        if head != tip_full:
+            failures.append(f"HEAD ({head[:12]}) is not the reviewed "
+                            f"tip ({tip_full[:12]})")
     try:
         rows = json.loads(manifest_path.read_text())
     except (OSError, json.JSONDecodeError) as e:
@@ -113,6 +125,11 @@ def check_manifest(manifest_path: str | Path,
                for f in failures):
             continue
         ev = row.get("evidence_commit")
+        # Hardening 5.2: in release-grade mode (reviewed_tip bound)
+        # the evidence chain is mandatory on every row.
+        if reviewed_tip is not None and ev in (None, ""):
+            failures.append(f"{rid}: evidence_commit is required in "
+                            "release-grade mode")
         if ev not in (None, ""):
             # Committed-byte lookup: the digest describes what the
             # evidence commit STORES, never mutable worktree bytes.
@@ -123,6 +140,19 @@ def check_manifest(manifest_path: str | Path,
             elif committed != row["artifact_sha256"]:
                 failures.append(f"{rid}: committed-byte digest mismatch "
                                 f"at {ev}:{row['artifact_path']}")
+            # Hardening 5.3: the artifact must SURVIVE unchanged at
+            # the reviewed tip — a descendant could delete or modify
+            # it while keeping the evidence commit in its ancestry.
+            if reviewed_tip is not None:
+                at_tip = _sha256_at_commit(repo, reviewed_tip,
+                                           row["artifact_path"])
+                if at_tip is None:
+                    failures.append(f"{rid}: artifact absent at the "
+                                    f"reviewed tip: "
+                                    f"{row['artifact_path']}")
+                elif at_tip != row["artifact_sha256"]:
+                    failures.append(f"{rid}: artifact modified between "
+                                    "evidence commit and reviewed tip")
         else:
             art = repo / row["artifact_path"]
             if not art.exists():
@@ -153,13 +183,27 @@ def check_manifest(manifest_path: str | Path,
                         repo, ev, reviewed_tip):
                     failures.append(f"{rid}: evidence_commit is not an "
                                     "ancestor of the reviewed tip")
-        # Optional attempted/analyzable accounting (units honesty):
+        # Attempted/analyzable accounting (hardening 5.1 — the unit-
+        # count error class becomes machine-impossible, not merely
+        # discouraged): the pair travels together, and unless a typed
+        # accounting_mode says otherwise, independent_n IS the
+        # analyzable count.
         att, ana = row.get("attempted_n"), row.get("analyzable_n")
-        if att is not None and ana is not None:
+        if (att is None) != (ana is None):
+            failures.append(f"{rid}: attempted_n and analyzable_n are "
+                            "a pair — supply both or neither")
+        elif att is not None:
             if not (isinstance(att, int) and isinstance(ana, int)
                     and 0 <= ana <= att):
                 failures.append(f"{rid}: analyzable_n must be an int "
                                 "with 0 <= analyzable_n <= attempted_n")
+            elif (row.get("accounting_mode", "analyzable")
+                    == "analyzable" and row.get("independent_n") != ana):
+                failures.append(f"{rid}: independent_n "
+                                f"({row.get('independent_n')}) != "
+                                f"analyzable_n ({ana}) — declare a "
+                                "typed accounting_mode if the relation "
+                                "is legitimately different")
         if (_commit_exists(repo, row["criterion_registered_at"])
                 and _commit_exists(repo, row["generator_commit"])
                 and not _is_ancestor(repo, row["criterion_registered_at"],
@@ -180,6 +224,11 @@ if __name__ == "__main__":
     fails = check_manifest(sys.argv[1], reviewed_tip=tip)
     for f in fails:
         print(f"FAIL {f}")
-    print("MANIFEST VERIFIES" if not fails else
+    # Hardening 5.2 (token separation): diagnostic runs must never
+    # print the release-grade success token.
+    ok_token = ("MANIFEST VERIFIES (RELEASE-GRADE)" if tip is not None
+                else "MANIFEST VERIFIES (DIAGNOSTIC — no reviewed tip "
+                     "bound; not a release verification)")
+    print(ok_token if not fails else
           f"{len(fails)} FAILURES — the walk may not proceed")
     sys.exit(1 if fails else 0)

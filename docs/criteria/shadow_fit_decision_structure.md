@@ -60,7 +60,13 @@ closes it); overlap and pooled are context. Per approach: auth_at_latch, v_latch
 b0_old, b0_new, remainder, regime labels; plus profile-likelihood
 and cluster-bootstrap bounds, LOAO, and cluster-balanced coverage —
 side by side with the old-path (defect-documentation) numbers.
-Independent evidence counts in APPROACHES (5, 18, 23), never rows.
+Independent target-set reporting counts: 3 overlap / 20
+confirmatory / 23 pooled — in APPROACHES, never rows; legacy
+discovery appendix 5 listed / 4 analyzable, kept separate. (A
+stale "(5, 18, 23)" accounting sentence stood here after the
+partition amendment; channel-2 correctly ruled a criterion carrying
+both partitions does not uniquely specify the closure set. Removed
+before any shadow-fit evidence exists.)
 The old-vs-shadow delta is described as a PAIRED ARCHIVE-SCALE
 DIAGNOSTIC EFFECT — never a shipping-build benefit, flight
 validation, or release statistic.

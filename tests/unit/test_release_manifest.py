@@ -80,3 +80,48 @@ def test_criterion_must_predate_evidence(tmp_path):
 def test_rows_never_units(tmp_path):
     fails = check_manifest(_write(tmp_path, [_row(independent_n=0)]), REPO)
     assert any("independent_n" in f for f in fails)
+
+
+def test_accounting_pair_and_identity(tmp_path):
+    """Hardening 5.1: attempted/analyzable travel together, and
+    independent_n == analyzable_n unless a typed accounting_mode
+    declares otherwise — the rows-6-8 unit-count error class becomes
+    machine-impossible."""
+    fails = check_manifest(_write(tmp_path, [
+        _row(board_row=1, attempted_n=5),                    # pair broken
+        _row(board_row=2, attempted_n=5, analyzable_n=4,
+             independent_n=99),                              # 99 != 4
+        _row(board_row=3, attempted_n=5, analyzable_n=4,
+             independent_n=4),                               # clean
+        _row(board_row=4, attempted_n=1, analyzable_n=1,
+             independent_n=5, accounting_mode="analyzable"), # 5 != 1
+    ]), REPO)
+    assert any("row 1" in f and "pair" in f for f in fails)
+    assert any("row 2" in f and "accounting_mode" in f for f in fails)
+    assert not any("row 3" in f for f in fails)
+    assert any("row 4" in f for f in fails)
+
+
+def test_release_grade_requires_evidence_and_bound_head(tmp_path):
+    """Hardenings 5.2-5.4: with a reviewed tip bound, every row needs
+    evidence_commit; the artifact must survive unchanged AT the tip;
+    and HEAD must BE the tip (a clean checkout of a different commit
+    verifies nothing about this one)."""
+    head = _head()
+    parent = subprocess.run(["git", "rev-parse", "HEAD~1"], cwd=REPO,
+                            capture_output=True, text=True).stdout.strip()
+    # Row without evidence_commit + tip bound to the PARENT (not HEAD).
+    fails = check_manifest(_write(tmp_path, [_row()]), REPO,
+                           reviewed_tip=parent)
+    assert any("evidence_commit is required" in f for f in fails)
+    assert any("is not the reviewed tip" in f for f in fails)
+    # Evidence chain with committed-byte lookup: a file that exists at
+    # HEAD but not at the root commit fails the survive-at-tip check
+    # when the digest comes from a different revision's bytes.
+    root = subprocess.run(["git", "rev-list", "--max-parents=0", "HEAD"],
+                          cwd=REPO, capture_output=True,
+                          text=True).stdout.split()[0]
+    fails2 = check_manifest(_write(tmp_path, [
+        _row(evidence_commit=root)]), REPO)
+    assert any("absent at" in f or "digest mismatch" in f
+               for f in fails2)
