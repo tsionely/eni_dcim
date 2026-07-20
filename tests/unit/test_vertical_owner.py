@@ -136,12 +136,9 @@ def test_shadow_check_is_consistent_and_never_captures():
 
 
 def test_terminal_override_directions_and_gating():
-    """Enable-bit path under the advisory-15 interim: HIGH commands
-    descend (the evidence-backed clamp arm); LOW commands NO CLIMB —
-    the upward allowance is zero while h_up is a contested envelope
-    (the servo aims at center; admission restricts arrivals to
-    near-centered, so nothing material is lost). Without certification
-    the override yields None."""
+    """Enable-bit path: LOW commands climb, HIGH commands descend
+    (symmetric +-0.10 command clamp, advisory-16 restoration); without
+    certification the override yields None."""
     from aigp.core.messages import RelPose, StateEstimate
     from aigp.planning.vertical_owner import terminal_override
 
@@ -158,8 +155,9 @@ def test_terminal_override_directions_and_gating():
     owner, v_bz, vz = terminal_override(a, st(-0.4), v_sp, True, 0.9, 0.55,
                                         None, 0.016)
     assert owner == TERM_OWNER and v_bz is not None
-    # LOW: upward allowance 0 — no climb command, and never a descend.
-    assert v_bz == pytest.approx(0.0, abs=1e-9)
+    # LOW -> climb (advisory-16: the interim upward-allowance-zero
+    # retired with the voided 0.744 evidence; symmetric clamp restored).
+    assert v_bz < 0
     # HIGH case with a fresh arbiter:
     b = make_arbiter()
     owner, v_bz2, _ = terminal_override(b, st(+0.4), v_sp, True, 0.9, 0.55,

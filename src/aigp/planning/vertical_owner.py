@@ -311,15 +311,13 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # blind the epistemology exactly where it must block (the safety
     # fixture pins this). Larger vehicle shrinks every allowance;
     # nothing grows.
-    # Asymmetric command clamp (advisory-15 SS1.4 interim): the upward
-    # allowance is ZERO while h_up is a contested/unknown envelope —
-    # the downward arm (-0.10) is the program's one evidence-backed
-    # clamp (0.10 <= measured C_bottom 0.162 - 0.06, by 2mm). Positive
-    # e_z (climb wanted) is refused at the command site; admission
-    # already restricts arrivals to near-centered, so nothing material
-    # is lost. Reverts only via the freeze-exception channel with the
-    # forensics attached.
-    e_z_cmd = float(np.clip(e_z, -cmd_clamp_m, 0.0))
+    # Symmetric command clamp RESTORED (advisory-16 SS0): the 0.744
+    # contrary evidence resolved as Class-C frontal clips, so the
+    # advisory-15 interim (upward allowance zero) retires with the
+    # evidence that keyed it. The chain returns to symmetric HELD:
+    # +-0.10, both injection signs legal. The downward arm remains the
+    # one evidence-backed value (0.10 <= C_bottom 0.162 - 0.06).
+    e_z_cmd = float(np.clip(e_z, -cmd_clamp_m, cmd_clamp_m))
     g = compute_terminal_guidance(
         e_z=e_z_cmd, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
@@ -327,10 +325,7 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         vz_goal = prev_vz_up if prev_vz_up is not None else 0.0
     else:
         vz_goal = g["vz_cmd"]
-    # Upward allowance 0 (interim, see clamp above): arresting a sink
-    # (raising vz toward zero) stays legal; commanding an actual climb
-    # (vz_goal > 0) does not.
-    vz_goal = min(vz_goal, 0.0)
+
     vz_up = slew_up_velocity(prev_vz_up if prev_vz_up is not None else vz_goal,
                              vz_goal, dt, az_max, az_max)
     # Body conversion, LEGACY-CONSISTENT: the geometrically-honest
