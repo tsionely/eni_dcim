@@ -1,22 +1,29 @@
 {
   "n_control_flights": 3,
-  "n_pooled_samples": 39,
+  "n_flights_with_std": 2,
+  "per_flight_stds": [
+    0.13673165389960573,
+    0.04722609847470463
+  ],
+  "n_demeaned_residuals": 39,
   "n_closest_points": 2,
   "closest_true_dz": [
     1.4027195829847081,
     3.172044297355416
   ],
-  "sigma_prime_closest_m": 0.8846623571853539,
-  "sigma_prime_pooled_m": 0.7978715255135315,
-  "sigma_prime_m": 0.8846623571853539,
-  "sigma_prime_definition": "std of true_world_dz at each control flight's closest fresh commit sample (R in [0.8,5], age\u22640.25); fallback = pooled time-series std",
+  "sigma_prime_within_rms_m": 0.10228843912012751,
+  "sigma_prime_residual_m": 0.10125133059298651,
+  "sigma_cross_flight_closest_m": 0.8846623571853539,
+  "sigma_prime_m": 0.10228843912012751,
+  "sigma_prime_definition": "RMS of per-control-flight std(true_world_dz) in first commit (age\u22640.35, R\u2208[0.5,6], n\u22655); NOT cross-flight absolute height. Also report demeaned residual std and closest-dz cross-std.",
   "block_b_inject_m": 0.12,
   "design_sigma_m": 0.05,
   "design_n_sigma": 2.4,
-  "power_n_sigma": 0.13564497124280567,
+  "power_n_sigma": 1.1731531053971018,
   "flag_threshold_m": 0.07,
   "flag_sigma_gt_0p07": true,
-  "ruling": "\u03c3\u2032=0.8846623571853539: Block B \u00b10.12 is UNDERPOWERED (0.14\u03c3 < 2.4\u03c3 design) \u2014 FLAG",
+  "ruling": "\u03c3\u2032=0.10228843912012751: Block B \u00b10.12 is UNDERPOWERED (1.17\u03c3 < 2.4\u03c3 design) \u2014 FLAG",
+  "note_cross_flight_closest": "cross-flight std of closest true_dz is bias/range mixing (0.8846623571853539) \u2014 not used as \u03c3\u2032",
   "per_flight": [
     {
       "fid": "20260720T071008-5b501b4c",

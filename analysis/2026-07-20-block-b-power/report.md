@@ -2,12 +2,13 @@
 
 ## Verdict
 
-- **σ′ (closest-per-flight)**: `0.8846623571853539` m (n=2 controls)
-- **σ′ (pooled time-series)**: `0.7978715255135315` m (n=39 samples)
-- **Primary σ′**: `0.8846623571853539` m
-- **Block B ±0.12 power**: `0.13564497124280567` σ (design 0.12/0.05=2.4σ)
+- **σ′ (within-flight RMS)**: `0.10228843912012751` m (per-flight stds=`[0.13673165389960573, 0.04722609847470463]`)
+- **σ′ (demeaned residual)**: `0.10125133059298651` m
+- **Cross-flight closest (NOT σ′)**: `0.8846623571853539` m values=`[1.4027195829847081, 3.172044297355416]`
+- **Primary σ′**: `0.10228843912012751` m
+- **Block B ±0.12 power**: `1.1731531053971018` σ (design 0.12/0.05=2.4σ)
 - **Flag σ′ > 0.07**: `True`
-- σ′=0.8846623571853539: Block B ±0.12 is UNDERPOWERED (0.14σ < 2.4σ design) — FLAG
+- σ′=0.10228843912012751: Block B ±0.12 is UNDERPOWERED (1.17σ < 2.4σ design) — FLAG
 
 ## Per control flight
 
