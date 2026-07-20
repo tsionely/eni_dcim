@@ -1,0 +1,2 @@
+trial,transition_id,flight,t_rel_s,range_z_m,from_source,to_source,rate_source,rate_anchor_age_s,rate_anchor_valid,rate_anchor_v_mps,candidate_frame_id,candidate_range_z_m
+anchor_drop_frame_304,1,F2,6.9368124,1.497103373282544,FULL_QUAD,SIDE_PAIR,FULL_RATE_ANCHOR,0.1667172908782959,True,-0.4253071902258842,304,1.8205209770928898

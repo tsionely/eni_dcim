@@ -376,6 +376,7 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
     tracker_fixes = 0
     feature_side_rows = 0
     center_only = 0
+    side_armed = False
     for kind, mono, payload in events:
         if kind == "imu":
             ts, accel, gyro = payload
@@ -400,15 +401,22 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
             if det.cert_status == "certified":
                 r_fix = float(np.linalg.norm(det.rel_pose.t))
                 if prior is None or abs(r_fix - prior) <= 0.4 * prior:
-                    tracker.certificate.on_full_quad(det.ts_ns)
+                    tracker.certificate.on_full_quad(det.ts_ns,
+                                                     z_m=float(det.rel_pose.t[2]))
                     anchored = True
+                else:
+                    tracker.certificate.on_relock_or_collision()
+                    side_armed = False
             est.update_vision(det)
             feat = feature_from_full(det) if anchored else None
             if feat is not None:
                 emitted.append(("feature", "detector", feat, det))
             if (anchored and tracker.enabled and det.rel_pose is not None
                     and float(det.rel_pose.t[2]) <= parallel_below_m):
-                tracked_side = tracker.track(frame, det.rel_pose,
+                side_armed = True
+                prior_pose = state_before.gate_rel if state_before.gate_rel is not None \
+                    else det.rel_pose
+                tracked_side = tracker.track(frame, prior_pose,
                                              center_hint_px=det.center_px)
                 if tracked_side is not None and tracker.last_feature is not None:
                     feature_side_rows += 1
@@ -418,10 +426,12 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
             center_only += 1
             center_hint = det.center_px
 
+        fallback_allowed = side_armed or (
+            last_full_mono is not None
+            and (mono - last_full_mono) / 1e9 <= tracker.max_solo_s
+        )
         if (det is None or det.rel_pose is None) and tracker.enabled \
-                and last_full_mono is not None \
-                and (mono - last_full_mono) / 1e9 <= tracker.max_solo_s \
-                and est.state.gate_rel is not None:
+                and fallback_allowed and est.state.gate_rel is not None:
             tracked = tracker.track(frame, est.state.gate_rel, center_hint_px=center_hint)
             if tracked is not None:
                 tracker_fixes += 1
