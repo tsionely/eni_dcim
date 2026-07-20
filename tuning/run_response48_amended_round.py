@@ -1,8 +1,8 @@
-"""RESPONSE48 amended three-task diagnostic round.
+"""Ordered RESPONSE52 A-G diagnostic round.
 
 CSV-only: no simulator launch. Produces archaeology-first wrong-sign
 disclosure, corrected event-support re-score, shadow residual split
-diagnostics, and era/applicability ledger artifacts.
+diagnostics, old-path taxonomy, and era/applicability ledger artifacts.
 """
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ from run_shadow_residual_diagnostics import (  # noqa: E402
 
 TASK_A_DIR = ROOT / "tuning" / "taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z"
 TASK_B_DIR = ROOT / "tuning" / "taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z"
-OUT_PREFIX = "response48-amended-DIAGNOSTIC"
+OUT_PREFIX = "ordered-round-A-G-DIAGNOSTIC"
 WRONG_SIGN_CRITERION = ROOT / "docs" / "criteria" / "wrong_sign_rescore_equivalence.md"
 SHADOW_CRITERION = ROOT / "docs" / "criteria" / "shadow_fit_decision_structure.md"
 DISCOVERY_OVERLAP_IDS = {
@@ -52,6 +52,7 @@ OFF_TARGET_DISCOVERY_IDS = {
     "20260720T071545-cd18c5fb",
     "20260720T134522-9aa0ef5c",
 }
+LEGACY_DISCOVERY_IDS = DISCOVERY_OVERLAP_IDS | OFF_TARGET_DISCOVERY_IDS
 NEEDED_DEADBAND = 0.02
 LEGACY_E_DEADBAND = 0.03
 LEGACY_PRODUCT_EPS = -1e-6
@@ -640,7 +641,135 @@ def cluster_regime_labels(samples: list[dict[str, Any]]) -> dict[str, str]:
     return {cid: ";".join(sorted(vals)) for cid, vals in by_cluster.items()}
 
 
-def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
+def legacy_discovery_appendix(task_b_dir: Path, out_dir: Path) -> list[dict[str, Any]]:
+    selected = {
+        row["cluster_id"]: row
+        for row in read_csv(task_b_dir / "DIAGNOSTIC_selected_clusters.csv")
+    }
+    delta_rows = {
+        row["cluster_id"]: row
+        for row in read_csv(task_b_dir / "DIAGNOSTIC_delta_latch_mechanism.csv")
+    }
+    rows = []
+    for cid in sorted(selected):
+        meta = selected[cid]
+        fid = meta.get("flight_id", "")
+        if fid not in LEGACY_DISCOVERY_IDS:
+            continue
+        delta = delta_rows.get(cid, {})
+        n = int(float(delta.get("n") or 0))
+        rows.append({
+            "diagnostic_only": True,
+            "target_set": "legacy_discovery_appendix_5_listed_4_analyzable",
+            "cluster_id": cid,
+            "flight_id": fid,
+            "fixture_dir": meta.get("fixture_dir", ""),
+            "era": meta.get("era", ""),
+            "recording_regime": meta.get("recording_regime", ""),
+            "listed": True,
+            "analyzable": n > 0,
+            "n_rows": n,
+            "strict_failure_reason": delta.get("strict_failure_reason", ""),
+            "auth_at_latch_median": delta.get("auth_at_latch_median", ""),
+            "v_latch_median_mps": delta.get("v_latch_median_mps", ""),
+            "predicted_offset_mps": delta.get("minus_delta_latch_median_mps", ""),
+            "b0_old_mps": delta.get("b0_old_mps", ""),
+            "b1_old_mps_per_s": delta.get("b1_old_mps_per_s", ""),
+            "b0_new_mps": delta.get("b0_new_mps", ""),
+            "b1_new_mps_per_s": delta.get("b1_new_mps_per_s", ""),
+            "remainder_mps": delta.get("b0_new_mps", ""),
+            "old_minus_new_b0_mps": delta.get("b0_old_minus_new_mps", ""),
+            "regime_labels": meta.get("recording_regime", ""),
+            "note": "legacy appendix only; not merged into the legal 23 closure distribution",
+        })
+    write_csv(out_dir / "02_shadow_legacy_discovery_appendix_5_listed_4_analyzable.csv", rows)
+    return rows
+
+
+def b0_exact_maxima(b0_rows: list[dict[str, Any]], appendix_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def summarize(label: str, rows: list[dict[str, Any]], listed: int | None = None) -> dict[str, Any]:
+        vals = [abs(float(r["b0_new_mps"])) for r in rows if fnum(r.get("b0_new_mps")) is not None]
+        auth1_vals = [
+            abs(float(r["b0_new_mps"]))
+            for r in rows
+            if fnum(r.get("b0_new_mps")) is not None
+            and fnum(r.get("auth_at_latch_median")) is not None
+            and abs(float(r["auth_at_latch_median"]) - 1.0) <= 1e-9
+        ]
+        return {
+            "target_set": label,
+            "approaches_listed": listed if listed is not None else len(rows),
+            "approaches_analyzable": len([r for r in rows if fnum(r.get("b0_new_mps")) is not None]),
+            "b0_new_abs_max_mps_exact": max(vals) if vals else "",
+            "b0_new_auth1_abs_max_mps_exact": max(auth1_vals) if auth1_vals else "",
+            "precision_note": "exact CSV value, do not round into threshold-pass language",
+        }
+
+    return [
+        summarize(
+            "discovery_overlap_3",
+            [r for r in b0_rows if r["target_set"] == "discovery_overlap_3"],
+        ),
+        summarize(
+            "confirmatory_20",
+            [r for r in b0_rows if r["target_set"] == "confirmatory_20"],
+        ),
+        summarize("pooled_23", b0_rows),
+        summarize("legacy_discovery_appendix_5_listed_4_analyzable", appendix_rows, listed=5),
+    ]
+
+
+def old_fit_taxonomy(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
+    old = read_csv(task_a_dir / "release_fit.csv")[0]
+    rows = [
+        {
+            "diagnostic_only": True,
+            "reason_code": "INVALID_FOR_RELEASE_MODEL_PRECONDITION",
+            "applies": True,
+            "anchor_policy": "old_attenuated_anchor",
+            "source_previous_verdict": old.get("verdict", ""),
+            "replacement_status": "REPLACES_DATA_INSUFFICIENT",
+            "machine_readable_status": "OLD_BUILD_BLOCKED",
+            "evidence": "old residuals include deterministic signed offset, so a random-drift release model precondition is violated",
+        },
+        {
+            "diagnostic_only": True,
+            "reason_code": "KNOWN_SIGNED_DEFECT",
+            "applies": True,
+            "anchor_policy": "old_attenuated_anchor",
+            "source_previous_verdict": old.get("verdict", ""),
+            "replacement_status": "REPLACES_DATA_INSUFFICIENT",
+            "machine_readable_status": "OLD_BUILD_BLOCKED",
+            "evidence": "attenuated anchor defect is documented by delta-latch mechanism rows and old-vs-shadow b0 deltas",
+        },
+        {
+            "diagnostic_only": True,
+            "reason_code": "OLD_BUILD_BLOCKED",
+            "applies": True,
+            "anchor_policy": "old_attenuated_anchor",
+            "source_previous_verdict": old.get("verdict", ""),
+            "replacement_status": "REPLACES_DATA_INSUFFICIENT",
+            "machine_readable_status": "OLD_BUILD_BLOCKED",
+            "evidence": "old shipping path is adverse evidence and not a release candidate",
+        },
+    ]
+    write_csv(out_dir / "04_old_fit_verdict_taxonomy.csv", rows)
+    summary = {
+        "source_previous_verdict": old.get("verdict", ""),
+        "replacement_reason_codes": ";".join(r["reason_code"] for r in rows),
+        "machine_readable_status": "OLD_BUILD_BLOCKED",
+        "n_clusters": int(old.get("n_clusters", 0) or 0),
+        "n_rows": int(old.get("n_rows", 0) or 0),
+        "point_sigma_a_mps2": old.get("point_sigma_a_mps2", ""),
+        "profile_u95_sigma_a_mps2": old.get("profile_u95_sigma_a_mps2", ""),
+        "cluster_bootstrap_u95_sigma_a_mps2": old.get("cluster_bootstrap_u95_sigma_a_mps2", ""),
+        "u95_release_sigma_a_mps2": old.get("u95_release_sigma_a_mps2", ""),
+    }
+    write_csv(out_dir / "04_old_fit_verdict_taxonomy_summary.csv", [summary])
+    return summary
+
+
+def shadow_fit_diagnostics(task_a_dir: Path, task_b_dir: Path, out_dir: Path) -> dict[str, Any]:
     old_base = read_csv(task_a_dir / "forced_withhold_samples.csv")
     clusters = read_csv(task_a_dir / "expanded_census_clusters.csv")
     old_samples = annotate_samples([dict(r) for r in old_base], "old_attenuated_anchor")
@@ -656,7 +785,6 @@ def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
         "discovery_overlap_3",
         "confirmatory_20",
         "pooled_23",
-        "legacy_discovery_appendix_4_analyzable",
     ]
     release_rows = []
     boot_rows = []
@@ -730,18 +858,26 @@ def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
         })
     write_csv(out_dir / "02_shadow_b0_new_per_cluster_split.csv", b0_rows)
 
+    appendix_rows = legacy_discovery_appendix(task_b_dir, out_dir)
+    exact_max_rows = b0_exact_maxima(b0_rows, appendix_rows)
+    write_csv(out_dir / "02_shadow_b0_exact_maxima.csv", exact_max_rows)
+
     mechanism_rows = []
     for label, ids in [
         ("discovery_overlap_3", DISCOVERY_OVERLAP_IDS),
         ("confirmatory_20", {r["flight_id"] for r in clusters if r["flight_id"] not in DISCOVERY_OVERLAP_IDS}),
         ("pooled_23", {r["flight_id"] for r in clusters}),
-        ("legacy_discovery_appendix_5_listed", DISCOVERY_OVERLAP_IDS | OFF_TARGET_DISCOVERY_IDS),
+        ("legacy_discovery_appendix_5_listed_4_analyzable", LEGACY_DISCOVERY_IDS),
     ]:
-        group = [r for r in b0_rows if r["flight_id"] in ids]
+        group = (
+            appendix_rows
+            if label == "legacy_discovery_appendix_5_listed_4_analyzable"
+            else [r for r in b0_rows if r["flight_id"] in ids]
+        )
         mechanism_rows.append({
             "target_set": label,
             "approaches_listed": len(ids),
-            "approaches_analyzable": len(group),
+            "approaches_analyzable": len([r for r in group if fnum(r.get("b0_new_mps")) is not None]),
             "b0_new_abs_max_mps": max([abs(float(r["b0_new_mps"])) for r in group if fnum(r.get("b0_new_mps")) is not None], default=""),
             "b0_new_median_mps": statistics.median([float(r["b0_new_mps"]) for r in group if fnum(r.get("b0_new_mps")) is not None]) if group else "",
             "note": "mechanism evidence counted in approaches, never rows",
@@ -759,6 +895,9 @@ def shadow_fit_diagnostics(task_a_dir: Path, out_dir: Path) -> dict[str, Any]:
         "discovery_overlap_approaches": 3,
         "confirmatory_approaches": 20,
         "pooled_approaches": 23,
+        "legacy_appendix_listed": 5,
+        "legacy_appendix_analyzable": len([r for r in appendix_rows if fnum(r.get("b0_new_mps")) is not None]),
+        "exact_maxima": exact_max_rows,
         "mapping_rows": len(mapping_rows),
         "mapping_counts": mapping_counts,
     }
@@ -930,7 +1069,8 @@ def run(args: argparse.Namespace) -> Path:
     task_a = args.task_a_dir.resolve()
     task_b = args.task_b_dir.resolve()
     wrong = archaeology_and_rescore(task_b, out_dir)
-    shadow = shadow_fit_diagnostics(task_a, out_dir)
+    shadow = shadow_fit_diagnostics(task_a, task_b, out_dir)
+    old_tax = old_fit_taxonomy(task_a, out_dir)
     led = ledger(task_a, out_dir)
 
     summary = {
@@ -940,6 +1080,7 @@ def run(args: argparse.Namespace) -> Path:
         "shadow_fit_criterion_commit": last_commit_for(SHADOW_CRITERION),
         "wrong_sign": wrong,
         "shadow": shadow,
+        "old_fit_taxonomy": old_tax,
         "ledger": led,
         "source_artifacts": {
             "task_a": str(task_a.relative_to(ROOT)),
@@ -969,8 +1110,15 @@ def run(args: argparse.Namespace) -> Path:
         f"- Pooled old U95: `{shadow['pooled_old']['u95_conservative_mps2']}`.",
         f"- Pooled shadow U95: `{shadow['pooled_shadow']['u95_conservative_mps2']}`.",
         f"- Split counts: discovery overlap `{shadow['discovery_overlap_approaches']}`, confirmatory `{shadow['confirmatory_approaches']}`, pooled `{shadow['pooled_approaches']}`.",
+        f"- Legacy appendix: `{shadow['legacy_appendix_listed']}` listed / `{shadow['legacy_appendix_analyzable']}` analyzable.",
         "",
-        "## 3. Ledger",
+        "## 3. Old-Fit Taxonomy",
+        "",
+        f"- Source previous verdict: `{old_tax['source_previous_verdict']}`.",
+        f"- Replacement status: `{old_tax['machine_readable_status']}`.",
+        f"- Reason codes: `{old_tax['replacement_reason_codes']}`.",
+        "",
+        "## 4. Ledger",
         "",
         f"- Approaches: `{led['approaches']}`.",
         f"- Y_eligible: `{led['Y_eligible']}`.",
