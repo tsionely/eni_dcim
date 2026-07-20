@@ -43,10 +43,7 @@ from run_l1_perception_replay import (  # noqa: E402
 
 ARCHIVE_DIRS = [
     ROOT / "fixtures" / "20260720T071602-phase6l-cohort-3",
-    ROOT / "fixtures" / "20260720T133508-phase7m-metrology-f1",
-    ROOT / "fixtures" / "20260720T134548-phase7m-metrology-f2",
-    ROOT / "fixtures" / "20260720T135040-phase7m-metrology-f3",
-]
+] + sorted((ROOT / "fixtures").glob("*-phase7m-metrology-f*"))
 P4_DIR = ROOT / "tuning" / "hold-lift-p4-3b554f3-3942837-20260720T115546Z"
 OUT_PREFIX = "archive-harvest-release-fit-v21"
 BOOTSTRAP_N = 2200
@@ -188,6 +185,8 @@ def split_approaches(rows: list[dict], meta: dict) -> list[dict]:
             "approach_id": aid,
             "flight": meta["flight"],
             "flight_id": meta["flight_id"],
+            "fixture_dir": meta.get("fixture_dir", ""),
+            "metrology_only": bool(meta.get("metrology_only", False)),
             "t_start_s": t0,
             "t_end_s": t1,
             "full_rows_below_3p5": len(seg),
@@ -250,7 +249,12 @@ def run_archive_replays(params: ParamSet) -> tuple[list[dict], list[dict], list[
     approaches = []
     for target in targets_from_archive():
         rows, meta = run_video_replay(params, target)
+        meta["fixture_dir"] = target.get("fixture_dir", "")
+        meta["metrology_only"] = "phase7m-metrology" in str(target.get("fixture_dir", ""))
         attach_flight_signals(params, rows, target)
+        for row in rows:
+            row["fixture_dir"] = meta["fixture_dir"]
+            row["metrology_only"] = meta["metrology_only"]
         features.extend(rows)
         metas.append(meta)
         approaches.extend(split_approaches(rows, meta))
@@ -392,6 +396,12 @@ def build_forced_withhold_rows(features: list[dict], approaches: list[dict]) -> 
                     "cluster_id": app["approach_id"],
                     "flight": app["flight"],
                     "flight_id": app["flight_id"],
+                    "fixture_dir": app.get("fixture_dir", ""),
+                    "metrology_only": bool(app.get("metrology_only", False)),
+                    "measurement_latch_mechanism_eligible": True,
+                    "term_command_regime_eligible": (
+                        not bool(app.get("metrology_only", False))
+                    ),
                     "cut_id": cut_id,
                     "cut_frame_id": cut["frame_id"],
                     "frame_id": side["frame_id"],
@@ -622,13 +632,24 @@ def flight_loao_sensitivity(samples: list[dict]) -> list[dict]:
 
 def regime_rows(samples: list[dict]) -> list[dict]:
     out = []
+    eligible = [
+        r for r in samples
+        if r.get("term_command_regime_eligible") is True
+        or str(r.get("term_command_regime_eligible")) == "True"
+    ]
     for label in ["up", "down", "triangular", "slew_limited", "saturated", "authority_limited", "flat_no_ff"]:
-        group = [r for r in samples if r.get("command_regime") == label]
+        group = [r for r in eligible if r.get("command_regime") == label]
+        excluded = [
+            r for r in samples
+            if r.get("command_regime") == label and r not in group
+        ]
         ages = [float(r["age_s"]) for r in group]
         vals = [float(r["r_v_mps"]) for r in group]
         out.append({
             "command_regime": label,
+            "coverage_scope": "term_command_regime_eligible_only",
             "n": len(group),
+            "excluded_metrology_only_n": len(excluded),
             "approaches": len({r["cluster_id"] for r in group}),
             "age_min_s": min(ages) if ages else "",
             "age_max_s": max(ages) if ages else "",
