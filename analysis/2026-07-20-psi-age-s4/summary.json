@@ -1,0 +1,82 @@
+{
+  "ask": "psi-age ledger + S4 prep",
+  "source": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\tuning\\l1-full-addendum-a150ece-a150ece-20260720T094216Z\\features.csv",
+  "n_side_features": 555,
+  "n_side_pair_metric": 432,
+  "n_side_row_only_shadow": 123,
+  "n_maintenance_with_prior_full_residual": 52,
+  "n_exact_same_ts_pairs": 251,
+  "age_bins": [
+    {
+      "age_lo_s": 0.0,
+      "age_hi_s": 0.05,
+      "n": 12,
+      "residual_mean": -0.04093549504315298,
+      "residual_std": 0.06837163330804029,
+      "residual_mae": 0.04093549504315298,
+      "residual_p90_abs": 0.17245662969274766,
+      "age_mean": 0.034071872
+    },
+    {
+      "age_lo_s": 0.05,
+      "age_hi_s": 0.12,
+      "n": 10,
+      "residual_mean": -0.024983707371761754,
+      "residual_std": 0.04989600733611918,
+      "residual_mae": 0.024983707371761754,
+      "residual_p90_abs": 0.10776930820407271,
+      "age_mean": 0.0862007552
+    },
+    {
+      "age_lo_s": 0.12,
+      "age_hi_s": 0.25,
+      "n": 12,
+      "residual_mean": -0.022472457613469665,
+      "residual_std": 0.0735289704265309,
+      "residual_mae": 0.022472457613469665,
+      "residual_p90_abs": 0.0030133638422720666,
+      "age_mean": 0.16670318933333336
+    },
+    {
+      "age_lo_s": 0.25,
+      "age_hi_s": 0.5,
+      "n": 6,
+      "residual_mean": 0.0,
+      "residual_std": 0.0,
+      "residual_mae": 0.0,
+      "residual_p90_abs": 0.0,
+      "age_mean": 0.4340569173333333
+    },
+    {
+      "age_lo_s": 0.5,
+      "age_hi_s": 1.0,
+      "n": 12,
+      "residual_mean": 0.0,
+      "residual_std": 0.0,
+      "residual_mae": 0.0,
+      "residual_p90_abs": 0.0,
+      "age_mean": 0.7139958399999999
+    },
+    {
+      "age_lo_s": 1.0,
+      "age_hi_s": 9.0,
+      "n": 0,
+      "residual_mean": null,
+      "residual_std": null,
+      "residual_mae": null,
+      "residual_p90_abs": null,
+      "age_mean": null
+    }
+  ],
+  "disposition": {
+    "material_age_dependence": false,
+    "corr_age_abs_residual": -0.2279717486933442,
+    "mae_grows_across_bins": false,
+    "psi_age_max_s": 0.930377728,
+    "psi_age_p90_s": 0.7013812992,
+    "n_paired": 52,
+    "verdict": "DIAGNOSTIC_ONLY \u2014 residuals show no material age dependence over the encountered psi_age interval [0, 0.930]s (p90=0.701s). No hard validity limit / sigma_psi(age) required for S4.",
+    "proposal": null
+  },
+  "verdict": "DIAGNOSTIC_ONLY"
+}
