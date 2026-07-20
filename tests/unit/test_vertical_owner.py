@@ -741,3 +741,54 @@ def test_s6_source_histories_survive_enable_toggle_and_shadow_modes():
                          cert_status="certified", mode="SIDE_PAIR_ROW_ONLY")
     assert terminal_observe(g, st(), sh, 0.02) is None
     assert len(g._hist_other) + len(g._hist) == n_before
+
+
+def test_hard_step_limit_overrides_inflated_sigma():
+    """RESPONSE19 disposition SS2.2: the old max(0.10, 3 sigma_side)
+    rule permitted a 0.225m source step — approaching the whole
+    corridor. A 0.15m inter-source bias (legal under the old rule)
+    must now BLOCK the switch: |median de| <= 0.10 is HARD, and an
+    inflated provisional sigma never relaxes it."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    for i in range(10):
+        ts = i * 0.04
+        g.observe(ts, 0.10, source="FULL_QUAD")
+        g.observe(ts + 0.001, 0.25, source="SIDE_PAIR")   # de = 0.15
+    for i in range(10, 16):
+        g.observe(i * 0.04, 0.25, source="SIDE_PAIR")
+    assert g.active_source == "FULL_QUAD"
+
+
+def test_side_rung_maintains_but_never_first_captures():
+    """RESPONSE19 disposition SS3 (conservative first-live): a mature,
+    consistent SIDE_PAIR-active oracle must NOT open the control door —
+    only FULL_QUAD may first-capture; the side rung maintains an owner
+    it inherited."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 284.0
+    a = make_arbiter()
+    g = TerminalOracle()
+    g.active_source = "SIDE_PAIR"          # side-active by transition
+    owner = None
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="SIDE_PAIR")
+        owner, v_bz, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 0.6, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g)
+    assert g.ready()                        # mature and honest...
+    assert owner == ALT_OWNER               # ...but the door stays shut

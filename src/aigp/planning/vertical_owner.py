@@ -122,7 +122,7 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
     before the authority it gates, by construction."""
     if (feature is None or feature_age_s is None or feature_age_s > 0.15
             or feature.span_px <= 1.0
-            or feature.cert_status not in ("certified", "probation")
+            or feature.cert_status != "certified"
             or state.image_size is None):
         return None
     # Ladder first release: only the two METRIC rungs act (FULL_QUAD
@@ -227,7 +227,13 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # Once TERM owns, the latch/loss-grace semantics govern instead.
     capture_ok = certified
     if oracle is not None and arbiter.owner != TERM_OWNER:
-        capture_ok = certified and oracle.ready()
+        # Conservative first-live authority policy (RESPONSE19
+        # disposition SS3): only the highest-fidelity rung may open the
+        # control door; the side rung MAINTAINS an already-captured
+        # owner (its primary purpose — metrology after the full quad
+        # disappears) but may not first-capture in its first cohort.
+        capture_ok = (certified and oracle.ready()
+                      and oracle.active_source == "FULL_QUAD")
         if capture_ok:
             from aigp.planning.vertical_terminal import (crossing_error,
                                                          crossing_sigma)
@@ -377,6 +383,7 @@ class TerminalOracle:
         self.active_source = "FULL_QUAD"
         self._last_full: tuple[float, float] | None = None
         self._last_side: tuple[float, float] | None = None
+        self._overlap_deltas: list[tuple[float, float]] = []  # (ts, de)
         self._overlap_ok = False
         self._upgrade_streak = 0
         self._transition_grace = False
@@ -391,6 +398,7 @@ class TerminalOracle:
         self.active_source = "FULL_QUAD"
         self._last_full = None
         self._last_side = None
+        self._overlap_deltas = []
         self._overlap_ok = False
         self._upgrade_streak = 0
         self._transition_grace = False
@@ -404,6 +412,14 @@ class TerminalOracle:
     def sigmas(self) -> tuple[float, float]:
         """(sigma_e, sigma_v) of the ACTIVE source."""
         return self.SIGMAS[self.active_source]
+
+    def _slope_of(self, hist: list):
+        from aigp.planning.vertical_terminal import robust_slope
+        tail = self._fresh_tail(hist)
+        if len(tail) < 4:
+            return None
+        recent = tail[-12:]
+        return robust_slope([t for t, _ in recent], [e for _, e in recent])
 
     @staticmethod
     def _push(hist: list, ts_s: float, e: float) -> None:
@@ -460,9 +476,31 @@ class TerminalOracle:
             self._last_side = (ts_s, e_meas)
         if (self._last_full is not None and self._last_side is not None
                 and abs(self._last_full[0] - self._last_side[0]) <= 0.15):
-            bound = max(0.10, 3.0 * self.SIGMAS["SIDE_PAIR"][0])
-            self._overlap_ok = abs(self._last_full[1]
-                                   - self._last_side[1]) <= bound
+            de = self._last_side[1] - self._last_full[1]
+            ts_pair = max(self._last_full[0], self._last_side[0])
+            if (not self._overlap_deltas
+                    or ts_pair > self._overlap_deltas[-1][0]):
+                self._overlap_deltas.append((ts_pair, de))
+                if len(self._overlap_deltas) > 12:
+                    del self._overlap_deltas[:-12]
+            # Switch legality (RESPONSE19 disposition SS2): >=3 paired
+            # unique-exposure overlaps, newest pair fresh, and the
+            # HARD absolute step limit |median(de)| <= 0.10 — an
+            # inflated provisional sigma must never relax it (the old
+            # max(0.10, 3*sigma_side) permitted a 0.225m source step
+            # approaching the whole corridor). Rate compatibility:
+            # opposing slope signs at the transition forbid it.
+            recent = [d for t, d in self._overlap_deltas
+                      if ts_pair - t <= 0.5]
+            self._overlap_ok = False
+            if len(recent) >= 3 and abs(float(np.median(recent))) <= 0.10:
+                v_act = self._slope_of(self._hist)
+                v_oth = self._slope_of(self._hist_other)
+                deadband = 0.05
+                if (v_act is None or v_oth is None
+                        or abs(v_act) <= deadband or abs(v_oth) <= deadband
+                        or (v_act > 0) == (v_oth > 0)):
+                    self._overlap_ok = True
         if source == self.active_source:
             self._push(self._hist, ts_s, e_meas)
             if self.active_source == "SIDE_PAIR":
@@ -488,8 +526,7 @@ class TerminalOracle:
             # then re-matures the returning rung honestly (no capture
             # authority until it does).
             ref = self.e_z if self.e_z is not None else e_meas
-            if abs(e_meas - ref) <= max(0.10,
-                                        3.0 * self.SIGMAS["SIDE_PAIR"][0]):
+            if abs(e_meas - ref) <= 0.10:
                 self._upgrade_streak += 1
             else:
                 self._upgrade_streak = 0
@@ -569,10 +606,13 @@ class TerminalOracle:
         if e_meas is not None:
             limit = vz_max * max(dt, 1e-3) + self.jump_floor
             if self._transition_grace:
-                # One-shot: a consistency-gated source step (<=0.10+3s)
-                # crosses the per-tick jump limit legally, exactly once.
+                # One-shot, DIAGNOSTIC-ONLY (RESPONSE19 disposition
+                # SS2.3): lifts the single temporal-innovation alarm a
+                # certified <=0.10m source step legally causes; touches
+                # no admission, envelope, maturity, age, phase or
+                # ownership logic.
                 self._transition_grace = False
-                limit = max(limit, 0.10 + 3.0 * self.SIGMAS["SIDE_PAIR"][0])
+                limit = max(limit, 0.10 + self.jump_floor)
             if self.e_z is not None and abs(e_meas - self.e_z) > limit:
                 self._violations += 1
                 if self._violations >= self.jump_k:
