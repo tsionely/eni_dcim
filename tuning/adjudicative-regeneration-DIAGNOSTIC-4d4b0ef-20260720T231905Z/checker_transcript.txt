@@ -1,0 +1,14 @@
+name: release_manifest_checker_release_grade
+head: c98de1c243aaf87f23f1a85c2e15fb6e2d019866
+started_utc: 2026-07-20T23:27:58.578674+00:00
+ended_utc: 2026-07-20T23:28:53.586362+00:00
+command: C:\Users\tsion\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/release_manifest.py docs/release/evidence_manifest_5c69823.json c98de1c243aaf87f23f1a85c2e15fb6e2d019866
+exit_code: 0
+status_before_clean: True
+sim_lock_exists_before: False
+sim_processes_before:
+<none>
+--- stdout ---
+MANIFEST VERIFIES (RELEASE-GRADE)
+--- stderr ---
+
