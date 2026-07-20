@@ -1,0 +1,4 @@
+era_family,diagnostic_only,clusters,rows,point_sigma_a_mps2,profile_u95_sigma_a_mps2,profile_nearly_flat,gate_push,note
+phase5,True,5,128,,,,,lt6 clusters: no stratified fit
+phase6,True,17,1497,1.0724630078797412,1.1500000000000001,False,True,diagnostic stratified profile fit; not a separate release claim
+phase7,True,1,13,,,,,lt6 clusters: no stratified fit

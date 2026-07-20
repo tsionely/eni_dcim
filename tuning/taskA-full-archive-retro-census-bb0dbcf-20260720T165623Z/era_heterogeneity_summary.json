@@ -1,0 +1,8 @@
+{
+  "clusters": 23,
+  "era_count": 15,
+  "era_family_count": 3,
+  "era_interpretation": "LOAO pushes over gate across all left-out flights; no single ERA-specific rescue. Per-era strata are mostly <6; phase6 family is the only diagnostic stratum with >=6 clusters.",
+  "flight_loao_all_push_over_gate": true,
+  "task_a_dir": "C:\\Users\\tsion\\Projects\\eni_dcim_qa\\tuning\\taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z"
+}

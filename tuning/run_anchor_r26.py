@@ -422,6 +422,32 @@ def terminal_command_update(
         vz_max=vz_max,
         az_max=az_max,
     )
+    shadow_vz_up = ""
+    shadow_e_cross_new = ""
+    shadow_vz_cmd_new = ""
+    shadow_command_delta = ""
+    shadow_e_cross_delta = ""
+    shadow_delta_latch = ""
+    if oracle.active_source == "SIDE_PAIR" and fnum(oracle.rate_anchor_v_raw) is not None:
+        shadow_vz_up = float(oracle.rate_anchor_v_raw) + float(ff)
+        shadow = compute_terminal_guidance(
+            e_z=float(np.clip(e_z_eff, -cmd_clamp, cmd_clamp)),
+            sigma_e=0.10,
+            v_z=float(shadow_vz_up),
+            sigma_v=0.15,
+            tau_s=tau_s,
+            margin_m=margin,
+            prev_phase=prev_phase,
+            vz_max=vz_max,
+            az_max=az_max,
+        )
+        shadow_e_cross_new = shadow["e_cross"]
+        shadow_vz_cmd_new = shadow["vz_cmd"] if shadow["vz_cmd"] is not None else ""
+        if guidance["vz_cmd"] is not None and shadow["vz_cmd"] is not None:
+            shadow_command_delta = float(shadow["vz_cmd"]) - float(guidance["vz_cmd"])
+        shadow_e_cross_delta = guidance["e_cross"] - shadow["e_cross"]
+        if fnum(oracle.rate_anchor_v) is not None:
+            shadow_delta_latch = float(oracle.rate_anchor_v) - float(oracle.rate_anchor_v_raw)
     vz_goal = (
         prev_vz_up if guidance["vz_cmd"] is None and prev_vz_up is not None
         else 0.0 if guidance["vz_cmd"] is None
@@ -439,6 +465,16 @@ def terminal_command_update(
         "rate_feed_forward_mps": ff,
         "anchor_applied_ref_mps": applied_ref,
         "logged_applied_vz_up_mps": logged_applied_vz_up if logged_applied_vz_up is not None else "",
+        "rate_anchor_v_raw_mps": oracle.rate_anchor_v_raw if oracle.rate_anchor_v_raw is not None else "",
+        "rate_anchor_quality": oracle.rate_anchor_quality if oracle.rate_anchor_quality is not None else "",
+        "shadow_vz_up_new_mps": shadow_vz_up,
+        "shadow_e_cross_old_m": guidance["e_cross"],
+        "shadow_e_cross_new_m": shadow_e_cross_new,
+        "shadow_vz_cmd_old_mps": guidance["vz_cmd"] if guidance["vz_cmd"] is not None else "",
+        "shadow_vz_cmd_new_mps": shadow_vz_cmd_new,
+        "shadow_command_delta_mps": shadow_command_delta,
+        "shadow_e_cross_delta_m": shadow_e_cross_delta,
+        "shadow_delta_latch_mps": shadow_delta_latch,
         "maintenance_score": maintenance_score,
         "maintenance_score_ok": maintenance_score_ok,
         "runtime_hold_authorized": runtime_hold_authorized,

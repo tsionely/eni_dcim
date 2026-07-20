@@ -1,0 +1,2 @@
+b0,b1,mean_fit_residual_rms_mps,cluster_bootstrap_n,cluster_bootstrap_u95_sigma_a_mps2,cluster_bootstrap_sigma_a_min_mps2,cluster_bootstrap_sigma_a_max_mps2,b0_ci_low_mps,b0_ci_median_mps,b0_ci_high_mps,b1_ci_low_mps_per_s,b1_ci_median_mps_per_s,b1_ci_high_mps_per_s
+-0.007133243864417843,0.06476359644779224,0.46874332332122876,2200,1.7354300892950971,0.08605424733602862,2.5016540878291,-0.1014467708633746,-0.007344132463001411,0.07846933164604791,-0.3671453595610033,0.0737670078387534,0.5094166941895598

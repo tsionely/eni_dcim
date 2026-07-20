@@ -1,0 +1,2 @@
+n_flights,n_clusters,n_rows,point_sigma_a_mps2,profile_u95_sigma_a_mps2,cluster_bootstrap_u95_sigma_a_mps2,u95_release_sigma_a_mps2,sigma_0_mps,pseudo_sigma_0_mps,pseudo_sigma_a_mps2,profile_nearly_flat,loao_pushes_over_gate,coverage_monotone_degrade,max_validated_age,verdict
+23,23,1638,1.3069277300036368,1.4000000000000001,1.7354300892950971,1.7354300892950971,0.08397546969730924,0.013697768148201908,4.305708208859055e-09,False,True,False,none,"HOLD, DATA-INSUFFICIENT"

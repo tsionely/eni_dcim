@@ -1,0 +1,2 @@
+diagnostic_only,x,y,slope_target,intercept_target,slope,intercept,n_clusters
+True,-delta_latch_median_mps,b0_old_minus_new_mps,1.0,0.0,0.8042567827180913,-0.011074213478127926,4

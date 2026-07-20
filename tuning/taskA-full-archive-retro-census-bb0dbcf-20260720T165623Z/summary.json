@@ -1,0 +1,34 @@
+{
+  "census_verdict": "PASS_GE_6",
+  "cluster_count": 23,
+  "eligible_recordings": 115,
+  "failure_reason_counts": {
+    "FULL_BELOW_3P5_NOT_EZ_USABLE": 24,
+    "NO_CERTIFIED_FULL_BELOW_3P5": 53,
+    "NO_CLOSE_FEATURE_EPOCH_LE4P5": 45,
+    "NO_LEGAL_FULL_RATE_ANCHOR": 3,
+    "NO_LEGAL_SIDE_MAINTENANCE_INTERVAL": 10,
+    "NO_PARALLEL_SIDE_PRODUCTION": 20,
+    "OK": 23
+  },
+  "fixture_dirs_enumerated": 61,
+  "release": {
+    "cluster_bootstrap_u95_sigma_a_mps2": 1.7354300892950971,
+    "coverage_monotone_degrade": false,
+    "loao_pushes_over_gate": true,
+    "max_validated_age": "none",
+    "n_clusters": 23,
+    "n_flights": 23,
+    "n_rows": 1638,
+    "point_sigma_a_mps2": 1.3069277300036368,
+    "profile_nearly_flat": false,
+    "profile_u95_sigma_a_mps2": 1.4000000000000001,
+    "pseudo_sigma_0_mps": 0.013697768148201908,
+    "pseudo_sigma_a_mps2": 4.305708208859055e-09,
+    "sigma_0_mps": 0.08397546969730924,
+    "u95_release_sigma_a_mps2": 1.7354300892950971,
+    "verdict": "HOLD, DATA-INSUFFICIENT"
+  },
+  "release_fit_run": true,
+  "repo_head": "bb0dbcf36cac8a7e100d480dc0de8fcad6b12821"
+}

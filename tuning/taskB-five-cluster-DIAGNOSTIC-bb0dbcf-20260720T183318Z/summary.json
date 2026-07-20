@@ -1,0 +1,9 @@
+{
+  "diagnostic_only": true,
+  "mechanism_regression_intercept": -0.011074213478127926,
+  "mechanism_regression_slope": 0.8042567827180913,
+  "missing_legal_five": [],
+  "r26_1_restamp_verdict": "FAIL",
+  "sample_rows": 119,
+  "selected_cluster_count": 5
+}

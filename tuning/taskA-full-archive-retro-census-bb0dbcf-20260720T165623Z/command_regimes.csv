@@ -1,0 +1,8 @@
+command_regime,coverage_scope,n,excluded_metrology_only_n,approaches,age_min_s,age_max_s,signed_mean_r_v_mps,signed_median_r_v_mps,r_v_rms_mps
+up,term_command_regime_eligible_only,424,0,15,0.027653932571411133,0.5353438854217529,-0.44632683278307766,-0.29285775023750227,0.6142913965710163
+down,term_command_regime_eligible_only,651,0,19,0.0259249210357666,0.535315752029419,0.2203706681508636,0.16131670294646605,0.3205082772399077
+triangular,term_command_regime_eligible_only,0,0,0,,,,,
+slew_limited,term_command_regime_eligible_only,0,0,0,,,,,
+saturated,term_command_regime_eligible_only,0,0,0,,,,,
+authority_limited,term_command_regime_eligible_only,331,0,13,0.0,0.534843921661377,0.2085680567789708,0.10340635417055107,0.621106740996162
+flat_no_ff,term_command_regime_eligible_only,232,0,21,0.0,0.500237226486206,-0.048991686192394496,-0.0,0.15524294768115232
