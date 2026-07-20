@@ -1,21 +1,22 @@
 {
   "n_control_flights": 3,
-  "n_pooled_samples": 13,
-  "n_closest_points": 1,
+  "n_pooled_samples": 39,
+  "n_closest_points": 2,
   "closest_true_dz": [
-    1.5587514913619223
+    1.4027195829847081,
+    3.172044297355416
   ],
-  "sigma_prime_closest_m": null,
-  "sigma_prime_pooled_m": 0.08980884784065978,
-  "sigma_prime_m": 0.08980884784065978,
+  "sigma_prime_closest_m": 0.8846623571853539,
+  "sigma_prime_pooled_m": 0.7978715255135315,
+  "sigma_prime_m": 0.8846623571853539,
   "sigma_prime_definition": "std of true_world_dz at each control flight's closest fresh commit sample (R in [0.8,5], age\u22640.25); fallback = pooled time-series std",
   "block_b_inject_m": 0.12,
   "design_sigma_m": 0.05,
   "design_n_sigma": 2.4,
-  "power_n_sigma": 1.3361712446518168,
+  "power_n_sigma": 0.13564497124280567,
   "flag_threshold_m": 0.07,
   "flag_sigma_gt_0p07": true,
-  "ruling": "\u03c3\u2032=0.08980884784065978: Block B \u00b10.12 is UNDERPOWERED (1.34\u03c3 < 2.4\u03c3 design) \u2014 FLAG",
+  "ruling": "\u03c3\u2032=0.8846623571853539: Block B \u00b10.12 is UNDERPOWERED (0.14\u03c3 < 2.4\u03c3 design) \u2014 FLAG",
   "per_flight": [
     {
       "fid": "20260720T071008-5b501b4c",
