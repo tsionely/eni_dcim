@@ -1,0 +1,63 @@
+{
+  "repo_head_sha": "e6c3de8a906ab7aa75af5a71cb1f6da4c2439011",
+  "head_note": "Run against archived TERM-owned rows; position_until_s=0.45",
+  "position_until_s": 0.45,
+  "data_sources": {
+    "flight_logs_scanned": 1248,
+    "shadow_csvs_scanned": 16,
+    "search_roots": [
+      "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures",
+      "C:\\Users\\tsion\\Projects\\eni_dcim_github\\tuning",
+      "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures",
+      "C:\\Users\\tsion\\Projects\\eni_dcim_qa\\tuning\\runtime-logs",
+      "C:\\Users\\tsion\\Projects\\eni_dcim\\logs"
+    ]
+  },
+  "term_rows": {
+    "live": 604,
+    "replay": 95,
+    "total": 699,
+    "tau_missing_live": 0,
+    "tau_missing_replay": 20
+  },
+  "tau_distribution_all": {
+    "n": 679,
+    "p5": 0.28443937580295364,
+    "p25": 0.8511294943503335,
+    "p50": 1.132477928886628,
+    "p75": 1.3457594215138342,
+    "p90": 1.564363978871805,
+    "p95": 1.6987554077004874,
+    "min": 0.027606491409039466,
+    "max": 3.940316842786559,
+    "mean": 1.1078477645679456
+  },
+  "tau_distribution_live": {
+    "p5": 0.31337426337556346,
+    "p25": 0.8613774449370732,
+    "p50": 1.1342768038872926,
+    "p75": 1.3240031602774247,
+    "p90": 1.5160961172851535,
+    "p95": 1.5939266436506485
+  },
+  "tau_distribution_replay": {
+    "p5": 0.028889950287204154,
+    "p25": 0.7488244215988202,
+    "p50": 1.0853408622266743,
+    "p75": 1.9954733478269415,
+    "p90": 2.7900675347390047,
+    "p95": 3.2404320978187324
+  },
+  "episodes": {
+    "total": 19,
+    "any_tick_tau_le_threshold": 4,
+    "first_capture_tau_le_threshold": 0
+  },
+  "first_captures_tau_le_threshold": 0,
+  "first_captures_tau_le_threshold_live": 0,
+  "term_to_alt_handbacks": 13,
+  "term_to_alt_handbacks_tau_le_threshold": 0,
+  "RETRO_VERDICT": "NO_CHANGE",
+  "verdict_change": false,
+  "verdict_rationale": "No first-capture at tau<=0.45 in archive; handbacks at low tau do not imply recorded verdict change without refused captures."
+}
