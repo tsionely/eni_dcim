@@ -1,0 +1,80 @@
+{
+  "label": "phase7m-metrology-f4",
+  "created_utc": "20260720T142941",
+  "code_commit": "a257a4d7cd99b0faf9d50d7f08426e4b5b42bc0b",
+  "metrology_only": true,
+  "items": [
+    {
+      "kind": "flight_flight.jsonl",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260720T142917-9aa0ef5c\\flight.jsonl",
+      "file": "20260720T142917-9aa0ef5c-flight.jsonl",
+      "bytes": 1224276
+    },
+    {
+      "kind": "flight_result.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260720T142917-9aa0ef5c\\result.json",
+      "file": "20260720T142917-9aa0ef5c-result.json",
+      "bytes": 497
+    },
+    {
+      "kind": "flight_params.json",
+      "source": "C:\\Users\\tsion\\Projects\\eni_dcim\\logs\\20260720T142917-9aa0ef5c\\params.json",
+      "file": "20260720T142917-9aa0ef5c-params.json",
+      "bytes": 3692
+    },
+    {
+      "kind": "config_snapshot",
+      "source": "gen",
+      "file": "config_snapshot.json",
+      "bytes": 265
+    },
+    {
+      "kind": "recording_slice",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase7m_f4_slices\\20260720T142917-9aa0ef5c_takeoff_to_end.aigprec",
+      "file": "20260720T142917-9aa0ef5c_takeoff_to_end.aigprec",
+      "bytes": 12824391
+    },
+    {
+      "kind": "summary",
+      "source": "gen",
+      "file": "summary.json",
+      "bytes": 1402
+    },
+    {
+      "kind": "verify",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase7m_metrology_f4_select.json",
+      "file": "track_verification\\phase7m_metrology_f4_select.json",
+      "bytes": 1020
+    },
+    {
+      "kind": "verify",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_status\\phase7m_metrology_f4_race.json",
+      "file": "track_verification\\phase7m_metrology_f4_race.json",
+      "bytes": 216
+    },
+    {
+      "kind": "verify",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase7m_metrology_f4\\phase7m_metrology_f4_eventlist.png",
+      "file": "track_verification\\phase7m_metrology_f4_eventlist.jpg",
+      "bytes": 67329
+    },
+    {
+      "kind": "verify",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase7m_metrology_f4\\phase7m_metrology_f4_race_dialog.png",
+      "file": "track_verification\\phase7m_metrology_f4_race_dialog.jpg",
+      "bytes": 26791
+    },
+    {
+      "kind": "verify",
+      "source": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\phase7m_metrology_f4\\phase7m_metrology_f4_verify_after_race.png",
+      "file": "track_verification\\phase7m_metrology_f4_verify_after_race.jpg",
+      "bytes": 59440
+    },
+    {
+      "kind": "notes",
+      "source": "manual",
+      "file": "notes.md",
+      "bytes": 790
+    }
+  ]
+}
