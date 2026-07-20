@@ -82,9 +82,25 @@ paired delta existed.
 
 ## 4. Mask and accounting requirements (binding on the artifact)
 
+(Third amendment, still pre-evidence: this section previously
+demanded an explanation of "why 16 owner-term rows yield 13
+new-command rows" — the WITHDRAWN row mask surviving as a normative
+requirement. Removed: 13 was obtained by treating numeric zero as
+absence. The count 13 may appear ONLY as a labeled LEGACY
+TRACE-LEVEL COUNT — produced by incorrectly treating zero as
+absence — and must not define support, the verdict denominator, or
+any acceptance requirement.)
+
 The re-score publishes: the exact formula and conventions; the
-old/new selection masks and why 16 owner-term rows yield 13
-new-command rows; the provenance of the historical count 28; paired
-counts on identical eligible timestamps; approach-level summaries
-(never row pseudo-replication); and the criterion commit hash of
-THIS file beside the evidence commit.
+old/new event-selection masks in COMMAND-EVENT terms (16 trace rows
+-> 9 unique command events -> 7 sign-evaluable + 2 zero-command
+nonviolations, per §1's layering); the provenance of the historical
+count 28 — reconstructed, or declared unreconstructible from the
+identified historical harness with the harness evidence shown;
+paired counts on the identical COMMAND-EVENT KEY
+(flight_id, trial, mono_ns) — never trace-row timestamps;
+approach-level summaries (never row pseudo-replication); and the
+criterion commit hash of THIS file beside the evidence commit.
+Wherever earlier sections say paired "row set" or "same timestamp",
+the verdict unit is the unique command event at its exact event
+key; trace rows persist for provenance only.

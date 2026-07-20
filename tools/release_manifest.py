@@ -40,6 +40,12 @@ REQUIRED_FIELDS = (
     "independent_unit", "independent_n", "result", "status",
 )
 
+# Closed accounting-mode enum: mode -> equation(row, attempted,
+# analyzable) that must hold. Extend ONLY by committed change here.
+ACCOUNTING_MODES = {
+    "analyzable": lambda row, att, ana: row.get("independent_n") == ana,
+}
+
 
 def _sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -110,6 +116,26 @@ def check_manifest(manifest_path: str | Path,
         if head != tip_full:
             failures.append(f"HEAD ({head[:12]}) is not the reviewed "
                             f"tip ({tip_full[:12]})")
+        # Manifest self-binding (channel-2 §5): the manifest ITSELF
+        # must be the exact file stored at the reviewed tip — an
+        # ignored or external manifest never appears as a dirty
+        # tracked change, so clean-tree alone cannot catch it.
+        try:
+            rel = manifest_path.resolve().relative_to(repo.resolve())
+        except ValueError:
+            failures.append("manifest is not repository-relative — "
+                            "it cannot be committed-byte-bound")
+            rel = None
+        if rel is not None:
+            at_tip = _sha256_at_commit(repo, reviewed_tip,
+                                       rel.as_posix())
+            if at_tip is None:
+                failures.append(f"manifest absent at the reviewed "
+                                f"tip: {rel.as_posix()}")
+            elif at_tip != _sha256(manifest_path):
+                failures.append("manifest bytes differ from the "
+                                "committed manifest at the reviewed "
+                                "tip")
     try:
         rows = json.loads(manifest_path.read_text())
     except (OSError, json.JSONDecodeError) as e:
@@ -219,13 +245,23 @@ def check_manifest(manifest_path: str | Path,
                     and 0 <= ana <= att):
                 failures.append(f"{rid}: analyzable_n must be an int "
                                 "with 0 <= analyzable_n <= attempted_n")
-            elif (row.get("accounting_mode", "analyzable")
-                    == "analyzable" and row.get("independent_n") != ana):
-                failures.append(f"{rid}: independent_n "
-                                f"({row.get('independent_n')}) != "
-                                f"analyzable_n ({ana}) — declare a "
-                                "typed accounting_mode if the relation "
-                                "is legitimately different")
+            else:
+                # CLOSED ENUM (channel-2 §4.1): an unknown mode fails
+                # closed — the field is a type, never an escape hatch.
+                # Every permitted mode carries a machine-enforced
+                # equation; new modes enter by committed checker
+                # change, not by novel strings.
+                mode = row.get("accounting_mode", "analyzable")
+                if mode not in ACCOUNTING_MODES:
+                    failures.append(f"{rid}: unknown accounting_mode "
+                                    f"'{mode}' — permitted: "
+                                    f"{sorted(ACCOUNTING_MODES)}")
+                elif not ACCOUNTING_MODES[mode](row, att, ana):
+                    failures.append(f"{rid}: independent_n "
+                                    f"({row.get('independent_n')}) "
+                                    f"violates mode '{mode}' equation "
+                                    f"(attempted {att}, analyzable "
+                                    f"{ana})")
         if (_commit_exists(repo, row["criterion_registered_at"])
                 and _commit_exists(repo, row["generator_commit"])
                 and not _is_ancestor(repo, row["criterion_registered_at"],
