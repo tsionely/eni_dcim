@@ -1,0 +1,10 @@
+TEST-SUITE TRANSCRIPT v2 — generated at an ALREADY-PUSHED tip (rebase-drift class closed)
+invocation: python -m pytest tests/unit -q
+reviewed tip (full hash): bb998ae2a5edf79f7b2431b6b8388d496a76a522
+remote verification at generation time: origin/main = bb998ae2a5edf79f7b2431b6b8388d496a76a522 (identical: yes)
+environment: Python 3.11.15, Linux 6.18.5
+--- git status --porcelain (empty = clean) ---
+--- output tail ---
+.......................................................................  [100%]
+215 passed in 21.03s
+exit status: 0

@@ -1,0 +1,8 @@
+CHECKER TRANSCRIPT v5 — evidence packet 5c69823, generated at an ALREADY-PUSHED tip
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json bb998ae2a5edf79f7b2431b6b8388d496a76a522
+reviewed tip (full hash): bb998ae2a5edf79f7b2431b6b8388d496a76a522
+remote verification at generation time: origin/main = bb998ae2a5edf79f7b2431b6b8388d496a76a522
+--- git status --porcelain (empty = clean) ---
+--- output ---
+MANIFEST VERIFIES (RELEASE-GRADE)
+exit status: 0
