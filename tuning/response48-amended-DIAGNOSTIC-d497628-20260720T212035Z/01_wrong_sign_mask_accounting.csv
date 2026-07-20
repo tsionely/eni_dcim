@@ -1,0 +1,8 @@
+layer,rows,unique_events,selection
+all_trace_rows,172,100,all DIAGNOSTIC_r26_1_anchor_trial_rows rows
+legacy_term_rows,108,56,shadow_owner == 'term'
+legacy_28_formula_rows,28,28,legacy formula positive over legacy_term_rows
+traceability_term_side_with_new_command,16,9,"shadow_owner == 'term', active_source == SIDE_PAIR, shadow_vz_cmd_new_mps populated"
+command_event_support,9,9,"unique (flight_id, trial, mono_ns); fed=True row selected when duplicated"
+sign_evaluable_events,7,7,command events with abs(new_cmd)>0.02
+zero_neutral_on_support,2,2,numeric zero/neutral commands remain on support and score as nonviolations

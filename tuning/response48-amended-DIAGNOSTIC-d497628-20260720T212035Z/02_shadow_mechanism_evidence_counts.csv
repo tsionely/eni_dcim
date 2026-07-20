@@ -1,0 +1,5 @@
+target_set,approaches_listed,approaches_analyzable,b0_new_abs_max_mps,b0_new_median_mps,note
+discovery_overlap_3,3,3,0.2305251782459188,0.01589504364853899,"mechanism evidence counted in approaches, never rows"
+confirmatory_20,20,20,0.8588192627189799,-0.0043195964256544095,"mechanism evidence counted in approaches, never rows"
+pooled_23,23,23,0.8588192627189799,-0.0021071839143341764,"mechanism evidence counted in approaches, never rows"
+legacy_discovery_appendix_5_listed,5,3,0.2305251782459188,0.01589504364853899,"mechanism evidence counted in approaches, never rows"

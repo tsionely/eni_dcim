@@ -1,0 +1,2 @@
+flight_id,trial,paired_command_events,sign_evaluable_events,zero_neutral_events_on_support,old_wrong_sign_needed,new_wrong_sign_needed,new_excess_wrong_sign_events,equivalence_margin,wrong_sign_clause_result,old_opposition_to_velocity_events,new_opposition_to_velocity_events,opposition_to_velocity_rate_delta,opposition_to_velocity_note
+20260720T071112-cd18c5fb,anchor_drop_frame_304,9,7,2,0,0,0,0,PASS,2,2,0.0,telemetry descriptor only; no pass/fail semantics

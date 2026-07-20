@@ -1,0 +1,6 @@
+definition,path,rows,events,violations,status,formula
+legacy_harness_raw_e_meas_trace_rows,old_actual_applied,108,56,28,INVALID_TEST_WRONG_SUPPORT_AND_MASK,terminal_vz_up_mps vs e_meas; abs(e_meas)>0.03; trace rows as units
+registered_needed_correction_event_support,old_policy_forecast,9,9,0,PASS,shadow_vz_cmd_old_mps vs applied_e_z; abs both >0.02; event support
+registered_needed_correction_event_support,new_shadow_forecast,9,9,0,PASS,shadow_vz_cmd_new_mps vs applied_e_z; abs both >0.02; event support
+opposition_to_velocity_rate,old_policy_forecast,9,9,2,TELEMETRY_ONLY,shadow_vz_cmd_old_mps vs truth_vz_up_mps; descriptor only
+opposition_to_velocity_rate,new_shadow_forecast,9,9,2,TELEMETRY_ONLY,shadow_vz_cmd_new_mps vs truth_vz_up_mps; descriptor only
