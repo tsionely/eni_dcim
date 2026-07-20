@@ -163,46 +163,54 @@ def find_pass_t(log: dict) -> tuple[float | None, str]:
 
 
 def frozen_exit_bearing(log: dict, t_pass: float) -> dict | None:
-    """Median travel direction in final EXIT_WINDOW_S before pass.
+    """Frozen exit bearing in the SAME frame as detection bearings.
 
-    Prefer setpoint v_body xy during commit; fallback state v_world xy.
+    Detection bearings are camera-forward: atan2(tx, tz). Body FRD maps
+    as x≈cam-z, y≈cam-x, so travel bearing atan2(v_by, v_bx) is
+    commensurate. NEVER use v_world (NED) — that scrambled Q99 to ~160°.
+
+    Prefer: (1) body travel from setpoints, (2) gate-1 LOS from state
+    (straight-dash proxy), both in the final EXIT_WINDOW_S.
     """
-    samples = []
+    travel = []
     for sp in log["setpoints"]:
         if t_pass - EXIT_WINDOW_S <= sp["t_ff"] <= t_pass and sp.get("v_body"):
             vx, vy = sp["v_body"][0], sp["v_body"][1]
-            speed = math.hypot(vx, vy)
-            if speed > 0.3:
-                # body: x forward, y right → bearing of travel
-                samples.append(float(np.degrees(np.arctan2(vy, vx))))
-    if len(samples) < 3:
-        for s in log["states"]:
-            if t_pass - EXIT_WINDOW_S <= s["t_ff"] <= t_pass:
-                vw = s["v_world"]
-                speed = math.hypot(vw[0], vw[1])
-                if speed > 0.3:
-                    samples.append(float(np.degrees(np.arctan2(vw[1], vw[0]))))
-    if not samples:
-        # fallback: gate-1 LOS at pass (approach bearing ≈ exit for straight dash)
-        for s in reversed(log["states"]):
-            if s["t_ff"] > t_pass:
-                continue
+            # FORWARD only — retreat (vx<0) yields ~±180° and poisoned Q99
+            if vx > 0.5:
+                travel.append(float(np.degrees(np.arctan2(vy, vx))))
+    los = []
+    for s in log["states"]:
+        if t_pass - EXIT_WINDOW_S <= s["t_ff"] <= t_pass:
             gr = s.get("gate_rel")
             if gr is None:
                 continue
             t = gr["t"]
-            return {
-                "bearing_deg": bearing_deg(float(t[0]), float(t[2])),
-                "source": "gate1_los_fallback",
-                "n": 1,
-            }
-        return None
-    return {
-        "bearing_deg": float(np.median(samples)),
-        "source": "travel_median",
-        "n": len(samples),
-        "spread_deg": float(np.percentile(samples, 90) - np.percentile(samples, 10)),
-    }
+            if float(t[2]) > 0.05:
+                los.append(bearing_deg(float(t[0]), float(t[2])))
+    if len(travel) >= 3:
+        return {
+            "bearing_deg": float(np.median(travel)),
+            "source": "body_travel_median",
+            "n": len(travel),
+            "spread_deg": float(np.percentile(travel, 90)
+                                - np.percentile(travel, 10)),
+        }
+    if los:
+        return {
+            "bearing_deg": float(np.median(los)),
+            "source": "gate1_los_median",
+            "n": len(los),
+            "spread_deg": float(np.percentile(los, 90)
+                                - np.percentile(los, 10)) if len(los) > 1 else 0.0,
+        }
+    if travel:
+        return {
+            "bearing_deg": float(np.median(travel)),
+            "source": "body_travel_sparse",
+            "n": len(travel),
+        }
+    return None
 
 
 def pre_cross_gate2_visible(dets: list[dict], t_pass: float,
@@ -554,19 +562,27 @@ def main() -> int:
     visible = [r for r in ok if r.get("gate2_visible_pre_cross")]
     cross_errs = [r["abs_cross_error_deg"] for r in ok
                   if r.get("abs_cross_error_deg") is not None]
-    # Prefer errors from flights that actually saw gate 2
+    # Prefer errors from flights that actually saw gate 2 AND used a
+    # sane exit source (not retreat-poisoned).
+    def _sane(r):
+        src = (r.get("exit") or {}).get("source", "")
+        return "travel" in src or "los" in src
+
     cross_vis = [r["abs_cross_error_deg"] for r in visible
-                 if r.get("abs_cross_error_deg") is not None]
+                 if r.get("abs_cross_error_deg") is not None and _sane(r)]
     bank_errs = []
-    for r in ok:
+    for r in visible:
         bank_errs.extend(r.get("bank_abs_errors_deg") or [])
 
-    # Primary cone stats: use visible-subset if n>=3 else all
-    primary = cross_vis if len(cross_vis) >= 3 else cross_errs
+    # Primary: visible-only (the D7 population). Fallback: all sane.
+    cross_sane = [r["abs_cross_error_deg"] for r in ok
+                  if r.get("abs_cross_error_deg") is not None and _sane(r)]
+    primary = cross_vis if len(cross_vis) >= 3 else cross_sane
     stats = {
         "cross_errors": cone_stats(primary),
         "cross_errors_all_approaches": cone_stats(cross_errs),
         "cross_errors_visible_only": cone_stats(cross_vis),
+        "cross_errors_sane_exit": cone_stats(cross_sane),
         "bank_errors": cone_stats(bank_errs),
     }
     vis = {
