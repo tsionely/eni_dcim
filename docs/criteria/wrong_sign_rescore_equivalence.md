@@ -26,6 +26,20 @@ the new (shadow) path may introduce NO violation absent in the old
 path at the same timestamp. Any nonzero paired excess = regression
 flag; row 4 fails closed, no averaging, no rate argument.
 
+**Off-support disposition (amendment, registered while the re-score
+artifact still does not exist — channel-1 row question):** the
+common support is DEFINED by the disclosed 16->13 mask accounting.
+Rows outside it are not excused by lacking a pair:
+
+- a NEW-path violation on an off-support row ALSO fails row 4
+  closed — the safety criterion is absolute for the candidate path,
+  on support or off it;
+- an OLD-path violation on an off-support row is reported
+  descriptively (it informs the historical record; it cannot indict
+  or excuse the repair);
+- every off-support row is listed with the reason it left the
+  support, so the mask can never silently discard a violation.
+
 ## 2. Opposition-to-velocity rate (telemetry descriptor)
 
 Renamed per the ruling; carries NO pass/fail semantics. **No
