@@ -1,9 +1,9 @@
-"""L1 shadow-capture addendum replay for commit 04baee1.
+"""L1 shadow-capture + sigma-harvest addendum replay for commit 2aa8b9c.
 
 QA & MOCK-TUNER scope: recorded video replay only. This script reuses the
 fresh-video perception replay harness and then runs the current terminal
-observer + shadow ownership/admission logic over those feature rows. It writes
-only under tuning/.
+observer + shadow ownership/admission logic over both terminal feature topics:
+`feature` and `feature_side`. It writes only under tuning/.
 """
 from __future__ import annotations
 
@@ -47,14 +47,17 @@ def apply_patches(params: ParamSet, patches: list[str]) -> ParamSet:
     return params.patch(overrides) if overrides else params
 
 
+SOURCE_REF = "2aa8b9c"
+
+
 def source_commit() -> tuple[str, str, list[str]]:
     source = subprocess.check_output(
-        ["git", "rev-parse", "04baee1"],
+        ["git", "rev-parse", SOURCE_REF],
         cwd=ROOT,
         text=True,
     ).strip()
     changed = subprocess.check_output(
-        ["git", "diff", "--name-only", "04baee1..HEAD", "--", ".", ":!tuning"],
+        ["git", "diff", "--name-only", f"{SOURCE_REF}..HEAD", "--", ".", ":!tuning"],
         cwd=ROOT,
         text=True,
     ).splitlines()
@@ -129,8 +132,14 @@ def attach_setpoint_speeds(params: ParamSet, rows: list[dict],
 
 
 def overlap_stats(oracle: TerminalOracle, ts_s: float) -> tuple[int, float | None]:
-    deltas = [float(d) for t, d in getattr(oracle, "_overlap_deltas", [])
-              if ts_s - float(t) <= 0.5]
+    pairs = list(getattr(oracle, "_overlap_deltas", []))
+    if not pairs:
+        return 0, None
+    i = len(pairs) - 1
+    while i > 0 and float(pairs[i][0]) - float(pairs[i - 1][0]) <= 0.12:
+        i -= 1
+    tail = pairs[i:]
+    deltas = [float(d) for _, d in tail if ts_s - float(tail[-1][0]) <= 0.12]
     if not deltas:
         return 0, None
     return len(deltas), statistics.median(deltas)
@@ -221,13 +230,14 @@ def replay_shadow_capture(params: ParamSet, rows: list[dict],
         if r is not None and r <= 2.0 and first_below_2_ts is None:
             first_below_2_ts = float(row["t_rel_s"])
         fed = should_feed_feature(row, opts, first_below_2_ts)
-        e_meas = fnum(row.get("e_meas")) if fed else None
+        e_meas_raw = fnum(row.get("e_meas")) if fed else None
         source_valid = (
             fed
-            and e_meas is not None
+            and e_meas_raw is not None
             and row.get("cert_status") == "certified"
             and row.get("feature_mode") in ("FULL_QUAD", "SIDE_PAIR")
         )
+        e_meas = e_meas_raw if source_valid else None
         active_sample = False
         ts_s = float(row["feature_ts_ns"]) / 1e9
         if e_meas is not None:
@@ -253,10 +263,15 @@ def replay_shadow_capture(params: ParamSet, rows: list[dict],
             transitions.append(transition_row)
             prev_source = oracle.active_source
 
-        metrics = admission_metrics(params, oracle, row)
+        decision_row = dict(row)
+        if not active_sample:
+            decision_row["e_meas"] = ""
+        metrics = admission_metrics(params, oracle, decision_row)
         admission_score = fnum(metrics.get("admission_score"))
         first_capture_ok = (
             source_valid
+            and row.get("topic", "feature") == "feature"
+            and row.get("feature_mode") == "FULL_QUAD"
             and oracle.ready()
             and oracle.active_source == "FULL_QUAD"
             and admission_score is not None
@@ -264,7 +279,8 @@ def replay_shadow_capture(params: ParamSet, rows: list[dict],
         )
         maintain_ok = arbiter.owner == TERM_OWNER and source_valid
         capture_certified = first_capture_ok or maintain_ok
-        arbiter.note_exposure(source_valid)
+        if row.get("topic", "feature") == "feature":
+            arbiter.note_exposure(source_valid)
         phase = "position" if opts.force_position_phase else str(row.get("phase") or "")
         owner = arbiter.tick(
             commit_active=True,
@@ -374,6 +390,139 @@ def summarize_shadow(timeline: list[dict], transitions: list[dict]) -> list[dict
     return out
 
 
+RANGE_BINS = [
+    ("3p0-3p5", 3.0, 3.5),
+    ("2p5-3p0", 2.5, 3.0),
+    ("2p0-2p5", 2.0, 2.5),
+    ("1p5-2p0", 1.5, 2.0),
+    ("1p0-1p5", 1.0, 1.5),
+    ("0p5-1p0", 0.5, 1.0),
+    ("lt0p5", -float("inf"), 0.5),
+]
+
+
+def range_bin(value: float | None) -> str:
+    if value is None:
+        return "unknown"
+    for label, lo, hi in RANGE_BINS:
+        if lo <= value < hi:
+            return label
+    return "gte3p5"
+
+
+def rms_centered(values: list[float]) -> float | None:
+    vals = [v for v in values if math.isfinite(v)]
+    if len(vals) < 2:
+        return None
+    m = statistics.fmean(vals)
+    return math.sqrt(statistics.fmean([(v - m) ** 2 for v in vals]))
+
+
+def sample_std(values: list[float]) -> float | None:
+    vals = [v for v in values if math.isfinite(v)]
+    return statistics.stdev(vals) if len(vals) >= 2 else None
+
+
+def sigma_harvest(rows: list[dict]) -> tuple[list[dict], list[dict]]:
+    full = [
+        r for r in rows
+        if r.get("feature_mode") == "FULL_QUAD"
+        and r.get("cert_status") == "certified"
+        and fnum(r.get("e_meas")) is not None
+    ]
+    side = [
+        r for r in rows
+        if r.get("feature_mode") == "SIDE_PAIR"
+        and r.get("cert_status") == "certified"
+        and fnum(r.get("e_meas")) is not None
+    ]
+    full_by_flight: dict[str, list[dict]] = {}
+    for row in full:
+        full_by_flight.setdefault(row["flight"], []).append(row)
+    pairs = []
+    for row in side:
+        st = float(row["feature_ts_ns"]) / 1e9
+        candidates = []
+        for frow in full_by_flight.get(row["flight"], []):
+            dt = abs(st - float(frow["feature_ts_ns"]) / 1e9)
+            if dt <= 0.15:
+                candidates.append((dt, frow))
+        if not candidates:
+            continue
+        dt, frow = min(candidates, key=lambda x: x[0])
+        rng = fnum(row.get("range_z_m"))
+        residual = float(row["e_meas"]) - float(frow["e_meas"])
+        pairs.append({
+            "cohort": row.get("cohort", "primary"),
+            "flight": row["flight"],
+            "side_frame_id": row["frame_id"],
+            "full_frame_id": frow["frame_id"],
+            "side_topic": row.get("topic", ""),
+            "full_topic": frow.get("topic", ""),
+            "side_ts_s": st,
+            "full_ts_s": float(frow["feature_ts_ns"]) / 1e9,
+            "dt_s": dt,
+            "range_z_m": rng if rng is not None else "",
+            "range_bin": range_bin(rng),
+            "side_e_z": row["e_meas"],
+            "full_e_z": frow["e_meas"],
+            "residual_e_m": residual,
+        })
+
+    summary = []
+    groups: list[tuple[str, str, list[dict]]] = []
+    for cohort in sorted({p["cohort"] for p in pairs} or {"primary"}):
+        cr = [p for p in pairs if p["cohort"] == cohort]
+        groups.append((cohort, "all", cr))
+        for label, _, _ in RANGE_BINS:
+            groups.append((cohort, label, [p for p in cr if p["range_bin"] == label]))
+    for cohort, label, group in groups:
+        residuals = [float(p["residual_e_m"]) for p in group]
+        derivs = []
+        for flight in sorted({p["flight"] for p in group}):
+            fr = sorted([p for p in group if p["flight"] == flight],
+                        key=lambda p: float(p["side_ts_s"]))
+            for a, b in zip(fr, fr[1:]):
+                dt = float(b["side_ts_s"]) - float(a["side_ts_s"])
+                if 1e-3 < dt <= 0.25:
+                    derivs.append((float(b["residual_e_m"])
+                                   - float(a["residual_e_m"])) / dt)
+        summary.append({
+            "cohort": cohort,
+            "range_bin": label,
+            "n": len(group),
+            "bias_e_m": statistics.fmean(residuals) if residuals else "",
+            "sigma_e_m": rms_centered(residuals) if len(residuals) >= 2 else "",
+            "std_e_m": sample_std(residuals) if len(residuals) >= 2 else "",
+            "sigma_v_mps": rms_centered(derivs) if len(derivs) >= 2 else "",
+            "std_v_mps": sample_std(derivs) if len(derivs) >= 2 else "",
+            "n_v_pairs": len(derivs),
+        })
+    return pairs, summary
+
+
+def discover_recent_targets() -> list[dict]:
+    tags = ("phase6h", "phase6i", "phase6j", "phase6k", "phase6l")
+    targets = []
+    for folder in sorted((ROOT / "fixtures").iterdir()):
+        if not folder.is_dir() or not any(tag in folder.name for tag in tags):
+            continue
+        for result_path in sorted(folder.glob("*-result.json")):
+            flight_id = result_path.name[:-12]
+            rec_path = folder / f"{flight_id}_takeoff_to_end.aigprec"
+            log_path = folder / f"{flight_id}-flight.jsonl"
+            if not rec_path.exists() or not log_path.exists():
+                continue
+            targets.append({
+                "label": flight_id,
+                "flight_id": flight_id,
+                "recording": str(rec_path.relative_to(ROOT)),
+                "log": str(log_path.relative_to(ROOT)),
+                "contact_offset_m": 0.162,
+            })
+    return targets
+
+
 def write_report(out_dir: Path, summary: dict) -> None:
     lines = [
         "# L1 Shadow Capture Addendum",
@@ -382,7 +531,7 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "Scope: recorded video replay only; no real simulator was launched, reset, clicked, or commanded.",
         f"Source commit under test: `{summary['commit']}`.",
         f"Repo HEAD while running: `{summary['repo_head']}`.",
-        f"Non-tuning delta from `04baee1`: `{summary['non_tuning_delta_from_04baee1']}`.",
+        f"Non-tuning delta from `{SOURCE_REF}`: `{summary['non_tuning_delta_from_source']}`.",
         f"Runtime patches: `{summary['patches'] or []}`.",
         "",
         "## Inputs",
@@ -390,9 +539,10 @@ def write_report(out_dir: Path, summary: dict) -> None:
     ]
     for meta in summary["flight_meta"]:
         lines.append(
-            f"- `{meta['flight']}` `{meta['flight_id']}`: "
+            f"- `{meta.get('cohort', 'primary')}` `{meta['flight']}` `{meta['flight_id']}`: "
             f"{meta['frames']} frames, detector fixes {meta['raw_detector_fixes']}, "
-            f"tracker fixes {meta['tracker_fixes']}, feature rows {meta['feature_rows']}."
+            f"tracker fixes {meta['tracker_fixes']}, feature rows {meta['feature_rows']}, "
+            f"feature_side rows {meta.get('feature_side_rows', 0)}."
         )
     lines.extend([
         "",
@@ -424,6 +574,17 @@ def write_report(out_dir: Path, summary: dict) -> None:
             )
     else:
         lines.append("No full->side source transition was observed.")
+    lines.extend(["", "## Earned Sigma Row", ""])
+    lines.append("| Cohort | Range bin | n | bias_e | sigma_e | sigma_v | n_v |")
+    lines.append("|---|---|---:|---:|---:|---:|---:|")
+    for row in summary["sigma_summary"]:
+        if row["range_bin"] != "all" and row["n"] == 0:
+            continue
+        lines.append(
+            f"| `{row['cohort']}` | `{row['range_bin']}` | {row['n']} | "
+            f"{fmt(row['bias_e_m'])} | {fmt(row['sigma_e_m'])} | "
+            f"{fmt(row['sigma_v_mps'])} | {row['n_v_pairs']} |"
+        )
     lines.extend([
         "",
         "## Verdict",
@@ -432,7 +593,8 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "",
         "Artifacts: `features.csv`, `observer_timeline.csv`, `shadow_capture_timeline.csv`, "
         "`shadow_capture_summary.csv`, `shadow_source_transitions.csv`, "
-        "`observer_source_transitions.csv`, and `summary.json`.",
+        "`observer_source_transitions.csv`, `earned_sigma_pairs.csv`, "
+        "`earned_sigma_summary.csv`, and `summary.json`.",
     ])
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -442,42 +604,63 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--patch", action="append", default=[])
     parser.add_argument("--include-f6", action="store_true",
                         help="Include the third live phase6l flight if present.")
+    parser.add_argument("--sweep-recent", action="store_true",
+                        help="Also replay the 29 recent phase6h-phase6l recordings.")
     args = parser.parse_args(argv)
 
     assert_mock_safe()
     head, head_short = git_head()
     src_head, src_short, source_delta = source_commit()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_dir = ROOT / "tuning" / f"l1-shadow-capture-{src_short}-{head_short}-{stamp}"
+    out_dir = ROOT / "tuning" / f"l1-full-addendum-{src_short}-{head_short}-{stamp}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     params = apply_patches(ParamSet.load(ROOT / "config" / "params_default.json"),
                            args.patch)
-    targets = list(TARGETS)
+    target_groups: list[tuple[str, list[dict]]] = [("primary_f2_f4", list(TARGETS))]
     if args.include_f6:
-        targets.append({
+        target_groups[0][1].append({
             "label": "F6",
             "flight_id": "20260720T071545-cd18c5fb",
             "recording": "fixtures/20260720T071602-phase6l-cohort-3/20260720T071545-cd18c5fb_takeoff_to_end.aigprec",
             "log": "fixtures/20260720T071602-phase6l-cohort-3/20260720T071545-cd18c5fb-flight.jsonl",
             "contact_offset_m": 0.162,
         })
+    if args.sweep_recent:
+        target_groups.append(("sweep29", discover_recent_targets()))
 
     all_features = []
     metas = []
-    for target in targets:
-        rows, meta = run_video_replay(params, target)
-        all_features.extend(rows)
-        metas.append(meta)
-    attach_setpoint_speeds(params, all_features, targets)
+    speed_targets = []
+    for cohort, targets in target_groups:
+        for target in targets:
+            rows, meta = run_video_replay(params, target)
+            for row in rows:
+                row["cohort"] = cohort
+            meta["cohort"] = cohort
+            all_features.extend(rows)
+            speed_targets.append(target)
+            metas.append(meta)
+    attach_setpoint_speeds(params, all_features, speed_targets)
+    for row in all_features:
+        row.setdefault("cohort", "primary_f2_f4")
     write_csv(out_dir / "features.csv", all_features)
+
+    sigma_pairs, sigma_summary = sigma_harvest(all_features)
+    write_csv(out_dir / "earned_sigma_pairs.csv", sigma_pairs)
+    write_csv(out_dir / "earned_sigma_summary.csv", sigma_summary)
 
     observer = []
     observer_transitions = []
-    for flight in sorted({r["flight"] for r in all_features}):
-        flight_rows = [r for r in all_features if r["flight"] == flight]
+    for cohort, flight in sorted({(r.get("cohort", ""), r["flight"]) for r in all_features}):
+        flight_rows = [r for r in all_features
+                       if r.get("cohort", "") == cohort and r["flight"] == flight]
         tl, tr = replay_oracle_from_rows(params, flight_rows,
                                          ReplayOptions("baseline"))
+        for row in tl:
+            row["cohort"] = cohort
+        for row in tr:
+            row["cohort"] = cohort
         observer.extend(tl)
         observer_transitions.extend(tr)
     write_csv(out_dir / "observer_timeline.csv", observer)
@@ -520,10 +703,11 @@ def main(argv: list[str] | None = None) -> int:
     summary = {
         "commit": src_head,
         "repo_head": head,
-        "non_tuning_delta_from_04baee1": source_delta,
+        "non_tuning_delta_from_source": source_delta,
         "patches": args.patch,
         "flight_meta": metas,
         "observer_transitions": observer_transitions,
+        "sigma_summary": sigma_summary,
         "shadow_summary": shadow_summary,
         "shadow_transitions": shadow_transitions,
         "verdict": verdict,

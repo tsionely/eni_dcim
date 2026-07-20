@@ -260,7 +260,11 @@ def replay_oracle_from_rows(params: ParamSet, rows: list[dict],
         if r is not None and r <= 2.0 and first_below_2_ts is None:
             first_below_2_ts = float(row["t_rel_s"])
         fed = should_feed_feature(row, opts, first_below_2_ts)
-        e_meas = fnum(row.get("e_meas")) if fed else None
+        e_meas = fnum(row.get("e_meas")) if (
+            fed
+            and row.get("cert_status") == "certified"
+            and row.get("feature_mode") in ("FULL_QUAD", "SIDE_PAIR")
+        ) else None
         if e_meas is not None:
             oracle.observe(float(row["feature_ts_ns"]) / 1e9, e_meas,
                            source=row["feature_mode"])
@@ -354,6 +358,8 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
 
     detector = HsvGateDetector(params)
     tracker = GateCloseTracker(params, detector)
+    parallel_below_m = float(params.get("perception.close_tracker.parallel_below_m",
+                                        default=3.5))
     est = StateEstimator(params)
     est.set_level_reference(level_roll, level_pitch)
     est.attitude.set_attitude_euler(level_roll, level_pitch)
@@ -368,6 +374,7 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
     last_full_mono = None
     raw_detector_fixes = 0
     tracker_fixes = 0
+    feature_side_rows = 0
     center_only = 0
     for kind, mono, payload in events:
         if kind == "imu":
@@ -382,7 +389,7 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
             and state_before.gate_rel_age_s < 1.0 else None
         frame = CameraFrame(frame_id=int(fid), ts_ns=int(sim_ns), image=img)
         det = detector.detect(frame, prior)
-        emitted: list[tuple[str, TerminalFeature, object]] = []
+        emitted: list[tuple[str, str, TerminalFeature, object]] = []
         center_hint = None
 
         if det is not None and det.rel_pose is not None:
@@ -398,7 +405,15 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
             est.update_vision(det)
             feat = feature_from_full(det) if anchored else None
             if feat is not None:
-                emitted.append(("detector", feat, det))
+                emitted.append(("feature", "detector", feat, det))
+            if (anchored and tracker.enabled and det.rel_pose is not None
+                    and float(det.rel_pose.t[2]) <= parallel_below_m):
+                tracked_side = tracker.track(frame, det.rel_pose,
+                                             center_hint_px=det.center_px)
+                if tracked_side is not None and tracker.last_feature is not None:
+                    feature_side_rows += 1
+                    emitted.append(("feature_side", "tracker_parallel",
+                                    tracker.last_feature, tracked_side))
         elif det is not None:
             center_only += 1
             center_hint = det.center_px
@@ -412,9 +427,9 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
                 tracker_fixes += 1
                 est.update_vision(tracked)
                 if tracker.last_feature is not None:
-                    emitted.append(("tracker", tracker.last_feature, tracked))
+                    emitted.append(("feature", "tracker", tracker.last_feature, tracked))
 
-        for source, feat, used_det in emitted:
+        for topic, source, feat, used_det in emitted:
             state = est.state
             e_meas, reject = feature_e_meas(params, state, feat)
             r_z = gate_range_z(state)
@@ -426,6 +441,7 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
                 "mono_ns": int(mono),
                 "t_rel_s": (int(mono) - t0) / 1e9,
                 "feature_ts_ns": int(feat.ts_ns),
+                "topic": topic,
                 "phase": phase,
                 "commit": phase == "commit",
                 "source": source,
@@ -459,6 +475,7 @@ def run_video_replay(params: ParamSet, target: dict) -> tuple[list[dict], dict]:
         "imu_samples": len(imu),
         "raw_detector_fixes": raw_detector_fixes,
         "tracker_fixes": tracker_fixes,
+        "feature_side_rows": feature_side_rows,
         "center_only_detections": center_only,
         "feature_rows": len(rows),
         "level_roll": level_roll,
