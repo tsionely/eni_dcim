@@ -25,10 +25,9 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tuning"))
 
-from run_l1_perception_replay import assert_mock_safe  # noqa: E402
-
 SOURCE_DIR = ROOT / "tuning" / "ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z"
 OUT_PREFIX = "adjudicative-regeneration-DIAGNOSTIC"
+LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 
 SHADOW_CRITERION = ROOT / "docs" / "criteria" / "shadow_fit_decision_structure.md"
 WRONG_SIGN_CRITERION = ROOT / "docs" / "criteria" / "wrong_sign_rescore_equivalence.md"
@@ -90,6 +89,25 @@ def is_ancestor(older: str, newer: str) -> bool:
         cwd=ROOT,
         capture_output=True,
     ).returncode == 0
+
+
+def assert_mock_safe() -> None:
+    if LOCK_PATH.exists():
+        raise SystemExit(f"SIM lock exists; refusing CSV report generation: {LOCK_PATH}")
+    try:
+        out = subprocess.check_output(
+            [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-Process FlightSim,DCGame -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Id",
+            ],
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        out = ""
+    if out.strip():
+        raise SystemExit(f"FlightSim/DCGame process visible; refusing CSV report generation: {out.strip()}")
 
 
 def last_commit_for(path: Path) -> str:
