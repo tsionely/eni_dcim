@@ -32,8 +32,13 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-OUT_DIR = ROOT / "tuning" / f"terminal-ab-be0c779-{HEAD_SHORT}-{RUN_STAMP}"
-RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"terminal-ab-be0c779-{HEAD_SHORT}-{RUN_STAMP}"
+OUT_DIR = ROOT / "tuning" / f"terminal-ab-e16d506-{HEAD_SHORT}-{RUN_STAMP}"
+RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"terminal-ab-e16d506-{HEAD_SHORT}-{RUN_STAMP}"
+
+BASE_PATCHES = {
+    "safety.imu_stale_s": 0.25,
+}
+CALIBRATION: dict = {}
 
 
 ARMS = [
@@ -165,6 +170,9 @@ def _state_from_data(data: dict) -> dict | None:
         true_dz = true_world_dz(rel, q_att, level_roll, level_pitch)
     except Exception:
         true_dz = float("nan")
+    pitch_t = float(np.arcsin(np.clip(
+        2.0 * (q_att[0] * q_att[2] - q_att[3] * q_att[1]), -1.0, 1.0
+    ))) + level_pitch
     center = data.get("gate_center_px") or [None, None]
     return {
         "ts_ns": int(data.get("ts_ns", 0)),
@@ -172,6 +180,7 @@ def _state_from_data(data: dict) -> dict | None:
         "lateral_m": float(t[0]),
         "camera_y_down_m": float(t[1]),
         "true_dz_m": float(true_dz),
+        "pitch_t_rad": float(pitch_t),
         "gate_age_s": _f(data.get("gate_rel_age_s")),
         "center_x_px": _f(center[0]) if len(center) > 0 else None,
         "center_y_px": _f(center[1]) if len(center) > 1 else None,
@@ -201,6 +210,18 @@ def _std(values: list[float]) -> float | None:
     return float(np.std(vals, ddof=0)) if vals else None
 
 
+def _visible_scale_gate_reject(feature: dict | None, state: dict | None) -> bool:
+    if feature is None or state is None:
+        return False
+    if feature.get("cert_status") not in ("certified", "probation"):
+        return False
+    span = _f(feature.get("span_px"))
+    range_m = _f(state.get("range_m"))
+    if span is None or range_m is None or span <= 1.0 or range_m < 0.5:
+        return False
+    return not (300.0 <= span * range_m <= 800.0)
+
+
 def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, list[str]]:
     counts = {
         "term_rows": 0,
@@ -225,13 +246,16 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         "detection_certified_rows": 0,
         "detection_probation_rows": 0,
         "detection_none_rows": 0,
+        "visible_scale_gate_reject_rows": 0,
+        "capture_by_2p2": 0,
     }
     e_values: list[float] = []
     vz_values: list[float] = []
     vbz_values: list[float] = []
     states: list[dict] = []
-    term_records: list[tuple[dict, dict | None]] = []
+    term_records: list[tuple[dict, dict | None, dict | None]] = []
     feature_ts: set[int] = set()
+    last_feature: dict | None = None
     anomalies: list[str] = []
     flight_dir = Path(log_dir)
     if not flight_dir.exists():
@@ -245,6 +269,7 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
                 states.append(state)
             continue
         if topic == "feature":
+            last_feature = data
             counts["feature_rows"] += 1
             cert = data.get("cert_status", "none")
             if cert == "certified":
@@ -269,7 +294,8 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         if topic != "term_status":
             continue
         state = _nearest_state(states, int(data.get("ts_ns", 0)))
-        term_records.append((data, state))
+        feature = dict(last_feature) if last_feature is not None else None
+        term_records.append((data, state, feature))
         counts["term_rows"] += 1
         engaged = bool(data.get("engaged"))
         ready = bool(data.get("ready"))
@@ -297,6 +323,8 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
             vz_values.append(float(data["vz_up"]))
         if data.get("v_bz_applied") is not None:
             vbz_values.append(float(data["v_bz_applied"]))
+        if _visible_scale_gate_reject(feature, state):
+            counts["visible_scale_gate_reject_rows"] += 1
     counts["unique_feature_ts"] = len(feature_ts)
     states.sort(key=lambda s: s["ts_ns"])
     closest = min(states, key=lambda s: abs(s["range_m"])) if states else None
@@ -321,10 +349,11 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
     first_ready_idx = None
     first_owner_idx = None
     first_applied_idx = None
+    scale_rejects_seen = 0
     ranges_by_flag: dict[str, list[float]] = {
         "engaged": [], "ready": [], "engaged_ready": [], "owner": [], "applied": []
     }
-    for idx, (data, state) in enumerate(term_records):
+    for idx, (data, state, feature) in enumerate(term_records):
         owner = data.get("owner", "")
         engaged = bool(data.get("engaged"))
         ready = bool(data.get("ready"))
@@ -332,6 +361,8 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         e_z = _f(data.get("e_z"))
         vz_up = _f(data.get("vz_up"))
         v_bz = _f(data.get("v_bz_applied"))
+        if _visible_scale_gate_reject(feature, state):
+            scale_rejects_seen += 1
         if prev_owner is not None and owner != prev_owner:
             counts["owner_transitions"] += 1
             if prev_owner == "term" and engaged and ready:
@@ -341,6 +372,12 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
             first_ready_idx = idx
         if owner_term and first_owner_idx is None:
             first_owner_idx = idx
+            if state is not None:
+                counts["first_capture_range_m"] = state["range_m"]
+                counts["capture_by_2p2"] = int(state["range_m"] >= 2.2)
+            counts["e_z_at_capture"] = e_z if e_z is not None else ""
+            counts["v_bz_at_capture"] = v_bz if v_bz is not None else ""
+            counts["scale_gate_reject_rows_before_capture"] = scale_rejects_seen
         if v_bz is not None and first_applied_idx is None:
             first_applied_idx = idx
         if saw_applied and not ready and saw_ready_after_applied:
@@ -380,6 +417,10 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         counts[f"first_{key}_range_m"] = values[0] if values else ""
         counts[f"min_{key}_range_m"] = min(values) if values else ""
         counts[f"max_{key}_range_m"] = max(values) if values else ""
+    counts.setdefault("first_capture_range_m", "")
+    counts.setdefault("e_z_at_capture", "")
+    counts.setdefault("v_bz_at_capture", "")
+    counts.setdefault("scale_gate_reject_rows_before_capture", "")
     if first_ready_idx is not None and first_owner_idx is not None:
         counts["ready_to_owner_delay_rows"] = max(0, first_owner_idx - first_ready_idx)
     else:
@@ -443,7 +484,63 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         anomalies.append("v_bz sign flip jitter")
     if counts["ready_drop_after_applied_rows"]:
         anomalies.append("readiness drop after applied")
+    if counts["visible_scale_gate_reject_rows"]:
+        anomalies.append("visible scale-gate rejects")
     return counts, anomalies
+
+
+def term_status_detail_rows(log_dir: str) -> list[dict]:
+    rows: list[dict] = []
+    flight_dir = Path(log_dir)
+    if not flight_dir.exists():
+        return rows
+    states: list[dict] = []
+    last_feature: dict | None = None
+    for rec in iter_log(flight_dir):
+        topic = rec.get("topic")
+        data = rec.get("data", {})
+        if topic == "state":
+            state = _state_from_data(data)
+            if state is not None:
+                states.append(state)
+            continue
+        if topic == "feature":
+            last_feature = data
+            continue
+        if topic != "term_status":
+            continue
+        state = _nearest_state(states, int(data.get("ts_ns", 0)))
+        feature = last_feature
+        e_z = _f(data.get("e_z"))
+        v_bz = _f(data.get("v_bz_applied"))
+        sign_bad = 0
+        if e_z is not None and v_bz is not None:
+            sign_bad = int(_sign(e_z) and _sign(v_bz) and _sign(e_z) == _sign(v_bz))
+        span = _f(feature.get("span_px")) if feature is not None else None
+        range_m = _f(state.get("range_m")) if state is not None else None
+        rows.append({
+            "row": len(rows) + 1,
+            "ts_ns": data.get("ts_ns", ""),
+            "owner": data.get("owner", ""),
+            "engaged": bool(data.get("engaged")),
+            "ready": bool(data.get("ready")),
+            "e_z": e_z if e_z is not None else "",
+            "vz_up": data.get("vz_up", ""),
+            "v_bz_applied": v_bz if v_bz is not None else "",
+            "sign_bad_vbz_vs_ez": sign_bad,
+            "range_m": range_m if range_m is not None else "",
+            "lateral_m": state.get("lateral_m", "") if state is not None else "",
+            "true_dz_m": state.get("true_dz_m", "") if state is not None else "",
+            "pitch_t_rad": state.get("pitch_t_rad", "") if state is not None else "",
+            "gate_age_s": state.get("gate_age_s", "") if state is not None else "",
+            "feature_cert_status": feature.get("cert_status", "") if feature else "",
+            "feature_span_px": span if span is not None else "",
+            "feature_mode": feature.get("mode", "") if feature else "",
+            "span_x_range": (span * range_m
+                             if span is not None and range_m is not None else ""),
+            "visible_scale_gate_reject": _visible_scale_gate_reject(feature, state),
+        })
+    return rows
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
@@ -464,6 +561,8 @@ def arm_summary(rows: list[dict]) -> dict:
     passes = sum(1 for r in rows if int(r.get("gates_passed") or 0) >= 1)
     finished = sum(1 for r in rows if r.get("finished") is True)
     anomalies = sum(1 for r in rows if r.get("term_anomalies"))
+    capture_runs = sum(1 for r in rows if _f(r.get("first_capture_range_m")) is not None)
+    capture_by_2p2 = sum(int(r.get("capture_by_2p2") or 0) for r in rows)
     lateral = [_f(r.get("closest_lateral_m")) for r in rows]
     dz = [_f(r.get("closest_true_dz_m")) for r in rows]
     closest_range = [_f(r.get("closest_range_m")) for r in rows]
@@ -477,6 +576,8 @@ def arm_summary(rows: list[dict]) -> dict:
         "finished": finished,
         "finish_rate": finished / total if total else 0.0,
         "term_anomaly_runs": anomalies,
+        "capture_runs": capture_runs,
+        "capture_by_2p2": capture_by_2p2,
         "closest_range_mean_m": _mean(range_vals),
         "closest_lateral_mean_m": _mean(lateral_vals),
         "closest_lateral_std_m": _std(lateral_vals),
@@ -488,7 +589,7 @@ def arm_summary(rows: list[dict]) -> dict:
 def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
     rows: list[dict] = []
     params = ParamSet.load(ROOT / "config" / "params_default.json").patch({
-        "safety.imu_stale_s": 0.25,
+        **BASE_PATCHES,
         **patches,
     })
     terminal_enabled = bool(patches.get("planner.terminal.enable", False))
@@ -498,6 +599,13 @@ def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
             result = app.reset_and_fly(params, settle_s=1.0, max_duration_s=45.0)
             term_counts, anomalies = summarize_term_status(result.get("log_dir", ""),
                                                            terminal_enabled)
+            term_csv = ""
+            if terminal_enabled:
+                term_rows = term_status_detail_rows(result.get("log_dir", ""))
+                term_csv_path = (OUT_DIR / "term_status_live"
+                                 / f"{idx:02d}_{result.get('flight_id', 'unknown')}.csv")
+                write_csv(term_csv_path, term_rows)
+                term_csv = str(term_csv_path.relative_to(ROOT))
             row = {
                 "arm": label,
                 "idx": idx,
@@ -511,6 +619,7 @@ def run_arm(label: str, patches: dict, runs: int, arm_index: int) -> list[dict]:
                 "env_hits": result.get("env_hits", 0),
                 "overrun_frac": result.get("loop_stats", {}).get("overrun_frac", ""),
                 "log_dir": result.get("log_dir", ""),
+                "term_status_csv": term_csv,
                 "term_anomalies": "; ".join(anomalies),
                 **term_counts,
             }
@@ -531,7 +640,17 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "Role: QA & MOCK-TUNER.",
         "Scope: mock only. No real simulator was launched, reset, clicked, or commanded.",
         f"Commit: `{HEAD}`.",
-        "Base harness patch: `safety.imu_stale_s=0.25`.",
+        "Base patches in BOTH arms: "
+        + "`" + " ".join(f"--patch {k}={v}" for k, v in BASE_PATCHES.items()) + "`.",
+        "",
+        "## Mock-Domain Pitch Calibration",
+        "",
+        f"Measured mock `planner.terminal.pitch_cal_rad`: "
+        f"`{BASE_PATCHES.get('planner.terminal.pitch_cal_rad', 'n/a')}`.",
+        f"Calibration source: `{CALIBRATION.get('source', 'not recorded')}`.",
+        f"Commit ticks: `{CALIBRATION.get('commit_ticks', 'n/a')}`; "
+        f"flights: `{CALIBRATION.get('flights', 'n/a')}`; "
+        f"median deg: `{CALIBRATION.get('median_deg', 'n/a')}`.",
         "",
         "## Arms",
         "",
@@ -553,8 +672,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "",
         "## Term Status Notes",
         "",
-        "| Arm | Run | Gates | Finished | term rows | engaged | ready | engaged+ready | owner=term | applied | first owner R | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | closest y/dz | anomalies |",
-        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| Arm | Run | Gates | Finished | term rows | engaged | ready | engaged+ready | owner=term | applied | first capture R | capture by 2.2 | e_z at capture | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | scale rejects | closest y/dz | anomalies |",
+        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ])
     for row in rows:
         lines.append(
@@ -562,12 +681,15 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             f"{row['finished']} | {row['term_rows']} | {row['engaged_rows']} | "
             f"{row['ready_rows']} | {row.get('engaged_ready_rows', '')} | "
             f"{row['owner_term_rows']} | "
-            f"{row['applied_rows']} | {_fmt(row.get('first_owner_range_m'))} | "
+            f"{row['applied_rows']} | {_fmt(row.get('first_capture_range_m'))} | "
+            f"{row.get('capture_by_2p2', '')} | "
+            f"{_fmt(row.get('e_z_at_capture'))} | "
             f"{_fmt(row.get('first_applied_range_m'))} | "
             f"{_fmt(row.get('e_z_min'))}/{_fmt(row.get('e_z_max'))} | "
             f"{_fmt(row.get('v_bz_min'))}/{_fmt(row.get('v_bz_max'))} | "
             f"{row.get('applied_sign_mismatch_rows', '')} | "
             f"{row.get('owner_transitions', '')} | "
+            f"{row.get('visible_scale_gate_reject_rows', '')} | "
             f"{_fmt(row.get('closest_lateral_m'))}/{_fmt(row.get('closest_true_dz_m'))} | "
             f"{row['term_anomalies']} |"
         )
@@ -602,16 +724,25 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             if int(r.get("engaged_ready_rows") or 0)
             and not int(r.get("owner_term_rows") or 0)
         )
+        capture_by_2p2 = sum(int(r.get("capture_by_2p2") or 0) for r in arm_rows)
+        e_at_capture = [_f(r.get("e_z_at_capture")) for r in arm_rows]
+        e_at_capture = [v for v in e_at_capture if v is not None]
+        scale_reject_runs = sum(
+            1 for r in arm_rows if int(r.get("visible_scale_gate_reject_rows") or 0)
+        )
         lines.append(
             f"- `{label}`: engaged+ready runs {len(engaged_ready_ranges)}/{len(arm_rows)} "
             f"(first range mean {_fmt_m(_mean(engaged_ready_ranges))}); "
             f"owner=term runs {len(owner_ranges)}/{len(arm_rows)} "
             f"(first range mean {_fmt_m(_mean(owner_ranges))}, "
             f"min {_fmt_m(min(owner_ranges) if owner_ranges else None)}); "
+            f"captures by 2.2m {capture_by_2p2}/{len(arm_rows)}; "
+            f"e_z at capture mean {_fmt_na(_mean(e_at_capture))}; "
             f"v_bz_applied runs {len(applied_ranges)}/{len(arm_rows)} "
             f"(first range mean {_fmt_m(_mean(applied_ranges))}); "
             f"wrong-sign rows {sign_bad}; owner-chatter runs {chatter}; "
             f"jitter runs {jitter}; readiness-transient runs {ready_transient}; "
+            f"visible scale-reject runs {scale_reject_runs}/{len(arm_rows)}; "
             f"certified-feature runs {certified_feature_runs}/{len(arm_rows)}; "
             f"engaged+ready/no-owner runs {engaged_ready_no_owner}/{len(arm_rows)}."
         )
@@ -620,6 +751,7 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
     live_applied_rows = sum(int(r.get("applied_rows") or 0) for r in live_rows)
     live_engaged_ready = sum(1 for r in live_rows
                              if int(r.get("engaged_ready_rows") or 0))
+    live_capture_by_2p2 = sum(int(r.get("capture_by_2p2") or 0) for r in live_rows)
     verdict = ("NO-GO for live terminal arms: the mock live arm never actuated."
                if live_rows and (live_owner_rows == 0 or live_applied_rows == 0)
                else "GO from mock terminal authority wiring.")
@@ -631,7 +763,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "",
         f"Live arm summary: owner=term rows `{live_owner_rows}`, "
         f"v_bz_applied rows `{live_applied_rows}`, "
-        f"runs with engaged+ready `{live_engaged_ready}/{len(live_rows)}`.",
+        f"runs with engaged+ready `{live_engaged_ready}/{len(live_rows)}`, "
+        f"captures by 2.2m `{live_capture_by_2p2}/{len(live_rows)}`.",
     ])
     lines.extend([
         "",
@@ -640,7 +773,8 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
     ])
     (OUT_DIR / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (OUT_DIR / "summary.json").write_text(
-        json.dumps({"commit": HEAD, "arms": ARMS, "summaries": summaries,
+        json.dumps({"commit": HEAD, "base_patches": BASE_PATCHES,
+                    "calibration": CALIBRATION, "arms": ARMS, "summaries": summaries,
                     "rows": rows}, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
@@ -677,10 +811,28 @@ def rebuild_existing(out_dir: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    global BASE_PATCHES, CALIBRATION
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs", type=int, default=10)
     parser.add_argument("--rebuild-from", type=Path)
+    parser.add_argument("--pitch-cal-rad", type=float)
+    parser.add_argument("--pitch-cal-source", default="")
+    parser.add_argument("--pitch-cal-commit-ticks", type=int)
+    parser.add_argument("--pitch-cal-flights", type=int)
+    parser.add_argument("--pitch-cal-median-deg", type=float)
     args = parser.parse_args(argv)
+    if args.pitch_cal_rad is not None:
+        BASE_PATCHES = {
+            **BASE_PATCHES,
+            "planner.terminal.pitch_cal_rad": args.pitch_cal_rad,
+        }
+        CALIBRATION = {
+            "source": args.pitch_cal_source,
+            "commit_ticks": args.pitch_cal_commit_ticks,
+            "flights": args.pitch_cal_flights,
+            "median_rad": args.pitch_cal_rad,
+            "median_deg": args.pitch_cal_median_deg,
+        }
     if args.rebuild_from:
         rebuild_existing(args.rebuild_from)
         print(f"[terminal-ab] rebuilt report={OUT_DIR / 'summary.md'}", flush=True)
