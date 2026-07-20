@@ -11,6 +11,7 @@ Artifacts:
 - R26/SIGMA_A: `tuning/hold-lift-r26-3b554f3-3942837-20260720T115535Z/`
 - P4 wall-clock: `tuning/hold-lift-p4-3b554f3-3942837-20260720T115546Z/`
 - R26 reference provenance pin: `tuning/hold-lift-r26-3b554f3-35bfa6d-20260720T121704Z/`
+- SIGMA_A deconvolution: `tuning/sigma-a-deconv-caa2398-20260720T123324Z/`
 
 ## 0. Reference Provenance Pin Rerun
 
@@ -32,6 +33,32 @@ Age-bin p95 comparison:
 | `0.30-0.50s` | `1.226` | `1.310` |
 
 Verdict: the old reference substantially inflated the all-up p95 (`4.455 -> 2.340 m/s^2`) and the old RMS (`1.956`) was partly reference noise. However, the withheld-FULL oracle p95 is still well above the `0.35 m/s^2` drift-model gate, so R26-2/3 remains `FAIL` on this configuration rather than being cleared by the reference correction alone.
+
+## 0B. SIGMA_A Deconvolution
+
+Using the existing oracle-reference residuals from `caa2398` only, with no new replay, the variance model was fit as:
+
+`r_v^2 = sigma_ref^2 + sigma_a^2 * age^2`
+
+Primary estimator: per-sample Theil-Sen robust line on `r_v^2` vs `age^2`, with 5000x bootstrap CI. OLS is retained as sensitivity.
+
+| Group | n | age range | slope raw | sigma_a | sigma_a 95% CI | sigma_ref | sigma_ref 95% CI | gate lives | ref sanity |
+|---|---:|---|---:|---:|---|---:|---|---|---|
+| `all` | 16 | `0.167-0.431s` | `0.000` | `0.000` | `0.000/0.000/0.000` | `0.437` | `0.437/0.437/0.521` | `True` | `False` |
+| `switch_adjacent` | 3 | `0.167-0.194s` | `0.000` | `0.000` | `0.000/0.000/0.000` | `0.437` | `0.437/0.437/0.437` | `True` | `False` |
+| `maintenance` | 13 | `0.229-0.431s` | `0.000` | `0.000` | `0.000/0.000/0.000` | `0.437` | `0.437/0.437/0.577` | `True` | `False` |
+
+OLS sensitivity agrees on the drift gate: all-up raw slope `-0.772`, maintenance raw slope `-1.017`, both clamp to `sigma_a=0.000`; fitted `sigma_ref` is `0.491` all-up and `0.523` maintenance.
+
+Age-bin counts:
+
+| Age bin | n | residual RMS | legacy ratio p95 |
+|---|---:|---:|---:|
+| `0.10-0.20s` | 3 | `0.437` | `2.584` |
+| `0.20-0.30s` | 6 | `0.437` | `1.905` |
+| `0.30-0.50s` | 7 | `0.374` | `1.310` |
+
+Verdict: under the deconvolved variance model, the true age-growing drift term is not supported by these samples and the `sigma_a <= 0.35` gate lives. Caveat: `sigma_ref=0.437` is above the expected `0.15-0.30 m/s` oracle-slope sanity band, so the estimator-change note should go to advisors with an explicit reference/anchor-rate-offset warning rather than as an unconditional clean pass.
 
 ## 1. SIGMA_A Corrected With Percentile Envelope
 
