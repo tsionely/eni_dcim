@@ -1,0 +1,4 @@
+flight,event_id,t_ff,impulse,threat,accepted,reason,provenance,true_dz,tail,h_up,h_down,R_state,R_det,age,first_touch,in_graze
+phase6l_F2,0,4.4933281,0.2195853441953659,1,True,ACCEPT_det_plus_att_plane,det_plus_att,-0.6104838107308698,LOW,None,0.18951618926913028,0.8971050642858123,0.8971050642858123,inf,True,True
+phase6l_F4,0,3.947552,0.07583777606487274,1,False,REJECT_stale_state,state_gate_rel,None,None,None,None,0.23478436979393494,None,0.336507752,True,True
+phase6l_F6,0,3.4054723,1.6458932161331177,2,False,REJECT_state_R_vs_contact_geom,state_gate_rel,None,None,None,None,2.5867278534072664,2.660845331870601,0.014312464,True,False

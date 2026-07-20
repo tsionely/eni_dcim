@@ -1,0 +1,241 @@
+{
+  "ask": "A8 phase6l contact harvest",
+  "verdict": {
+    "n_events": 3,
+    "n_accepted_graze": 1,
+    "n_accepted_any_impulse": 1,
+    "sample_used": "graze_band",
+    "n_sample": 1,
+    "n_HIGH": 0,
+    "n_LOW": 1,
+    "h_up_m": null,
+    "h_down_m": 0.18951618926913028,
+    "h_drone_m": 0.18951618926913028,
+    "h_up_scatter": {
+      "n": 0
+    },
+    "h_down_scatter": {
+      "n": 1,
+      "min": 0.18951618926913028,
+      "max": 0.18951618926913028,
+      "mean": 0.18951618926913028,
+      "std": 0.0,
+      "median": 0.18951618926913028,
+      "p10": 0.18951618926913028,
+      "p90": 0.18951618926913028,
+      "values": [
+        0.18951618926913028
+      ]
+    },
+    "proxy_scatter": {
+      "n": 1,
+      "min": 1.4104838107308697,
+      "max": 1.4104838107308697,
+      "mean": 1.4104838107308697,
+      "std": 0.0,
+      "median": 1.4104838107308697,
+      "p10": 1.4104838107308697,
+      "p90": 1.4104838107308697,
+      "values": [
+        1.4104838107308697
+      ]
+    },
+    "rejection_reasons": {
+      "REJECT_stale_state": 1,
+      "REJECT_state_R_vs_contact_geom": 1
+    },
+    "contact_grade_usable": false,
+    "envelope_unfreeze_candidate": false,
+    "chain": {
+      "held_h": 0.62,
+      "held_C_contact": 0.18,
+      "if_unfreeze_C_contact": 0.6104838107308698,
+      "status": "HELD \u2014 harvest insufficient or h\u22480"
+    },
+    "sim_crosscheck": {
+      "reachable": true,
+      "path": "simtools/mock_sim.py::_check_gate_crossing",
+      "model": "point-mass drone (no airframe half-extent constant)",
+      "pass_band": "|vert| <= half_h",
+      "clip_band": "half_h < |vert| <= 1.5*half_h (collision_id=1001)",
+      "GATE_GEOM_d_star": 0.8,
+      "mock_default_half_h": 0.7,
+      "implied_h_drone_at_clip_onset_point_mass": 0.0,
+      "note": "Point-mass first-clip predicts deficit\u22480 (true_dz\u2248\u00b1half_h). A measured contact-instant max(deficit)>0 is the real airframe half-extent above that idealization. Absence of accepted HIGH-tail deficits is consistent with the mock (h=0), and does NOT support published h=0.62."
+    }
+  },
+  "flights": [
+    {
+      "label": "phase6l_F2",
+      "fid": "20260720T071112-cd18c5fb",
+      "note": "11 gate clips, clip-budget abort",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl",
+      "n_collisions": 11,
+      "n_events": 1,
+      "ledger": [
+        {
+          "flight": "phase6l_F2",
+          "fid": "20260720T071112-cd18c5fb",
+          "event_id": 0,
+          "n_in_event": 11,
+          "t_ff": 4.4933281,
+          "impulse": 0.2195853441953659,
+          "threat_level": 1,
+          "first_touch": true,
+          "accepted": true,
+          "reason": "ACCEPT_det_plus_att_plane",
+          "provenance": "det_plus_att",
+          "true_dz": -0.6104838107308698,
+          "true_dz_raw": -0.6104838107308698,
+          "proxy_0p8_minus_true_dz": 1.4104838107308697,
+          "R_state": 0.8971050642858123,
+          "tz_state": 0.5047111505010242,
+          "R_det": 0.8971050642858123,
+          "age": Infinity,
+          "dt_state": 0.00676719999999964,
+          "tail": "LOW",
+          "h_up": null,
+          "h_down": 0.18951618926913028,
+          "clearance_deficit_high": 0.0,
+          "in_graze_band": true
+        }
+      ]
+    },
+    {
+      "label": "phase6l_F4",
+      "fid": "20260720T071333-cd18c5fb",
+      "note": "live single(s)",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071333-cd18c5fb-flight.jsonl",
+      "n_collisions": 3,
+      "n_events": 1,
+      "ledger": [
+        {
+          "flight": "phase6l_F4",
+          "fid": "20260720T071333-cd18c5fb",
+          "event_id": 0,
+          "n_in_event": 3,
+          "t_ff": 3.947552,
+          "impulse": 0.07583777606487274,
+          "threat_level": 1,
+          "first_touch": true,
+          "accepted": false,
+          "reason": "REJECT_stale_state",
+          "provenance": "state_gate_rel",
+          "true_dz": null,
+          "true_dz_raw": -0.21134185665177663,
+          "proxy_0p8_minus_true_dz": null,
+          "R_state": 0.23478436979393494,
+          "tz_state": -0.16963588845893898,
+          "R_det": null,
+          "age": 0.336507752,
+          "dt_state": 0.007460299999999975,
+          "in_graze_band": true
+        }
+      ]
+    },
+    {
+      "label": "phase6l_F6",
+      "fid": "20260720T071545-cd18c5fb",
+      "note": "live single(s)",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071545-cd18c5fb-flight.jsonl",
+      "n_collisions": 2,
+      "n_events": 1,
+      "ledger": [
+        {
+          "flight": "phase6l_F6",
+          "fid": "20260720T071545-cd18c5fb",
+          "event_id": 0,
+          "n_in_event": 2,
+          "t_ff": 3.4054723,
+          "impulse": 1.6458932161331177,
+          "threat_level": 2,
+          "first_touch": true,
+          "accepted": false,
+          "reason": "REJECT_state_R_vs_contact_geom",
+          "provenance": "state_gate_rel",
+          "true_dz": null,
+          "true_dz_raw": -0.012444330719797614,
+          "proxy_0p8_minus_true_dz": null,
+          "R_state": 2.5867278534072664,
+          "tz_state": 2.4633617200258504,
+          "R_det": 2.660845331870601,
+          "age": 0.014312464,
+          "dt_state": 0.009304800000000224,
+          "in_graze_band": false
+        }
+      ]
+    }
+  ],
+  "ledger": [
+    {
+      "flight": "phase6l_F2",
+      "fid": "20260720T071112-cd18c5fb",
+      "event_id": 0,
+      "n_in_event": 11,
+      "t_ff": 4.4933281,
+      "impulse": 0.2195853441953659,
+      "threat_level": 1,
+      "first_touch": true,
+      "accepted": true,
+      "reason": "ACCEPT_det_plus_att_plane",
+      "provenance": "det_plus_att",
+      "true_dz": -0.6104838107308698,
+      "true_dz_raw": -0.6104838107308698,
+      "proxy_0p8_minus_true_dz": 1.4104838107308697,
+      "R_state": 0.8971050642858123,
+      "tz_state": 0.5047111505010242,
+      "R_det": 0.8971050642858123,
+      "age": Infinity,
+      "dt_state": 0.00676719999999964,
+      "tail": "LOW",
+      "h_up": null,
+      "h_down": 0.18951618926913028,
+      "clearance_deficit_high": 0.0,
+      "in_graze_band": true
+    },
+    {
+      "flight": "phase6l_F4",
+      "fid": "20260720T071333-cd18c5fb",
+      "event_id": 0,
+      "n_in_event": 3,
+      "t_ff": 3.947552,
+      "impulse": 0.07583777606487274,
+      "threat_level": 1,
+      "first_touch": true,
+      "accepted": false,
+      "reason": "REJECT_stale_state",
+      "provenance": "state_gate_rel",
+      "true_dz": null,
+      "true_dz_raw": -0.21134185665177663,
+      "proxy_0p8_minus_true_dz": null,
+      "R_state": 0.23478436979393494,
+      "tz_state": -0.16963588845893898,
+      "R_det": null,
+      "age": 0.336507752,
+      "dt_state": 0.007460299999999975,
+      "in_graze_band": true
+    },
+    {
+      "flight": "phase6l_F6",
+      "fid": "20260720T071545-cd18c5fb",
+      "event_id": 0,
+      "n_in_event": 2,
+      "t_ff": 3.4054723,
+      "impulse": 1.6458932161331177,
+      "threat_level": 2,
+      "first_touch": true,
+      "accepted": false,
+      "reason": "REJECT_state_R_vs_contact_geom",
+      "provenance": "state_gate_rel",
+      "true_dz": null,
+      "true_dz_raw": -0.012444330719797614,
+      "proxy_0p8_minus_true_dz": null,
+      "R_state": 2.5867278534072664,
+      "tz_state": 2.4633617200258504,
+      "R_det": 2.660845331870601,
+      "age": 0.014312464,
+      "dt_state": 0.009304800000000224,
+      "in_graze_band": false
+    }
+  ]
+}
