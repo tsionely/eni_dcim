@@ -459,7 +459,22 @@ class App:
                             rate_anchor_age_s=(
                                 term_oracle.anchor_age_s()
                                 if term_oracle.rate_anchor_ts is not None
-                                else None)))
+                                else None),
+                            rate_anchor_valid=term_oracle.rate_anchor_valid,
+                            gate_lock_epoch=term_oracle.epoch,
+                            e_z_raw=term_oracle.last_e_raw,
+                            e_z_accepted=term_oracle.last_e_accepted,
+                            sigma_e=term_oracle.sigmas()[0],
+                            sigma_v=term_oracle.sigmas()[1],
+                            tail_n=term_oracle.history_stats()[0],
+                            tail_span_s=term_oracle.history_stats()[1],
+                            tail_gap_s=(lambda g: None if g == float(
+                                "inf") else g)(
+                                term_oracle.history_stats()[2]),
+                            tau_s=term_oracle.last_tau_s,
+                            admission_score=(
+                                term_oracle.last_admission_score),
+                            transition=term_oracle.last_transition))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

@@ -164,7 +164,9 @@ def terminal_observe(oracle: "TerminalOracle", state, feature,
     e_meas += gate_w * fx * (np.tan(pitch_t) - np.tan(pitch_cal_rad)) \
         / feature.span_px
     # Authority clamp (SS1.4): bounded to the eroded opening (A8 inherits).
+    oracle.last_e_raw = float(e_meas)
     e_meas = float(np.clip(e_meas, -e_z_clamp_m, e_z_clamp_m))
+    oracle.last_e_accepted = float(e_meas)
     active = oracle.observe(float(feature.ts_ns) / 1e9, e_meas,
                             source=getattr(feature, "mode", "FULL_QUAD"))
     # Only the ACTIVE rung's measurement may act this tick; inactive-
@@ -269,7 +271,10 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # evidence-based sigmas. Geometry vs epistemology stay
             # separate currencies; the interim operates against the
             # weaker geometric bound while the epistemology matures.
-            capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= corridor_m
+            oracle.last_admission_score = float(abs(e_x) + 2.0 * s_x
+                                                + 0.06)
+            oracle.last_tau_s = float(tau_s)
+            capture_ok = oracle.last_admission_score <= corridor_m
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,
                          feature_age_s=state.gate_rel_age_s,
@@ -411,6 +416,12 @@ class TerminalOracle:
         self.rate_anchor_valid = False
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
+        self.epoch = 0
+        self.last_e_raw: float | None = None
+        self.last_e_accepted: float | None = None
+        self.last_admission_score: float | None = None
+        self.last_tau_s: float | None = None
+        self.last_transition: dict | None = None
 
     def reset(self) -> None:
         self.e_z = None
@@ -431,6 +442,12 @@ class TerminalOracle:
         self.rate_anchor_valid = False
         self._anchor_e0: float | None = None
         self._anchor_breaches = 0
+        self.epoch += 1
+        self.last_e_raw = None
+        self.last_e_accepted = None
+        self.last_admission_score = None
+        self.last_tau_s = None
+        self.last_transition = None
 
     SIGMAS = {"FULL_QUAD": (0.05, 0.10),
               # Side-pair rung: margined analogs (x1.5) until the R5
@@ -535,10 +552,11 @@ class TerminalOracle:
                 i -= 1
             tail_pairs = self._overlap_deltas[i:]
             self._overlap_ok = False
+            self._pair_stats = (len(tail_pairs), float(np.median(
+                [d for _, d in tail_pairs])) if tail_pairs else 0.0)
             if (len(tail_pairs) >= 3
                     and ts_pair - tail_pairs[-1][0] <= 0.12
-                    and abs(float(np.median(
-                        [d for _, d in tail_pairs]))) <= 0.10):
+                    and abs(self._pair_stats[1]) <= 0.10):
                 v_act = self._slope_of(self._hist)
                 v_oth = self._slope_of(self._hist_other)
                 deadband = 0.05
@@ -593,6 +611,12 @@ class TerminalOracle:
                 self.active_source = "SIDE_PAIR"
                 self._upgrade_streak = 0
                 self._transition_grace = True
+                ps = getattr(self, "_pair_stats", (0, 0.0))
+                self.last_transition = {
+                    "prev": "FULL_QUAD", "new": "SIDE_PAIR",
+                    "paired_overlap_count": ps[0],
+                    "overlap_delta_median": ps[1],
+                    "ts": ts_s}
                 return True
         else:
             # Full-quad seen while side is active: hysteresis count.

@@ -225,6 +225,18 @@ class TermStatus:
     ready_legacy: bool = False
     rate_source: str | None = None
     rate_anchor_age_s: float | None = None
+    rate_anchor_valid: bool = False
+    gate_lock_epoch: int = 0
+    e_z_raw: float | None = None
+    e_z_accepted: float | None = None
+    sigma_e: float | None = None
+    sigma_v: float | None = None
+    tail_n: int = 0
+    tail_span_s: float = 0.0
+    tail_gap_s: float | None = None
+    tau_s: float | None = None
+    admission_score: float | None = None
+    transition: dict | None = None
 
 
 @dataclass(frozen=True, slots=True)

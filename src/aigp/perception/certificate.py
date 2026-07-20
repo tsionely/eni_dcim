@@ -61,6 +61,12 @@ class SidePairCertificate:
         certificate is maintained/re-anchored; below terminal_floor a
         held certificate refreshes continuity only. A fresh identity
         can never be born in the final approach band."""
+        # S1 addendum: a chain stale enough that status_at() reads
+        # NONE is a DEAD identity even if _status still says otherwise
+        # — re-anchoring it below the promote floor would resurrect a
+        # retired certificate on a fresh (possibly successor) quad.
+        if self.status_at(ts_ns) == NONE:
+            self._status = NONE
         if self._status == NONE:
             if z_m is not None and z_m < self.promote_floor:
                 return                     # refuse fresh certification
