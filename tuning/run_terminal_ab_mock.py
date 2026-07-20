@@ -32,7 +32,7 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 RUN_STAMP = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 HEAD = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 HEAD_SHORT = HEAD[:7]
-RUN_LABEL = "terminal-ab-b74cbbf"
+RUN_LABEL = "terminal-ab-7b2626b"
 OUT_DIR = ROOT / "tuning" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 RUNTIME_DIR = ROOT / "tuning" / "runtime-logs" / f"{RUN_LABEL}-{HEAD_SHORT}-{RUN_STAMP}"
 MOCK_IMAGE_SIZE = (320, 180)
@@ -237,7 +237,11 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         "term_rows": 0,
         "engaged_rows": 0,
         "ready_rows": 0,
+        "ready_legacy_rows": 0,
+        "ready_current_only_rows": 0,
+        "ready_legacy_only_rows": 0,
         "engaged_ready_rows": 0,
+        "engaged_ready_legacy_rows": 0,
         "owner_term_rows": 0,
         "applied_rows": 0,
         "engaged_not_ready_rows": 0,
@@ -258,6 +262,13 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         "detection_none_rows": 0,
         "visible_scale_gate_reject_rows": 0,
         "capture_by_2p2": 0,
+        "source_full_quad_rows": 0,
+        "source_side_pair_rows": 0,
+        "source_other_rows": 0,
+        "owner_term_full_quad_rows": 0,
+        "owner_term_side_pair_rows": 0,
+        "applied_full_quad_rows": 0,
+        "applied_side_pair_rows": 0,
     }
     e_values: list[float] = []
     vz_values: list[float] = []
@@ -309,18 +320,42 @@ def summarize_term_status(log_dir: str, terminal_enabled: bool) -> tuple[dict, l
         counts["term_rows"] += 1
         engaged = bool(data.get("engaged"))
         ready = bool(data.get("ready"))
+        ready_legacy = bool(data.get("ready_legacy"))
         applied = data.get("v_bz_applied") is not None
         owner_term = data.get("owner") == "term"
+        source_mode = data.get("source_mode") or ""
         if engaged:
             counts["engaged_rows"] += 1
         if ready:
             counts["ready_rows"] += 1
+        if ready_legacy:
+            counts["ready_legacy_rows"] += 1
+        if ready and not ready_legacy:
+            counts["ready_current_only_rows"] += 1
+        if ready_legacy and not ready:
+            counts["ready_legacy_only_rows"] += 1
         if engaged and ready:
             counts["engaged_ready_rows"] += 1
+        if engaged and ready_legacy:
+            counts["engaged_ready_legacy_rows"] += 1
         if owner_term:
             counts["owner_term_rows"] += 1
         if applied:
             counts["applied_rows"] += 1
+        if source_mode == "FULL_QUAD":
+            counts["source_full_quad_rows"] += 1
+            if owner_term:
+                counts["owner_term_full_quad_rows"] += 1
+            if applied:
+                counts["applied_full_quad_rows"] += 1
+        elif source_mode == "SIDE_PAIR":
+            counts["source_side_pair_rows"] += 1
+            if owner_term:
+                counts["owner_term_side_pair_rows"] += 1
+            if applied:
+                counts["applied_side_pair_rows"] += 1
+        elif source_mode:
+            counts["source_other_rows"] += 1
         if engaged and not ready:
             counts["engaged_not_ready_rows"] += 1
         if applied and not engaged:
@@ -532,8 +567,10 @@ def term_status_detail_rows(log_dir: str) -> list[dict]:
             "row": len(rows) + 1,
             "ts_ns": data.get("ts_ns", ""),
             "owner": data.get("owner", ""),
+            "source_mode": data.get("source_mode", ""),
             "engaged": bool(data.get("engaged")),
             "ready": bool(data.get("ready")),
+            "ready_legacy": bool(data.get("ready_legacy")),
             "e_z": e_z if e_z is not None else "",
             "vz_up": data.get("vz_up", ""),
             "v_bz_applied": v_bz if v_bz is not None else "",
@@ -793,14 +830,18 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         "",
         "## Term Status Notes",
         "",
-        "| Arm | Run | Gates | Finished | term rows | engaged | ready | engaged+ready | owner=term | applied | commit vision survival | first capture R | capture by 2.2 | e_z at capture | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | scale rejects | closest y/dz | anomalies |",
-        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| Arm | Run | Gates | Finished | term rows | engaged | ready | ready legacy | engaged+ready | engaged+legacy | source FULL/SIDE | owner=term | applied | commit vision survival | first capture R | capture by 2.2 | e_z at capture | first applied R | e_z min/max | v_bz min/max | sign bad | owner transitions | scale rejects | closest y/dz | anomalies |",
+        "|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ])
     for row in rows:
         lines.append(
             f"| `{row['arm']}` | {row['idx']} | {row['gates_passed']} | "
             f"{row['finished']} | {row['term_rows']} | {row['engaged_rows']} | "
-            f"{row['ready_rows']} | {row.get('engaged_ready_rows', '')} | "
+            f"{row['ready_rows']} | "
+            f"{row.get('ready_legacy_rows', '')} | "
+            f"{row.get('engaged_ready_rows', '')} | "
+            f"{row.get('engaged_ready_legacy_rows', '')} | "
+            f"{row.get('source_full_quad_rows', '')}/{row.get('source_side_pair_rows', '')} | "
             f"{row['owner_term_rows']} | "
             f"{row['applied_rows']} | "
             f"{_fmt_pct(row.get('commit_vision_survival_frac'))} "
@@ -843,6 +884,24 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
         certified_feature_runs = sum(
             1 for r in arm_rows if int(r.get("feature_certified_rows") or 0)
         )
+        ready_legacy_runs = sum(
+            1 for r in arm_rows if int(r.get("ready_legacy_rows") or 0)
+        )
+        ready_current_only_rows = sum(
+            int(r.get("ready_current_only_rows") or 0) for r in arm_rows
+        )
+        ready_legacy_only_rows = sum(
+            int(r.get("ready_legacy_only_rows") or 0) for r in arm_rows
+        )
+        source_full_rows = sum(
+            int(r.get("source_full_quad_rows") or 0) for r in arm_rows
+        )
+        source_side_rows = sum(
+            int(r.get("source_side_pair_rows") or 0) for r in arm_rows
+        )
+        owner_side_rows = sum(
+            int(r.get("owner_term_side_pair_rows") or 0) for r in arm_rows
+        )
         engaged_ready_no_owner = sum(
             1 for r in arm_rows
             if int(r.get("engaged_ready_rows") or 0)
@@ -884,6 +943,11 @@ def write_report(rows: list[dict], summaries: dict[str, dict]) -> None:
             f"jitter runs {jitter}; readiness-transient runs {ready_transient}; "
             f"visible scale-reject runs {scale_reject_runs}/{len(arm_rows)}; "
             f"certified-feature runs {certified_feature_runs}/{len(arm_rows)}; "
+            f"ready_legacy runs {ready_legacy_runs}/{len(arm_rows)}; "
+            f"ready current-only rows {ready_current_only_rows}; "
+            f"ready legacy-only rows {ready_legacy_only_rows}; "
+            f"source_mode FULL/SIDE rows {source_full_rows}/{source_side_rows}; "
+            f"owner SIDE rows {owner_side_rows}; "
             f"engaged+ready/no-owner runs {engaged_ready_no_owner}/{len(arm_rows)}."
         )
     live_rows = [r for r in rows if r["arm"] == "terminal_speed1p8"]

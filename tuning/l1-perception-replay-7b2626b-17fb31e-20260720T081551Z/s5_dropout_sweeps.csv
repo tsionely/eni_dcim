@@ -1,0 +1,13 @@
+sweep,flight,fed_rows,ready_below_2_rows,ready_legacy_below_2_rows,active_side_below_2_rows,first_ready_range_m,transition_count
+baseline,F2,25,14,0,0,1.902749064928567,0
+baseline,F4,26,1,0,0,1.0283844811614702,0
+drop_all_0p16s_after_first_below_2m,F2,20,4,0,0,1.1940047941274192,0
+drop_all_0p16s_after_first_below_2m,F4,26,1,0,0,1.0283844811614702,0
+drop_all_0p30s_after_first_below_2m,F2,15,0,0,0,,0
+drop_all_0p30s_after_first_below_2m,F4,26,1,0,0,1.0283844811614702,0
+drop_full_below_2p0m,F2,12,0,0,0,,0
+drop_full_below_2p0m,F4,26,1,0,0,1.0283844811614702,0
+drop_full_below_1p5m,F2,17,14,0,0,1.902749064928567,0
+drop_full_below_1p5m,F4,26,1,0,0,1.0283844811614702,0
+drop_full_source_all,F2,6,0,0,0,,0
+drop_full_source_all,F4,2,0,0,0,,0
