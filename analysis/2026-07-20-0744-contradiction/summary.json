@@ -1,0 +1,290 @@
+{
+  "ask": "0.744 contradiction fixture forensics (advisory-15 / RESPONSE23)",
+  "fid": "20260720T071112-cd18c5fb",
+  "fixture": "20260720T071602-phase6l-cohort-3",
+  "log": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260720T071602-phase6l-cohort-3\\20260720T071112-cd18c5fb-flight.jsonl",
+  "event_gap_s": 0.05,
+  "n_episodes": 2,
+  "early_to_plane_gap_s": 0.1251452999999998,
+  "early_hit": {
+    "verdict": "INDEPENDENT_EPISODE_NO_TAIL",
+    "n_samples": 3,
+    "n_accepted": 0,
+    "first_t_ff": 4.4933281,
+    "reasons": [
+      "REJECT_no_state_gate",
+      "REJECT_no_state_gate",
+      "REJECT_no_state_gate"
+    ],
+    "note": "Event 0 is \u2265EVENT_GAP before the plane burst (independent episode) but every sample lacks contact-instant state (REJECT_no_state_gate / no gate_rel) \u2014 cannot adjudicate a tail. Does NOT tighten h_up or h_down.",
+    "adjudicates_tail": false
+  },
+  "n_h_up_0744_rows": 3,
+  "class_counts": {
+    "A": 0,
+    "B": 0,
+    "C": 3
+  },
+  "upper_tail_premise_0p64": "NOT_TIGHTENED \u2014 zero Class-A rows above 0.64",
+  "frontal_hypothesis_50ms": {
+    "tested": true,
+    "result": "CONFIRMED on all 0.744 rows: each sits within 50ms of a LOW-tail dz (\u22120.162) while reading HIGH-tail dz (+0.056) \u2014 impossible as two vertical contacts; ordinary as FRONTAL clips carrying no envelope information."
+  },
+  "verdict": "All h_up=0.744 rows are Class C (frontal / post-impulse contaminated). Early hit is an independent episode without contact-instant truth \u2014 does not adjudicate a tail. Upper-tail premise is NOT tightened by this fixture; the 0.744 number is excluded with explicit frontal-burst reason.",
+  "targets": [
+    {
+      "flight": "phase6l_F2",
+      "fid": "20260720T071112-cd18c5fb",
+      "event_id": 1,
+      "n_in_event": 9,
+      "t_ff": 4.6550928,
+      "impulse": 0.0672006830573082,
+      "threat_level": 1,
+      "first_touch": true,
+      "accepted": true,
+      "reason": "ACCEPT_contact_instant_state",
+      "provenance": "state_gate_rel",
+      "true_dz": 0.05592887342143529,
+      "true_dz_raw": 0.05592887342143529,
+      "proxy_0p8_minus_true_dz": 0.7440711265785648,
+      "R_state": 0.8523589204355237,
+      "tz_state": 0.4826357130302156,
+      "R_det": 0.8523589204355237,
+      "age": 0.0,
+      "dt_state": 0.004887899999999945,
+      "tail": "HIGH",
+      "h_up": 0.7440711265785648,
+      "h_down": null,
+      "clearance_deficit_high": 0.0,
+      "pitch_att_deg": -43.451611577508075,
+      "roll_att_deg": -15.231993387605904,
+      "level_pitch_deg": -17.801972875502017,
+      "gate_lock_epoch": {
+        "proxy": "fresh_R_bucket",
+        "R_bucket": 0.85,
+        "age": 0.0,
+        "note": "no gate_lock_id in state logs; bucket = rounded R"
+      },
+      "feature_age_s": 0.0,
+      "last_pre_impulse_pose": {
+        "t": [
+          0.3834779847245919,
+          -0.5886621552175684,
+          0.4826357130302156
+        ],
+        "R": 0.8523589204355237,
+        "tz": 0.4826357130302156,
+        "ty": -0.5886621552175684,
+        "tx": 0.3834779847245919,
+        "normal": [
+          0.3315797123146436,
+          -0.4459438676238836,
+          -0.8313777488662962
+        ],
+        "dt_state": 0.004887899999999945
+      },
+      "support_direction": {
+        "support": "frontal_face",
+        "contact_member": "ring_face_or_unknown",
+        "normal_kind": "frontal_or_mixed",
+        "depth_frac": 0.5662353047042749,
+        "tz": 0.4826357130302156,
+        "R": 0.8523589204355237,
+        "true_dz": 0.05592887342143529
+      },
+      "dt_from_first_authoritative_s": 0.034297000000000466,
+      "first_auth_true_dz": -0.16182558820618198,
+      "cleared_since_prior_contact": true,
+      "h_up_implied": 0.7440711265785648,
+      "h_down_implied": null,
+      "impulse_direction_logged": false,
+      "impulse_note": "collision payload has impulse magnitude only (collision_id/threat_level); normal inferred",
+      "classification": {
+        "class": "C",
+        "tighten_upper_tail": false,
+        "reasons": [
+          "incompatible_dz_within_50ms (this=+0.056 vs other=-0.162 at \u0394t=34.3ms) \u2192 FRONTAL clip, no envelope information"
+        ],
+        "exclusion": "frontal_incompatible_dz_burst"
+      },
+      "episode_id": 1
+    },
+    {
+      "flight": "phase6l_F2",
+      "fid": "20260720T071112-cd18c5fb",
+      "event_id": 1,
+      "n_in_event": 9,
+      "t_ff": 4.6620244,
+      "impulse": 0.06471516191959381,
+      "threat_level": 1,
+      "first_touch": true,
+      "accepted": true,
+      "reason": "ACCEPT_contact_instant_state",
+      "provenance": "state_gate_rel",
+      "true_dz": 0.05592887342143529,
+      "true_dz_raw": 0.05592887342143529,
+      "proxy_0p8_minus_true_dz": 0.7440711265785648,
+      "R_state": 0.8523589204355237,
+      "tz_state": 0.4826357130302156,
+      "R_det": 0.8523589204355237,
+      "age": 0.0,
+      "dt_state": 0.0020436999999997596,
+      "tail": "HIGH",
+      "h_up": 0.7440711265785648,
+      "h_down": null,
+      "clearance_deficit_high": 0.0,
+      "pitch_att_deg": -43.451611577508075,
+      "roll_att_deg": -15.231993387605904,
+      "level_pitch_deg": -17.801972875502017,
+      "gate_lock_epoch": {
+        "proxy": "fresh_R_bucket",
+        "R_bucket": 0.85,
+        "age": 0.0,
+        "note": "no gate_lock_id in state logs; bucket = rounded R"
+      },
+      "feature_age_s": 0.0,
+      "last_pre_impulse_pose": {
+        "t": [
+          0.3834779847245919,
+          -0.5886621552175684,
+          0.4826357130302156
+        ],
+        "R": 0.8523589204355237,
+        "tz": 0.4826357130302156,
+        "ty": -0.5886621552175684,
+        "tx": 0.3834779847245919,
+        "normal": [
+          0.3315797123146436,
+          -0.4459438676238836,
+          -0.8313777488662962
+        ],
+        "dt_state": 0.0020436999999997596
+      },
+      "support_direction": {
+        "support": "frontal_face",
+        "contact_member": "ring_face_or_unknown",
+        "normal_kind": "frontal_or_mixed",
+        "depth_frac": 0.5662353047042749,
+        "tz": 0.4826357130302156,
+        "R": 0.8523589204355237,
+        "true_dz": 0.05592887342143529
+      },
+      "dt_from_first_authoritative_s": 0.04122860000000017,
+      "first_auth_true_dz": -0.16182558820618198,
+      "cleared_since_prior_contact": true,
+      "h_up_implied": 0.7440711265785648,
+      "h_down_implied": null,
+      "impulse_direction_logged": false,
+      "impulse_note": "collision payload has impulse magnitude only (collision_id/threat_level); normal inferred",
+      "classification": {
+        "class": "C",
+        "tighten_upper_tail": false,
+        "reasons": [
+          "incompatible_dz_within_50ms (this=+0.056 vs other=-0.162 at \u0394t=41.2ms) \u2192 FRONTAL clip, no envelope information"
+        ],
+        "exclusion": "frontal_incompatible_dz_burst"
+      },
+      "episode_id": 1
+    },
+    {
+      "flight": "phase6l_F2",
+      "fid": "20260720T071112-cd18c5fb",
+      "event_id": 1,
+      "n_in_event": 9,
+      "t_ff": 4.668993,
+      "impulse": 0.061208512634038925,
+      "threat_level": 1,
+      "first_touch": true,
+      "accepted": true,
+      "reason": "ACCEPT_contact_instant_state",
+      "provenance": "state_gate_rel",
+      "true_dz": 0.05592887342143529,
+      "true_dz_raw": 0.05592887342143529,
+      "proxy_0p8_minus_true_dz": 0.7440711265785648,
+      "R_state": 0.8523589204355237,
+      "tz_state": 0.4826357130302156,
+      "R_det": 0.8523589204355237,
+      "age": 0.0,
+      "dt_state": 0.009012300000000195,
+      "tail": "HIGH",
+      "h_up": 0.7440711265785648,
+      "h_down": null,
+      "clearance_deficit_high": 0.0,
+      "pitch_att_deg": -43.451611577508075,
+      "roll_att_deg": -15.231993387605904,
+      "level_pitch_deg": -17.801972875502017,
+      "gate_lock_epoch": {
+        "proxy": "fresh_R_bucket",
+        "R_bucket": 0.85,
+        "age": 0.0,
+        "note": "no gate_lock_id in state logs; bucket = rounded R"
+      },
+      "feature_age_s": 0.0,
+      "last_pre_impulse_pose": {
+        "t": [
+          0.3834779847245919,
+          -0.5886621552175684,
+          0.4826357130302156
+        ],
+        "R": 0.8523589204355237,
+        "tz": 0.4826357130302156,
+        "ty": -0.5886621552175684,
+        "tx": 0.3834779847245919,
+        "normal": [
+          0.3315797123146436,
+          -0.4459438676238836,
+          -0.8313777488662962
+        ],
+        "dt_state": 0.009012300000000195
+      },
+      "support_direction": {
+        "support": "frontal_face",
+        "contact_member": "ring_face_or_unknown",
+        "normal_kind": "frontal_or_mixed",
+        "depth_frac": 0.5662353047042749,
+        "tz": 0.4826357130302156,
+        "R": 0.8523589204355237,
+        "true_dz": 0.05592887342143529
+      },
+      "dt_from_first_authoritative_s": 0.048197200000000606,
+      "first_auth_true_dz": -0.16182558820618198,
+      "cleared_since_prior_contact": true,
+      "h_up_implied": 0.7440711265785648,
+      "h_down_implied": null,
+      "impulse_direction_logged": false,
+      "impulse_note": "collision payload has impulse magnitude only (collision_id/threat_level); normal inferred",
+      "classification": {
+        "class": "C",
+        "tighten_upper_tail": false,
+        "reasons": [
+          "incompatible_dz_within_50ms (this=+0.056 vs other=-0.162 at \u0394t=48.2ms) \u2192 FRONTAL clip, no envelope information"
+        ],
+        "exclusion": "frontal_incompatible_dz_burst"
+      },
+      "episode_id": 1
+    }
+  ],
+  "episodes_brief": [
+    {
+      "event_id": 0,
+      "t_start": 4.4933281,
+      "t_end": 4.4956505,
+      "n": 3,
+      "first_auth_t": 4.4933281,
+      "first_auth_dz": null,
+      "dz_values": []
+    },
+    {
+      "event_id": 1,
+      "t_start": 4.6207958,
+      "t_end": 4.668993,
+      "n": 9,
+      "first_auth_t": 4.6207958,
+      "first_auth_dz": -0.16182558820618198,
+      "dz_values": [
+        -0.1618,
+        0.0559
+      ]
+    }
+  ]
+}
