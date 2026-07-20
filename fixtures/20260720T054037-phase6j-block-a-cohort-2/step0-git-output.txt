@@ -1,0 +1,99 @@
+﻿===== git pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:87 char:44
++ ... it pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+Updating 876d082..e16d506
+Fast-forward
+ analysis/2026-07-19-first-passes.md                |   20 +-
+ analysis/2026-07-19-first-passes/first-passes.md   |   20 +-
+ .../2026-07-19-first-passes/run_first_passes.py    |  116 +-
+ analysis/2026-07-19-first-passes/summary.json      |  199 +-
+ analysis/2026-07-20-a8-half-extent.md              |   37 +
+ analysis/2026-07-20-a8-half-extent/report.md       |   37 +
+ .../run_a8_half_extent.py                          |  418 ++
+ analysis/2026-07-20-a8-half-extent/summary.json    |  209 +
+ analysis/2026-07-20-d7-banked-bearing.md           |  198 +
+ .../2026-07-20-d7-banked-bearing/bank_samples.csv  |  199 +
+ .../d7-banked-bearing.md                           |  198 +
+ .../2026-07-20-d7-banked-bearing/per_flight.csv    |   79 +
+ .../run_d7_banked_bearing.py                       |  801 +++
+ analysis/2026-07-20-d7-banked-bearing/summary.json | 5100 ++++++++++++++++++++
+ analysis/2026-07-20-nr2-ribbon-intergate.md        |   27 +
+ analysis/2026-07-20-nr2-ribbon-intergate/report.md |   27 +
+ .../run_nr2_ribbon.py                              |  516 ++
+ .../2026-07-20-nr2-ribbon-intergate/summary.json   |   92 +
+ analysis/2026-07-20-nr4-corridor-clearance.md      |   30 +
+ .../2026-07-20-nr4-corridor-clearance/report.md    |   30 +
+ .../run_nr4_corridor.py                            |  672 +++
+ .../2026-07-20-nr4-corridor-clearance/summary.json |  308 ++
+ analysis/2026-07-20-nr5-gate2-truth.md             |   26 +
+ analysis/2026-07-20-nr5-gate2-truth/report.md      |   26 +
+ .../run_nr5_gate2_truth.py                         |  504 ++
+ analysis/2026-07-20-nr5-gate2-truth/summary.json   |  374 ++
+ analysis/_d7_inventory_out.json                    | 1769 +++++++
+ analysis/_inventory_d7.py                          |  230 +
+ docs/design/terminal-vertical-wiring.md            |   49 +
+ docs/thinktank/RESPONSE12.md                       |  120 +
+ src/aigp/app.py                                    |   11 +-
+ src/aigp/planning/race_planner.py                  |   13 +-
+ src/aigp/planning/vertical_owner.py                |   34 +-
+ tests/unit/test_planner.py                         |   27 +
+ tests/unit/test_vertical_owner.py                  |  135 +-
+ tuning/pytest-windows-f10b35c-basetemp-full.txt    |  Bin 0 -> 13284 bytes
+ tuning/run_terminal_ab_mock.py                     |  416 +-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1362 ++++++
+ .../summary.json                                   | 1408 ++++++
+ .../summary.md                                     |   53 +
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1362 ++++++
+ .../summary.json                                   | 1408 ++++++
+ .../summary.md                                     |   51 +
+ tuning/windows-ci.md                               |   32 +
+ 46 files changed, 18564 insertions(+), 221 deletions(-)
+ create mode 100644 analysis/2026-07-20-a8-half-extent.md
+ create mode 100644 analysis/2026-07-20-a8-half-extent/report.md
+ create mode 100644 analysis/2026-07-20-a8-half-extent/run_a8_half_extent.py
+ create mode 100644 analysis/2026-07-20-a8-half-extent/summary.json
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing.md
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/bank_samples.csv
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/d7-banked-bearing.md
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/per_flight.csv
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/run_d7_banked_bearing.py
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/summary.json
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate.md
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/report.md
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/run_nr2_ribbon.py
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/summary.json
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance.md
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/report.md
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/run_nr4_corridor.py
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/summary.json
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth.md
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/report.md
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/run_nr5_gate2_truth.py
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/summary.json
+ create mode 100644 analysis/_d7_inventory_out.json
+ create mode 100644 analysis/_inventory_d7.py
+ create mode 100644 docs/thinktank/RESPONSE12.md
+ create mode 100644 tuning/pytest-windows-f10b35c-basetemp-full.txt
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/runs.csv
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/runs.json
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/summary.json
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/summary.md
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/runs.csv
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/runs.json
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/summary.json
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/summary.md
+
+===== git log -1 --oneline =====
+e16d506 Ratified admission horizon + honest-measurement gates at the oracle door
+
+===== ancestor e16d506 =====
+OK
+

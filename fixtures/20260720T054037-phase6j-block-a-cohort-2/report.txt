@@ -1,0 +1,163 @@
+﻿===== PHASE6J BLOCK A COHORT 2 2026-07-20T08:33:15.8616193+03:00 =====
+===== git pull --rebase =====
+git : From https://github.com/tsionely/eni_dcim
+At line:87 char:44
++ ... it pull --rebase =====`n"+(git pull --rebase origin main 2>&1|Out-Str ...
++                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...ionely/eni_dcim:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+Updating 876d082..e16d506
+Fast-forward
+ analysis/2026-07-19-first-passes.md                |   20 +-
+ analysis/2026-07-19-first-passes/first-passes.md   |   20 +-
+ .../2026-07-19-first-passes/run_first_passes.py    |  116 +-
+ analysis/2026-07-19-first-passes/summary.json      |  199 +-
+ analysis/2026-07-20-a8-half-extent.md              |   37 +
+ analysis/2026-07-20-a8-half-extent/report.md       |   37 +
+ .../run_a8_half_extent.py                          |  418 ++
+ analysis/2026-07-20-a8-half-extent/summary.json    |  209 +
+ analysis/2026-07-20-d7-banked-bearing.md           |  198 +
+ .../2026-07-20-d7-banked-bearing/bank_samples.csv  |  199 +
+ .../d7-banked-bearing.md                           |  198 +
+ .../2026-07-20-d7-banked-bearing/per_flight.csv    |   79 +
+ .../run_d7_banked_bearing.py                       |  801 +++
+ analysis/2026-07-20-d7-banked-bearing/summary.json | 5100 ++++++++++++++++++++
+ analysis/2026-07-20-nr2-ribbon-intergate.md        |   27 +
+ analysis/2026-07-20-nr2-ribbon-intergate/report.md |   27 +
+ .../run_nr2_ribbon.py                              |  516 ++
+ .../2026-07-20-nr2-ribbon-intergate/summary.json   |   92 +
+ analysis/2026-07-20-nr4-corridor-clearance.md      |   30 +
+ .../2026-07-20-nr4-corridor-clearance/report.md    |   30 +
+ .../run_nr4_corridor.py                            |  672 +++
+ .../2026-07-20-nr4-corridor-clearance/summary.json |  308 ++
+ analysis/2026-07-20-nr5-gate2-truth.md             |   26 +
+ analysis/2026-07-20-nr5-gate2-truth/report.md      |   26 +
+ .../run_nr5_gate2_truth.py                         |  504 ++
+ analysis/2026-07-20-nr5-gate2-truth/summary.json   |  374 ++
+ analysis/_d7_inventory_out.json                    | 1769 +++++++
+ analysis/_inventory_d7.py                          |  230 +
+ docs/design/terminal-vertical-wiring.md            |   49 +
+ docs/thinktank/RESPONSE12.md                       |  120 +
+ src/aigp/app.py                                    |   11 +-
+ src/aigp/planning/race_planner.py                  |   13 +-
+ src/aigp/planning/vertical_owner.py                |   34 +-
+ tests/unit/test_planner.py                         |   27 +
+ tests/unit/test_vertical_owner.py                  |  135 +-
+ tuning/pytest-windows-f10b35c-basetemp-full.txt    |  Bin 0 -> 13284 bytes
+ tuning/run_terminal_ab_mock.py                     |  416 +-
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1362 ++++++
+ .../summary.json                                   | 1408 ++++++
+ .../summary.md                                     |   53 +
+ .../runs.csv                                       |   21 +
+ .../runs.json                                      | 1362 ++++++
+ .../summary.json                                   | 1408 ++++++
+ .../summary.md                                     |   51 +
+ tuning/windows-ci.md                               |   32 +
+ 46 files changed, 18564 insertions(+), 221 deletions(-)
+ create mode 100644 analysis/2026-07-20-a8-half-extent.md
+ create mode 100644 analysis/2026-07-20-a8-half-extent/report.md
+ create mode 100644 analysis/2026-07-20-a8-half-extent/run_a8_half_extent.py
+ create mode 100644 analysis/2026-07-20-a8-half-extent/summary.json
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing.md
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/bank_samples.csv
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/d7-banked-bearing.md
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/per_flight.csv
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/run_d7_banked_bearing.py
+ create mode 100644 analysis/2026-07-20-d7-banked-bearing/summary.json
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate.md
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/report.md
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/run_nr2_ribbon.py
+ create mode 100644 analysis/2026-07-20-nr2-ribbon-intergate/summary.json
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance.md
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/report.md
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/run_nr4_corridor.py
+ create mode 100644 analysis/2026-07-20-nr4-corridor-clearance/summary.json
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth.md
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/report.md
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/run_nr5_gate2_truth.py
+ create mode 100644 analysis/2026-07-20-nr5-gate2-truth/summary.json
+ create mode 100644 analysis/_d7_inventory_out.json
+ create mode 100644 analysis/_inventory_d7.py
+ create mode 100644 docs/thinktank/RESPONSE12.md
+ create mode 100644 tuning/pytest-windows-f10b35c-basetemp-full.txt
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/runs.csv
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/runs.json
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/summary.json
+ create mode 100644 tuning/terminal-ab-be0c779-be0c779-20260720T042404Z/summary.md
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/runs.csv
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/runs.json
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/summary.json
+ create mode 100644 tuning/terminal-ab-f10b35c-f10b35c-20260719T203238Z/summary.md
+
+===== git log -1 --oneline =====
+e16d506 Ratified admission horizon + honest-measurement gates at the oracle door
+
+===== ancestor e16d506 =====
+OK
+
+LOCK=Sakana 22652 2026-07-20T08:33:16.1192617+03:00 phase6j
+
+
+=== F1 arm=control attempt=1 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=7.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 2, 'duration_s': 11.06811779999407, 'loop_overrun_frac': 0.01734730755330683, 'loop_stats': {'ticks': 2767, 'overruns': 48, 'overrun_frac': 0.01734730755330683, 'max_late_us': 13130}, 'flight_id': '20260720T053402-f170ead6', 'log_dir': 'logs\\20260720T053402-f170ead6'}
+F1 COUNTED fid=20260720T053402-f170ead6 gates=0 abort=environment collision (impulse=7.2) closest=4.036 px=314.5,289.5 agi_max=0 slice_frames=235 truncated=False
+
+=== F2 arm=live attempt=2 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=6.9)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 18.981346700020367, 'loop_overrun_frac': 0.0012655557899177389, 'loop_stats': {'ticks': 4741, 'overruns': 6, 'overrun_frac': 0.0012655557899177389, 'max_late_us': 11588}, 'flight_id': '20260720T053514-5cebc2b2', 'log_dir': 'logs\\20260720T053514-5cebc2b2'}
+F2 COUNTED fid=20260720T053514-5cebc2b2 gates=0 abort=environment collision (impulse=6.9) closest=1.136 px=355.2213247215492,91.0396817324903 agi_max=0 slice_frames=473 truncated=False
+
+=== F3 arm=control attempt=3 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 114 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.2)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 36, 'duration_s': 10.795992199971806, 'loop_overrun_frac': 0.008521674694331233, 'loop_stats': {'ticks': 2699, 'overruns': 23, 'overrun_frac': 0.008521674694331233, 'max_late_us': 13803}, 'flight_id': '20260720T053635-f170ead6', 'log_dir': 'logs\\20260720T053635-f170ead6'}
+F3 COUNTED fid=20260720T053635-f170ead6 gates=0 abort=environment collision (impulse=1.2) closest=1.524 px=378.55621337890625,195.95845222473145 agi_max=0 slice_frames=229 truncated=False
+
+=== F4 arm=live attempt=4 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 116 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.9)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 2, 'env_hits': 1, 'duration_s': 18.888006599998334, 'loop_overrun_frac': 0.013765353663701822, 'loop_stats': {'ticks': 4722, 'overruns': 65, 'overrun_frac': 0.013765353663701822, 'max_late_us': 11056}, 'flight_id': '20260720T053745-5cebc2b2', 'log_dir': 'logs\\20260720T053745-5cebc2b2'}
+F4 COUNTED fid=20260720T053745-5cebc2b2 gates=0 abort=environment collision (impulse=3.9) closest=1.752 px=636.8780947016415,183.77796703987713 agi_max=0 slice_frames=470 truncated=False
+
+=== F5 arm=control attempt=5 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=3.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 22, 'duration_s': 11.172010499984026, 'loop_overrun_frac': 0.006802721088435374, 'loop_stats': {'ticks': 2793, 'overruns': 19, 'overrun_frac': 0.006802721088435374, 'max_late_us': 10057}, 'flight_id': '20260720T053905-f170ead6', 'log_dir': 'logs\\20260720T053905-f170ead6'}
+F5 COUNTED fid=20260720T053905-f170ead6 gates=0 abort=environment collision (impulse=3.0) closest=1.297 px=214.63729858398438,116.42379760742188 agi_max=0 slice_frames=235 truncated=False
+
+=== F6 arm=live attempt=6 ===
+CMD=scripts\fly_once.py --max-duration 300 --patch safety.flight_timeout_s=300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=True
+param overrides: {'safety.flight_timeout_s': 300, 'planner.commit.speed_mps': 1.8, 'planner.terminal.enable': 'True'}
+Waiting for sim heartbeat...
+Connected. Starting IO agents...
+gyro bias calibrated over 115 samples: [0. 0. 0.]; level ref roll=+0.000 pitch=-0.311
+live calibration (180 samples): bias=[0. 0. 0.] level roll=+0.000 pitch=-0.311
+Flight result: {'finished': False, 'aborted': True, 'abort_reason': 'environment collision (impulse=1.0)', 'gates_passed': 0, 'lap_time_s': None, 'gate_clips': 0, 'env_hits': 1, 'duration_s': 10.399856199976057, 'loop_overrun_frac': 0.002307692307692308, 'loop_stats': {'ticks': 2600, 'overruns': 6, 'overrun_frac': 0.002307692307692308, 'max_late_us': 4687}, 'flight_id': '20260720T054016-5cebc2b2', 'log_dir': 'logs\\20260720T054016-5cebc2b2'}
+F6 COUNTED fid=20260720T054016-5cebc2b2 gates=0 abort=environment collision (impulse=1.0) closest=1.042 px=221.26803238783214,340.4027704200297 agi_max=0 slice_frames=217 truncated=False
+SIX FLIGHTS COMPLETE

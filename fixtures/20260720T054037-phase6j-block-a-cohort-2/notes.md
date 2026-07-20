@@ -1,0 +1,15 @@
+# Phase 6j — Block A Cohort 2
+
+- HEAD: `e16d5068cabf6579c38304ed2eb3c98a1587e5b2`; e16d506 ancestor OK.
+- Six alternating verified R2 flights at 1.8 m/s; terminal.enable only arm difference.
+
+| F | Arm | Log | Gates | Abort | Closest + px | age | agi_max | Recording |
+|---:|---|---|---:|---|---|---|---:|---|
+| 1 | control | `20260720T053402-f170ead6` | 0 | environment collision (impulse=7.2) | 4.04m [314.5,289.5] | 0.000s | 0 | 235 frames, 10.9MB |
+| 2 | live | `20260720T053514-5cebc2b2` | 0 | environment collision (impulse=6.9) | 1.14m [355.2,91.0] | 0.029s | 0 | 473 frames, 20.5MB |
+| 3 | control | `20260720T053635-f170ead6` | 0 | environment collision (impulse=1.2) | 1.52m [378.6,196.0] | 0.005s | 0 | 229 frames, 11.7MB |
+| 4 | live | `20260720T053745-5cebc2b2` | 0 | environment collision (impulse=3.9) | 1.75m [636.9,183.8] | 0.040s | 0 | 470 frames, 24.8MB |
+| 5 | control | `20260720T053905-f170ead6` | 0 | environment collision (impulse=3.0) | 1.30m [214.6,116.4] | 0.010s | 0 | 235 frames, 12.6MB |
+| 6 | live | `20260720T054016-5cebc2b2` | 0 | environment collision (impulse=1.0) | 1.04m [221.3,340.4] | 0.007s | 0 | 217 frames, 11.4MB |
+
+## Post-pass / inter-gate
