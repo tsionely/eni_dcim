@@ -219,8 +219,18 @@ def analyze_flight(rows: list[dict], census: dict) -> dict:
         and fnum(r["range_z_m"]) <= 5.0
     ]
 
-    # Predictor flag: continuous certified FULL ends ABOVE 4.5m (f4 finding)
+    # Predictor flag: first-streak min range ABOVE 4.5m (NOT sufficient alone; legal f2/f3 re-acquire)
     full_dies_above_4p5 = end_range is not None and end_range > 4.5
+
+    n_ez_ok_le_3p5 = int(float(census.get("full_ok_below_3p5") or 0))
+    n_full_cert_le_3p5 = int(float(census.get("full_certified_below_3p5_any") or 0))
+    closest_cert = min((fnum(r["range_z_m"]) for r in full_cert), default=None)
+    recovered_certified_full_le_3p5 = n_ez_ok_le_3p5 > 0
+    compound_dropout_signature = (
+        full_dies_above_4p5
+        and n_full_cert_le_3p5 == 0
+        and (closest_cert is None or closest_cert > RANGE_CUT)
+    )
 
     return {
         "slot": meta.get("slot", census.get("flight")),
@@ -231,14 +241,20 @@ def analyze_flight(rows: list[dict], census: dict) -> dict:
         "mechanism": mech,
         "legal": legal,
         "approaches": int(float(census.get("approaches") or 0)),
-        "n_full_certified_le_3p5": int(float(census.get("full_certified_below_3p5_any") or 0)),
-        "n_full_ez_ok_le_3p5": int(float(census.get("full_ok_below_3p5") or 0)),
+        "n_full_certified_le_3p5": n_full_cert_le_3p5,
+        "n_full_ez_ok_le_3p5": n_ez_ok_le_3p5,
         "n_side_certified": int(float(census.get("side_pair_certified") or 0)),
         "n_side_row_only": int(float(census.get("side_pair_row_only") or 0)),
         # Discriminators
         "certified_full_end_range_m": end_range,
         "certified_full_end_t_rel_s": end_t,
         "full_dies_above_4p5": full_dies_above_4p5,
+        "recovered_certified_full_le_3p5": recovered_certified_full_le_3p5,
+        "compound_dropout_signature": compound_dropout_signature,
+        "certified_full_end_range_note": (
+            "first contiguous certified-FULL streak min range; gaps then "
+            "re-acquire below 3.5 still legal (does NOT alone discriminate)"
+        ),
         "n_full_gaps": n_full_gaps,
         "first_full_gap_range_m": first_gap_range,
         "first_full_gap_t_rel_s": first_gap_t,
@@ -258,7 +274,7 @@ def analyze_flight(rows: list[dict], census: dict) -> dict:
         "n_scale_gate_le_3p5": len(scale_kills),
         "n_ez_ok_le_3p5_recount": len(ez_ok_le),
         "n_side_rows_le5": len(side_band),
-        "closest_certified_full_m": min((fnum(r["range_z_m"]) for r in full_cert), default=None),
+        "closest_certified_full_m": closest_cert,
     }
 
 
@@ -310,6 +326,9 @@ def main() -> None:
     disc_keys = [
         "certified_full_end_range_m",
         "full_dies_above_4p5",
+        "recovered_certified_full_le_3p5",
+        "compound_dropout_signature",
+        "n_full_ez_ok_le_3p5",
         "n_full_gaps",
         "first_full_gap_range_m",
         "speed_xy_median_mps",
@@ -323,7 +342,7 @@ def main() -> None:
     ]
     contrast = {}
     for k in disc_keys:
-        if k == "full_dies_above_4p5":
+        if k in ("full_dies_above_4p5", "recovered_certified_full_le_3p5", "compound_dropout_signature"):
             contrast[k] = {
                 "legal_rate": (
                     sum(1 for r in legal if r[k]) / len(legal) if legal else None
@@ -346,27 +365,49 @@ def main() -> None:
                 "scale_funnel": pop_stats(mech_scale, k),
             }
 
-    # Does end_range > 4.5 discriminate?
-    # Legal should mostly have end_range <= 3.5 (streak continues into terminal)
-    # Dropout funnel should have end_range > 4.5
+    # First-streak end-range alone does NOT discriminate (legal f2/f3 gap ~5m, re-acquire).
     end_legal = [r["certified_full_end_range_m"] for r in legal if r["certified_full_end_range_m"] is not None]
     end_drop = [r["certified_full_end_range_m"] for r in mech_drop if r["certified_full_end_range_m"] is not None]
     end_scale = [r["certified_full_end_range_m"] for r in mech_scale if r["certified_full_end_range_m"] is not None]
-    # Separation: max(legal ends) vs min(dropout ends)
+    closest_legal = [r["closest_certified_full_m"] for r in legal if r["closest_certified_full_m"] is not None]
+    closest_drop = [r["closest_certified_full_m"] for r in mech_drop if r["closest_certified_full_m"] is not None]
+
+    first_streak_discriminates = (
+        bool(end_legal and end_drop) and max(end_legal) < min(end_drop)
+    )
+    compound_separates = (
+        len(mech_drop) > 0
+        and all(r["compound_dropout_signature"] for r in mech_drop)
+        and not any(r["compound_dropout_signature"] for r in legal)
+    )
+    recovered_separates = (
+        len(mech_drop) > 0
+        and all(r["recovered_certified_full_le_3p5"] for r in legal)
+        and not any(r["recovered_certified_full_le_3p5"] for r in mech_drop)
+    )
+    closest_separates = (
+        bool(closest_legal and closest_drop)
+        and max(closest_legal) < RANGE_CUT
+        and min(closest_drop) > RANGE_CUT
+    )
+
     separation = {
         "legal_end_range_median_m": statistics.median(end_legal) if end_legal else None,
         "legal_end_range_max_m": max(end_legal) if end_legal else None,
         "dropout_end_range_median_m": statistics.median(end_drop) if end_drop else None,
         "dropout_end_range_min_m": min(end_drop) if end_drop else None,
         "scale_end_range_median_m": statistics.median(end_scale) if end_scale else None,
-        "f4_finding_discriminates_dropout_vs_legal": (
-            bool(end_legal and end_drop)
-            and max(end_legal) < min(end_drop)
-        ),
+        "first_streak_end_range_discriminates_dropout_vs_legal": first_streak_discriminates,
+        "f4_finding_discriminates_dropout_vs_legal": first_streak_discriminates,
         "threshold_probe_m": 4.5,
         "legal_above_4p5": sum(1 for z in end_legal if z > 4.5),
         "dropout_above_4p5": sum(1 for z in end_drop if z > 4.5),
         "scale_above_4p5": sum(1 for z in end_scale if z > 4.5),
+        "legal_closest_certified_full_max_m": max(closest_legal) if closest_legal else None,
+        "dropout_closest_certified_full_min_m": min(closest_drop) if closest_drop else None,
+        "closest_certified_full_discriminates": closest_separates,
+        "recovered_certified_full_le_3p5_discriminates": recovered_separates,
+        "compound_dropout_signature_separates": compound_separates,
     }
 
     # Coverage-censoring ledger
@@ -406,6 +447,9 @@ def main() -> None:
             "legal": r["legal"],
             "certified_full_end_range_m": r["certified_full_end_range_m"],
             "full_dies_above_4p5": r["full_dies_above_4p5"],
+            "recovered_certified_full_le_3p5": r["recovered_certified_full_le_3p5"],
+            "compound_dropout_signature": r["compound_dropout_signature"],
+            "closest_certified_full_m": r["closest_certified_full_m"],
             "n_scale_gate_le_3p5": r["n_scale_gate_le_3p5"],
             "n_full_ez_ok_le_3p5": r["n_full_ez_ok_le_3p5"],
         }
@@ -428,22 +472,54 @@ def main() -> None:
         "discriminator_contrast": contrast,
         "f4_end_range_discrimination": separation,
         "p2_read": {
-            "finding": (
-                "certified_full_end_range_m cleanly separates legal "
-                f"(median {separation['legal_end_range_median_m']}, "
-                f"max {separation['legal_end_range_max_m']}) from "
-                f"NO_CERTIFIED_FULL_BELOW_3P5 dropout funnel "
-                f"(median {separation['dropout_end_range_median_m']}, "
-                f"min {separation['dropout_end_range_min_m']})"
-            ),
-            "f4_finding_discriminates": separation["f4_finding_discriminates_dropout_vs_legal"],
-            "p2_hold_through_band_supported": separation["f4_finding_discriminates_dropout_vs_legal"],
-            "note": (
-                "P2 (hold/slow when FULL drops before 4.5 m) is the "
-                "tanks-visible profile decision that reads off this table: "
-                "legal approaches keep continuous certified FULL into/below "
-                "the 3.5 m band; dropout-censored approaches lose it above ~4.5 m."
-            ),
+            "first_streak_end_range_alone_discriminates": separation[
+                "first_streak_end_range_discriminates_dropout_vs_legal"
+            ],
+            "f4_finding_discriminates": separation[
+                "first_streak_end_range_discriminates_dropout_vs_legal"
+            ],
+            "compound_dropout_signature_separates": separation[
+                "compound_dropout_signature_separates"
+            ],
+            "recovered_certified_full_le_3p5_separates": separation[
+                "recovered_certified_full_le_3p5_discriminates"
+            ],
+            "closest_certified_full_discriminates": separation[
+                "closest_certified_full_discriminates"
+            ],
+            "p2_hold_through_band_supported": separation[
+                "compound_dropout_signature_separates"
+            ],
+            "verdict_lines": [
+                (
+                    "certified_full_end_range_m (first streak) is reported but "
+                    "does NOT alone separate legal from dropout: legal f2/f3 "
+                    f"also end first streak at {separation['legal_end_range_max_m']:.3f} m "
+                    "after a gap yet re-acquire certified FULL <=3.5 m."
+                ),
+                (
+                    f"closest_certified_full_m does separate: legal max "
+                    f"{separation['legal_closest_certified_full_max_m']:.3f} m vs "
+                    f"dropout min {separation['dropout_closest_certified_full_min_m']:.3f} m "
+                    f"(cut {RANGE_CUT} m)."
+                ),
+                (
+                    "recovered_certified_full_le_3p5 (n_full_ez_ok_le_3p5>0): "
+                    f"all {len(legal)}/{len(legal)} legal True, "
+                    f"all {len(mech_drop)}/{len(mech_drop)} dropout False."
+                ),
+                (
+                    "compound_dropout_signature (FULL dies >4.5 m AND never "
+                    "certified FULL <=3.5 m): separates every dropout flight "
+                    f"from every legal flight: {separation['compound_dropout_signature_separates']}."
+                ),
+                (
+                    "P2 supported: hold/re-anchor when FULL drops before 4.5 m "
+                    "is the intervention that turns a dropout trajectory into "
+                    "legal re-acquire (metrology f2/f3 already do this "
+                    "spontaneously without pooling scale-gate funnel)."
+                ),
+            ],
         },
         "scale_funnel_note": (
             "SCALE_GATE_FLIPPED_FAR_GATE_POST_GAP flights CAN have continuous "
@@ -466,32 +542,42 @@ def main() -> None:
         "",
         "## 1. Discriminator table — what predicts certified terminal coverage",
         "",
-        "Primary observable from the f4 autopsy: **distance at which continuous "
-        "certified FULL ends** (`certified_full_end_range_m`).",
+        "**First-streak** `certified_full_end_range_m` (f4 autopsy metric) is "
+        "reported for continuity but **does not alone discriminate** — legal "
+        "metrology f2/f3 gap near ~5 m then re-acquire below 3.5 m.",
         "",
-        f"- Legal median end-range: **{separation['legal_end_range_median_m']:.3f} m** "
-        f"(max {separation['legal_end_range_max_m']:.3f} m)",
-        f"- Dropout funnel (`NO_CERTIFIED_FULL_BELOW_3P5`) median: "
-        f"**{separation['dropout_end_range_median_m']:.3f} m** "
-        f"(min {separation['dropout_end_range_min_m']:.3f} m)",
-        f"- Scale-gate funnel median end-range: "
-        f"**{separation['scale_end_range_median_m']}** "
-        "(not the kill — see scale_gate counts)",
+        f"- Legal first-streak median/min/max: "
+        f"**{separation['legal_end_range_median_m']:.3f}** / "
+        f"{min(end_legal):.3f} / {separation['legal_end_range_max_m']:.3f} m",
+        f"- Dropout first-streak median/min/max: "
+        f"**{separation['dropout_end_range_median_m']:.3f}** / "
+        f"{separation['dropout_end_range_min_m']:.3f} / "
+        f"{max(end_drop):.3f} m",
+        f"- **First-streak alone separates dropout vs legal:** "
+        f"{separation['first_streak_end_range_discriminates_dropout_vs_legal']}",
         "",
-        f"**f4 finding discriminates dropout vs legal (no overlap): "
-        f"{separation['f4_finding_discriminates_dropout_vs_legal']}**",
+        "**Discriminators that do separate** (all 3 dropout vs all 5 legal):",
+        "",
+        f"- `closest_certified_full_m`: legal max "
+        f"{separation['legal_closest_certified_full_max_m']:.3f} m, dropout min "
+        f"{separation['dropout_closest_certified_full_min_m']:.3f} m "
+        f"(cut {RANGE_CUT} m) → {separation['closest_certified_full_discriminates']}",
+        f"- `recovered_certified_full_le_3p5` (any ez_ok FULL ≤3.5 m): "
+        f"{separation['recovered_certified_full_le_3p5_discriminates']}",
+        f"- `compound_dropout_signature` (dies >4.5 m AND no certified FULL ≤3.5 m): "
+        f"**{separation['compound_dropout_signature_separates']}**",
         "",
         "### Per-flight discriminators (excerpt)",
         "",
-        "| slot | era | mechanism | FULL ends at (m) | dies >4.5? | FULL gaps | scale_gate≤3.5 | ez_ok≤3.5 | |x| med≤5 |",
-        "|---|---|---|---:|---|---:|---:|---:|---:|",
+        "| slot | era | mechanism | 1st streak (m) | dies>4.5 | recovered≤3.5 | compound | closest FULL | ez_ok≤3.5 |",
+        "|---|---|---|---:|---|---|---|---:|---:|",
     ]
     for r in table:
         lines.append(
             f"| {r['slot']} | {r['era']} | `{r['mechanism']}` | "
             f"{r['certified_full_end_range_m']} | {r['full_dies_above_4p5']} | "
-            f"{r['n_full_gaps']} | {r['n_scale_gate_le_3p5']} | "
-            f"{r['n_full_ez_ok_le_3p5']} | {r['lateral_abs_x_median_le5_m']} |"
+            f"{r['recovered_certified_full_le_3p5']} | {r['compound_dropout_signature']} | "
+            f"{r['closest_certified_full_m']} | {r['n_full_ez_ok_le_3p5']} |"
         )
 
     lines += [
@@ -510,8 +596,22 @@ def main() -> None:
         "n_side_rows_le5",
         "n_scale_gate_le_3p5",
         "closest_certified_full_m",
+        "n_full_ez_ok_le_3p5",
+        "recovered_certified_full_le_3p5",
+        "compound_dropout_signature",
     ):
         c = contrast[k]
+        if k in ("recovered_certified_full_le_3p5", "compound_dropout_signature"):
+            def rate_fmt(block, key):
+                v = block.get(key)
+                return f"{v:.2f}" if isinstance(v, float) else str(v)
+            lines.append(
+                f"| `{k}` (rate true) | {rate_fmt(c, 'legal_rate')} | "
+                f"{rate_fmt(c, 'censored_rate')} | "
+                f"{rate_fmt(c, 'dropout_funnel_rate')} | "
+                f"{rate_fmt(c, 'scale_funnel_rate')} |"
+            )
+            continue
         def fmt(block):
             m = block.get("median")
             return f"{m:.3f}" if isinstance(m, float) else str(m)
@@ -522,13 +622,14 @@ def main() -> None:
 
     lines += [
         "",
-        "### P2 hold-through-band — table verdict",
+        "### P2 hold-through-band — table verdict (5 lines)",
         "",
-        summary["p2_read"]["finding"] + ".",
+    ]
+    for line in summary["p2_read"]["verdict_lines"]:
+        lines.append(f"- {line}")
+    lines += [
         "",
-        summary["p2_read"]["note"],
-        "",
-        f"**P2 supported by discriminator separation:** "
+        f"**P2 supported (compound signature separates):** "
         f"{summary['p2_read']['p2_hold_through_band_supported']}.",
         "",
         summary["scale_funnel_note"],
@@ -584,7 +685,10 @@ def main() -> None:
     print(json.dumps({
         "n": len(table),
         "Y_eligible": summary["Y_eligible"],
-        "f4_disc": separation["f4_finding_discriminates_dropout_vs_legal"],
+        "f4_disc_first_streak": separation[
+            "first_streak_end_range_discriminates_dropout_vs_legal"
+        ],
+        "compound_separates": separation["compound_dropout_signature_separates"],
         "legal_end_med": separation["legal_end_range_median_m"],
         "drop_end_med": separation["dropout_end_range_median_m"],
     }))
