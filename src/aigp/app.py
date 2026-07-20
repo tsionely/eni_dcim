@@ -215,6 +215,7 @@ class App:
         imu_cell = bus.cell(Topic.IMU)
         det_cell = bus.cell(Topic.DETECTION)
         feat_cell = bus.cell(Topic.FEATURE)
+        feat_side_cell = bus.cell(Topic.FEATURE_SIDE)
         frame_cell = bus.cell(Topic.FRAME)
         collision_q = bus.events(Topic.COLLISION)
 
@@ -227,6 +228,9 @@ class App:
         feat_seq = 0
         last_feat = None
         last_feat_mono = 0.0
+        last_feat_side = None
+        last_feat_side_mono = 0.0
+        feat_side_seq = 0
         setpoint = None
         state = estimator.state
         t_start = time.monotonic()
@@ -375,6 +379,23 @@ class App:
                                      feat_age, terminal_d_star,
                                      pitch_cal_rad=terminal_pitch_cal,
                                      e_z_clamp_m=terminal_e_clamp)
+                    # Parallel SIDE stream (own topic so the latest-value
+                    # cell cannot shadow the FULL row): observed into the
+                    # oracle's side history every commit tick — the
+                    # overlap volume that matures the rung, earns its
+                    # sigmas, and legalizes transitions. Same exposure,
+                    # no extra note_exposure.
+                    sfresh = feat_side_cell.get_if_newer(feat_side_seq)
+                    if sfresh is not None:
+                        last_feat_side, feat_side_seq = sfresh
+                        last_feat_side_mono = time.monotonic()
+                    if last_feat_side is not None:
+                        terminal_observe(
+                            term_oracle, state, last_feat_side,
+                            time.monotonic() - last_feat_side_mono,
+                            terminal_d_star,
+                            pitch_cal_rad=terminal_pitch_cal,
+                            e_z_clamp_m=terminal_e_clamp)
                     shadow_arbiter.note_exposure(certified)
                     bus.publish_latest(Topic.SHADOW, shadow_terminal_check(
                         shadow_arbiter, setpoint.v_body, state.q_att,

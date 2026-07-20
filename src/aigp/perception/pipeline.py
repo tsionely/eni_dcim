@@ -34,6 +34,9 @@ class PerceptionAgent(Agent):
         self.detections = 0
         self.tracker_fixes = 0
         self.tracker = None
+        self.parallel_below_m = float(params.get(
+            "perception.close_tracker.parallel_below_m",
+            default=3.5)) if params is not None else 3.5
         if params is not None and hasattr(detector, "red_mask"):
             self.tracker = GateCloseTracker(params, detector)
 
@@ -93,6 +96,29 @@ class PerceptionAgent(Agent):
                             center_x_px=float((c[0][0] + c[1][0]) / 2.0),
                             cert_status=detection.cert_status,
                             mode="FULL_QUAD"))
+                    # PARALLEL SIDE PRODUCTION (rung-2 starvation fix):
+                    # the close tracker was SIDE's only producer yet ran
+                    # only when the detector failed — a 29-recording
+                    # sweep found not one legal full->side transition
+                    # because the overlap volume that matures the rung
+                    # never existed. Below parallel_below_m the tracker
+                    # now runs on the SAME anchored frame; only its
+                    # FEATURE is published, on its OWN topic (a
+                    # latest-value cell must not let the side row shadow
+                    # the full row), and never its detection — the
+                    # detector's fix is the better pose; one estimate
+                    # per channel.
+                    if (self.tracker is not None and self.tracker.enabled
+                            and float(detection.rel_pose.t[2])
+                            <= self.parallel_below_m):
+                        tracked = self.tracker.track(
+                            frame, detection.rel_pose,
+                            center_hint_px=detection.center_px)
+                        if (tracked is not None
+                                and self.tracker.last_feature is not None):
+                            self.bus.publish_latest(
+                                Topic.FEATURE_SIDE,
+                                self.tracker.last_feature)
                 continue
             if detection is not None:
                 # Center-only detection (pose rejected by the sanity

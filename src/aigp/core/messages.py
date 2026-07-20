@@ -31,6 +31,7 @@ class Topic:
     SHADOW = "shadow"          # non-actuating terminal-channel shadow
     TERM = "term_status"       # ACTUATING terminal channel per-tick record
     FEATURE = "feature"        # certified terminal vertical feature
+    FEATURE_SIDE = "feature_side"  # parallel SIDE_PAIR rung stream
     # Event queues (discrete, every occurrence matters)
     COLLISION = "collision"
     FSM = "fsm"
