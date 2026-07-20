@@ -71,44 +71,50 @@
  },
  {
   "board_row": 6,
-  "claim": "delta-latch mechanism table (5 clusters)",
+  "claim": "delta-latch mechanism table (5 listed discovery approaches, 4 analyzable)",
   "criterion_registered_at": "0140a79",
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_delta_latch_mechanism.csv",
   "artifact_sha256": "fc5123a38e9ee386a45eb4e37efc4b5a182f099befd390e8bfc5247449c66498",
   "generator_commit": "bb0dbcf",
   "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
-  "independent_n": 5,
+  "independent_n": 4,
   "result": "see artifact",
   "status": "REPORTED",
-  "evidence_commit": "5c69823"
+  "evidence_commit": "5c69823",
+  "attempted_n": 5,
+  "analyzable_n": 4
  },
  {
   "board_row": 7,
-  "claim": "R26-1 shadow restamp verdict (HELD OPEN on definition)",
+  "claim": "R26-1 shadow restamp verdict (HELD OPEN on definition) \u2014 ONE physical approach, correlated replay variants",
   "criterion_registered_at": "0140a79",
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_restamp_verdict.csv",
   "artifact_sha256": "a07d81d02397efe8dd2407fc436401776692c37eacec00442f033307e2075fe7",
   "generator_commit": "bb0dbcf",
   "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
-  "independent_n": 5,
+  "independent_n": 1,
   "result": "see artifact",
   "status": "REPORTED",
-  "evidence_commit": "5c69823"
+  "evidence_commit": "5c69823",
+  "attempted_n": 1,
+  "analyzable_n": 1
  },
  {
   "board_row": 8,
-  "claim": "R26-1 anchor trial rows (raw)",
+  "claim": "R26-1 anchor trial rows (raw) \u2014 ONE physical approach, correlated replay variants",
   "criterion_registered_at": "0140a79",
   "artifact_path": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_r26_1_anchor_trial_rows.csv",
   "artifact_sha256": "903f95e04d6976aeecfef7fc865f2cfdbd7d998ab30b09e0437f8bd3a6958aaa",
   "generator_commit": "bb0dbcf",
   "generator_command": "codex task A/B harnesses (tuning/*.py) at generator commit",
   "independent_unit": "physical_approach",
-  "independent_n": 5,
+  "independent_n": 1,
   "result": "see artifact",
   "status": "REPORTED",
-  "evidence_commit": "5c69823"
+  "evidence_commit": "5c69823",
+  "attempted_n": 1,
+  "analyzable_n": 1
  }
 ]

@@ -35,11 +35,28 @@ a maximum age, or close any board row by itself.
 
 ## Reporting requirements (binding on the artifact)
 
-Three-way split, published separately: the 5 discovery approaches,
-the 18 confirmatory approaches, the pooled 23. **Row-3 closure
-reads the 18-approach confirmatory distribution** (discovery found
-the mechanism; only out-of-sample closes it); the pooled set is
-context. Per approach: auth_at_latch, v_latch, predicted offset,
+**AMENDED before any shadow-fit evidence exists (channel-2 packet
+audit §5): the 5/18/23 partition is set-theoretically unsupported
+by the actual census — only three of the five discovery approaches
+are inside the legal 23.** The mechanically reproducible partition,
+with its members named:
+
+- DISCOVERY-OVERLAP (3, inside the legal 23):
+  20260720T071112-cd18c5fb, 20260720T071333-cd18c5fb,
+  20260720T135008-9aa0ef5c.
+- OFF-TARGET DISCOVERY (2, outside the legal 23, reported as a
+  legacy appendix only): 20260720T071545-cd18c5fb (the
+  zero-analyzable-sample approach, NO_LEGAL_SIDE_MAINTENANCE_
+  INTERVAL) and 20260720T134522-9aa0ef5c.
+- CONFIRMATORY (20): the legal 23 minus the three overlap members.
+- POOLED (23): the full legal census.
+
+Three-way split published separately: the 3 overlap, the 20
+confirmatory, the pooled 23 — plus the legacy discovery appendix
+(5 listed / 4 analyzable, answering a different question and never
+merged). **Row-3 closure reads the 20-approach CONFIRMATORY
+distribution** (discovery found the mechanism; only out-of-sample
+closes it); overlap and pooled are context. Per approach: auth_at_latch, v_latch, predicted offset,
 b0_old, b0_new, remainder, regime labels; plus profile-likelihood
 and cluster-bootstrap bounds, LOAO, and cluster-balanced coverage —
 side by side with the old-path (defect-documentation) numbers.

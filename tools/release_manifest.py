@@ -61,14 +61,43 @@ def _is_ancestor(repo: Path, older: str, newer: str) -> bool:
     return r.returncode == 0
 
 
+def _sha256_at_commit(repo: Path, commit: str, path: str) -> str | None:
+    r = subprocess.run(["git", "show", f"{commit}:{path}"], cwd=repo,
+                       capture_output=True)
+    if r.returncode != 0:
+        return None
+    return hashlib.sha256(r.stdout).hexdigest()
+
+
+def _tree_clean(repo: Path) -> bool:
+    r = subprocess.run(["git", "status", "--porcelain"], cwd=repo,
+                       capture_output=True, text=True)
+    return r.returncode == 0 and r.stdout.strip() == ""
+
+
 def check_manifest(manifest_path: str | Path,
-                   repo_root: str | Path | None = None) -> list[str]:
-    """Returns a list of failures (empty list == manifest verifies)."""
+                   repo_root: str | Path | None = None,
+                   reviewed_tip: str | None = None) -> list[str]:
+    """Returns a list of failures (empty list == manifest verifies).
+
+    Release-grade contract (channel-2 §7 strengthening): pass
+    reviewed_tip (full hash) to additionally enforce — clean working
+    tree; criterion <= generator <= evidence <= reviewed_tip ancestry
+    per row; and, when a row carries evidence_commit, its digest is
+    computed from the COMMITTED bytes (git show evidence:path), never
+    the mutable worktree."""
     manifest_path = Path(manifest_path)
     repo = Path(repo_root) if repo_root is not None else manifest_path.parent
     while repo != repo.parent and not (repo / ".git").exists():
         repo = repo.parent
     failures: list[str] = []
+    if reviewed_tip is not None:
+        if not _commit_exists(repo, reviewed_tip):
+            return [f"reviewed_tip '{reviewed_tip}' does not resolve"]
+        if not _tree_clean(repo):
+            failures.append("working tree not clean at verification "
+                            "time — the transcript would not describe "
+                            "a committed state")
     try:
         rows = json.loads(manifest_path.read_text())
     except (OSError, json.JSONDecodeError) as e:
@@ -83,25 +112,54 @@ def check_manifest(manifest_path: str | Path,
         if any(f.startswith(rid + ":") and "missing" in f
                for f in failures):
             continue
-        art = repo / row["artifact_path"]
-        if not art.exists():
-            failures.append(f"{rid}: artifact does not exist on the "
-                            f"reviewed tip: {row['artifact_path']}")
-        elif _sha256(art) != row["artifact_sha256"]:
-            failures.append(f"{rid}: artifact digest mismatch: "
-                            f"{row['artifact_path']}")
+        ev = row.get("evidence_commit")
+        if ev not in (None, ""):
+            # Committed-byte lookup: the digest describes what the
+            # evidence commit STORES, never mutable worktree bytes.
+            committed = _sha256_at_commit(repo, ev, row["artifact_path"])
+            if committed is None:
+                failures.append(f"{rid}: artifact absent at "
+                                f"{ev}:{row['artifact_path']}")
+            elif committed != row["artifact_sha256"]:
+                failures.append(f"{rid}: committed-byte digest mismatch "
+                                f"at {ev}:{row['artifact_path']}")
+        else:
+            art = repo / row["artifact_path"]
+            if not art.exists():
+                failures.append(f"{rid}: artifact does not exist on the "
+                                f"reviewed tip: {row['artifact_path']}")
+            elif _sha256(art) != row["artifact_sha256"]:
+                failures.append(f"{rid}: artifact digest mismatch: "
+                                f"{row['artifact_path']}")
         for key in ("generator_commit", "criterion_registered_at"):
             if not _commit_exists(repo, row[key]):
                 failures.append(f"{rid}: {key} '{row[key]}' does not "
                                 "resolve in the object store")
         # Optional typed evidence-landing commit (channel-2 amendment:
         # dual roles must be TYPED fields, never filename or free
-        # text). When present it must resolve like the others.
-        if row.get("evidence_commit") not in (None, ""):
-            if not _commit_exists(repo, row["evidence_commit"]):
-                failures.append(f"{rid}: evidence_commit "
-                                f"'{row['evidence_commit']}' does not "
-                                "resolve in the object store")
+        # text). When present it must resolve, and the full chain
+        # criterion <= generator <= evidence (<= reviewed_tip) holds.
+        if ev not in (None, ""):
+            if not _commit_exists(repo, ev):
+                failures.append(f"{rid}: evidence_commit '{ev}' does "
+                                "not resolve in the object store")
+            else:
+                if (_commit_exists(repo, row["generator_commit"])
+                        and not _is_ancestor(repo, row["generator_commit"],
+                                             ev)):
+                    failures.append(f"{rid}: generator_commit is not an "
+                                    "ancestor of evidence_commit")
+                if reviewed_tip is not None and not _is_ancestor(
+                        repo, ev, reviewed_tip):
+                    failures.append(f"{rid}: evidence_commit is not an "
+                                    "ancestor of the reviewed tip")
+        # Optional attempted/analyzable accounting (units honesty):
+        att, ana = row.get("attempted_n"), row.get("analyzable_n")
+        if att is not None and ana is not None:
+            if not (isinstance(att, int) and isinstance(ana, int)
+                    and 0 <= ana <= att):
+                failures.append(f"{rid}: analyzable_n must be an int "
+                                "with 0 <= analyzable_n <= attempted_n")
         if (_commit_exists(repo, row["criterion_registered_at"])
                 and _commit_exists(repo, row["generator_commit"])
                 and not _is_ancestor(repo, row["criterion_registered_at"],
@@ -118,7 +176,8 @@ def check_manifest(manifest_path: str | Path,
 
 if __name__ == "__main__":
     import sys
-    fails = check_manifest(sys.argv[1])
+    tip = sys.argv[2] if len(sys.argv) > 2 else None
+    fails = check_manifest(sys.argv[1], reviewed_tip=tip)
     for f in fails:
         print(f"FAIL {f}")
     print("MANIFEST VERIFIES" if not fails else
