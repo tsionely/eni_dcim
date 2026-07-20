@@ -71,9 +71,9 @@ CHECKPOINT_FILES = [
     "01_wrong_sign_mask_accounting.csv",
     "01_wrong_sign_paired_common_support_events.csv",
     "01_wrong_sign_legacy_28_rows.csv",
-    "01_wrong_sign_historical_zero_green_rescore.csv",
+    "01_historical_zero_wrong_sign_green_rescore.csv",
     "03_Y_eligible_by_era_with_applicability.csv",
-    "03_frozen_compound_signature_2x2.csv",
+    "03_frozen_compound_signature_2x2_with_applicability.csv",
     "04_old_fit_verdict_taxonomy.csv",
     "summary.json",
 ]
