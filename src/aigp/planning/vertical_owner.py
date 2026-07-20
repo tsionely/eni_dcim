@@ -166,7 +166,9 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
                       oracle: "TerminalOracle | None" = None,
                       pitch_cal_rad: float = -0.33,
                       e_z_clamp_m: float = 0.45,
-                      t_tail_s: float = 0.45):
+                      t_tail_s: float = 0.45,
+                      corridor_m: float = 0.30,
+                      cmd_clamp_m: float = 0.10):
     """The ONE final-boundary override (enable-bit path).
 
     Computes the terminal vertical command from the CERTIFIED gate state
@@ -237,7 +239,14 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             # — with them 2*sigma + 0.06 exceeds the 0.30 corridor at
             # any tau >= 0.45 and admission can never pass.)
             s_x = crossing_sigma(0.05, vz_vis, 0.10, h_tail)
-            capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= 0.30
+            # corridor_m is CORRIDOR_INTERIM (advisory-10 ruling): the
+            # operational admission band 0.30, explicitly labeled and
+            # time-boxed — expiry condition is the cohort-2 R5 sigma
+            # library, after which corridor := C_contact = 0.18 with
+            # evidence-based sigmas. Geometry vs epistemology stay
+            # separate currencies; the interim operates against the
+            # weaker geometric bound while the epistemology matures.
+            capture_ok = abs(e_x) + 2.0 * s_x + 0.06 <= corridor_m
     owner = arbiter.tick(commit_active=True, same_gate=True,
                          certified=capture_ok,
                          feature_age_s=state.gate_rel_age_s,
@@ -268,8 +277,20 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
             gr, state.q_att, state.level_roll, state.level_pitch)
         v_z_up = -float(quat_rotate(q_lvl, np.asarray(state.v_world,
                                                       dtype=np.float64))[2])
+    # COMMAND clamp (advisory-10 geometry-chain ruling, decomposed from
+    # the measurement bound): the correction target the servo may act
+    # on is bounded to cmd_clamp = C_contact(0.18) - 0.06 oracle
+    # calibration - 0.02 rail slack = 0.10 — a wrong e_z may displace
+    # the commanded crossing by at most the no-touch band minus guards.
+    # The MEASUREMENT stays honest at +-e_z_clamp_m (0.45): admission
+    # and the continuous test must be able to SEE an off-corridor
+    # arrival to refuse it; clamping the measurement to 0.10 would
+    # blind the epistemology exactly where it must block (the safety
+    # fixture pins this). Larger vehicle shrinks every allowance;
+    # nothing grows.
+    e_z_cmd = float(np.clip(e_z, -cmd_clamp_m, cmd_clamp_m))
     g = compute_terminal_guidance(
-        e_z=e_z, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
+        e_z=e_z_cmd, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
     if g["vz_cmd"] is None:                     # freeze: hold applied target
         vz_goal = prev_vz_up if prev_vz_up is not None else 0.0

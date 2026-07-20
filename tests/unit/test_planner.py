@@ -373,28 +373,46 @@ def test_commit_entry_requires_fresh_fix():
     assert p.plan(int(0.1e9), "race", fresh, None).phase == "commit"
 
 
-def test_geometric_termination_needs_fresh_evidence():
-    """THE first-attempt fork (1.8 cohort, 9 flights): every first
-    commit whose closest approach reached <1.1m passed (4/4); every
-    flight that aborted its first commit at 2-4m died in retry churn
-    (0/4). All three early aborts fired the crossed-plane termination
-    on a believed that had been BLIND 1.44-1.50s — a phantom crossing
-    dead-reckoned through z<-0.4 while the true gate was 2-4m out.
-    Stale + 'crossed' keeps flying the locked vector; only the
-    entry-grade freshness bar (entry_max_age_s) may end an attempt
-    geometrically."""
+def test_blind_commit_stops_instead_of_phantom_or_flail():
+    """THE first-attempt fork (1.8 cohort) + the cohort-2 wipeout: a
+    phantom crossing on a 1.45s-blind believed must not RETREAT (the
+    0/4 churn deaths), and the commit must not keep dashing blind
+    either (cohort-2 F1: 3.7m blind continuation, then a blind reverse
+    into the structure, impulse 7.2). Stale evidence mid-commit =>
+    BRAKE to hover, then reacquire from standstill. A fresh crossing
+    still retreats — that maneuver has evidence behind it."""
     p = planner()
     sp = p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.4],
                                       center_px=(320, 180)), None)
     assert sp.phase == "commit"
-    v_locked = sp.v_body.copy()
     # Phantom: believed crossed the plane, but vision is 1.45s old.
     phantom = make_state(gate_t=[0.0, 0.0, -0.5], age_s=1.45)
     sp2 = p.plan(int(0.5e9), "race", phantom, None)
-    assert sp2.phase == "commit"
-    assert np.allclose(sp2.v_body, v_locked)
-    # Honest crossing: same geometry with commit-grade freshness ends
-    # the attempt (retreat for the next pass).
+    assert sp2.phase == "recover"
+    assert np.allclose(sp2.v_body, 0.0)           # full stop, no reverse
+    # After the brake window: stationary search (yaw in place), never a
+    # blind retreat.
+    sp3 = p.plan(int(2.0e9), "race", make_state(age_s=2.0), None)
+    assert sp3.phase == "search"
+    assert np.linalg.norm(sp3.v_body[:2]) == 0
+    # Fresh crossing on a separate attempt: evidence-backed retreat.
+    p2 = planner()
+    assert p2.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.4],
+                                         center_px=(320, 180)),
+                   None).phase == "commit"
     honest = make_state(gate_t=[0.0, 0.0, -0.5], age_s=0.1)
-    sp3 = p.plan(int(0.7e9), "race", honest, None)
-    assert sp3.phase == "retreat"
+    assert p2.plan(int(0.5e9), "race", honest, None).phase == "retreat"
+
+
+def test_timer_expiry_blind_brakes_instead_of_reverse():
+    """Cohort-2 F1's exact death: window expires with believed long
+    expired (age inf) after a blind overfly — backing up at -1.2 m/s
+    reverses into the structure just passed. Stale at timer => brake;
+    fresh at timer keeps the historical retreat."""
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.4],
+                                 center_px=(320, 180)), None)
+    stale = make_state(gate_t=[0.0, 0.0, 1.0], age_s=3.0)
+    sp = p.plan(int(5e9), "race", stale, None)
+    assert sp.phase == "recover"
+    assert np.allclose(sp.v_body, 0.0)

@@ -270,3 +270,37 @@ mock terminal arms must carry a MOCK-DOMAIN pitch_cal (calibrated from
 mock commit logs) as a base patch in BOTH arms; it is a calibration
 constant of the domain, never a treatment variable. Real-domain liveness
 evidence stands on F4 (capture 1.32m, 28 owned ticks, pass).
+
+## Cohort-2 wipeout autopsy + THE STOP POLICY (2026-07-20, phase6j)
+
+Cohort 2 flew on e16d506 before the advisory-10 deltas landed: 0/6,
+all environment collisions, both arms. Autopsy (F1, control): vision
+died at 3.3m into the first commit and never returned (age -> inf);
+the freshness gate correctly refused the phantom crossing at ~age 1.8s
+— and then the commit continued BLIND on the locked vector for 3.7m
+(to the entry-sized timer), overflew the true gate area, and the
+timer's blind -1.2 m/s retreat backed into the structure just
+overflown (impulse 7.2). F2 (live) survived its first attempt only to
+die in acquisition churn (fresh relock at 0.72m while moving 2.8 m/s).
+
+The regression was OURS, by composition: the freshness gate converted
+"retreat-early-then-churn-death" into "blind-dash-then-blind-reverse".
+Both maneuvers were unconstitutional; the constitution's own sentence
+decides the replacement — *uncertainty while moving reduces speed and
+eventually forces a STOP; it never expands what may act*:
+
+- **Blindness budget in commit**: evidence age > entry_max_age_s
+  (0.6s) => brake to hover (recover), then reacquire from standstill
+  (stationary search). No blind continuation, no blind reverse. A good
+  crossing is unaffected: the wash runs ~0.5s and the sim's pass event
+  clears commit before the budget expires.
+- **Timer-expiry split**: stale believed at window end => brake;
+  fresh believed => the historical evidence-backed retreat.
+- Fresh geometric termination and fresh corridor aborts keep their
+  retreat — those maneuvers know where the structure is.
+
+This is the S4 stationary doctrine (D7 + N-R4 kills) applied to the
+failed-approach case, one build early. Pre-registered for the cohort-2
+REDO: zero blind-reverse collisions; the early-blindness flights end
+hovering 2-3m short and re-attempt; the fork metric (first-commit
+closest <1.1m => pass) still holds on the non-blind attempts.

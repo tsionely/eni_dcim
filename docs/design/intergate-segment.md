@@ -48,12 +48,15 @@ clearance statistic), N-R5 (gate-2 truth labels at crossing), A8
   rate (n=3+3 cannot speak except at the maximal split; recorded, not
   concluded from).
 - **Block B (correction capability, 2-4 flights, only after Block A)**:
-  inject a +/-0.20m aim offset into the LEGACY aim only
-  (--patch planner.approach.aim_up_m shifted by +/-0.2, alternating
+  inject a +/-0.12m aim offset into the LEGACY aim only
+  (--patch planner.approach.aim_up_m shifted by +/-0.12, alternating
   sign, pre-registered per flight). TERM-live must null to <=0.1m;
-  control must express ~0.2m. The injected offset is one knob with
+  control must express ~0.12m. The injected offset is one knob with
   known truth — it replaces restoring 2.5 m/s, which would move trim
-  and re-open the oracle verification.
+  and re-open the oracle verification. AMENDED 0.20 -> 0.12 by the
+  advisory-10 geometry ruling: +-0.20 exceeds C_contact = 0.18 (a
+  commanded clip); 0.12 keeps ~2.4 sigma against the ~0.05 delivery
+  noise, so the designed power survives.
 - **The frame-package canary (pre-registered)**: when the honest
   adapter + source-frame migration lands and 2.5 m/s is restored, the
   retired ~0.25m residual must either be explained by the package or

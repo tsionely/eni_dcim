@@ -253,6 +253,28 @@ class RacePlanner:
         if self._commit_until_ns is not None:
             if now_ns < self._commit_until_ns and self._commit_v_body is not None:
                 gate = state.gate_rel
+                # BLINDNESS BUDGET (cohort-2 wipeout, F1 autopsy): when
+                # commit evidence goes stale past the commit-grade
+                # horizon, STOP — brake to hover and reacquire from
+                # standstill. The freshness-gated termination alone
+                # converted the phantom-abort class into a blind 3.7m
+                # continuation on the locked vector followed by a blind
+                # -1.2 m/s reverse into the structure just overflown
+                # (impulse 7.2). The constitution's own rule decides
+                # this: uncertainty while moving reduces speed and
+                # eventually forces a stop — never a blind dash and
+                # never a blind reverse. A good crossing is unaffected:
+                # the wash runs ~0.5s and the pass event clears commit
+                # before this budget expires.
+                if state.gate_rel_age_s > self.entry_max_age_s:
+                    self._commit_until_ns = None
+                    self._commit_v_body = None
+                    self._commit_prev_z = None
+                    self._note_attempt_failed(now_ns)
+                    self._recover_until_ns = now_ns + int(
+                        self.recover_brake_s * 1e9)
+                    return Setpoint(phase="recover", v_body=np.zeros(3),
+                                    yaw_rate=0.0)
                 # Relock guard (phase6a dash-F2): the believed target
                 # jumped several meters AWAY mid-commit — that is the
                 # estimator legitimately relocking the NEXT gate after we
@@ -286,11 +308,12 @@ class RacePlanner:
                 # early retreat in the 1.8 cohort fired this clause on a
                 # believed that had been BLIND for 1.44-1.50s — a
                 # PHANTOM crossing dead-reckoned through the plane while
-                # the true closest approach was still 2.1-4.1m out. The
-                # no-irreversible-maneuver-on-state-only-evidence law
-                # applies here too: stale + 'crossed' => keep flying the
-                # locked vector (the entry-sized timer is the honest
-                # end; vision usually reacquires as geometry changes).
+                # the true closest approach was still 2.1-4.1m out.
+                # Stale phantoms never reach here anymore (the blindness
+                # budget above brakes first); this clause fires only on
+                # a FRESH crossing — genuinely decided, retreat for the
+                # next pass. The freshness condition stays as the
+                # documented law even though the budget subsumes it.
                 if gate is not None and gate.t[2] < -0.4 \
                         and state.gate_rel_age_s <= self.entry_max_age_s:
                     self._commit_until_ns = None
@@ -369,10 +392,19 @@ class RacePlanner:
             # Window expired without a gate-passed event: we are past the
             # plane outside the opening (or stalled) — back off and retry
             # instead of the blind flail that ended most R2 flights.
+            # Retreat-at-speed is an evidence maneuver: with a fresh
+            # believed we know where the structure is and can back away
+            # from it. With stale evidence, brake instead (cohort-2 F1
+            # backed blind into the gate it had just blind-overflown).
             self._commit_until_ns = None
             self._commit_v_body = None
             self._commit_prev_z = None
             self._note_attempt_failed(now_ns)
+            if state.gate_rel_age_s > self.entry_max_age_s:
+                self._recover_until_ns = now_ns + int(
+                    self.recover_brake_s * 1e9)
+                return Setpoint(phase="recover", v_body=np.zeros(3),
+                                yaw_rate=0.0)
             if self.retreat_enabled:
                 self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                 return self._retreat_setpoint(state)

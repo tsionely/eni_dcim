@@ -526,3 +526,81 @@ def test_scale_gate_rejects_successor_wearing_certificate():
     g2 = TerminalOracle()
     assert terminal_observe(g2, st(1.32), feat(388.0), 0.02) is not None
     assert len(g2._hist) == 1
+
+
+def test_cmd_clamp_bounds_correction_measurement_stays_honest():
+    """Advisory-10 geometry chain, decomposed: the servo's correction
+    TARGET is bounded to cmd_clamp=0.10 (C_contact 0.18 minus oracle
+    calibration 0.06 minus rail slack 0.02) — a wrong e_z may displace
+    the commanded crossing by at most the no-touch band minus guards.
+    The MEASUREMENT stays honest at +-0.45: admission must still SEE an
+    off-corridor arrival to refuse it (the existing admission-block
+    fixture is that safety pin; this one pins the command side)."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import (TERM_OWNER, TerminalOracle,
+                                              VerticalOwnerArbiter,
+                                              terminal_override)
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 1.8]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 284.0
+    # e_meas ~ -0.30: honest, off-aim (drone high), within the 0.45
+    # measurement bound but 3x the command clamp.
+    y_top = 180.0 - 0.5 * span + 0.30 * span / 1.6
+
+    a = VerticalOwnerArbiter()
+    a.owner = TERM_OWNER                    # already captured; command path
+    g = TerminalOracle()
+    v_bz = None
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9), y_top_px=y_top,
+                            span_px=span, center_x_px=320.0,
+                            cert_status="certified", mode="BAR_FULL")
+        owner, v_bz, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 1.0, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g)
+    assert owner == TERM_OWNER and v_bz is not None
+    # Correction bounded by the clamped target: |e_cmd|<=0.10 =>
+    # |vz| <= 0.10/tau_min(0.25) = 0.40 (+slew headroom), never the
+    # 0.6 vz_max a 0.30 target would command.
+    assert abs(v_bz) <= 0.45
+
+
+def test_corridor_param_is_live():
+    """CORRIDOR_INTERIM is a real config lever: shrinking it to 0.10
+    must block the same liveness rig the 0.30 interim admits (its
+    floor alone is 0.194). Guard-parameter liveness per the pattern
+    book."""
+    from aigp.core.messages import RelPose, StateEstimate, TerminalFeature
+    from aigp.planning.vertical_owner import TerminalOracle, terminal_override
+
+    def st():
+        return StateEstimate(
+            ts_ns=0, q_att=LEVEL, omega=np.zeros(3), v_world=np.zeros(3),
+            gate_rel=RelPose(t=np.array([0.0, 0.0, 2.4]),
+                             normal=np.array([0.0, 0.0, -1.0])),
+            gate_rel_age_s=0.05, gate_center_px=(320, 180),
+            image_size=(640, 360), healthy=True, level_roll=0.0,
+            level_pitch=-0.311)
+
+    span = 213.0
+    a = make_arbiter()
+    g = TerminalOracle()
+    owner = None
+    for i in range(7):
+        f = TerminalFeature(ts_ns=int(i * 0.04e9),
+                            y_top_px=180.0 - 0.5 * span, span_px=span,
+                            center_x_px=320.0, cert_status="certified",
+                            mode="BAR_FULL")
+        owner, _, _ = terminal_override(
+            a, st(), np.array([1.8, 0.0, 0.0]), True, 1.37, 0.55, None,
+            0.04, feature=f, feature_age_s=0.02, oracle=g,
+            corridor_m=0.10)
+    assert owner == ALT_OWNER

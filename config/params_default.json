@@ -72,7 +72,10 @@
       "vz_max_mps": 0.6,
       "pitch_cal_rad": -0.33,
       "e_z_clamp_m": 0.45,
-      "engage_range_m": 2.5
+      "engage_range_m": 2.5,
+      "corridor_interim_m": 0.3,
+      "cmd_clamp_m": 0.1,
+      "coverage_tail_p95_s": 0.5
     },
     "recover": {
       "brake_s": 0.8

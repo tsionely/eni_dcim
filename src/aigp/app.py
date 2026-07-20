@@ -260,17 +260,33 @@ class App:
             default=2.5)) if params else 2.5
         terminal_margin = float(params.get("planner.terminal.margin_m",
                                            default=0.55)) if params else 0.55
+        # Advisory-10 geometry chain: CORRIDOR_INTERIM (time-boxed at
+        # 0.30, expiry = cohort-2 R5 sigma library -> 0.18), the
+        # command clamp (0.10 = C_contact - guards), and the measured
+        # coverage-tail p95 term of the admission horizon.
+        terminal_corridor = float(params.get(
+            "planner.terminal.corridor_interim_m",
+            default=0.30)) if params else 0.30
+        terminal_cmd_clamp = float(params.get(
+            "planner.terminal.cmd_clamp_m",
+            default=0.10)) if params else 0.10
+        terminal_tail_p95 = float(params.get(
+            "planner.terminal.coverage_tail_p95_s",
+            default=0.50)) if params else 0.50
         term_arbiter = VerticalOwnerArbiter()
         term_oracle = TerminalOracle()
         term_vz_up = None
-        # Uncorrected-tail horizon for admission (ratified rule): the
-        # tail is the LONGER of the damping+freeze interval (0.45s) and
-        # the no-return tail — time-to-plane at the distance where
-        # retreat stops being possible (the planner's no-abort band).
-        # At 1.8 m/s these coincide (0.8m/1.8 = 0.44s); at restored
-        # 2.5 m/s the braking band grows to 1.2m and the tail follows.
-        term_tail = max(0.45, planner.abort_min_dist_m
-                        / max(planner.commit_speed, 0.1))
+        # Uncorrected-tail horizon for admission (ratified rule,
+        # completed per advisory 10): the tail is the LONGEST of the
+        # damping+freeze interval (0.45s), the no-return tail
+        # (time-to-plane where retreat stops being possible — the
+        # planner's no-abort band), and the MEASURED coverage-tail p95
+        # (0.50s from the cohort-1 pass fixtures) — the constant
+        # carries its evidence inside the formula, not beside it.
+        term_tail = max(0.45,
+                        planner.abort_min_dist_m
+                        / max(planner.commit_speed, 0.1),
+                        terminal_tail_p95)
 
         supervisor.start_flight()
         while not supervisor.done:
@@ -392,7 +408,9 @@ class App:
                             vz_max=terminal_vz_max,
                             pitch_cal_rad=terminal_pitch_cal,
                             e_z_clamp_m=terminal_e_clamp,
-                            t_tail_s=term_tail)
+                            t_tail_s=term_tail,
+                            corridor_m=terminal_corridor,
+                            cmd_clamp_m=terminal_cmd_clamp)
                         term_v_bz = v_bz
                         if v_bz is not None:
                             setpoint.v_body[2] = v_bz
