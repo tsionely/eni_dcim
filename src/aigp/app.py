@@ -452,7 +452,14 @@ class App:
                             e_z=term_oracle.e_z, vz_up=term_vz_up,
                             v_bz_applied=term_v_bz,
                             source_mode=term_oracle.active_source,
-                            ready_legacy=term_oracle.ready_legacy()))
+                            ready_legacy=term_oracle.ready_legacy(),
+                            rate_source=("FULL_RATE_ANCHOR"
+                                         if term_oracle.active_source
+                                         == "SIDE_PAIR" else "FULL_QUAD"),
+                            rate_anchor_age_s=(
+                                term_oracle.anchor_age_s()
+                                if term_oracle.rate_anchor_ts is not None
+                                else None)))
                 else:
                     # Attempt over (non-commit): explicit history reset —
                     # the ONLY planner-side reset (never on capture,

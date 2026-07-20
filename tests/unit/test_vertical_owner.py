@@ -829,3 +829,47 @@ def test_p1_held_latest_packet_is_consumed_once():
     assert len(g._hist) == 1                  # FULL history: one row
     assert len(g._hist_other) == 1            # SIDE history: one row
     assert len(g._overlap_deltas) == 1        # exact-exposure pair: one
+
+
+def test_full_rate_anchor_latches_and_survives_side_offset():
+    """Advisory-16 (a): at the legal FULL->SIDE transition the FULL
+    rate is LATCHED; a constant offset on all SIDE positions (R26-4)
+    leaves the anchor unchanged and causes no rate spike — SIDE's
+    slope never becomes active authority."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    slope = -0.10                             # e shrinking: climb 0.10
+    for i in range(8):
+        ts = i * 0.04
+        g.observe(ts, 0.30 + slope * ts, source="FULL_QUAD")
+        g.observe(ts, 0.38 + slope * ts, source="SIDE_PAIR")
+    for i in range(8, 14):
+        g.observe(i * 0.04, 0.38 + slope * i * 0.04, source="SIDE_PAIR")
+    assert g.active_source == "SIDE_PAIR"
+    assert g.rate_anchor_valid
+    assert g.rate_anchor_v == pytest.approx(0.10, abs=0.03)
+    # SIDE observations advance the clock but never reset the anchor.
+    assert g.anchor_age_s() > 0.2
+
+
+def test_anchor_falsified_by_contradictory_side_positions():
+    """Advisory-16 SS6 / R26-5: a SIDE position sequence contradicting
+    the held rate invalidates the anchor after two consecutive
+    breaches — the monitor is a falsification gate, never a SIDE rate
+    estimator; fallback (c) takes over via neutral rate."""
+    from aigp.planning.vertical_owner import TerminalOracle
+    g = TerminalOracle()
+    for i in range(8):
+        ts = i * 0.04
+        g.observe(ts, 0.30 - 0.10 * ts, source="FULL_QUAD")   # climb 0.10
+        g.observe(ts, 0.34 - 0.10 * ts, source="SIDE_PAIR")
+    for i in range(8, 12):
+        g.observe(i * 0.04, 0.34 - 0.10 * i * 0.04, source="SIDE_PAIR")
+    assert g.active_source == "SIDE_PAIR" and g.rate_anchor_valid
+    # Positions now move hard the OTHER way (true rate reversed).
+    t0 = 12 * 0.04
+    for k in range(3):
+        ts = t0 + k * 0.04
+        g.observe(ts, 0.34 - 0.10 * t0 + 0.6 * (ts - t0 + 0.5),
+                  source="SIDE_PAIR")
+    assert not g.rate_anchor_valid

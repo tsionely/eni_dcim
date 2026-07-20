@@ -223,6 +223,8 @@ class TermStatus:
     v_bz_applied: float | None # body-z actually applied (None = legacy)
     source_mode: str | None = None
     ready_legacy: bool = False
+    rate_source: str | None = None
+    rate_anchor_age_s: float | None = None
 
 
 @dataclass(frozen=True, slots=True)

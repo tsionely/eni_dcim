@@ -292,9 +292,21 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         # slope, never solely from the believed state — that channel
         # drifts exactly in the final blind interval. No slope =>
         # neutral rate, never the believed fallback.
-        vz_vis = oracle.v_z_visual()
-        v_z_up = (vz_vis * oracle.rate_authority()
-                  if vz_vis is not None else 0.0)
+        if oracle.active_source == "SIDE_PAIR":
+            # FULL_RATE_ANCHOR maintenance (advisory-16): rate_source
+            # is FULL's anchored measurement, age-capped at the tail
+            # horizon and falsifiable by SIDE positions; SIDE's slope
+            # stays in shadow. Anchor invalid/expired => neutral rate
+            # — option (c) as (a)'s automatic floor.
+            age = oracle.anchor_age_s()
+            if oracle.rate_anchor_valid and age <= tau_s + 0.5:
+                v_z_up = float(oracle.rate_anchor_v)
+            else:
+                v_z_up = 0.0
+        else:
+            vz_vis = oracle.v_z_visual()
+            v_z_up = (vz_vis * oracle.rate_authority()
+                      if vz_vis is not None else 0.0)
     else:
         e_z = e_meas if e_meas is not None else -true_world_dz(
             gr, state.q_att, state.level_roll, state.level_pitch)
@@ -394,6 +406,11 @@ class TerminalOracle:
         self._overlap_ok = False
         self._upgrade_streak = 0
         self._transition_grace = False
+        self.rate_anchor_v: float | None = None
+        self.rate_anchor_ts: float | None = None
+        self.rate_anchor_valid = False
+        self._anchor_e0: float | None = None
+        self._anchor_breaches = 0
 
     def reset(self) -> None:
         self.e_z = None
@@ -409,6 +426,11 @@ class TerminalOracle:
         self._overlap_ok = False
         self._upgrade_streak = 0
         self._transition_grace = False
+        self.rate_anchor_v: float | None = None
+        self.rate_anchor_ts: float | None = None
+        self.rate_anchor_valid = False
+        self._anchor_e0: float | None = None
+        self._anchor_breaches = 0
 
     SIGMAS = {"FULL_QUAD": (0.05, 0.10),
               # Side-pair rung: margined analogs (x1.5) until the R5
@@ -528,6 +550,22 @@ class TerminalOracle:
             self._push(self._hist, ts_s, e_meas)
             if self.active_source == "SIDE_PAIR":
                 self._upgrade_streak = 0      # no full obs this tick
+                # Falsification monitor (advisory-16 SS6): fresh SIDE
+                # positions may not estimate rate, but they can refute
+                # an implausible held rate. Constant-rate diagnostic
+                # vs the latched (e0, v_anchor); two consecutive
+                # unique-exposure breaches invalidate the anchor —
+                # fallback (c) takes over via neutral rate.
+                if (self.rate_anchor_valid and self._anchor_e0 is not None
+                        and self.rate_anchor_ts is not None):
+                    age = ts_s - self.rate_anchor_ts
+                    pred = self._anchor_e0 - self.rate_anchor_v * age
+                    if abs(e_meas - pred) > 0.15 + 0.05 * age:
+                        self._anchor_breaches += 1
+                        if self._anchor_breaches >= 2:
+                            self.rate_anchor_valid = False
+                    else:
+                        self._anchor_breaches = 0
             return True
         # Inactive-rung observation.
         self._push(self._hist_other, ts_s, e_meas)
@@ -537,6 +575,20 @@ class TerminalOracle:
                           or ts_s - self._hist[-1][0] > self.max_gap_s)
             if (full_stale and self._mature(self._hist_other)
                     and self._overlap_ok):
+                # LATCH THE RATE ANCHOR from the full history's last
+                # accepted fit, before the swap: freeze the
+                # measurement, not the physics — the applied-command
+                # feed-forward rides on top at the consumer.
+                sl = self._slope_of(self._hist)
+                n_f, span_f, _ = self.history_stats()
+                auth = float(min(1.0, (span_f / 0.3) * (n_f / 10.0)))
+                self.rate_anchor_v = (-float(sl) * auth
+                                      if sl is not None else 0.0)
+                self.rate_anchor_ts = (self._hist[-1][0]
+                                       if self._hist else ts_s)
+                self.rate_anchor_valid = sl is not None
+                self._anchor_e0 = e_meas
+                self._anchor_breaches = 0
                 self._hist, self._hist_other = self._hist_other, self._hist
                 self.active_source = "SIDE_PAIR"
                 self._upgrade_streak = 0
@@ -558,6 +610,11 @@ class TerminalOracle:
                 self.active_source = "FULL_QUAD"
                 self._upgrade_streak = 0
                 self._transition_grace = True
+                self.rate_anchor_v = None      # FULL rate authority back
+                self.rate_anchor_ts = None
+                self.rate_anchor_valid = False
+                self._anchor_e0 = None
+                self._anchor_breaches = 0
                 return True
         return False
 
@@ -596,6 +653,15 @@ class TerminalOracle:
                 and gap <= self.max_gap_s
                 and self.v_z_visual() is not None
                 and not self.disarmed)
+
+    def anchor_age_s(self) -> float:
+        """Age of the FULL rate anchor: newest accepted exposure ts
+        minus the anchor's FULL exposure ts. SIDE observations advance
+        the clock but never the anchor."""
+        if self.rate_anchor_ts is None:
+            return float("inf")
+        newest = self._hist[-1][0] if self._hist else self.rate_anchor_ts
+        return max(0.0, newest - self.rate_anchor_ts)
 
     def ready_legacy(self) -> bool:
         """The PRE-correction readiness (whole-attempt gap statistic),
