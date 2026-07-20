@@ -7,36 +7,36 @@ Error = `|angle(true-successor bearing, FROZEN exit vector)|` at gate-1 crossing
 
 - Approaches scored: **78**
 - See gate 2 before crossing: **19** (24.4%)
-- Primary error set: `visible_only`
+- Primary error set: `pass_cohort`
 
 ## Crossing error vs frozen exit (cone input)
 
 ```json
 {
-  "n": 18,
-  "median": 23.903434081888776,
-  "p90": 102.64092824031503,
-  "p95": 114.05868094182992,
-  "q99": 123.05267536461902,
-  "max": 125.30117397031631,
-  "mean": 36.80302746461772,
-  "q99_plus_2": 125.05267536461902,
+  "n": 5,
+  "median": 8.878943054843432,
+  "p90": 30.51111722158557,
+  "p95": 31.180221336709234,
+  "q99": 31.715504628808166,
+  "max": 31.849325451832897,
+  "mean": 14.737959281943073,
+  "q99_plus_2": 33.71550462880816,
   "hard_cap_deg": 12.0,
   "KILL_BANK_PREDICTOR": true,
   "recommended_cone_half_width": 12.0,
-  "recall_within_4deg": 0.1111111111111111,
-  "recall_within_6deg": 0.1111111111111111,
-  "recall_within_8deg": 0.1111111111111111,
-  "recall_within_10deg": 0.2777777777777778,
-  "recall_within_12deg": 0.3333333333333333,
-  "recall_within_15deg": 0.3333333333333333,
-  "recall_within_20deg": 0.4444444444444444
+  "recall_within_4deg": 0.4,
+  "recall_within_6deg": 0.4,
+  "recall_within_8deg": 0.4,
+  "recall_within_10deg": 0.6,
+  "recall_within_12deg": 0.6,
+  "recall_within_15deg": 0.6,
+  "recall_within_20deg": 0.6
 }
 ```
 
 ## HARD CAP BREACH — KILL THE BANK PREDICTOR
 
-**Q99+2° = 125.05° > 12.0°.** Per S4: this kills the bank predictor / moving-bridge assumption, **not** the ±12° hard cap. Do not widen the cone.
+**Q99+2° = 33.72° > 12.0°.** Per S4: this kills the bank predictor / moving-bridge assumption, **not** the ±12° hard cap. Do not widen the cone.
 
 ## Bank-time errors (3–12 m samples vs exit)
 
@@ -96,13 +96,13 @@ Rival pairs (first 12):
 
 | half-width | recall |
 |---:|---:|
-| ±4° | 11.1% |
-| ±6° | 11.1% |
-| ±8° | 11.1% |
-| ±10° | 27.8% |
-| ±12° | 33.3% |
-| ±15° | 33.3% |
-| ±20° | 44.4% |
+| ±4° | 40.0% |
+| ±6° | 40.0% |
+| ±8° | 40.0% |
+| ±10° | 60.0% |
+| ±12° | 60.0% |
+| ±15° | 60.0% |
+| ±20° | 60.0% |
 
 ## Per-flight
 

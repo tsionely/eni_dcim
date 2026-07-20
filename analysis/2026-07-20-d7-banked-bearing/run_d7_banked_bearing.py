@@ -577,14 +577,41 @@ def main() -> int:
     # Primary: visible-only (the D7 population). Fallback: all sane.
     cross_sane = [r["abs_cross_error_deg"] for r in ok
                   if r.get("abs_cross_error_deg") is not None and _sane(r)]
-    primary = cross_vis if len(cross_vis) >= 3 else cross_sane
+    # Pass cohort: HUD gate-index advance — the S4-relevant population.
+    PASS_FIDS = {
+        "20260719T160537-f170ead6", "20260719T163649-f170ead6",
+        "20260719T200816-f170ead6", "20260719T201851-50f9dcc8",
+        "20260716T131137-2ca531c3",
+    }
+    pass_rows = [r for r in ok if r["fid"] in PASS_FIDS
+                 and r.get("abs_cross_error_deg") is not None]
+    cross_pass = [r["abs_cross_error_deg"] for r in pass_rows]
+    # Primary for the HARD CAP: pass cohort if n>=3, else visible sane
+    if len(cross_pass) >= 3:
+        primary = cross_pass
+        primary_name = "pass_cohort"
+    elif len(cross_vis) >= 3:
+        primary = cross_vis
+        primary_name = "visible_only"
+    else:
+        primary = cross_sane
+        primary_name = "sane_exit"
     stats = {
         "cross_errors": cone_stats(primary),
+        "cross_errors_pass_cohort": cone_stats(cross_pass),
         "cross_errors_all_approaches": cone_stats(cross_errs),
         "cross_errors_visible_only": cone_stats(cross_vis),
         "cross_errors_sane_exit": cone_stats(cross_sane),
         "bank_errors": cone_stats(bank_errs),
+        "pass_cohort_errors": [
+            {"fid": r["fid"], "abs_err": r["abs_cross_error_deg"],
+             "signed": r.get("cross_error_vs_exit_deg"),
+             "visible": r.get("gate2_visible_pre_cross")}
+            for r in pass_rows
+        ],
     }
+    # stash for bundle
+    _primary_name = primary_name
     vis = {
         "n_approaches": len(ok),
         "n_visible": len(visible),
@@ -599,8 +626,7 @@ def main() -> int:
         "ambiguity": amb,
         "flights": results,
         "hard_cap_deg": HARD_CAP_DEG,
-        "primary_error_set": (
-            "visible_only" if len(cross_vis) >= 3 else "all_with_successor"),
+        "primary_error_set": _primary_name,
     }
 
     (OUT / "summary.json").write_text(
