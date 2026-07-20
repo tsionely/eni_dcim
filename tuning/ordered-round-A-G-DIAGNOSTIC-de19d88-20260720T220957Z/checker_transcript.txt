@@ -1,0 +1,7 @@
+CHECKER TRANSCRIPT - ordered A-G evidence manifest extension
+invocation: python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json d69e35400b51565f694efb56834bc4233e377533
+reviewed tip (full hash): d69e35400b51565f694efb56834bc4233e377533
+repo status before invocation: clean after manifest worktree bytes were synced to committed blob and re-added
+--- output ---
+MANIFEST VERIFIES (RELEASE-GRADE)
+exit status: 0
