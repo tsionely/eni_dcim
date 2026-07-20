@@ -44,7 +44,7 @@ from run_l1_perception_replay import (  # noqa: E402
 from scripts.reflight import load_frame_monos, load_frames, load_imu  # noqa: E402
 
 
-DEFAULT_SOURCE_REF = "8cd67fa"
+DEFAULT_SOURCE_REF = "3b554f3"
 
 
 def percentile(values: list[float], pct: float) -> float | str:
@@ -120,6 +120,8 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
     center_only = 0
     accepted_full = 0
     frame_ms = []
+    detector_ms = []
+    tracker_ms = []
     feature_age_ms = []
     last_full_mono = None
     side_armed = False
@@ -137,7 +139,9 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
         prior = gate_range_z(state_before) if state_before.gate_rel is not None \
             and state_before.gate_rel_age_s < 1.0 else None
         frame = CameraFrame(frame_id=int(fid), ts_ns=int(sim_ns), image=img)
+        det_start = time.perf_counter()
         det = detector.detect(frame, prior)
+        detector_ms.append((time.perf_counter() - det_start) * 1000.0)
         center_hint = None
         emitted = []
 
@@ -167,8 +171,10 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
                 side_armed = True
                 prior_pose = state_before.gate_rel if state_before.gate_rel is not None \
                     else det.rel_pose
+                tr_start = time.perf_counter()
                 tracked_side = tracker.track(frame, prior_pose,
                                              center_hint_px=det.center_px)
+                tracker_ms.append((time.perf_counter() - tr_start) * 1000.0)
                 if tracked_side is not None and tracker.last_feature is not None:
                     side_rows += 1
                     emitted.append(("SIDE_PAIR", "tracker_parallel", time.perf_counter()))
@@ -184,7 +190,9 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
         )
         if (det is None or det.rel_pose is None) and fallback_allowed \
                 and tracker is not None and tracker.enabled and est.state.gate_rel is not None:
+            tr_start = time.perf_counter()
             tracked = tracker.track(frame, est.state.gate_rel, center_hint_px=center_hint)
+            tracker_ms.append((time.perf_counter() - tr_start) * 1000.0)
             if tracked is not None:
                 est.update_vision(tracked)
                 if tracker.last_feature is not None:
@@ -210,6 +218,8 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
             })
 
     ft = summarize_timings(frame_ms)
+    dt = summarize_timings(detector_ms)
+    tt = summarize_timings(tracker_ms)
     fa = summarize_timings(feature_age_ms)
     summary = {
         "flight": target["label"],
@@ -223,8 +233,17 @@ def run_arm(params: ParamSet, target: dict, arm: str) -> tuple[dict, list[dict]]
         "tracker_fallback_rows": tracker_fallback_rows,
         "center_only_detections": center_only,
         "feature_rows": len(rows),
+        "total_frame_wall_ms": sum(frame_ms),
         "feature_delivery_age_p95_ms": fa["p95_ms"],
         "feature_delivery_age_p99_ms": fa["p99_ms"],
+        "feature_delivery_age_max_ms": fa["max_ms"],
+        "detector_p95_ms": dt["p95_ms"],
+        "detector_p99_ms": dt["p99_ms"],
+        "detector_max_ms": dt["max_ms"],
+        "tracker_calls": tt["n"],
+        "tracker_p95_ms": tt["p95_ms"],
+        "tracker_p99_ms": tt["p99_ms"],
+        "tracker_max_ms": tt["max_ms"],
         "frame_process_p95_ms": ft["p95_ms"],
         "frame_process_p99_ms": ft["p99_ms"],
         "frame_process_mean_ms": ft["mean_ms"],
@@ -244,15 +263,21 @@ def write_report(out_dir: Path, summary: dict) -> None:
         f"Repo HEAD: `{summary['repo_head']}`.",
         f"Non-tuning delta from `{summary['source_ref']}`: `{summary['non_tuning_delta_from_source']}`.",
         "",
-        "| Flight | Arm | Unique exposures | FULL fixes | accepted FULL | SIDE rows | feature age P95/P99 ms | frame P95/P99 ms |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "| Flight | Arm | Unique exposures | FULL fixes | accepted FULL | feature rows | SIDE rows | fallback SIDE | total wall ms | detector P95/P99 | tracker calls | tracker P95/P99 | feature age P95/P99 | frame mean/P95/P99/max |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for row in summary["p4_rows"]:
         lines.append(
             f"| `{row['flight']}` | `{row['arm']}` | {row['unique_exposures']} | "
-            f"{row['full_fixes']} | {row['accepted_full_fixes']} | {row['side_rows']} | "
+            f"{row['full_fixes']} | {row['accepted_full_fixes']} | "
+            f"{row['feature_rows']} | {row['side_rows']} | {row['tracker_fallback_rows']} | "
+            f"{fmt(row['total_frame_wall_ms'])} | "
+            f"{fmt(row['detector_p95_ms'])}/{fmt(row['detector_p99_ms'])} | "
+            f"{row['tracker_calls']} | "
+            f"{fmt(row['tracker_p95_ms'])}/{fmt(row['tracker_p99_ms'])} | "
             f"{fmt(row['feature_delivery_age_p95_ms'])}/{fmt(row['feature_delivery_age_p99_ms'])} | "
-            f"{fmt(row['frame_process_p95_ms'])}/{fmt(row['frame_process_p99_ms'])} |"
+            f"{fmt(row['frame_process_mean_ms'])}/{fmt(row['frame_process_p95_ms'])}/"
+            f"{fmt(row['frame_process_p99_ms'])}/{fmt(row['frame_process_max_ms'])} |"
         )
     lines.extend([
         "",

@@ -49,7 +49,7 @@ from run_l1_perception_replay import (  # noqa: E402
 )
 
 
-DEFAULT_SOURCE_REF = "8cd67fa"
+DEFAULT_SOURCE_REF = "3b554f3"
 SIDE_SIGMA_E_FLOOR_M = 0.038
 FULL_SIGMA_E_M = 0.05
 FULL_SIGMA_V_MPS = 0.10
@@ -222,6 +222,21 @@ def rms_centered(values: list[float]) -> float | None:
     return math.sqrt(statistics.fmean([(v - mean) ** 2 for v in vals]))
 
 
+def percentile(values: list[float], pct: float) -> float | None:
+    vals = sorted(v for v in values if math.isfinite(v))
+    if not vals:
+        return None
+    if len(vals) == 1:
+        return vals[0]
+    pos = (pct / 100.0) * (len(vals) - 1)
+    lo = int(math.floor(pos))
+    hi = int(math.ceil(pos))
+    if lo == hi:
+        return vals[lo]
+    frac = pos - lo
+    return vals[lo] * (1.0 - frac) + vals[hi] * frac
+
+
 def terminal_tail_s(params: ParamSet) -> float:
     abort_min = float(params.get("planner.commit.abort_min_dist_m", default=0.8))
     speed = float(params.get("planner.commit.speed_mps", default=2.5))
@@ -257,8 +272,11 @@ def anchor_hold_rate(oracle: TerminalOracle, prev_vz_up: float | None) -> tuple[
     anchor_v = fnum(oracle.rate_anchor_v)
     if anchor_v is None or not oracle.rate_anchor_valid:
         return None, 0.0, oracle.anchor_applied_ref if oracle.anchor_applied_ref is not None else ""
-    if oracle.anchor_applied_ref is None and prev_vz_up is not None:
-        oracle.anchor_applied_ref = float(prev_vz_up)
+    if oracle.anchor_applied_ref is None:
+        ref = oracle.applied_at(oracle.rate_anchor_ts) if hasattr(oracle, "applied_at") else None
+        if ref is None and prev_vz_up is not None:
+            ref = float(prev_vz_up)
+        oracle.anchor_applied_ref = ref
     ff = (
         float(prev_vz_up) - float(oracle.anchor_applied_ref)
         if prev_vz_up is not None and oracle.anchor_applied_ref is not None
@@ -274,6 +292,7 @@ def terminal_command_update(
     e_z_eff: float,
     prev_vz_up: float | None,
     dt: float,
+    prev_phase: str | None = None,
 ) -> dict:
     speed = max(float(row.get("setpoint_speed_xy_mps") or 0.0),
                 float(params.get("planner.commit.speed_mps", default=2.5)),
@@ -285,13 +304,28 @@ def terminal_command_update(
     margin = float(params.get("planner.terminal.margin_m", default=0.55))
     cmd_clamp = float(params.get("planner.terminal.cmd_clamp_m", default=0.10))
     logged_applied_vz_up = fnum(row.get("setpoint_vz_up_mps"))
+    maintenance_score = ""
+    maintenance_score_ok = ""
+    runtime_hold_authorized = ""
+    age = rate_anchor_age(oracle, float(row["feature_ts_ns"]) / 1e9)
     if oracle.active_source == "SIDE_PAIR":
-        age = rate_anchor_age(oracle, float(row["feature_ts_ns"]) / 1e9)
-        if oracle.rate_anchor_valid and age <= tau_s + 0.5:
+        applied_now = logged_applied_vz_up if logged_applied_vz_up is not None else prev_vz_up
+        if hasattr(oracle, "note_applied"):
+            oracle.note_applied(float(row["feature_ts_ns"]) / 1e9,
+                                float(applied_now) if applied_now is not None else 0.0)
+        sig_e, _ = oracle.sigmas()
+        h_m = min(tau_s, terminal_tail_s(params), TAIL_S)
+        sigma_a_ceiling = 0.35
+        sv_maint = math.sqrt(0.10 ** 2 + (age * sigma_a_ceiling) ** 2)
+        maintenance_score = 2.0 * math.sqrt(float(sig_e) ** 2 + (h_m * sv_maint) ** 2) + 0.06
+        maintenance_score_ok = maintenance_score <= CORRIDOR_M
+        runtime_hold_authorized = bool(
+            oracle.rate_anchor_valid and age <= tau_s + 0.5 and maintenance_score_ok
+        )
+        if runtime_hold_authorized:
             # The recorded replay is counterfactual for the terminal owner, so
             # use the actually logged vertical command as the applied-command
             # feed-forward term when it is available.
-            applied_now = logged_applied_vz_up if logged_applied_vz_up is not None else prev_vz_up
             rate_hold, ff, applied_ref = anchor_hold_rate(oracle, applied_now)
             v_z_up = float(rate_hold or 0.0)
         else:
@@ -309,7 +343,7 @@ def terminal_command_update(
         sigma_v=0.15,
         tau_s=tau_s,
         margin_m=margin,
-        prev_phase=None,
+        prev_phase=prev_phase,
         vz_max=vz_max,
         az_max=az_max,
     )
@@ -330,6 +364,14 @@ def terminal_command_update(
         "rate_feed_forward_mps": ff,
         "anchor_applied_ref_mps": applied_ref,
         "logged_applied_vz_up_mps": logged_applied_vz_up if logged_applied_vz_up is not None else "",
+        "maintenance_score": maintenance_score,
+        "maintenance_score_ok": maintenance_score_ok,
+        "runtime_hold_authorized": runtime_hold_authorized,
+        "terminal_phase": guidance["phase"],
+        "terminal_tau_eff_s": guidance["tau_eff"],
+        "terminal_e_cross_m": guidance["e_cross"],
+        "terminal_sigma_cross_m": guidance["sigma_cross"],
+        "terminal_safe": guidance["safe"],
         "terminal_rate_input_mps": v_z_up,
         "terminal_vz_up_mps": vz_applied,
         "terminal_vz_goal_mps": vz_goal,
@@ -399,6 +441,7 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
     transition_id = 0
     vz_max = float(params.get("planner.terminal.vz_max_mps", default=0.6))
     term_vz_up: float | None = None
+    term_phase: str | None = None
 
     for row in rows:
         if not row.get("commit"):
@@ -476,7 +519,9 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
                 float(applied) if applied is not None else 0.0,
                 term_vz_up,
                 dt,
+                term_phase,
             )
+            term_phase = str(command_info["terminal_phase"] or term_phase or "")
             term_vz_up = fnum(command_info["terminal_vz_up_mps"])
             if oracle.active_source == "SIDE_PAIR":
                 metrics = admission_metrics(
@@ -493,6 +538,14 @@ def replay_anchor_trial(params: ParamSet, rows: list[dict], label: str,
                 "rate_feed_forward_mps": "",
                 "anchor_applied_ref_mps": "",
                 "logged_applied_vz_up_mps": row.get("setpoint_vz_up_mps", ""),
+                "maintenance_score": "",
+                "maintenance_score_ok": "",
+                "runtime_hold_authorized": "",
+                "terminal_phase": "",
+                "terminal_tau_eff_s": "",
+                "terminal_e_cross_m": "",
+                "terminal_sigma_cross_m": "",
+                "terminal_safe": "",
                 "terminal_rate_input_mps": "",
                 "terminal_vz_up_mps": "",
                 "terminal_vz_goal_mps": "",
@@ -682,6 +735,114 @@ def summarize_sigma_regimes(rows: list[dict]) -> list[dict]:
     return out
 
 
+def percentile_envelope(rows: list[dict]) -> list[dict]:
+    out = []
+    groups = [("all", rows)]
+    groups.extend((r["regime"], [row for row in rows if row.get("sigma_regime") == r["regime"]])
+                  for r in [{"regime": "switch_adjacent"}, {"regime": "maintenance"}])
+    for label, group in groups:
+        samples = [
+            abs(float(r["sigma_a_sample_mps2"])) for r in group
+            if fnum(r.get("sigma_a_sample_mps2")) is not None
+        ]
+        out.append({
+            "group": label,
+            "n": len(samples),
+            "p50_abs_sigma_a_mps2": percentile(samples, 50) if samples else "",
+            "p80_abs_sigma_a_mps2": percentile(samples, 80) if samples else "",
+            "p90_abs_sigma_a_mps2": percentile(samples, 90) if samples else "",
+            "p95_abs_sigma_a_mps2": percentile(samples, 95) if samples else "",
+            "p99_abs_sigma_a_mps2": percentile(samples, 99) if samples else "",
+            "max_abs_sigma_a_mps2": max(samples) if samples else "",
+        })
+    return out
+
+
+def heldout_age_coverage(rows: list[dict]) -> list[dict]:
+    specs = [
+        ("0p10-0p20", 0.10, 0.20),
+        ("0p20-0p30", 0.20, 0.30),
+        ("0p30-0p50", 0.30, 0.50),
+        ("gte0p50", 0.50, float("inf")),
+    ]
+    out = []
+    for label, lo, hi in specs:
+        group = []
+        for row in rows:
+            age = fnum(row.get("rate_anchor_age_s"))
+            sample = fnum(row.get("sigma_a_sample_mps2"))
+            if age is None or sample is None or age < lo or age >= hi:
+                continue
+            group.append(row)
+        train = [r for r in group if int(float(r.get("frame_id", 0))) % 2 == 0]
+        held = [r for r in group if int(float(r.get("frame_id", 0))) % 2 != 0]
+        train_abs = [abs(float(r["sigma_a_sample_mps2"])) for r in train]
+        fit = percentile(train_abs, 95) if train_abs else None
+        held_abs = [abs(float(r["sigma_a_sample_mps2"])) for r in held]
+        covered = [v for v in held_abs if fit is not None and v <= fit]
+        floor = floor_for_sigma_a(fit) if fit is not None else ""
+        ages = [float(r["rate_anchor_age_s"]) for r in group]
+        out.append({
+            "age_bin": label,
+            "age_min_s": min(ages) if ages else "",
+            "age_max_s": max(ages) if ages else "",
+            "train_n": len(train),
+            "heldout_n": len(held),
+            "fit_p95_abs_sigma_a_mps2": fit if fit is not None else "",
+            "heldout_coverage_frac": (len(covered) / len(held_abs)) if held_abs and fit is not None else "",
+            "heldout_max_abs_sigma_a_mps2": max(held_abs) if held_abs else "",
+            "floor_m": floor,
+            "corridor_pass": (floor <= CORRIDOR_M) if fnum(floor) is not None else "",
+        })
+    return out
+
+
+def summarize_age_distribution(trial_rows: list[dict], transitions: list[dict]) -> dict:
+    transition_ages = [
+        float(t["rate_anchor_age_s"]) for t in transitions
+        if fnum(t.get("rate_anchor_age_s")) is not None
+        and t.get("to_source") == "SIDE_PAIR"
+    ]
+    side_rows = [
+        r for r in trial_rows
+        if r.get("shadow_owner") == TERM_OWNER and r.get("active_source") == "SIDE_PAIR"
+    ]
+    side_ages = [
+        float(r["rate_anchor_age_s"]) for r in side_rows
+        if fnum(r.get("rate_anchor_age_s")) is not None
+    ]
+    damping_ages = [
+        float(r["rate_anchor_age_s"]) for r in side_rows
+        if r.get("terminal_phase") in ("damping", "freeze")
+        and fnum(r.get("rate_anchor_age_s")) is not None
+    ]
+    scores = [
+        float(r["maintenance_score"]) for r in side_rows
+        if fnum(r.get("maintenance_score")) is not None
+    ]
+    authorized = [
+        r for r in side_rows
+        if str(r.get("runtime_hold_authorized")).lower() == "true"
+        or r.get("runtime_hold_authorized") is True
+    ]
+    authorized_ages = [
+        float(r["rate_anchor_age_s"]) for r in authorized
+        if fnum(r.get("rate_anchor_age_s")) is not None
+    ]
+    return {
+        "transition_age_n": len(transition_ages),
+        "transition_age_min_s": min(transition_ages) if transition_ages else "",
+        "transition_age_median_s": statistics.median(transition_ages) if transition_ages else "",
+        "transition_age_max_s": max(transition_ages) if transition_ages else "",
+        "maintain_age_n": len(side_ages),
+        "maintain_age_max_s": max(side_ages) if side_ages else "",
+        "authorized_age_max_s": max(authorized_ages) if authorized_ages else "",
+        "damping_onset_age_s": min(damping_ages) if damping_ages else "",
+        "worst_continuous_score": max(scores) if scores else "",
+        "score_p95": percentile(scores, 95) if scores else "",
+    }
+
+
 def floor_for_sigma_a(sigma_a: float, age_s: float = TAIL_S) -> float:
     sig_v = math.sqrt(FULL_SIGMA_V_MPS ** 2 + (sigma_a * min(age_s, TAIL_S)) ** 2)
     return 2.0 * math.sqrt(SIDE_SIGMA_E_FLOOR_M ** 2 + (TAIL_S * sig_v) ** 2) + 0.06
@@ -744,6 +905,65 @@ def feed_oracle_row(rows: list[dict], scenario: str, oracle: TerminalOracle,
         "rate_anchor_v_mps": oracle.rate_anchor_v if oracle.rate_anchor_v is not None else "",
         "anchor_breaches": getattr(oracle, "_anchor_breaches", ""),
     })
+
+
+def seeded_anchor_oracle(applied_fn) -> TerminalOracle:
+    g = TerminalOracle()
+    slope = -0.10
+    for i in range(8):
+        ts = i * 0.04
+        if hasattr(g, "note_applied"):
+            g.note_applied(ts, applied_fn(ts))
+        g.observe(ts, 0.30 + slope * ts, source="FULL_QUAD")
+        g.observe(ts, 0.34 + slope * ts, source="SIDE_PAIR")
+    for i in range(8, 14):
+        ts = i * 0.04
+        if hasattr(g, "note_applied"):
+            g.note_applied(ts, applied_fn(ts))
+        g.observe(ts, 0.34 + slope * ts, source="SIDE_PAIR")
+    return g
+
+
+def command_change_fixtures() -> list[dict]:
+    cases = [
+        ("constant", lambda _t: 0.10, 0.10, 0.0),
+        ("step_up_after_anchor", lambda t: 0.00 if t <= 0.28 else 0.30, 0.30, 0.30),
+        ("step_down_after_anchor", lambda t: 0.00 if t <= 0.28 else -0.20, -0.20, -0.20),
+        (
+            "triangular_return",
+            lambda t: 0.00 if t <= 0.32 else 0.40 if t <= 0.44 else 0.00,
+            0.00,
+            0.0,
+        ),
+    ]
+    rows = []
+    for name, applied_fn, applied_now, expected_ff in cases:
+        g = seeded_anchor_oracle(applied_fn)
+        now_s = 0.56
+        if hasattr(g, "note_applied"):
+            g.note_applied(now_s, applied_now)
+        rate_hold, ff, applied_ref = anchor_hold_rate(g, applied_now)
+        anchor_ref_lookup = (
+            g.applied_at(g.rate_anchor_ts)
+            if hasattr(g, "applied_at") and g.rate_anchor_ts is not None
+            else ""
+        )
+        rows.append({
+            "scenario": name,
+            "active_source": g.active_source,
+            "rate_anchor_valid": g.rate_anchor_valid,
+            "rate_anchor_ts_s": g.rate_anchor_ts if g.rate_anchor_ts is not None else "",
+            "rate_anchor_age_s": rate_anchor_age(g, now_s),
+            "rate_anchor_v_mps": g.rate_anchor_v if g.rate_anchor_v is not None else "",
+            "applied_at_anchor_lookup_mps": anchor_ref_lookup,
+            "anchor_applied_ref_mps": applied_ref,
+            "applied_now_mps": applied_now,
+            "expected_feed_forward_mps": expected_ff,
+            "measured_feed_forward_mps": ff,
+            "hold_rate_mps": rate_hold if rate_hold is not None else "",
+            "verdict": "PASS" if abs(float(ff) - float(expected_ff)) <= 1e-9 else "FAIL",
+        })
+    return rows
 
 
 def micro_replays() -> tuple[list[dict], list[dict]]:
@@ -880,6 +1100,23 @@ def write_report(out_dir: Path, summary: dict) -> None:
         )
     lines.extend([
         "",
+        "### Percentile Envelope",
+        "",
+        "| Group | n | p50 | p80 | p90 | p95 | p99 | max |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for row in summary["sigma_percentile_envelope"]:
+        lines.append(
+            f"| `{row['group']}` | {row['n']} | "
+            f"{fmt(row['p50_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p80_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p90_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p95_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['p99_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['max_abs_sigma_a_mps2'])} |"
+        )
+    lines.extend([
+        "",
         "### Regime Split",
         "",
         "| Regime | n | age range | corrected err RMS | sigma_a RMS | centered |",
@@ -920,6 +1157,32 @@ def write_report(out_dir: Path, summary: dict) -> None:
         )
     lines.extend([
         "",
+        "### Held-Out Coverage",
+        "",
+        "| Age bin | train n | heldout n | fit p95 sigma_a | heldout coverage | floor | corridor pass |",
+        "|---|---:|---:|---:|---:|---:|---|",
+    ])
+    for row in summary["heldout_age_coverage"]:
+        lines.append(
+            f"| `{row['age_bin']}` | {row['train_n']} | {row['heldout_n']} | "
+            f"{fmt(row['fit_p95_abs_sigma_a_mps2'])} | "
+            f"{fmt(row['heldout_coverage_frac'])} | {fmt(row['floor_m'])} | "
+            f"`{row['corridor_pass']}` |"
+        )
+    age = summary["age_distribution"]
+    lines.extend([
+        "",
+        "### Age Distributions",
+        "",
+        f"- Anchor age at transition: n={age['transition_age_n']}, "
+        f"min/median/max={fmt(age['transition_age_min_s'])}/"
+        f"{fmt(age['transition_age_median_s'])}/{fmt(age['transition_age_max_s'])}.",
+        f"- Max age while maintaining: `{fmt(age['maintain_age_max_s'])}` "
+        f"(authorized max `{fmt(age['authorized_age_max_s'])}`).",
+        f"- Age at damping onset: `{fmt(age['damping_onset_age_s'])}`.",
+        f"- Worst continuous score: `{fmt(age['worst_continuous_score'])}` "
+        f"(p95 `{fmt(age['score_p95'])}`).",
+        "",
         "## R26-4/5/6 Replays",
         "",
         "| Scenario | Verdict | Final source | Final rate source | Final now-age | Final frozen-age | Anchor valid |",
@@ -932,6 +1195,19 @@ def write_report(out_dir: Path, summary: dict) -> None:
             f"{fmt(row['final_rate_anchor_age_s'])} | "
             f"{fmt(row['final_rate_anchor_age_frozen_s'])} | "
             f"`{row['final_rate_anchor_valid']}` |"
+        )
+    lines.extend([
+        "",
+        "## R26-3 Command-Change Fixtures",
+        "",
+        "| Scenario | applied at anchor | applied now | expected ff | measured ff | verdict |",
+        "|---|---:|---:|---:|---:|---|",
+    ])
+    for row in summary["command_change_fixtures"]:
+        lines.append(
+            f"| `{row['scenario']}` | {fmt(row['applied_at_anchor_lookup_mps'])} | "
+            f"{fmt(row['applied_now_mps'])} | {fmt(row['expected_feed_forward_mps'])} | "
+            f"{fmt(row['measured_feed_forward_mps'])} | `{row['verdict']}` |"
         )
     lines.extend([
         "",
@@ -956,8 +1232,10 @@ def write_report(out_dir: Path, summary: dict) -> None:
         "Artifacts: `features_f2.csv`, `anchor_trial_rows.csv`, "
         "`anchor_trial_summary.csv`, `anchor_transitions.csv`, "
         "`sigma_a_rows.csv`, `sigma_a_summary.csv`, `sigma_regime_summary.csv`, "
-        "`anchor_age_sweep.csv`, `floor_table.csv`, "
-        "`r26_micro_rows.csv`, `r26_micro_summary.csv`, and `summary.json`.",
+        "`sigma_percentile_envelope.csv`, `heldout_age_coverage.csv`, "
+        "`age_distribution.csv`, `anchor_age_sweep.csv`, `floor_table.csv`, "
+        "`r26_command_change_fixtures.csv`, `r26_micro_rows.csv`, "
+        "`r26_micro_summary.csv`, and `summary.json`.",
     ])
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -1057,6 +1335,9 @@ def main(argv: list[str] | None = None) -> int:
     write_csv(out_dir / "sigma_a_rows.csv", sigma_a_rows)
     sigma_a_summary = summarize_sigma_a(sigma_a_rows)
     sigma_regime_summary = summarize_sigma_regimes(sigma_a_rows)
+    sigma_percentile = percentile_envelope(sigma_a_rows)
+    heldout_coverage = heldout_age_coverage(sigma_a_rows)
+    age_distribution = summarize_age_distribution(all_trial_rows, all_transitions)
     code_ages = [float(r["rate_anchor_age_s"]) for r in sigma_a_rows
                  if fnum(r.get("rate_anchor_age_s")) is not None]
     frozen_ages = [float(r["rate_anchor_age_frozen_s"]) for r in sigma_a_rows
@@ -1083,13 +1364,18 @@ def main(argv: list[str] | None = None) -> int:
     age_sweep = anchor_age_sweep(measured_sigma_a, max(code_ages) if code_ages else None)
     write_csv(out_dir / "sigma_a_summary.csv", sigma_a_summary)
     write_csv(out_dir / "sigma_regime_summary.csv", sigma_regime_summary)
+    write_csv(out_dir / "sigma_percentile_envelope.csv", sigma_percentile)
+    write_csv(out_dir / "heldout_age_coverage.csv", heldout_coverage)
+    write_csv(out_dir / "age_distribution.csv", [age_distribution])
     write_csv(out_dir / "anchor_age_sweep.csv", age_sweep)
     write_csv(out_dir / "floor_table.csv", floors)
     r26_23_pass = measured_sigma_a is not None and measured_sigma_a < 0.35
 
     micro_rows, micro_summary = micro_replays()
+    command_fixtures = command_change_fixtures()
     write_csv(out_dir / "r26_micro_rows.csv", micro_rows)
     write_csv(out_dir / "r26_micro_summary.csv", micro_summary)
+    write_csv(out_dir / "r26_command_change_fixtures.csv", command_fixtures)
 
     rate_telemetry_complete = (
         all("rate_source" in r and "rate_anchor_age_s" in r for r in all_trial_rows)
@@ -1111,12 +1397,17 @@ def main(argv: list[str] | None = None) -> int:
         "r26_1_verdict": "PASS" if r26_1_pass else "FAIL",
         "sigma_a_summary": sigma_a_summary,
         "sigma_regime_summary": sigma_regime_summary,
+        "sigma_percentile_envelope": sigma_percentile,
+        "heldout_age_coverage": heldout_coverage,
+        "age_distribution": age_distribution,
         "measured_sigma_a_mps2": measured_sigma_a,
         "measured_anchor_only_sigma_a_mps2": measured_anchor_only_sigma_a,
         "anchor_age_sweep": age_sweep,
         "floor_table": floors,
         "r26_23_verdict": "PASS" if r26_23_pass else "FAIL",
         "micro_summary": micro_summary,
+        "command_change_fixtures": command_fixtures,
+        "r26_3_verdict": "PASS" if all(r["verdict"] == "PASS" for r in command_fixtures) else "FAIL",
         "r26_456_verdict": "PASS" if all(r["verdict"] == "PASS" for r in micro_summary) else "FAIL",
         "rate_telemetry_complete": rate_telemetry_complete,
         "now_anchor_age_min_s": min(code_ages) if code_ages else "",
