@@ -1,0 +1,209 @@
+{
+  "ask": "A8 drone vertical half-extent",
+  "flights": [
+    {
+      "label": "phase6d_F1",
+      "fid": "20260719T134326-2477345e",
+      "note": "nine micro-clips",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T134835-phase6d-fiction-guards\\20260719T134326-2477345e-flight.jsonl",
+      "n_grazes_selected": 9,
+      "n_with_true_dz": 9,
+      "contacts": [
+        {
+          "t_ff": 7.8853539,
+          "impulse": 0.3817649781703949,
+          "threat_level": 1,
+          "true_world_dz": 0.1744114955103457,
+          "proxy_0p8_minus_true_dz": 0.6255885044896543,
+          "clearance_deficit": 0.0,
+          "ty_state": -0.051779898758282886,
+          "ty_det": -0.7489570717260996,
+          "R_state": 0.4984985687250898,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.008933200000000419
+        },
+        {
+          "t_ff": 7.8923725,
+          "impulse": 0.8577589988708496,
+          "threat_level": 1,
+          "true_world_dz": -0.45071310113644025,
+          "proxy_0p8_minus_true_dz": 1.2507131011364403,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.7489570717260996,
+          "R_state": null,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.0035431000000007984
+        },
+        {
+          "t_ff": 7.9036503,
+          "impulse": 0.8469246625900269,
+          "threat_level": 1,
+          "true_world_dz": -0.45071310113644025,
+          "proxy_0p8_minus_true_dz": 1.2507131011364403,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.7489570717260996,
+          "R_state": null,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.007734699999999428
+        },
+        {
+          "t_ff": 7.9036881,
+          "impulse": 0.3792891502380371,
+          "threat_level": 1,
+          "true_world_dz": -0.45071310113644025,
+          "proxy_0p8_minus_true_dz": 1.2507131011364403,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.7489570717260996,
+          "R_state": null,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.007772499999999738
+        },
+        {
+          "t_ff": 7.9060436,
+          "impulse": 0.11864551901817322,
+          "threat_level": 1,
+          "true_world_dz": 1.4221841679529237,
+          "proxy_0p8_minus_true_dz": -0.6221841679529236,
+          "clearance_deficit": 0.6221841679529236,
+          "ty_state": -1.5554441946848327,
+          "ty_det": -0.7489570717260996,
+          "R_state": 5.216316997102561,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.009952900000000042
+        },
+        {
+          "t_ff": 7.9137585,
+          "impulse": 0.0808098316192627,
+          "threat_level": 1,
+          "true_world_dz": 1.4221841679529237,
+          "proxy_0p8_minus_true_dz": -0.6221841679529236,
+          "clearance_deficit": 0.6221841679529236,
+          "ty_state": -1.5554441946848327,
+          "ty_det": -0.7489570717260996,
+          "R_state": 5.216316997102561,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.0022380000000001843
+        },
+        {
+          "t_ff": 7.9201064,
+          "impulse": 0.07361356914043427,
+          "threat_level": 1,
+          "true_world_dz": 1.4221841679529237,
+          "proxy_0p8_minus_true_dz": -0.6221841679529236,
+          "clearance_deficit": 0.6221841679529236,
+          "ty_state": -1.5554441946848327,
+          "ty_det": -0.7489570717260996,
+          "R_state": 5.216316997102561,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.004109899999999556
+        },
+        {
+          "t_ff": 7.9344992,
+          "impulse": 0.13775797188282013,
+          "threat_level": 1,
+          "true_world_dz": -0.3804948575165488,
+          "proxy_0p8_minus_true_dz": 1.1804948575165488,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.7489570717260996,
+          "R_state": null,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.0014491999999997063
+        },
+        {
+          "t_ff": 7.9345612,
+          "impulse": 0.024638736620545387,
+          "threat_level": 1,
+          "true_world_dz": -0.3804948575165488,
+          "proxy_0p8_minus_true_dz": 1.1804948575165488,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.7489570717260996,
+          "R_state": null,
+          "R_det": 0.9017970389989671,
+          "dt_state": 0.0013871999999999218
+        }
+      ],
+      "proxy_stats": {
+        "n": 9,
+        "max": 1.2507131011364403,
+        "min": -0.6221841679529236,
+        "mean": 0.5413516687859224,
+        "std": 0.8429532563247647,
+        "median": 1.1804948575165488
+      },
+      "max_clearance_deficit": 0.6221841679529236
+    },
+    {
+      "label": "try39_clip_pair",
+      "fid": "20260719T163649-f170ead6",
+      "note": "clip pair t_ff\u22484.035/4.042",
+      "path": "C:\\Users\\tsion\\Projects\\eni_dcim_github\\fixtures\\20260719T164956-phase6h-first-enable\\20260719T163649-f170ead6-flight.jsonl",
+      "n_grazes_selected": 2,
+      "n_with_true_dz": 2,
+      "contacts": [
+        {
+          "t_ff": 4.0352975,
+          "impulse": 0.7900810241699219,
+          "threat_level": 1,
+          "true_world_dz": -0.14977611648206124,
+          "proxy_0p8_minus_true_dz": 0.9497761164820613,
+          "clearance_deficit": 0.0,
+          "ty_state": -0.24365253719643962,
+          "ty_det": -0.6316110131938155,
+          "R_state": 0.3781407419267327,
+          "R_det": 0.8561465689972936,
+          "dt_state": 0.0032722000000005025
+        },
+        {
+          "t_ff": 4.042205,
+          "impulse": 0.6365295052528381,
+          "threat_level": 1,
+          "true_world_dz": -0.4980258027294378,
+          "proxy_0p8_minus_true_dz": 1.2980258027294378,
+          "clearance_deficit": 0.0,
+          "ty_state": null,
+          "ty_det": -0.6316110131938155,
+          "R_state": null,
+          "R_det": 0.8561465689972936,
+          "dt_state": 0.009778700000000029
+        }
+      ],
+      "proxy_stats": {
+        "n": 2,
+        "max": 1.2980258027294378,
+        "min": 0.9497761164820613,
+        "mean": 1.1239009596057494,
+        "std": 0.17412484312368826,
+        "median": 1.1239009596057494
+      },
+      "max_clearance_deficit": 0.0
+    }
+  ],
+  "aggregate": {
+    "n_contacts": 11,
+    "n_with_proxy": 11,
+    "proxy_0p8_minus_true_dz": {
+      "max": 1.2980258027294378,
+      "min": -0.6221841679529236,
+      "mean": 0.6472697216622546,
+      "std": 0.7983558691811302,
+      "median": 1.1804948575165488,
+      "p10": -0.6221841679529236,
+      "p90": 1.2507131011364403
+    },
+    "max_contact_clearance_deficit_m": 0.6221841679529236,
+    "h_drone_m": 0.6221841679529236,
+    "h_drone_formula": "max(0, max(clearance_deficit)) with deficit=max(0,-(0.8-true_dz))",
+    "compare_to_clamp": {
+      "clamp_m": 0.45,
+      "borrowed_on_faith_m": 0.15,
+      "h_drone_vs_borrow": 0.4721841679529236,
+      "supports_0p15_borrow": false,
+      "suggested_clamp": 0.6
+    }
+  }
+}
