@@ -371,3 +371,30 @@ def test_commit_entry_requires_fresh_fix():
     assert p.plan(0, "race", stale, None).phase == "approach"
     fresh = make_state(gate_t=[0.0, 0.0, 2.0], center_px=(320, 180))
     assert p.plan(int(0.1e9), "race", fresh, None).phase == "commit"
+
+
+def test_geometric_termination_needs_fresh_evidence():
+    """THE first-attempt fork (1.8 cohort, 9 flights): every first
+    commit whose closest approach reached <1.1m passed (4/4); every
+    flight that aborted its first commit at 2-4m died in retry churn
+    (0/4). All three early aborts fired the crossed-plane termination
+    on a believed that had been BLIND 1.44-1.50s — a phantom crossing
+    dead-reckoned through z<-0.4 while the true gate was 2-4m out.
+    Stale + 'crossed' keeps flying the locked vector; only the
+    entry-grade freshness bar (entry_max_age_s) may end an attempt
+    geometrically."""
+    p = planner()
+    sp = p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.4],
+                                      center_px=(320, 180)), None)
+    assert sp.phase == "commit"
+    v_locked = sp.v_body.copy()
+    # Phantom: believed crossed the plane, but vision is 1.45s old.
+    phantom = make_state(gate_t=[0.0, 0.0, -0.5], age_s=1.45)
+    sp2 = p.plan(int(0.5e9), "race", phantom, None)
+    assert sp2.phase == "commit"
+    assert np.allclose(sp2.v_body, v_locked)
+    # Honest crossing: same geometry with commit-grade freshness ends
+    # the attempt (retreat for the next pass).
+    honest = make_state(gate_t=[0.0, 0.0, -0.5], age_s=0.1)
+    sp3 = p.plan(int(0.7e9), "race", honest, None)
+    assert sp3.phase == "retreat"

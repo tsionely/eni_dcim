@@ -281,7 +281,18 @@ class RacePlanner:
                 # window cut a good crossing short (phase3h F3: retreat
                 # fired 0.21m from a dead-centered plane because the 1.2s
                 # default window expired just before the crossing).
-                if gate is not None and gate.t[2] < -0.4:
+                # FRESHNESS REQUIRED (the small difference between the
+                # 4/4 passes and the 0/4 first-attempt aborts): every
+                # early retreat in the 1.8 cohort fired this clause on a
+                # believed that had been BLIND for 1.44-1.50s — a
+                # PHANTOM crossing dead-reckoned through the plane while
+                # the true closest approach was still 2.1-4.1m out. The
+                # no-irreversible-maneuver-on-state-only-evidence law
+                # applies here too: stale + 'crossed' => keep flying the
+                # locked vector (the entry-sized timer is the honest
+                # end; vision usually reacquires as geometry changes).
+                if gate is not None and gate.t[2] < -0.4 \
+                        and state.gate_rel_age_s <= self.entry_max_age_s:
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
