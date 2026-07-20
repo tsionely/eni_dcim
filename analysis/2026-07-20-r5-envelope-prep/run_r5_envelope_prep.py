@@ -69,10 +69,24 @@ WARM_LIVE = [
                / "20260719T201851-50f9dcc8-flight.jsonl",
     },
 ]
-# Cold: phase6j — empty until fixtures land
-COLD_GLOB = list((ROOT / "fixtures").glob("*phase6j*")) + list(
-    Path(r"C:\Users\tsion\Projects\eni_dcim\fixtures").glob("*phase6j*")
-    if Path(r"C:\Users\tsion\Projects\eni_dcim\fixtures").exists() else [])
+# Cold / R5 endpoint: phase6k (cohort-2 REDO) preferred; phase6j kept as
+# discovery fallback for transitional runs.
+def _glob_cold():
+    roots = [ROOT / "fixtures", Path(r"C:\Users\tsion\Projects\eni_dcim\fixtures")]
+    out = []
+    for root in roots:
+        if not root.exists():
+            continue
+        out.extend(root.glob("*phase6k*"))
+        out.extend(root.glob("*phase6j*"))
+    # de-dupe by name, prefer phase6k
+    by_name = {}
+    for p in out:
+        by_name.setdefault(p.name, p)
+    return list(by_name.values())
+
+
+COLD_GLOB = _glob_cold()
 
 
 def resolve(meta: dict) -> Path | None:
