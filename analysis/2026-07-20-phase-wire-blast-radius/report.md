@@ -6,7 +6,7 @@ Corrected wire: `guidance_phase(tau_s, ...)` with `position_until_s=0.45`.
 
 ## RETRO_VERDICT: **NO_CHANGE**
 
-No first-capture at tau<=0.45 in archive; handbacks at low tau do not imply recorded verdict change without refused captures.
+Zero first-captures at τ≤0.45; four episodes reach τ≤0.45 only *after* capture at higher τ (latch would engage mid-episode, would not refuse the archived capture); zero TERM→ALT handbacks at τ≤0.45. No archived ownership verdict flips under the corrected wire.
 
 ## Data mined
 - Flight logs scanned: **1248**
