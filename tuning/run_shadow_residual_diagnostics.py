@@ -194,6 +194,21 @@ def fit_release_fast(samples: list[dict[str, Any]]) -> dict[str, Any]:
     return {**mean, **scale, **prof}
 
 
+def fit_point_fast(samples: list[dict[str, Any]]) -> dict[str, Any]:
+    """Fit the point scale model only.
+
+    The v2.1 cluster bootstrap samples the point sigma_a distribution; it
+    does not use a profile-likelihood bound per resample. Keeping the point
+    fit separate avoids recomputing the 81-point profile grid thousands of
+    times while preserving the bootstrap statistic.
+    """
+    mean = fit_mean_fast(samples)
+    b0 = float(mean["b0"] or 0.0)
+    b1 = float(mean["b1"] or 0.0)
+    scale = fit_scale_fast(samples, b0, b1)
+    return {**mean, **scale}
+
+
 def cluster_bootstrap_fast(samples: list[dict[str, Any]], n_boot: int = BOOTSTRAP_N) -> dict[str, Any]:
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in samples:
@@ -207,7 +222,7 @@ def cluster_bootstrap_fast(samples: list[dict[str, Any]], n_boot: int = BOOTSTRA
         draw: list[dict[str, Any]] = []
         for _cid in ids:
             draw.extend(groups[rng.choice(ids)])
-        fit = fit_release_fast(draw)
+        fit = fit_point_fast(draw)
         vals.append(float(fit["sigma_a_mps2"]))
         b0s.append(float(fit["b0"]))
         b1s.append(float(fit["b1"]))
