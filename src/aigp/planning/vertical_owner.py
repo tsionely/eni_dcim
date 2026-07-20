@@ -311,7 +311,15 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
     # blind the epistemology exactly where it must block (the safety
     # fixture pins this). Larger vehicle shrinks every allowance;
     # nothing grows.
-    e_z_cmd = float(np.clip(e_z, -cmd_clamp_m, cmd_clamp_m))
+    # Asymmetric command clamp (advisory-15 SS1.4 interim): the upward
+    # allowance is ZERO while h_up is a contested/unknown envelope —
+    # the downward arm (-0.10) is the program's one evidence-backed
+    # clamp (0.10 <= measured C_bottom 0.162 - 0.06, by 2mm). Positive
+    # e_z (climb wanted) is refused at the command site; admission
+    # already restricts arrivals to near-centered, so nothing material
+    # is lost. Reverts only via the freeze-exception channel with the
+    # forensics attached.
+    e_z_cmd = float(np.clip(e_z, -cmd_clamp_m, 0.0))
     g = compute_terminal_guidance(
         e_z=e_z_cmd, sigma_e=0.10, v_z=v_z_up, sigma_v=0.15, tau_s=tau_s,
         margin_m=margin_m, prev_phase=None, vz_max=vz_max, az_max=az_max)
@@ -319,6 +327,10 @@ def terminal_override(arbiter: "VerticalOwnerArbiter", state, setpoint_v_body,
         vz_goal = prev_vz_up if prev_vz_up is not None else 0.0
     else:
         vz_goal = g["vz_cmd"]
+    # Upward allowance 0 (interim, see clamp above): arresting a sink
+    # (raising vz toward zero) stays legal; commanding an actual climb
+    # (vz_goal > 0) does not.
+    vz_goal = min(vz_goal, 0.0)
     vz_up = slew_up_velocity(prev_vz_up if prev_vz_up is not None else vz_goal,
                              vz_goal, dt, az_max, az_max)
     # Body conversion, LEGACY-CONSISTENT: the geometrically-honest
@@ -490,10 +502,21 @@ class TerminalOracle:
             # max(0.10, 3*sigma_side) permitted a 0.225m source step
             # approaching the whole corridor). Rate compatibility:
             # opposing slope signs at the transition forbid it.
-            recent = [d for t, d in self._overlap_deltas
-                      if ts_pair - t <= 0.5]
+            # PAIRED TAIL (binding clarification): the maximal recent
+            # suffix of pairs with adjacent pair-to-pair gap <= 0.12s,
+            # newest pair fresh — ALL qualifying pairs are current, so
+            # stale overlap evidence collected before range/obliquity/
+            # identity changed cannot authorize a switch.
+            i = len(self._overlap_deltas) - 1
+            while (i > 0 and self._overlap_deltas[i][0]
+                   - self._overlap_deltas[i - 1][0] <= 0.12):
+                i -= 1
+            tail_pairs = self._overlap_deltas[i:]
             self._overlap_ok = False
-            if len(recent) >= 3 and abs(float(np.median(recent))) <= 0.10:
+            if (len(tail_pairs) >= 3
+                    and ts_pair - tail_pairs[-1][0] <= 0.12
+                    and abs(float(np.median(
+                        [d for _, d in tail_pairs]))) <= 0.10):
                 v_act = self._slope_of(self._hist)
                 v_oth = self._slope_of(self._hist_other)
                 deadband = 0.05
