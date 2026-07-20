@@ -1,0 +1,34 @@
+[
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_release_fit_by_set.csv",
+    "sha256": "8003902cf6171dbf41292fac9cfba1124d522972f753b3e2efb6f92f3d42e1f7"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_exact_maxima.csv",
+    "sha256": "ef926678be020a4b3d0d13c920c2e06c50c04958045fd5bf89cc7966148377dc"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_legacy_discovery_appendix_5_listed_4_analyzable.csv",
+    "sha256": "2ee7b0b9ee5a670886d1f1773312ebf6644f5c4cb61cf74a48e493ebccc0e310"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_loao_by_set.csv",
+    "sha256": "1249899925e4a091ab9e0ef640be9e105c6cdf889f3c7d4f2673b8726ad1899c"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_old_vs_new_balanced_coverage_by_set.csv",
+    "sha256": "2dacff552b5c5485f29317f883a80dba6b4ae8495bb66f874648299bca05d538"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_definition_scorecard.csv",
+    "sha256": "9d37fbeae5101da6226c3d566db2fd8d44778bcf788ea21a837db0c2ec13533f"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_approach_level_rescore.csv",
+    "sha256": "6dd0e66205a2b0ae0850bcee306b07dc51b429e7a1b8b684dc98742250602689"
+  },
+  {
+    "path": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/01_wrong_sign_mask_accounting.csv",
+    "sha256": "48c3928311cbe57a85cdcb9e91e3fd7b39a5015d365c1ff5c55c6d76e67bb8aa"
+  }
+]

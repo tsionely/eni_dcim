@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    "checkpoint_input_manifest.json",
+    "closure_read_shadow_fit_by_set.csv",
+    "closure_read_shadow_b0_exact_maxima.csv",
+    "closure_read_legacy_appendix.csv",
+    "closure_read_loao_by_set.csv",
+    "closure_read_balanced_coverage_by_set.csv",
+    "closure_read_wrong_sign_scorecard.csv",
+    "closure_read_wrong_sign_approach_verdict.csv",
+    "closure_read_event_support_accounting.csv"
+  ],
+  "checkpoint_input_manifest_path": "tuning/response53-closure-read-DIAGNOSTIC-a0b53df-20260720T230014Z/checkpoint_input_manifest.json",
+  "checkpoint_input_manifest_sha256": "49e89324f2dfe51e8614ac2819cd217bbff159d3776a9a2afabf0b4a73e977d6",
+  "diagnostic_only": true,
+  "event_support": "16 trace rows -> 9 command events -> 7 sign-evaluable + 2 zero-on-support",
+  "generator_postdates_181f41f": true,
+  "r26_1_verdict_scope": "PASS at 1/1 is a FIXTURE-LEVEL pass (one physical approach, four correlated variants), not population evidence.",
+  "repo_head": "a0b53dfeadf221cfd834dca7b85bc13c5ac10d24",
+  "report_layer_only": true,
+  "response53_commit": "02b32cca996a22f3a44a8757ce2486a747eb706e",
+  "sequencing_floor_commit": "181f41ff88a92febe386fd2b272162f0190c04d6",
+  "shadow_partition": "3 overlap / 20 confirmatory / 23 pooled; legacy 5 listed / 4 analyzable appendix kept separate",
+  "source_checkpoint_dir": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z"
+}
