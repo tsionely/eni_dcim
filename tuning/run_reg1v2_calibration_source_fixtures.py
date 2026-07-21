@@ -15,6 +15,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from tuning.reg1v2_calibration_source_generator import (
+    CANONICAL_SCORING_KEY_SCHEMA,
     Candidate,
     DT_NS,
     GOVERNING_REG1_COMMIT,
@@ -28,13 +29,15 @@ from tuning.reg1v2_calibration_source_generator import (
     committed_attestation_rows,
     detect_step_windows,
     fit_response_model,
-    format_exposure_key,
     local_open_face,
     normalize_rows_with_metadata,
     parse_certified_full,
     predict_window,
     reconstruct_v_full_raw,
     scoring_event_key,
+    scoring_support_bytes,
+    scoring_support_sha256_from_keys,
+    serialize_scoring_key,
     source_bytes_commit,
     synthetic_dry_run,
     synthetic_null_rows,
@@ -88,7 +91,7 @@ def feature_row(tick: int, *, e_meas_m: float, certified_full: object = True, fl
     return row
 
 
-def sentinel_cli_args(repo: Path, sentinel_path: Path, *, evidence_commit: str | None = None, digest: str | None = None, key_count: int = 1) -> list[str]:
+def sentinel_cli_args(repo: Path, sentinel_path: Path, *, evidence_commit: str | None = None, digest: str | None = None, key_schema: str = CANONICAL_SCORING_KEY_SCHEMA) -> list[str]:
     commit = evidence_commit or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
     registered_digest = digest or subprocess.check_output(
         [
@@ -107,8 +110,7 @@ def sentinel_cli_args(repo: Path, sentinel_path: Path, *, evidence_commit: str |
         "--sentinel-criterion-commit", GOVERNING_REG1_COMMIT,
         "--sentinel-evidence-commit", commit,
         "--sentinel-reviewed-tip", commit,
-        "--sentinel-key-schema", "event_key",
-        "--sentinel-key-count", str(key_count),
+        "--sentinel-key-schema", key_schema,
     ]
 
 
@@ -179,7 +181,9 @@ def fixture_response_reconstruction_v21_runtime_rules() -> None:
         ts = i * 0.02
         duplicate.append(feature_row(i, e_meas_m=1.5 - 0.22 * ts, flight_id="duplicate"))
         if i == 10:
-            duplicate.append(feature_row(10, e_meas_m=99.0, flight_id="duplicate", frame_id="duplicate_frame_0010"))
+            repeat = feature_row(10, e_meas_m=1.5 - 0.22 * ts, flight_id="duplicate", frame_id="duplicate_frame_0010")
+            repeat["row_key"] = "duplicate_repeat"
+            duplicate.append(repeat)
     dup_rate, dup_status, dup_meta = reconstruct_v_full_raw(duplicate, 0.34)
     expect(dup_status == "VALID", f"duplicate v2.1 reconstruction invalid: {dup_status}")
     expect(abs(float(dup_rate) - 0.22) < 1e-12, "duplicate timestamp was treated as a new exposure")
@@ -212,7 +216,10 @@ def _manual_window_for_lag_objective() -> StepWindow:
         rows.append({
             "event_id": "objective_step",
             "row_key": f"objective_{tick:03d}",
+            "flight_id": "manual_objective",
+            "frame_id": f"manual_objective_frame_{tick:04d}",
             "tick": tick,
+            "assigned_control_tick": tick,
             "relative_tick": tick,
             "ts_s": tick * 0.02,
             "feature_ts_ns": tick * 20_000_000,
@@ -307,7 +314,10 @@ def fixture_null_tie_not_null_calibrated() -> None:
         rows.append({
             "event_id": "null_tie",
             "row_key": f"null_tie_{tick:03d}",
+            "flight_id": "manual_null_tie",
+            "frame_id": f"manual_null_tie_frame_{tick:04d}",
             "tick": tick,
+            "assigned_control_tick": tick,
             "relative_tick": tick,
             "ts_s": tick * 0.02,
             "feature_ts_ns": tick * 20_000_000,
@@ -320,6 +330,8 @@ def fixture_null_tie_not_null_calibrated() -> None:
     fit = fit_response_model([window])
     expect(fit["calibration_status"] == "NOT_IDENTIFIED", f"null tie must be NOT_IDENTIFIED, got {fit['calibration_status']}")
     expect(fit["null_tied_positive"] is True, "null-tie diagnostic flag missing")
+    expect(fit["null_to_positive_loss_gap"] == 0.0, "both-zero null tie did not publish zero gap")
+    expect(fit["null_tie_rule_result"] == "TIE", "both-zero null tie was not typed as TIE")
 
 
 def fixture_direction_applicability() -> None:
@@ -341,7 +353,7 @@ def fixture_row_level_trace() -> None:
 
 def fixture_sentinel_disjoint_exclusion() -> None:
     rows = synthetic_rows()
-    windows = detect_step_windows(rows, sentinel_keys={"syn_0020"})
+    windows = detect_step_windows(rows, sentinel_keys={serialize_scoring_key(("step_01", "synthetic", 400_000_000, 20))})
     expect(windows[0].exclusion_reason == "SENTINEL_DISJOINT", "sentinel key did not exclude overlapping window")
     fit = fit_response_model(windows)
     expect(fit["usable_window_count"] == 1, "sentinel-excluded window leaked into usable fit set")
@@ -366,15 +378,15 @@ def fixture_s5_poisoned_duplicate_first_wins() -> None:
         ts = i * 0.02
         rows.append(feature_row(i, e_meas_m=1.5 - 0.31 * ts, certified_full="True", flight_id="dup"))
         if i == 8:
-            poison = feature_row(i, e_meas_m=99.0, certified_full="True", flight_id="dup")
-            poison["row_key"] = "dup_poison"
-            rows.append(poison)
+            repeat = feature_row(i, e_meas_m=1.5 - 0.31 * ts, certified_full="True", flight_id="dup")
+            repeat["row_key"] = "dup_repeat"
+            rows.append(repeat)
     normalized, meta = normalize_rows_with_metadata(rows)
-    expect(meta["discarded_rebroadcast_count"] == 1, "poisoned duplicate was not listed as discarded")
-    expect(meta["discarded_rebroadcasts"][0]["discarded_row_key"] == "dup_poison", "duplicate first-wins discarded the wrong row")
+    expect(meta["discarded_rebroadcast_count"] == 1, "byte-identical duplicate was not listed as discarded")
+    expect(meta["discarded_rebroadcasts"][0]["discarded_row_key"] == "dup_repeat", "duplicate first-wins discarded the wrong row")
     rate, status, rate_meta = reconstruct_v_full_raw(normalized, 0.30)
     expect(status == "VALID", f"duplicate fixture response invalid: {status}")
-    expect(abs(float(rate) - 0.31) < 1e-12, "poisoned duplicate affected the reconstructed rate")
+    expect(abs(float(rate) - 0.31) < 1e-12, "duplicate exposure affected the reconstructed rate")
     expect(rate_meta["history_samples"] == 16, "duplicate exposure leaked into certified history")
 
 
@@ -413,7 +425,7 @@ def fixture_s8_sentinel_overlap_actual_cli(repo: Path) -> None:
         tmp_path = Path(tmp)
         input_csv = tmp_path / "input.csv"
         write_csv(input_csv, synthetic_rows())
-        sentinel_path = Path("tuning/reg1v24_fixture_sentinel_overlap.csv")
+        sentinel_path = Path("tuning/reg1v25_fixture_sentinel_overlap.csv")
         proc = run_generator_cli(repo, [
             "--input-csv", str(input_csv),
             "--out-dir", str(tmp_path / "out"),
@@ -429,7 +441,7 @@ def fixture_s9_direction_argument_refusal(repo: Path) -> None:
         tmp_path = Path(tmp)
         input_csv = tmp_path / "input.csv"
         write_csv(input_csv, synthetic_rows())
-        sentinel_path = Path("tuning/reg1v24_fixture_sentinel_nonoverlap.csv")
+        sentinel_path = Path("tuning/reg1v25_fixture_sentinel_nonoverlap.csv")
         base = [
             "--input-csv", str(input_csv),
             "--out-dir", str(tmp_path / "out"),
@@ -465,7 +477,10 @@ def fixture_s11_multiple_positive_minimizers_not_identified() -> None:
         rows.append({
             "event_id": "multi_min",
             "row_key": f"multi_min_{tick:03d}",
+            "flight_id": "manual_multi_min",
+            "frame_id": f"manual_multi_min_frame_{tick:04d}",
             "tick": tick,
+            "assigned_control_tick": tick,
             "relative_tick": tick,
             "ts_s": tick * 0.02,
             "feature_ts_ns": tick * DT_NS,
@@ -531,17 +546,18 @@ def fixture_s15_missing_feature_ts_absent_never_synthesized() -> None:
     expect(meta["excluded_exposure_rows"][0]["reason"] == "ABSENT_EXPOSURE_KEY", "missing feature_ts did not fail the exposure key")
 
 
-def fixture_s16_equidistant_maps_to_earlier_tick() -> None:
+def fixture_s18_causal_floor_at_three_quarter_period() -> None:
     rows = [
-        feature_row(0, e_meas_m=1.0, flight_id="tie", feature_ts_ns=DT_NS // 2),
-        feature_row(1, e_meas_m=0.9, flight_id="tie"),
+        feature_row(0, e_meas_m=1.0, flight_id="floor", feature_ts_ns=(3 * DT_NS) // 4),
+        feature_row(1, e_meas_m=0.9, flight_id="floor"),
     ]
     normalized, meta = normalize_rows_with_metadata(rows)
-    first = next(row for row in normalized if row["frame_id"] == "tie_frame_0000")
-    expect(first["tick"] == 0, "equidistant exposure did not map to the earlier control tick")
-    expect(first["nearest_tick"] == 0, "nearest tick was not the earlier tick")
-    expect(first["tick_mismatch_ns"] == DT_NS // 2, "signed mismatch_ns not preserved")
-    expect(meta["mismatch_count"] == 1, "equidistant mismatch was not ledgered")
+    first = next(row for row in normalized if row["frame_id"] == "floor_frame_0000")
+    expect(first["assigned_control_tick"] == 0, "0.75-period exposure did not floor to the earlier control tick")
+    expect(first["causal_floor_tick"] == 0, "causal floor tick not published")
+    expect(first["tick_mismatch_ns"] == (3 * DT_NS) // 4, "signed causal-floor mismatch_ns not preserved")
+    expect(0 <= int(first["tick_mismatch_ns"]) <= DT_NS, "causal mismatch not in [0, one period]")
+    expect(meta["mismatch_count"] == 1, "causal-floor mismatch was not ledgered")
 
 
 def fixture_s17_sentinel_tip_digest_mismatch(repo: Path) -> None:
@@ -558,7 +574,7 @@ def fixture_s17_sentinel_tip_digest_mismatch(repo: Path) -> None:
         cwd=repo,
         text=True,
     ).strip()
-    with tempfile.TemporaryDirectory(prefix="reg1v24_s17_") as tmp:
+    with tempfile.TemporaryDirectory(prefix="reg1v25_s17_") as tmp:
         tmp_path = Path(tmp)
         input_csv = tmp_path / "input.csv"
         write_csv(input_csv, synthetic_rows())
@@ -571,10 +587,91 @@ def fixture_s17_sentinel_tip_digest_mismatch(repo: Path) -> None:
             "--sentinel-criterion-commit", GOVERNING_REG1_COMMIT,
             "--sentinel-evidence-commit", parent,
             "--sentinel-reviewed-tip", parent,
-            "--sentinel-key-schema", "event_key",
+            "--sentinel-key-schema", CANONICAL_SCORING_KEY_SCHEMA,
         ])
     expect(proc.returncode != 0, "altered sentinel bytes at tip unexpectedly passed")
     expect("SENTINEL_TIP_DIGEST_MISMATCH" in (proc.stderr + proc.stdout), "s17 did not emit tip digest mismatch")
+
+
+def fixture_s19_sentinel_schema_mismatch(repo: Path) -> None:
+    with tempfile.TemporaryDirectory(prefix="reg1v25_s19_") as tmp:
+        tmp_path = Path(tmp)
+        input_csv = tmp_path / "input.csv"
+        write_csv(input_csv, synthetic_rows())
+        sentinel_path = Path("tuning/reg1v25_fixture_sentinel_nonoverlap.csv")
+        proc = run_generator_cli(repo, [
+            "--input-csv", str(input_csv),
+            "--out-dir", str(tmp_path / "out"),
+            "--direction", "down",
+            *sentinel_cli_args(repo, sentinel_path, key_schema="event_key"),
+        ])
+    expect(proc.returncode != 0, "sentinel schema mismatch unexpectedly succeeded")
+    expect("SENTINEL_SCHEMA_MISMATCH" in (proc.stderr + proc.stdout), "s19 did not emit schema mismatch")
+
+
+def fixture_s20_null_contribution_branch_typing() -> None:
+    fit = fit_response_model(detect_step_windows(synthetic_null_rows()))
+    branch = fit["reg2_branch"]
+    expect(fit["calibration_status"] == "NULL_CALIBRATED", "null contribution fixture did not calibrate null")
+    expect(fit["model_class"] == "NULL_CONTRIBUTION", "fit summary did not type null model class")
+    expect(branch["model_class"] == "NULL_CONTRIBUTION", "REG-2 branch did not type NULL_CONTRIBUTION")
+    expect(branch["tau_s"] == "NOT_APPLICABLE" and branch["L_ticks"] == "NOT_APPLICABLE", "null tau/L were numeric")
+    expect(branch["profile_box"] == "NOT_APPLICABLE_NULL_CLASS", "null profile class missing")
+    for field in ("null_loss", "best_positive_loss", "null_to_positive_loss_gap", "positive_global_minimizer_count", "null_tie_rule_result"):
+        expect(field in branch, f"null branch field {field} missing")
+
+
+def fixture_s21_support_digest_byte_contract() -> None:
+    keys = [
+        ("step_b", "flight", 2, 1),
+        ("step_a", "flight", 10, 0),
+    ]
+    expected = b'["step_a","flight",10,0]\n["step_b","flight",2,1]\n'
+    expect(scoring_support_bytes(keys) == expected, "support-key byte serialization drifted")
+    expect(scoring_support_sha256_from_keys(keys) == hashlib.sha256(expected).hexdigest(), "support digest did not hash the canonical bytes")
+    fit = fit_response_model(detect_step_windows(synthetic_rows()))
+    expect(fit["duplicate_scoring_key_count"] == 0, "normal fit published duplicate scoring keys")
+    expect(len(fit["scoring_support_sha256"]) == 64, "fit did not publish support sha256")
+
+
+def fixture_s22_duplicate_scoring_key_stops() -> None:
+    rows: list[dict[str, object]] = []
+    for idx, tick in enumerate([0, 0, 1, 2]):
+        rows.append({
+            "event_id": "dup_score",
+            "row_key": f"dup_score_{idx}",
+            "flight_id": "dup_score",
+            "frame_id": f"dup_score_frame_{idx}",
+            "tick": tick,
+            "assigned_control_tick": tick,
+            "relative_tick": tick,
+            "ts_s": tick * 0.02,
+            "feature_ts_ns": tick * 20_000_000,
+            "v_ref_up_mps": 0.5,
+            "v_meas_mps": 0.1,
+            "response_status": "VALID",
+            "trace_complete": True,
+        })
+    window = StepWindow("dup_score", 0, "up", 0.0, 0.5, 0.0, [0, 1, 2], rows, "")
+    try:
+        fit_response_model([window], {"up"})
+    except ScoringSupportMismatch as exc:
+        expect("DUPLICATE_SCORING_KEY_COUNT" in str(exc), "duplicate scoring key did not carry typed stop")
+    else:
+        raise FixtureFailure("duplicate scoring key did not STOP")
+
+
+def fixture_s23_exposure_identity_whole_class_conflicts() -> None:
+    same_primary_a = feature_row(0, e_meas_m=1.0, flight_id="identity", frame_id="primary_a", feature_ts_ns=0)
+    same_primary_b = feature_row(0, e_meas_m=2.0, flight_id="identity", frame_id="primary_a", feature_ts_ns=0)
+    same_primary_b["row_key"] = "identity_payload_conflict"
+    frame_a = feature_row(1, e_meas_m=0.9, flight_id="identity", frame_id="shared_frame", feature_ts_ns=DT_NS)
+    frame_b = feature_row(2, e_meas_m=0.8, flight_id="identity", frame_id="shared_frame", feature_ts_ns=2 * DT_NS)
+    normalized, meta = normalize_rows_with_metadata([same_primary_a, same_primary_b, frame_a, frame_b])
+    expect(not normalized, "conflicting exposure classes leaked retained rows")
+    reasons = [row["reason"] for row in meta["excluded_exposure_rows"]]
+    expect(reasons.count("EXPOSURE_PAYLOAD_CONFLICT") == 2, "payload conflict did not exclude the whole primary class")
+    expect(reasons.count("FRAME_ID_COLLISION") == 2, "frame-id collision did not exclude the whole class")
 
 
 def fixture_provenance_and_committed_bytes(repo: Path) -> None:
@@ -585,9 +682,12 @@ def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     expect(prov["source_generator_path"] == SOURCE_GENERATOR_PATH, "source generator path not bound")
     expect(prov["source_generator_commit"] == source_commit, "source generator commit does not equal source-bytes commit")
     expect(prov["execution_tip"] == head, "execution tip mismatch")
-    expect(prov["governing_reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.4 exact commit binding mismatch")
-    expect(prov["reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.4 compatibility commit binding mismatch")
+    expect(prov["governing_reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.5 exact commit binding mismatch")
+    expect(prov["reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.5 compatibility commit binding mismatch")
     expect(prov["prior_viewed_output"]["disposition"] == "VOID_PRE_V2.3", "2g prior-viewing disclosure missing")
+    expect(prov["prior_viewed_output"]["prior_viewed_artifact_sha256"] != "PENDING_HISTORY_DIGEST", "2g prior-viewing digest placeholder leaked")
+    expect(len(prov["source_generator_sha256_at_source_commit"]) == 64, "source sha at source commit missing")
+    expect(prov["source_generator_sha256_at_source_commit"] == prov["source_generator_sha256_at_execution_tip"], "source sha mismatch across source/tip")
     expect(prov["input_digests"][0]["path"].startswith("synthetic://"), "synthetic dry-run should not bind A091 input")
     expect("attestation" in prov["attestation_policy"], "attestation child policy missing")
     expect(dry["packet_scope"] == "SYNTHETIC_DIAGNOSTIC", "synthetic packet scope enum missing")
@@ -613,7 +713,7 @@ def run(repo: Path) -> int:
         ("row_level_trace_happy_path", fixture_row_level_trace),
         ("sentinel_disjoint_detector_exclusion", fixture_sentinel_disjoint_exclusion),
         ("s4_strict_certified_full_parsing", fixture_s4_strict_certified_full_parsing),
-        ("s5_poisoned_duplicate_first_wins", fixture_s5_poisoned_duplicate_first_wins),
+        ("s5_byte_identical_duplicate_first_wins", fixture_s5_poisoned_duplicate_first_wins),
         ("s6_feature_time_alignment_and_mismatch_ledger", fixture_s6_feature_time_alignment_and_mismatch_ledger),
         ("s7_blank_trace_value_incomplete", fixture_s7_blank_trace_value_incomplete),
         ("s8_sentinel_overlap_actual_cli", lambda: fixture_s8_sentinel_overlap_actual_cli(repo)),
@@ -624,12 +724,17 @@ def run(repo: Path) -> int:
         ("s13_scoring_support_digest_mismatch_stops", fixture_s13_scoring_support_digest_mismatch_stops),
         ("s14_null_manifold_boundary_not_face_killed", fixture_s14_null_manifold_boundary_not_face_killed),
         ("s15_missing_feature_ts_absent_never_synthesized", fixture_s15_missing_feature_ts_absent_never_synthesized),
-        ("s16_equidistant_maps_to_earlier_tick", fixture_s16_equidistant_maps_to_earlier_tick),
         ("s17_sentinel_tip_digest_mismatch", lambda: fixture_s17_sentinel_tip_digest_mismatch(repo)),
+        ("s18_causal_floor_at_three_quarter_period", fixture_s18_causal_floor_at_three_quarter_period),
+        ("s19_sentinel_schema_mismatch", lambda: fixture_s19_sentinel_schema_mismatch(repo)),
+        ("s20_null_contribution_branch_typing", fixture_s20_null_contribution_branch_typing),
+        ("s21_support_digest_byte_contract", fixture_s21_support_digest_byte_contract),
+        ("s22_duplicate_scoring_key_stops", fixture_s22_duplicate_scoring_key_stops),
+        ("s23_exposure_identity_whole_class_conflicts", fixture_s23_exposure_identity_whole_class_conflicts),
         ("provenance_and_committed_bytes", lambda: fixture_provenance_and_committed_bytes(repo)),
     ]
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
-    print("REG-1V2.4 CALIBRATION SOURCE FIXTURES")
+    print("REG-1V2.5 CALIBRATION SOURCE FIXTURES")
     print(f"repo={repo}")
     print(f"head={head}")
     print("scope=DIAGNOSTIC synthetic dry-run only; no A091; no FlightSim/DCGame; no checkpoint; no intervention artifacts")
