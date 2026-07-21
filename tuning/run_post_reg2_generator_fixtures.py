@@ -22,12 +22,14 @@ from tuning.post_reg2_contract_b_generator import (
     CALIBRATION_DIGESTS,
     ContractBModel,
     StartupContractError,
+    calibration_artifact_reconstructed_v_raw,
     apply_contract_b_response,
     canonical_residual_slice_sha,
     evaluate_cut_records,
     fit_cut,
     points_for_line,
     resolve_decision,
+    runtime_twin_rate_anchor_v_raw,
     sensitivity_profile_rows,
     split_mixed_owner_rows,
     startup_contract,
@@ -322,10 +324,18 @@ def fixture_j_all_residual_admissibility_branches() -> None:
         ("CONTRIBUTORY_NOT_SUFFICIENT", {"input_validity_ok": True, "B": 3, "R": ["A"], "S_B": ["A", "B", "C"], "S_A": ["B", "C"]}),
         ("REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION", {"input_validity_ok": True, "B": 1, "R": [], "S_B": ["A"], "S_A": ["A"]}),
     ]
+    final_branches = {
+        "INVALID_INPUT",
+        "NO_REGISTERED_REMAINDER_TO_EXPLAIN",
+        "HOLD_INCOMPLETE_INTERVENTION_SUPPORT",
+        "CONFIRMED_SUFFICIENT_FOR_EVALUATOR",
+    }
     admissibilities = set()
     for expected, summary in cases:
         result = resolve_decision(summary)
         expect(result["branch"] == expected, f"branch {expected} resolved as {result['branch']}")
+        expected_finality = "FINAL" if expected in final_branches else "INTERIM_PENDING_RESTART"
+        expect(result["verdict_finality"] == expected_finality, f"finality for {expected} was {result['verdict_finality']}")
         admissibilities.add(str(result["residual_admissibility"]))
     expect("CANDIDATE_EVALUATOR_CORRECTED_STATISTICAL_INPUT" in admissibilities, "release-candidate residual branch missing")
     expect("DIAGNOSTIC_ONLY" in admissibilities, "diagnostic residual branch missing")
@@ -362,6 +372,24 @@ def fixture_l_precedence_earlier_branch_wins() -> None:
     expect(result["branch_order"] == 3, "precedence branch order mismatch")
 
 
+def fixture_m_runtime_twin_equivalence() -> None:
+    anchor_ts_s = 1.00
+    slope_de_dt = -0.42
+    samples = []
+    for i in range(70):
+        ts = i * 0.02
+        samples.append({
+            "row_key": f"full_{i:03d}",
+            "ts_s": ts,
+            "e_meas_m": 1.75 + slope_de_dt * ts,
+            "certified_full": True,
+        })
+    runtime_rate = runtime_twin_rate_anchor_v_raw(samples, anchor_ts_s, window_s=0.50)
+    calibration_rate = calibration_artifact_reconstructed_v_raw(samples, anchor_ts_s, window_s=0.50)
+    expect(runtime_rate == calibration_rate, "runtime twin and calibration reconstruction differ")
+    expect(abs(runtime_rate - 0.42) < 1e-12, "synthetic rate did not reconstruct as expected")
+
+
 def run(repo: Path) -> int:
     fixtures: list[tuple[str, Callable[[], None]]] = [
         ("startup_current_reg2_digest_guard", lambda: fixture_startup_current_reg2_digest_guard(repo)),
@@ -381,6 +409,7 @@ def run(repo: Path) -> int:
         ("j_all_residual_admissibility_branches", fixture_j_all_residual_admissibility_branches),
         ("k_theil_sen_ols_boundary_disagreement_flagged", fixture_k_theil_sen_ols_boundary_disagreement_flagged),
         ("l_precedence_earlier_branch_wins", fixture_l_precedence_earlier_branch_wins),
+        ("m_runtime_twin_equivalence", fixture_m_runtime_twin_equivalence),
     ]
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
     sim_lock = Path(r"C:\Temp\eni_dcim_sim.lock").exists()

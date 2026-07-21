@@ -36,6 +36,12 @@ EST_MIN_UNIQUE_AGES = 4
 EST_MIN_SPAN_S = 0.15
 EST_MIN_ROWS = 4
 TERM_OWNER_TOKENS = ("TERM", "physical_TERM_episode_A091")
+FINAL_VERDICT_BRANCHES = {
+    "CONFIRMED_SUFFICIENT_FOR_EVALUATOR",
+    "INVALID_INPUT",
+    "NO_REGISTERED_REMAINDER_TO_EXPLAIN",
+    "HOLD_INCOMPLETE_INTERVENTION_SUPPORT",
+}
 EXIT_REASONS = {
     "ABSENT_INPUT", "BURN_IN", "CLIPPED", "OWNERSHIP_SPLIT",
     "AGE_LOSS", "ESTIMABILITY_FAIL", "PENDING_TRANSPORT_PROOF",
@@ -399,6 +405,57 @@ def theil_sen_slope(xs: Sequence[float], ys: Sequence[float]) -> float | None:
     return float(statistics.median(slopes))
 
 
+def _certified_full_history_xy(
+    samples: Sequence[Mapping[str, object]],
+    anchor_ts_s: float,
+    *,
+    window_s: float = 0.50,
+    ts_key: str = "ts_s",
+    e_key: str = "e_meas_m",
+) -> tuple[list[float], list[float]]:
+    start_s = anchor_ts_s - window_s
+    window: list[tuple[float, float]] = []
+    for sample in samples:
+        if not bool(sample.get("certified_full", True)):
+            continue
+        ts = _num(sample.get(ts_key))
+        e_meas = _num(sample.get(e_key))
+        if ts is None or e_meas is None:
+            continue
+        if start_s <= ts <= anchor_ts_s:
+            window.append((ts, e_meas))
+    window.sort()
+    return [ts for ts, _ in window], [e for _, e in window]
+
+
+def runtime_twin_rate_anchor_v_raw(
+    samples: Sequence[Mapping[str, object]],
+    anchor_ts_s: float,
+    *,
+    window_s: float = 0.50,
+) -> float:
+    """Runtime twin of rate_anchor_v_raw from certified FULL e_meas history."""
+    xs, ys = _certified_full_history_xy(samples, anchor_ts_s, window_s=window_s)
+    slope = theil_sen_slope(xs, ys)
+    if slope is None:
+        raise ValueError("insufficient certified FULL history for runtime twin rate")
+    return -slope
+
+
+def calibration_artifact_reconstructed_v_raw(
+    samples: Sequence[Mapping[str, object]],
+    anchor_ts_s: float,
+    *,
+    window_s: float = 0.50,
+) -> float:
+    """Calibration artifact reconstruction: -Theil-Sen(d e_meas/dt)."""
+    xs, ys = _certified_full_history_xy(samples, anchor_ts_s, window_s=window_s)
+    slope = theil_sen_slope(xs, ys)
+    if slope is None:
+        raise ValueError("insufficient certified FULL history for calibration reconstruction")
+    return -slope
+
+
 def ols_slope_intercept(xs: Sequence[float], ys: Sequence[float]) -> tuple[float | None, float | None]:
     if len(xs) < 2:
         return None, None
@@ -598,10 +655,16 @@ def resolve_decision(summary: Mapping[str, object]) -> dict[str, object]:
     else:
         branch = "REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION"
         order = 9
+    boundary_optimum = bool(summary.get("boundary_optimum", True))
+    verdict_finality = "FINAL" if branch in FINAL_VERDICT_BRANCHES else "INTERIM_PENDING_RESTART"
+    if not boundary_optimum and branch not in FINAL_VERDICT_BRANCHES:
+        verdict_finality = "FINAL"
     return {
         "branch": branch,
         "branch_order": order,
         "residual_admissibility": residual_admissibility_for_branch(branch),
+        "verdict_finality": verdict_finality,
+        "boundary_optimum_flag": "BOUNDARY_OPTIMUM" if boundary_optimum else "NONE",
         "S_ids": sorted(S_B & S_A),
         "N_ids": sorted(N),
     }
