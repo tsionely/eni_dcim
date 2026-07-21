@@ -25,9 +25,10 @@ if str(SRC_ROOT) not in sys.path:
 
 from aigp.planning.vertical_terminal import robust_slope
 
-GOVERNING_REG1_COMMIT = "3fe25ea7eff64bac7910788536c0af7db470b341"
+GOVERNING_REG1_COMMIT = "ca1c161cf1b31b8f21ba4e47a5a0ec9951fe1976"
 REG1_COMMIT = GOVERNING_REG1_COMMIT
 SOURCE_GENERATOR_PATH = "tuning/reg1v2_calibration_source_generator.py"
+CANONICAL_SCORING_KEY_SCHEMA = "reg1v25_support_key_json_array_v1"
 DT_S = 0.02
 DT_NS = 20_000_000
 STEP_FLOOR_MPS = 0.35
@@ -40,6 +41,7 @@ RATE_LAST_SAMPLE_CAP = 12
 RATE_MIN_SAMPLES = 4
 MIN_VALID_ROWS = 8
 NULL_TIE_REL_TOL = 1e-9
+SSE_ABS_FLOOR = 1e-18
 G_VALUES = [round(i * 0.05, 2) for i in range(31)]
 TAU_VALUES = [round(i * 0.02, 2) for i in range(1, 61)]
 L_VALUES = list(range(26))
@@ -164,11 +166,10 @@ def canonical_feature_ts_ns(row: Mapping[str, object]) -> tuple[int | None, str]
     return value, "VALID"
 
 
-def _nearest_control_tick(feature_ts_ns: int) -> int:
-    quotient, remainder = divmod(feature_ts_ns, DT_NS)
-    if remainder > DT_NS // 2:
-        return quotient + 1
-    return quotient
+def _causal_floor_control_tick(feature_ts_ns: int, control_ticks: set[int]) -> int | None:
+    floor_tick = feature_ts_ns // DT_NS
+    candidates = [tick for tick in control_ticks if tick <= floor_tick]
+    return max(candidates) if candidates else None
 
 
 def _row_alignment_ledger(row: Mapping[str, object], feature_ts_ns: int | None, control_ticks: set[int]) -> dict[str, object]:
@@ -176,7 +177,8 @@ def _row_alignment_ledger(row: Mapping[str, object], feature_ts_ns: int | None, 
     ledger: dict[str, object] = {
         "alignment_status": "VALID",
         "alignment_reason": "",
-        "nearest_tick": None,
+        "causal_floor_tick": None,
+        "assigned_control_tick": None,
         "control_tick_original": original_tick,
         "tick_mismatch_ns": None,
         "abs_tick_mismatch_ns": None,
@@ -185,57 +187,68 @@ def _row_alignment_ledger(row: Mapping[str, object], feature_ts_ns: int | None, 
         ledger["alignment_status"] = "ABSENT"
         ledger["alignment_reason"] = "ABSENT_FEATURE_TS_NS"
         return ledger
-    nearest_tick = _nearest_control_tick(feature_ts_ns)
-    ledger["nearest_tick"] = nearest_tick
-    mismatch_ns = feature_ts_ns - nearest_tick * DT_NS
+    assigned_tick = _causal_floor_control_tick(feature_ts_ns, control_ticks)
+    ledger["causal_floor_tick"] = assigned_tick
+    ledger["assigned_control_tick"] = assigned_tick
+    if assigned_tick is None:
+        ledger["alignment_status"] = "OFF_WINDOW"
+        ledger["alignment_reason"] = "OFF_WINDOW"
+        return ledger
+    mismatch_ns = feature_ts_ns - assigned_tick * DT_NS
     ledger["tick_mismatch_ns"] = mismatch_ns
     ledger["abs_tick_mismatch_ns"] = abs(mismatch_ns)
-    if nearest_tick not in control_ticks:
+    if mismatch_ns < 0 or mismatch_ns > DT_NS:
         ledger["alignment_status"] = "OFF_WINDOW"
         ledger["alignment_reason"] = "OFF_WINDOW"
     return ledger
 
 
-def exposure_key_components(row: Mapping[str, object], feature_ts_ns: int | None) -> tuple[tuple[str, str, int] | None, list[str]]:
+def exposure_key_components(row: Mapping[str, object], feature_ts_ns: int | None) -> tuple[tuple[str, int] | None, list[str]]:
     missing: list[str] = []
     flight_id = row.get("flight_id")
-    frame_id = row.get("frame_id")
     if flight_id is None or str(flight_id) == "":
         missing.append("flight_id")
-    if frame_id is None or str(frame_id) == "":
-        missing.append("frame_id")
     if feature_ts_ns is None:
         missing.append("feature_ts_ns")
     if missing:
         return None, missing
-    return (str(flight_id), str(frame_id), int(feature_ts_ns)), []
+    return (str(flight_id), int(feature_ts_ns)), []
 
 
-def format_exposure_key(key: tuple[str, str, int]) -> str:
-    flight_id, frame_id, feature_ts_ns = key
-    return f"{flight_id}|frame_id={frame_id}|feature_ts_ns={feature_ts_ns}"
+def format_exposure_key(key: tuple[str, int]) -> str:
+    flight_id, feature_ts_ns = key
+    return f"{flight_id}|feature_ts_ns={feature_ts_ns}"
+
+
+def _payload_for_identity(row: Mapping[str, object]) -> dict[str, object]:
+    fields = (
+        "frame_id",
+        "e_meas_m",
+        "v_ref_up_mps",
+        "setpoint_v_body_z",
+        "level_pitch",
+        "level_roll",
+        "certified_full",
+        *TRACE_FIELDS,
+    )
+    return {field: row.get(field, None) for field in fields}
+
+
+def _payload_sha256(row: Mapping[str, object]) -> str:
+    return sha256_bytes(json.dumps(_payload_for_identity(row), sort_keys=True, separators=(",", ":"), default=str).encode("utf-8"))
 
 
 def normalize_rows_with_metadata(rows: Sequence[Mapping[str, object]]) -> tuple[list[dict[str, object]], dict[str, object]]:
-    out: list[dict[str, object]] = []
-    discarded: list[dict[str, object]] = []
-    excluded: list[dict[str, object]] = []
-    mismatch_ledger: list[dict[str, object]] = []
+    raw_control_ticks: set[int] = set()
+    prepared: list[dict[str, object]] = []
     absent_feature_rows: list[dict[str, object]] = []
     absent_cert_rows: list[dict[str, object]] = []
-    raw_control_ticks: set[int] = set()
     for index, row in enumerate(rows):
         tick_raw = row.get("tick")
         raw_control_ticks.add(int(tick_raw) if tick_raw is not None and str(tick_raw) != "" else index)
-    seen_exposures: set[tuple[str, str, int]] = set()
-    seen_frame_ts: dict[tuple[str, str], int] = {}
-    seen_ts_frame: dict[tuple[str, int], str] = {}
-    for index, row in enumerate(rows):
         new = dict(row)
-        tick_raw = new.get("tick")
-        if tick_raw is None:
-            tick_raw = index
-        new["tick"] = int(tick_raw)
+        new["_file_order"] = index
+        new["tick"] = int(tick_raw) if tick_raw is not None and str(tick_raw) != "" else index
         if _num(new.get("ts_s")) is None:
             new["ts_s"] = new["tick"] * DT_S
         feature_ts_ns, feature_status = canonical_feature_ts_ns(new)
@@ -253,67 +266,99 @@ def normalize_rows_with_metadata(rows: Sequence[Mapping[str, object]]) -> tuple[
         if cert_value is None:
             absent_cert_rows.append({"row_key": new.get("row_key", f"input_{index:06d}"), "reason": cert_status, "raw": new.get("certified_full")})
         exposure_key, missing_components = exposure_key_components(new, feature_ts_ns)
+        new["exposure_key_tuple"] = exposure_key
+        new["exposure_key_missing_components"] = ";".join(missing_components)
+        new["payload_sha256"] = _payload_sha256(new)
+        prepared.append(new)
+
+    excluded: list[dict[str, object]] = []
+    discarded: list[dict[str, object]] = []
+    mismatch_ledger: list[dict[str, object]] = []
+    primary_groups: dict[tuple[str, int], list[dict[str, object]]] = {}
+    frame_groups: dict[tuple[str, str], set[int]] = {}
+    for row in prepared:
+        exposure_key = row.get("exposure_key_tuple")
         if exposure_key is None:
             excluded.append({
-                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "row_key": row.get("row_key", f"input_{row['_file_order']:06d}"),
                 "reason": "ABSENT_EXPOSURE_KEY",
-                "missing_components": ";".join(missing_components),
+                "missing_components": row["exposure_key_missing_components"],
             })
             continue
+        primary_groups.setdefault(exposure_key, []).append(row)
+        frame_id = row.get("frame_id")
+        if frame_id is not None and str(frame_id) != "":
+            frame_groups.setdefault((str(row.get("flight_id", "")), str(frame_id)), set()).add(int(row["feature_ts_ns"]))
+
+    conflicting_primary = {
+        key for key, group in primary_groups.items()
+        if len({str(row["payload_sha256"]) for row in group}) > 1
+    }
+    conflicting_frame_ids = {
+        frame_key for frame_key, ts_values in frame_groups.items() if len(ts_values) > 1
+    }
+    frame_conflict_rows = {
+        id(row)
+        for row in prepared
+        if row.get("frame_id") is not None
+        and (str(row.get("flight_id", "")), str(row.get("frame_id"))) in conflicting_frame_ids
+    }
+    retained_primary: set[tuple[str, int]] = set()
+    out: list[dict[str, object]] = []
+    for row in prepared:
+        exposure_key = row.get("exposure_key_tuple")
+        if exposure_key is None:
+            continue
         exposure_key_text = format_exposure_key(exposure_key)
-        new["exposure_key"] = exposure_key_text
-        flight_id, frame_id, feature_ts_int = exposure_key
-        frame_key = (flight_id, frame_id)
-        ts_key = (flight_id, feature_ts_int)
-        if exposure_key in seen_exposures:
-            discarded.append({
-                "discarded_row_key": new.get("row_key", f"input_{index:06d}"),
+        row["exposure_key"] = exposure_key_text
+        if exposure_key in conflicting_primary:
+            excluded.append({
+                "row_key": row.get("row_key", f"input_{row['_file_order']:06d}"),
                 "exposure_key": exposure_key_text,
-                "feature_ts_ns": feature_ts_int,
+                "reason": "EXPOSURE_PAYLOAD_CONFLICT",
+            })
+            continue
+        if id(row) in frame_conflict_rows:
+            excluded.append({
+                "row_key": row.get("row_key", f"input_{row['_file_order']:06d}"),
+                "exposure_key": exposure_key_text,
+                "reason": "FRAME_ID_COLLISION",
+            })
+            continue
+        if exposure_key in retained_primary:
+            discarded.append({
+                "discarded_row_key": row.get("row_key", f"input_{row['_file_order']:06d}"),
+                "exposure_key": exposure_key_text,
+                "feature_ts_ns": int(row["feature_ts_ns"]),
                 "reason": "DUPLICATE_EXPOSURE_FIRST_WINS",
             })
             continue
-        if frame_key in seen_frame_ts and seen_frame_ts[frame_key] != feature_ts_int:
-            excluded.append({
-                "row_key": new.get("row_key", f"input_{index:06d}"),
-                "exposure_key": exposure_key_text,
-                "reason": "EXPOSURE_KEY_CONFLICT",
-                "conflict": "SAME_FRAME_ID_DIFFERENT_FEATURE_TS_NS",
-            })
-            continue
-        if ts_key in seen_ts_frame and seen_ts_frame[ts_key] != frame_id:
-            excluded.append({
-                "row_key": new.get("row_key", f"input_{index:06d}"),
-                "exposure_key": exposure_key_text,
-                "reason": "EXPOSURE_KEY_CONFLICT",
-                "conflict": "SAME_FEATURE_TS_NS_DIFFERENT_FRAME_ID",
-            })
-            continue
-        seen_exposures.add(exposure_key)
-        seen_frame_ts[frame_key] = feature_ts_int
-        seen_ts_frame[ts_key] = frame_id
-        alignment = _row_alignment_ledger(new, feature_ts_ns, raw_control_ticks)
-        new.update(alignment)
+        retained_primary.add(exposure_key)
+        alignment = _row_alignment_ledger(row, int(row["feature_ts_ns"]), raw_control_ticks)
+        row.update(alignment)
         if alignment["alignment_status"] in {"MISMATCH", "OFF_WINDOW"} or alignment.get("tick_mismatch_ns") not in {None, 0}:
-            mismatch_ledger.append({"row_key": new.get("row_key", f"input_{index:06d}"), **alignment})
+            mismatch_ledger.append({"row_key": row.get("row_key", f"input_{row['_file_order']:06d}"), **alignment})
         if alignment["alignment_status"] == "OFF_WINDOW":
             excluded.append({
-                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "row_key": row.get("row_key", f"input_{row['_file_order']:06d}"),
                 "exposure_key": exposure_key_text,
                 "reason": "OFF_WINDOW",
             })
             continue
-        new["tick"] = int(alignment["nearest_tick"])
-        new["ts_s"] = new["tick"] * DT_S
-        if _num(new.get("v_ref_up_mps")) is None:
-            v_body_z = _num(new.get("setpoint_v_body_z"))
-            level_pitch = _num(new.get("level_pitch"))
-            level_roll = _num(new.get("level_roll"))
+        row["assigned_control_tick"] = int(alignment["assigned_control_tick"])
+        row["tick"] = int(alignment["assigned_control_tick"])
+        row["ts_s"] = row["tick"] * DT_S
+        if _num(row.get("v_ref_up_mps")) is None:
+            v_body_z = _num(row.get("setpoint_v_body_z"))
+            level_pitch = _num(row.get("level_pitch"))
+            level_roll = _num(row.get("level_roll"))
             if v_body_z is not None and level_pitch is not None and level_roll is not None:
-                new["v_ref_up_mps"] = world_up_from_body_z(v_body_z, level_pitch, level_roll)
-        if not new.get("row_key"):
-            new["row_key"] = f"tick_{new['tick']:06d}"
-        out.append(new)
+                row["v_ref_up_mps"] = world_up_from_body_z(v_body_z, level_pitch, level_roll)
+        if not row.get("row_key"):
+            row["row_key"] = f"tick_{row['tick']:06d}"
+        row.pop("_file_order", None)
+        row.pop("exposure_key_tuple", None)
+        out.append(row)
     meta = {
         "discarded_rebroadcasts": discarded,
         "discarded_rebroadcast_count": len(discarded),
@@ -460,18 +505,26 @@ def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: 
         event_rows: list[dict[str, object]] = []
         for t in post_ticks:
             src = by_tick[t]
-            event_key = str(src.get("row_key"))
+            row_key = str(src.get("row_key"))
             relative_tick = int(src["tick"]) - tick
-            sentinel_event_key = f"step_{seq:02d}|{src.get('exposure_key', '')}|relative_tick={relative_tick}"
-            if event_key in sentinel_set or sentinel_event_key in sentinel_set:
+            sentinel_event_key = serialize_scoring_key((
+                f"step_{seq:02d}",
+                str(src["flight_id"]),
+                int(src["feature_ts_ns"]),
+                int(src["assigned_control_tick"]),
+            ))
+            if sentinel_event_key in sentinel_set:
                 reason = "SENTINEL_DISJOINT"
             v_meas, response_status, response_meta = reconstruct_v_full_raw(rows, float(src["ts_s"]))
             trace = _trace_for_row(src)
             feature_ts_ns, feature_status = canonical_feature_ts_ns(src)
             event_rows.append({
                 "event_id": f"step_{seq:02d}",
-                "row_key": event_key,
+                "row_key": row_key,
+                "flight_id": src.get("flight_id"),
+                "frame_id": src.get("frame_id"),
                 "tick": int(src["tick"]),
+                "assigned_control_tick": int(src["assigned_control_tick"]),
                 "relative_tick": relative_tick,
                 "ts_s": float(src["ts_s"]),
                 "feature_ts_ns": feature_ts_ns,
@@ -483,7 +536,7 @@ def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: 
                 "certification_absent_reason": src.get("certification_absent_reason", ""),
                 "alignment_status": src.get("alignment_status", ""),
                 "alignment_reason": src.get("alignment_reason", ""),
-                "nearest_tick": src.get("nearest_tick"),
+                "causal_floor_tick": src.get("causal_floor_tick"),
                 "control_tick_original": src.get("control_tick_original"),
                 "tick_mismatch_ns": src.get("tick_mismatch_ns"),
                 "abs_tick_mismatch_ns": src.get("abs_tick_mismatch_ns"),
@@ -543,12 +596,18 @@ def predict_window(window: StepWindow, candidate: Candidate) -> dict[int, float]
     return preds
 
 
-def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_directions: set[str] | None = None) -> dict[str, object]:
+def candidate_score(
+    windows: Sequence[StepWindow],
+    candidate: Candidate,
+    fit_directions: set[str] | None = None,
+    *,
+    support_count: int | None = None,
+    support_sha256: str | None = None,
+) -> dict[str, object]:
     scoring_rows = 0
     post_lag_rows = 0
     sse = 0.0
     max_post_lag_horizon_s = 0.0
-    scoring_keys: list[str] = []
     for window in windows:
         if window.exclusion_reason:
             continue
@@ -564,11 +623,15 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
             if meas is None or pred is None:
                 continue
             scoring_rows += 1
-            scoring_keys.append(scoring_event_key(window, row))
             if rel_tick >= candidate.lag_ticks:
                 post_lag_rows += 1
                 max_post_lag_horizon_s = max(max_post_lag_horizon_s, (rel_tick - candidate.lag_ticks) * DT_S)
             sse += (meas - pred) ** 2
+    if support_count is None or support_sha256 is None:
+        ledger = support_ledger(windows, fit_directions)
+        keys = support_keys_from_ledger(ledger)
+        support_count = len(keys)
+        support_sha256 = scoring_support_sha256_from_keys(keys)
     eligible = post_lag_rows >= MIN_VALID_ROWS and max_post_lag_horizon_s >= candidate.tau_s
     if eligible:
         failing_rule = ""
@@ -582,8 +645,8 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
         "L_ticks": candidate.lag_ticks,
         "rows_used": scoring_rows,
         "scoring_rows": scoring_rows,
-        "rows_scored_common": scoring_rows,
-        "scoring_support_sha256": scoring_support_sha256_from_keys(scoring_keys),
+        "rows_scored_common": support_count,
+        "scoring_support_sha256": support_sha256,
         "post_lag_rows": post_lag_rows,
         "max_horizon_s": max_post_lag_horizon_s,
         "max_post_lag_horizon_s": max_post_lag_horizon_s,
@@ -653,15 +716,31 @@ def _losses_tied(lhs: float, rhs: float) -> bool:
     return abs(lhs - rhs) / denom <= NULL_TIE_REL_TOL
 
 
+def scoring_key_tuple(window: StepWindow, row: Mapping[str, object]) -> tuple[str, str, int, int]:
+    return (
+        str(window.event_id),
+        str(row["flight_id"]),
+        int(row["feature_ts_ns"]),
+        int(row["assigned_control_tick"]),
+    )
+
+
+def serialize_scoring_key(key: tuple[str, str, int, int]) -> str:
+    return json.dumps([key[0], key[1], key[2], key[3]], separators=(",", ":"), ensure_ascii=False)
+
+
 def scoring_event_key(window: StepWindow, row: Mapping[str, object]) -> str:
-    exposure_key = str(row.get("exposure_key") or "")
-    if not exposure_key and row.get("feature_ts_ns") is not None:
-        exposure_key = f"feature_ts_ns={row['feature_ts_ns']}"
-    return f"{window.event_id}|{exposure_key}|relative_tick={row.get('relative_tick')}"
+    return serialize_scoring_key(scoring_key_tuple(window, row))
 
 
-def scoring_support_sha256_from_keys(keys: Sequence[str]) -> str:
-    payload = "\n".join(sorted(str(k) for k in keys)).encode("utf-8")
+def scoring_support_bytes(keys: Sequence[tuple[str, str, int, int]]) -> bytes:
+    records = [serialize_scoring_key(key) for key in sorted(keys)]
+    payload = "".join(f"{record}\n" for record in records)
+    return payload.encode("utf-8")
+
+
+def scoring_support_sha256_from_keys(keys: Sequence[tuple[str, str, int, int]]) -> str:
+    payload = scoring_support_bytes(keys)
     return sha256_bytes(payload)
 
 
@@ -683,10 +762,13 @@ def support_ledger(windows: Sequence[StepWindow], fit_directions: set[str] | Non
                 reason = str(row.get("response_status", "ABSENT_RESPONSE"))
             elif not trace_valid:
                 reason = "INCOMPLETE_TRACE"
+            key = scoring_key_tuple(window, row)
             ledger.append({
                 "window_id": window.event_id,
-                "event_key": scoring_event_key(window, row),
+                "event_key": serialize_scoring_key(key),
+                "flight_id": key[1],
                 "feature_ts_ns": row.get("feature_ts_ns"),
+                "assigned_control_tick": row.get("assigned_control_tick"),
                 "relative_tick": row.get("relative_tick"),
                 "response_validity_state": row.get("response_status"),
                 "trace_validity_state": "VALID" if trace_valid else "INCOMPLETE",
@@ -696,8 +778,16 @@ def support_ledger(windows: Sequence[StepWindow], fit_directions: set[str] | Non
     return ledger
 
 
-def support_keys_from_ledger(ledger: Sequence[Mapping[str, object]]) -> list[str]:
-    return [str(row["event_key"]) for row in ledger if row.get("included_in_objective")]
+def support_keys_from_ledger(ledger: Sequence[Mapping[str, object]]) -> list[tuple[str, str, int, int]]:
+    return [
+        (str(row["window_id"]), str(row["flight_id"]), int(row["feature_ts_ns"]), int(row["assigned_control_tick"]))
+        for row in ledger
+        if row.get("included_in_objective")
+    ]
+
+
+def duplicate_scoring_key_count(keys: Sequence[tuple[str, str, int, int]]) -> int:
+    return len(keys) - len(set(keys))
 
 
 def assert_rows_scored_common(score_rows: Sequence[Mapping[str, object]]) -> int:
@@ -715,8 +805,20 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
     usable = [w for w in windows if not w.exclusion_reason and (fit_directions is None or w.direction in fit_directions)]
     ledger = support_ledger(windows, fit_directions)
     ledger_support_keys = support_keys_from_ledger(ledger)
+    dup_key_count = duplicate_scoring_key_count(ledger_support_keys)
+    if dup_key_count:
+        raise ScoringSupportMismatch(f"DUPLICATE_SCORING_KEY_COUNT: {dup_key_count}")
     ledger_support_sha256 = scoring_support_sha256_from_keys(ledger_support_keys)
-    score_rows = [candidate_score(usable, cand, fit_directions) for cand in candidate_grid()]
+    score_rows = [
+        candidate_score(
+            usable,
+            cand,
+            fit_directions,
+            support_count=len(ledger_support_keys),
+            support_sha256=ledger_support_sha256,
+        )
+        for cand in candidate_grid()
+    ]
     rows_scored_common = assert_rows_scored_common(score_rows)
     scoring_support_sha256_values = {str(row["scoring_support_sha256"]) for row in score_rows}
     scoring_support_sha256 = next(iter(scoring_support_sha256_values)) if scoring_support_sha256_values else scoring_support_sha256_from_keys([])
@@ -727,9 +829,27 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
     null_best = min(null_scores, key=lambda r: float(r["sse"])) if null_scores else None
     positive = [row for row in eligible if float(row["g"]) > 0.0]
     positive_best = min(positive, key=lambda r: float(r["sse"])) if positive else None
-    compared_losses = [float(row["sse"]) for row in positive]
-    if null_best is not None:
-        compared_losses.append(float(null_best["sse"]))
+    null_loss = float(null_best["sse"]) if null_best is not None else None
+    best_positive_loss = float(positive_best["sse"]) if positive_best is not None else None
+    null_positive_gap = (best_positive_loss - null_loss) if best_positive_loss is not None and null_loss is not None else None
+    null_tie_epsilon = (
+        NULL_TIE_REL_TOL * max(best_positive_loss, null_loss, SSE_ABS_FLOOR)
+        if best_positive_loss is not None and null_loss is not None
+        else None
+    )
+    if best_positive_loss is None:
+        null_tie_rule_result = "NO_POSITIVE_ELIGIBLE"
+    elif null_positive_gap is not None and null_tie_epsilon is not None and null_positive_gap > null_tie_epsilon:
+        null_tie_rule_result = "NULL_BETTER"
+    elif null_positive_gap is not None and null_tie_epsilon is not None and abs(null_positive_gap) <= null_tie_epsilon:
+        null_tie_rule_result = "TIE"
+    else:
+        null_tie_rule_result = "POSITIVE_BETTER"
+    compared_losses = []
+    if best_positive_loss is not None:
+        compared_losses.append(best_positive_loss)
+    if null_loss is not None:
+        compared_losses.append(null_loss)
     global_loss = min(compared_losses) if compared_losses else None
     null_global_minimizer = null_best is not None and global_loss is not None and _losses_tied(float(null_best["sse"]), global_loss)
     positive_global_minimizers = [row for row in positive if global_loss is not None and _losses_tied(float(row["sse"]), global_loss)]
@@ -746,15 +866,8 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         if len(distinct_positive_global_minimizers) <= 1
         else "NOT_EVALUATED_NO_PREREG_EQUIVALENCE"
     )
-    null_strictly_better = (
-        null_best is not None
-        and all(_strictly_better_loss(float(null_best["sse"]), float(row["sse"])) for row in positive)
-        and not positive_global_minimizers
-    )
-    null_tied_positive = (
-        null_best is not None
-        and any(_losses_tied(float(null_best["sse"]), float(row["sse"])) for row in positive)
-    )
+    null_strictly_better = null_tie_rule_result in {"NULL_BETTER", "NO_POSITIVE_ELIGIBLE"} and null_best is not None and not positive_global_minimizers
+    null_tied_positive = null_tie_rule_result == "TIE"
     open_face = False
     open_face_checks: list[dict[str, object]] = []
     if not usable or not eligible:
@@ -777,11 +890,32 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
     else:
         status = "NULL_CALIBRATED"
         best = null_best
+    model_class = "NULL_CONTRIBUTION" if status == "NULL_CALIBRATED" else "POSITIVE_GAIN" if status == "CALIBRATED" else "NOT_APPLICABLE"
+    reg2_branch = {
+        "model_class": model_class,
+        "g": 0.0 if model_class == "NULL_CONTRIBUTION" else (float(best["g"]) if best else None),
+        "tau_s": "NOT_APPLICABLE" if model_class == "NULL_CONTRIBUTION" else (float(best["tau_s"]) if best else None),
+        "L_ticks": "NOT_APPLICABLE" if model_class == "NULL_CONTRIBUTION" else (int(best["L_ticks"]) if best else None),
+        "profile_box": "NOT_APPLICABLE_NULL_CLASS" if model_class == "NULL_CONTRIBUTION" else ("PENDING_PROFILE_BOX" if model_class == "POSITIVE_GAIN" else None),
+        "null_loss": null_loss,
+        "best_positive_loss": best_positive_loss,
+        "null_to_positive_loss_gap": null_positive_gap,
+        "positive_global_minimizer_count": len(distinct_positive_global_minimizers),
+        "null_tie_rule_result": null_tie_rule_result,
+    }
     return {
         "calibration_status": status,
         "best": best,
         "null_model_score": null_best,
         "null_tie_rel_tol": NULL_TIE_REL_TOL,
+        "sse_abs_floor": SSE_ABS_FLOOR,
+        "null_loss": null_loss,
+        "best_positive_loss": best_positive_loss,
+        "null_to_positive_loss_gap": null_positive_gap,
+        "null_tie_epsilon": null_tie_epsilon,
+        "null_tie_rule_result": null_tie_rule_result,
+        "reg2_branch": reg2_branch,
+        "model_class": model_class,
         "null_strictly_better_than_positive": null_strictly_better,
         "null_tied_positive": null_tied_positive,
         "global_minimizer_count": len(global_minimizer_coordinates),
@@ -796,6 +930,8 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         "candidate_count": len(score_rows),
         "rows_scored_common": rows_scored_common,
         "scoring_support_sha256": scoring_support_sha256,
+        "duplicate_scoring_key_count": dup_key_count,
+        "calibration_key_schema": CANONICAL_SCORING_KEY_SCHEMA,
         "support_ledger": ledger,
         "eligible_count": len(eligible),
         "score_rows": score_rows,
@@ -830,8 +966,13 @@ def read_sentinel_keys(path: Path) -> list[str]:
     keys: list[str] = []
     for row in rows:
         key = row.get("event_key") or row.get("row_key")
-        if not key and row.get("flight_id") and row.get("frame_id") and row.get("feature_ts_ns"):
-            key = format_exposure_key((str(row["flight_id"]), str(row["frame_id"]), int(str(row["feature_ts_ns"]))))
+        if not key and row.get("window_id") and row.get("flight_id") and row.get("feature_ts_ns") and row.get("assigned_control_tick"):
+            key = serialize_scoring_key((
+                str(row["window_id"]),
+                str(row["flight_id"]),
+                int(str(row["feature_ts_ns"])),
+                int(str(row["assigned_control_tick"])),
+            ))
         if key:
             keys.append(str(key))
     return keys
@@ -853,10 +994,11 @@ def verify_sentinel_binding(
     evidence_commit: str,
     reviewed_tip: str,
     key_schema: str,
-    expected_key_count: int | None,
 ) -> dict[str, object]:
     if not all([str(artifact_path), artifact_sha256, criterion_commit, evidence_commit, reviewed_tip, key_schema]):
         raise CalibrationSourceError("SENTINEL_BINDING_MISSING")
+    if key_schema != CANONICAL_SCORING_KEY_SCHEMA:
+        raise CalibrationSourceError("SENTINEL_SCHEMA_MISMATCH")
     execution_tip = git(repo, ["rev-parse", "HEAD"])
     rel_path = _repo_relative_path(repo, artifact_path)
     for label, commit in {
@@ -868,20 +1010,25 @@ def verify_sentinel_binding(
             git(repo, ["cat-file", "-e", f"{commit}^{{commit}}"])
         except subprocess.CalledProcessError as exc:
             raise CalibrationSourceError(f"SENTINEL_UNRESOLVABLE_{label}") from exc
-    if not is_ancestor(repo, criterion_commit, evidence_commit) or not is_ancestor(repo, evidence_commit, execution_tip):
+    if (
+        not is_ancestor(repo, criterion_commit, evidence_commit)
+        or not is_ancestor(repo, evidence_commit, reviewed_tip)
+        or not is_ancestor(repo, reviewed_tip, execution_tip)
+    ):
         raise CalibrationSourceError("SENTINEL_ANCESTRY_MISMATCH")
     try:
         evidence_digest = committed_byte_digest(repo, evidence_commit, rel_path)
+        reviewed_digest = committed_byte_digest(repo, reviewed_tip, rel_path)
         tip_digest = committed_byte_digest(repo, execution_tip, rel_path)
     except subprocess.CalledProcessError as exc:
         raise CalibrationSourceError("SENTINEL_ARTIFACT_UNRESOLVABLE") from exc
     if evidence_digest != artifact_sha256:
         raise CalibrationSourceError("SENTINEL_EVIDENCE_DIGEST_MISMATCH")
+    if reviewed_digest != artifact_sha256:
+        raise CalibrationSourceError("SENTINEL_REVIEWED_DIGEST_MISMATCH")
     if tip_digest != artifact_sha256:
         raise CalibrationSourceError("SENTINEL_TIP_DIGEST_MISMATCH")
     keys = read_sentinel_keys(artifact_path)
-    if expected_key_count is not None and len(keys) != expected_key_count:
-        raise CalibrationSourceError("SENTINEL_KEY_COUNT_MISMATCH")
     return {
         "sentinel_artifact_path": rel_path,
         "sentinel_artifact_sha256": artifact_sha256,
@@ -894,7 +1041,9 @@ def verify_sentinel_binding(
         "sentinel_verification": {
             "ancestry": "PASS",
             "digest_at_evidence": "PASS",
+            "digest_at_reviewed_tip": "PASS",
             "digest_at_tip": "PASS",
+            "schema_equality": "PASS",
         },
     }
 
@@ -923,9 +1072,15 @@ def provenance_packet(repo: Path, input_paths: Sequence[str], exact_command: str
         raise CalibrationSourceError(f"GOVERNING_REG1_COMMIT {GOVERNING_REG1_COMMIT} is not an ancestor of source commit {source_commit}")
     if not is_ancestor(repo, source_commit, execution_tip):
         raise CalibrationSourceError(f"source commit {source_commit} is not an ancestor of execution tip {execution_tip}")
+    source_sha_at_source = committed_byte_digest(repo, source_commit, SOURCE_GENERATOR_PATH)
+    source_sha_at_tip = committed_byte_digest(repo, execution_tip, SOURCE_GENERATOR_PATH)
+    if source_sha_at_source != source_sha_at_tip:
+        raise CalibrationSourceError("SOURCE_GENERATOR_SHA256_MISMATCH")
     return {
         "source_generator_path": SOURCE_GENERATOR_PATH,
         "source_generator_commit": source_commit,
+        "source_generator_sha256_at_source_commit": source_sha_at_source,
+        "source_generator_sha256_at_execution_tip": source_sha_at_tip,
         "execution_tip": execution_tip,
         "artifact_commit": artifact_commit,
         "governing_reg1_commit": GOVERNING_REG1_COMMIT,
@@ -933,17 +1088,22 @@ def provenance_packet(repo: Path, input_paths: Sequence[str], exact_command: str
         "input_digests": input_digest_rows(input_paths),
         "exact_command": exact_command,
         "prior_viewed_output": {
-            "commit": "044153b",
-            "source_run": "b421039",
+            "prior_viewed_artifact_path": "tuning/a091-response-model-calibration-reg1v22-aaa1c17-20260721T113736Z/summary.json",
+            "prior_viewed_artifact_sha256": "b7e7f66bc307a0f0b68f6938b78ae55719ee43f648164019dbaada46ad3553f1",
+            "prior_viewed_evidence_commit_full": "b42103962f2ee8445f3d2cd51897006b1da97714",
+            "prior_viewed_attestation_commit_full": "044153b55cb543b5141b910e8893c65ce92fa36b",
+            "prior_viewed_removal_commit_full": "2fa8e9d8059f5031b211e7cf28742b0bfe535d4b",
             "disposition": "VOID_PRE_V2.3",
+            "prior_disposition": "VOID_PRE_V2.3",
+            "prior_board_effect": "NONE",
             "result_viewed": True,
-            "calibration_status": "NULL_CALIBRATED",
-            "g": 0.0,
-            "tau_s": 0.02,
-            "L_ticks": 0,
-            "rms": 0.0,
-            "scoring_rows": 51,
-            "fit_directions": ["down", "up"],
+            "prior_calibration_status": "NULL_CALIBRATED",
+            "prior_g": 0.0,
+            "prior_tau": 0.02,
+            "prior_L": 0,
+            "prior_rms": 0.0,
+            "prior_scoring_rows": 51,
+            "prior_fit_directions": ["DOWN", "UP"],
             "effect_on_current_status": "none",
             "void_reasons": [
                 "generator predates v2.3",
@@ -1006,9 +1166,9 @@ def synthetic_dry_run(repo: Path) -> dict[str, object]:
     rows = synthetic_rows()
     windows = detect_step_windows(rows)
     fit = fit_response_model(windows)
-    packet = provenance_packet(repo, ["synthetic://reg1v24-detector-dry-run"], "python tuning/reg1v2_calibration_source_generator.py --synthetic-dry-run")
+    packet = provenance_packet(repo, ["synthetic://reg1v25-detector-dry-run"], "python tuning/reg1v2_calibration_source_generator.py --synthetic-dry-run")
     return {
-        "artifact": "REG1V24_CALIBRATION_SOURCE_SYNTHETIC_DRY_RUN",
+        "artifact": "REG1V25_CALIBRATION_SOURCE_SYNTHETIC_DRY_RUN",
         "diagnostic_token": "DIAGNOSTIC",
         "packet_scope": "SYNTHETIC_DIAGNOSTIC",
         "detector": [window_to_dict(w) for w in windows],
@@ -1025,22 +1185,26 @@ def write_packet(
     ledger_rows: Sequence[Mapping[str, object]] | None = None,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=False)
-    (out_dir / "summary.json").write_text(json.dumps(packet, indent=2, sort_keys=True), encoding="utf-8")
+    packet_out = dict(packet)
+    if ledger_rows is not None:
+        ledger_path = out_dir / "support_ledger.csv"
+        with ledger_path.open("w", newline="", encoding="utf-8") as f:
+            fieldnames = list(ledger_rows[0].keys()) if ledger_rows else ["empty"]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(ledger_rows)
+        packet_out["support_ledger_path"] = str(ledger_path)
+        packet_out["support_ledger_sha256"] = sha256_file(ledger_path)
+    (out_dir / "summary.json").write_text(json.dumps(packet_out, indent=2, sort_keys=True), encoding="utf-8")
     if score_rows is not None:
         with (out_dir / "candidate_scores.csv").open("w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=list(score_rows[0].keys()) if score_rows else ["empty"])
             writer.writeheader()
             writer.writerows(score_rows)
-    if ledger_rows is not None:
-        with (out_dir / "support_ledger.csv").open("w", newline="", encoding="utf-8") as f:
-            fieldnames = list(ledger_rows[0].keys()) if ledger_rows else ["empty"]
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(ledger_rows)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="REG-1v2.4 calibration source generator")
+    parser = argparse.ArgumentParser(description="REG-1v2.5 calibration source generator")
     parser.add_argument("--repo", default=".")
     parser.add_argument("--synthetic-dry-run", action="store_true")
     parser.add_argument("--input-csv")
@@ -1050,7 +1214,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--sentinel-evidence-commit", "--sentinel-keys-commit", dest="sentinel_evidence_commit")
     parser.add_argument("--sentinel-reviewed-tip")
     parser.add_argument("--sentinel-key-schema")
-    parser.add_argument("--sentinel-key-count", type=int)
     parser.add_argument("--out-dir")
     parser.add_argument("--direction", choices=["up", "down"])
     args = parser.parse_args(argv)
@@ -1083,7 +1246,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         evidence_commit=str(args.sentinel_evidence_commit),
         reviewed_tip=str(args.sentinel_reviewed_tip),
         key_schema=str(args.sentinel_key_schema),
-        expected_key_count=args.sentinel_key_count,
     )
     sentinel_keys = list(sentinel_binding["sentinel_keys"])
     input_paths.append(str(sentinel_path))
@@ -1096,7 +1258,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     fit_dirs = {args.direction}
     fit = fit_response_model(windows, fit_dirs)
     packet = {
-        "artifact": "REG1V24_CALIBRATION_PACKET",
+        "artifact": "REG1V25_CALIBRATION_PACKET",
         "diagnostic_token": "DIAGNOSTIC",
         "packet_scope": "REG2_CALIBRATION_CANDIDATE",
         "fit_summary": {k: v for k, v in fit.items() if k not in {"score_rows", "support_ledger"}},
