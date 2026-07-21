@@ -53,8 +53,34 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   clusters with |b1| > 0.35 falls by at least half AND every
   near-zero-activity cluster sits below 0.35 after intervention.
   SURVIVES-INTERVENTION => REFUTED regardless of the correlation
-  table. The POST-INTERVENTION residual is the admissible drift
-  measurement for any subsequent fit.
+  table.
+  **MACHINE DECISION TABLE (channel-2 on R59 — replaces the prose
+  cells; mutually exclusive, exhaustive). Define: B = physical
+  approaches classified large BEFORE (estimable cuts only); A =
+  the same approaches large AFTER; D = B - A; Q = independent
+  near-zero-activity approaches retaining an estimable large
+  WITHIN-CUT slope after intervention; K = 2. Then:**
+
+      input validity fails            -> INVALID_INPUT
+      Q >= K                          -> REFUTED
+      0 < Q < K                       -> HOLD_INCONCLUSIVE_QUIET_BREACH
+      Q = 0 and D >= ceil(B/2)        -> CONFIRMED_SUFFICIENT_FOR_EVALUATOR
+      Q = 0 and 0 < D < ceil(B/2)     -> CONTRIBUTORY_NOT_SUFFICIENT
+      Q = 0 and D <= 0                -> REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION
+
+  (The last label rejects mechanism-2 as the registered remainder
+  explanation without claiming the physical effect is nonexistent
+  in every regime.)
+  **RESIDUAL ADMISSIBILITY, TYPED BY BRANCH (supersedes the earlier
+  blanket sentence):** INVALID_INPUT -> residual INADMISSIBLE, no
+  verdict; REFUTED (either label) -> residual INADMISSIBLE as a
+  mechanism-corrected drift measurement;
+  CONTRIBUTORY_NOT_SUFFICIENT -> residual DIAGNOSTIC_ONLY (next
+  naming round's input; never a release fit or gate conclusion);
+  CONFIRMED_SUFFICIENT_FOR_EVALUATOR -> residual becomes a
+  CANDIDATE evaluator-corrected statistical input — still not
+  flight-release evidence, still behind the bridge and the
+  repaired-shipping-build re-earn.
   **THE MIDDLE CELL (channel-1 amendment, committed before any
   valid-stream run): PARTIAL COLLAPSE — some clusters drop,
   near-zero clusters end compliant, but fewer than half of the
@@ -236,10 +262,33 @@ consistency anchor becomes a discriminant between mechanisms.
 (FIRED in the 55ba6da round: auth = 1.0, b0 identical at -0.4449 —
 the re-attribution stands recorded in RESPONSE-58.)
 
-**Mechanism-2's own A091 prediction (channel-1, committed before
-the valid-stream run):** on A091 the rings were POPULATED — TERM
-was the actor, the feed-forward was not empty — so mechanism-2
-predicts its within-cut b1 is SMALL and INTERVENTION-INDIFFERENT.
-If that holds while its -0.44 intercept persists, the founding
-number belongs to a THIRD structure, and A091 is the first cell
-where the post-two-mechanisms residual shows its face.
+**Mechanism-2's A091 prediction — REFORMULATED (channel-2 on R59;
+the "small b1" clause is DELETED: it was undefined, written after
+the baseline slopes were viewed, and contradicted by A091's own
+cut table, whose pre-intervention within-cut slopes -0.99/-1.31/
+-1.50/-0.84 all exceed 0.35). The registered prediction is a
+STRUCTURAL NO-OP, ownership-gated:** on A091's TERM-owned support
+the mechanism-2 correction term == 0.0 EXACTLY, before-residual
+rows == after-residual rows, and every fitted quantity is
+unchanged. The harness MUST ownership-gate the intervention — a
+legacy setpoint that remains logged while TERM owns may not be
+injected as though legacy control physically acted; mixed-owner
+intervals split before the sentinel is read. A NONZERO correction
+on genuinely TERM-owned support indicates harness contamination or
+ownership misclassification, never mechanism confirmation. A091's
+absolute post-intervention b1 is DESCRIPTIVE evidence about
+whatever remains after mechanisms 1 and 2 — never a mechanism-2
+pass condition. If the no-op is confirmed and the -0.44-class
+intercept persists, the classification is
+UNATTRIBUTED_POST_M1_M2_SIGNED_STRUCTURE — a residual class, not
+yet a physical mechanism; and if A091's large within-cut slopes
+persist too, the third structure may be AGE-DEPENDENT, not
+intercept-only.
+
+**Guard-scope wording (channel-2, binding):** no outcome of the
+mechanism-2 intervention, BY ITSELF, authorizes a flight-code
+change; any flight-code change requires an independently named
+mechanism, criterion-before-evidence ancestry, and full
+shipping-build revalidation. (The separately filed latch-quality-
+admission hypothesis keeps its own path under exactly those
+terms.)
