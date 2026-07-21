@@ -167,8 +167,14 @@ def fixture_common_support_objective_bites() -> None:
     retired0 = _retired_candidate_specific_sse(window, c0)
     retired10 = _retired_candidate_specific_sse(window, c10)
     expect(new0["rows_used"] == new10["rows_used"] == 20, "common-support scoring used candidate-dependent row counts")
+    expect(new0["rows_scored_common"] == new10["rows_scored_common"] == 20, "rows_scored_common tripwire was not fixed")
     expect(float(new0["sse"]) < float(new10["sse"]), "common-support scoring did not select the registered lag")
     expect(retired10 < retired0, "fixture does not expose the retired candidate-specific censoring bug")
+
+    fit = fit_response_model([window])
+    score_counts = {row["rows_scored_common"] for row in fit["score_rows"]}
+    expect(score_counts == {20}, f"artifact-level rows_scored_common mismatch: {score_counts}")
+    expect(fit["rows_scored_common"] == 20, "fit summary did not publish rows_scored_common")
 
 
 def fixture_post_lag_identifiability_gating() -> None:

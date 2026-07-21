@@ -346,6 +346,7 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
         "L_ticks": candidate.lag_ticks,
         "rows_used": scoring_rows,
         "scoring_rows": scoring_rows,
+        "rows_scored_common": scoring_rows,
         "post_lag_rows": post_lag_rows,
         "max_horizon_s": max_post_lag_horizon_s,
         "max_post_lag_horizon_s": max_post_lag_horizon_s,
@@ -391,6 +392,9 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
     detected = sorted({w.direction for w in windows})
     usable = [w for w in windows if not w.exclusion_reason and (fit_directions is None or w.direction in fit_directions)]
     score_rows = [candidate_score(usable, cand, fit_directions) for cand in candidate_grid()]
+    common_counts = {int(row["rows_scored_common"]) for row in score_rows}
+    if len(common_counts) > 1:
+        raise CalibrationSourceError(f"rows_scored_common mismatch across candidates: {sorted(common_counts)}")
     eligible = [row for row in score_rows if row["eligible"]]
     null_scores = [row for row in score_rows if row["eligible"] and float(row["g"]) == 0.0]
     null_best = min(null_scores, key=lambda r: float(r["sse"])) if null_scores else None
@@ -431,6 +435,7 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         "detected_directions": detected,
         "fit_directions": sorted(fit_directions) if fit_directions else detected,
         "candidate_count": len(score_rows),
+        "rows_scored_common": next(iter(common_counts)) if common_counts else 0,
         "eligible_count": len(eligible),
         "score_rows": score_rows,
         "window_count": len(windows),
