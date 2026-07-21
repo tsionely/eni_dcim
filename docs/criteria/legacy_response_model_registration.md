@@ -152,14 +152,26 @@ UNIDENTIFIABLE candidates never enter the argmin.
       SCORING KEY (fixed types, one per objective row):
           (window_id: str, flight_id: str, feature_ts_ns: int,
            assigned_control_tick: int)
-      No scoring key may repeat after canonical normalization
-      (duplicate_scoring_key_count == 0, published).
-      SERIALIZATION: one canonical JSON array per key, exactly
-      ["window_id","flight_id",feature_ts_ns,assigned_control_tick]
-      in that fixed order; UTF-8; no optional whitespace; decimal
-      integers only; records sorted lexicographically by the
-      typed tuple; one LF after EVERY record including the final.
-      scoring_support_sha256 = SHA-256 of that byte stream.
+      CANONICAL window_id (v2.6 — never detector enumeration or
+      file order, which would let reordered input change the
+      digest of unchanged support):
+          window_id = "W|" + flight_id + "|" +
+                      decimal(event_control_mono_ns) + "|" +
+                      direction("DOWN"/"UP")
+          — derived from immutable event data only.
+      No scoring key may repeat after canonical normalization:
+      a duplicate is a HARD STOP, never a silent set conversion
+      (duplicate_scoring_key_count published, must equal 0).
+      SERIALIZATION (v2.6 exact): the actual field VALUES as a
+      JSON array [window_id, flight_id, feature_ts_ns,
+      assigned_control_tick]; strings required ASCII (non-ASCII
+      -> ledger-construction refusal); integers decimal only —
+      no floats, no null, no NaN, no string coercion; UTF-8;
+      separators ("," and ":") with no optional whitespace;
+      records sorted by the TYPED tuple (string, string, int,
+      int); exactly one LF after EVERY record including the
+      final. scoring_support_sha256 = SHA-256 of that byte
+      stream.
 
   The support ledger is constructed ONCE, before candidate
   iteration; candidate rows REFERENCE its count and digest and
@@ -171,9 +183,12 @@ UNIDENTIFIABLE candidates never enter the argmin.
   ONE support ledger: window_id, event key, feature_ts_ns,
   assigned_control_tick, relative_tick, response-validity state,
   trace-validity state, included_in_objective, exclusion reason.
-  Alignment/dedup rules unchanged from v1 (accepted):
-  feature_ts_ns to tick grid, nearest tick, max one-tick mismatch
-  listed; duplicate frame broadcasts dedup to first.
+  [VOID_SUPERSEDED_BY_V2_5 (v2.6, channel-2 on R77-78 §3): the
+  sentence that stood here — "nearest tick, dedup to first" —
+  contradicted the causal-floor and whole-conflict-class rules
+  and is VOID. The ONLY normative alignment/dedup text is 2f.1
+  (causal floor) and 2f.3 (canonical identity). Never nearest
+  future tick; never first-wins on contradictory payloads.]
 - **NULL-MODEL SCORE**: the g = 0 row is in the domain; every
   calibration publishes it explicitly beside the winner.
 
@@ -239,16 +254,43 @@ measured AFTER the lag, channel-2 Blocker 1.2):
   2. null loss strictly better than EVERY g > 0 eligible
      candidate's loss beyond the registered tolerance;
   3. no g > 0 candidate attains the global minimum.
-  **EXACT COMPARISON SEMANTICS (v2.5, channel-2 order F — never
-  left to source code):** losses are float64 SSE on the common
-  support. gap = best_positive_sse - null_sse. TIE iff
-  gap <= NULL_TIE_REL_TOL * max(best_positive_sse, null_sse,
-  SSE_ABS_FLOOR), with NULL_TIE_REL_TOL = 1e-9 and
-  SSE_ABS_FLOOR = 1e-18 (the floor decides the both-exactly-zero
-  case: 0.0 vs 0.0 is a TIE, hence NOT_IDENTIFIED — a dataset on
-  which every model is perfect identifies nothing). NULL wins iff
-  gap > that bound. The packet publishes null_loss,
-  best_positive_loss, the gap, and the tie-rule verdict.
+  **EXACT COMPARISON SEMANTICS (v2.6 TRI-STATE — the v2.5 binary
+  rule was NOT A PARTITION: with gap = best_positive_sse -
+  null_sse, "TIE iff gap <= epsilon" swallowed every case where
+  the POSITIVE model is strictly better (gap = -5 is not a tie);
+  and the 1e-18 sat inside the product where its contribution was
+  1e-27 — a misnamed floor. Ledger entry R80. The registered
+  relation:**
+
+      losses: float64 SSE on the common support
+      gap     = best_positive_sse - null_sse
+      epsilon = max(NULL_TIE_REL_TOL
+                      * max(|null_sse|, |best_positive_sse|),
+                    SSE_ABS_TOL)
+      NULL_TIE_REL_TOL = 1e-9
+      SSE_ABS_TOL      = 1e-18   (a TRUE absolute tolerance,
+                                  outside the product)
+
+      gap >  epsilon  -> NULL_STRICTLY_BETTER
+      gap < -epsilon  -> POSITIVE_STRICTLY_BETTER
+      else            -> TIE
+
+      NULL_STRICTLY_BETTER
+        AND eligible_positive_candidate_count > 0
+        AND identical support for every comparator
+        AND no positive-g global minimizer -> NULL_CALIBRATED
+      TIE -> NOT_IDENTIFIED (both-exactly-zero lands here: a
+        dataset on which every model is perfect identifies
+        nothing)
+      POSITIVE_STRICTLY_BETTER -> the positive-g winner's own
+        minimizer-set and local-face path
+
+  **NON-VACUITY (v2.6): eligible_positive_candidate_count == 0 ->
+  UNCALIBRATABLE_NO_POSITIVE_COMPARATOR (or NOT_IDENTIFIED),
+  NEVER NULL_CALIBRATED — "better than every member of an empty
+  family" is vacuous truth, not identification.** The packet
+  publishes null_loss, best_positive_loss, gap, epsilon, the
+  tri-state verdict, and the eligible-positive count.
   A g > 0 candidate tying the null within tolerance, or beating
   it, removes NULL_CALIBRATED: the status is then decided by the
   positive-gain winner's own closed-face check (CALIBRATED or
@@ -309,6 +351,21 @@ DETECTED and listed, whether or not fitted.
    labeled by the assigned CONTROL tick; the exposure time is
    preserved in the ledger; signed mismatch published per row.
    The mismatch LEDGER is mandatory.
+   **CONTROL TIMELINE (v2.6, channel-2 §6 — "the latest tick" is
+   defined against the ACTUAL LOGGED timeline, never a global
+   epoch rounding, which can cross a flight origin, clock reset,
+   or absent tick):** control timestamp field = the
+   replay-attached setpoint record's mono_ns; the join is
+   WITHIN-FLIGHT (partition key flight_id), split into SEGMENTS
+   at any clock reset (mono_ns decrease) — never join across a
+   reset. assigned control row = argmax(control_mono_ns) subject
+   to same flight/segment and control_mono_ns <= exposure time;
+   accept only 0 <= mismatch <= one registered control period.
+   Fail-closed types: OFF_WINDOW_NO_CAUSAL_CONTROL (no prior
+   control row); OFF_WINDOW_CONTROL_GAP (prior row older than one
+   period); CONTROL_IDENTITY_CONFLICT (duplicate control
+   timestamp, conflicting payload); ABSENT_CONTROL_TIME (missing
+   — never synthesized).
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
    Accepted TRUE set: {"True", "true", "1"}; accepted FALSE set:
    {"False", "false", "0"}; missing/blank/unknown ->
@@ -332,11 +389,25 @@ DETECTED and listed, whether or not fitted.
    payload) -> FIRST canonical file-order occurrence retained,
    discards listed; same primary ID with INCONSISTENT payload ->
    the ENTIRE conflict class excluded and listed
-   (EXPOSURE_PAYLOAD_CONFLICT); same frame_id across different
-   feature timestamps -> typed FRAME_ID_COLLISION, entire class
-   excluded unless runtime semantics prove frame reuse
-   legitimate; any missing ID component -> ABSENT_EXPOSURE_KEY,
-   excluded and listed. ONE normalization step applies this
+   (EXPOSURE_PAYLOAD_CONFLICT); any missing ID component ->
+   ABSENT_EXPOSURE_KEY, excluded and listed.
+   **RELEVANT PAYLOAD, FROZEN (v2.6 — the field list is never
+   chosen after seeing which rows conflict):**
+       e_meas_m        : float64, exact byte equality after
+                         canonical parse
+       certified_full  : the parsed tri-state (2f.2)
+       range_z_m       : float64, exact byte equality, when
+                         present on the record
+   A relevant field missing on SOME records of a class while
+   present on others is a payload INCONSISTENCY (the class
+   excludes); missing on ALL records is typed absence, not
+   conflict.
+   **FRAME_ID AUTHORITY (v2.6):** frame_id is DISCLOSED and
+   COUNTED (collisions typed FRAME_ID_COLLISION in the ledger)
+   but has NO independent censoring authority over
+   primary-identity evidence until a runtime-equivalence fixture
+   settles whether frame reuse is corruption or legal metadata —
+   it may flag, never exclude, on its own. ONE normalization step applies this
    BEFORE the detector and the response reconstruction; first
    wins in EVERY path only for byte-identical duplicates; every
    discard listed. A dict keyed by tick that keeps the last row
@@ -369,8 +440,14 @@ DETECTED and listed, whether or not fitted.
        the registered canonical key schema (two incomparable
        encodings can produce a trivially empty intersection);
        intersection_count == 0.
-   Missing fields, an unresolvable commit, or a schema mismatch
-   are STARTUP/PRE-FIT failures.
+   **THE COMMON KEY SCHEMA, FROZEN (v2.6):** the primary exposure
+   identity (flight_id, feature_ts_ns), serialized per the 2f.9
+   value rules — never row_key, frame_id, or any
+   implementation label. sentinel_artifact_path is
+   REPOSITORY-RELATIVE and must be the same path at all three
+   checked commits. Duplicate keys within EITHER set are a
+   failure. Missing fields, an unresolvable commit, or a schema
+   mismatch are STARTUP/PRE-FIT failures.
 5. **TYPED TRACE VALIDATION (§7.6):** transport completeness is
    about VALUES, not keys — every trace field non-empty and from
    its registered value set; a present key with a blank or
@@ -433,7 +510,32 @@ DETECTED and listed, whether or not fitted.
    identical canonical digest; (s22) one substituted key at
    equal cardinality -> different digest and STOP; (s23)
    conflicting exposure-identity group -> the registered
-   WHOLE-GROUP disposition, never first-row trust.
+   WHOLE-GROUP disposition, never first-row trust;
+   **(v2.6 additions, channel-2 on R77-78 §12:)** (s24) positive
+   model strictly better (gap < -epsilon) ->
+   POSITIVE_STRICTLY_BETTER, never TIE, never NULL_CALIBRATED;
+   (s25) zero eligible positive comparators ->
+   UNCALIBRATABLE_NO_POSITIVE_COMPARATOR, never vacuous NULL;
+   (s26) same physical windows in different input order -> same
+   canonical window_ids, same support digest; (s27) equal
+   cardinality with a substituted event -> different digest,
+   hard STOP; (s28) future tick temporally NEARER than the prior
+   tick -> the causal floor still selects the prior tick; (s29)
+   flight boundary / clock reset / duplicate control tick -> no
+   cross-segment join, typed refusals; (s30) same
+   (flight_id, feature_ts_ns) with different registered payload
+   -> entire class excluded; (s31) frame_id disagreement ->
+   disclosed and counted, no undeclared censoring authority;
+   (s32) sentinel and calibration key encodings differ ->
+   refusal before fitting; (s33) source bytes committed earlier
+   than execution tip -> distinct full hashes reported, byte
+   equality proved.
+   **RERUN RULE (v2.6): the prior 21/21 + 18/18 greens are valid
+   HISTORY of the cases they executed under their v2.3-bound
+   source — never summed into final-contract coverage. One
+   complete run of every still-relevant fixture, under ONE source
+   commit descending from the final criterion, at ONE pushed tip,
+   is the only coverage that counts.**
 
 ## 2g. PRIOR-VIEWING DISCLOSURE (v2.4 — this round is PRE-ADJUDICATIVE, not PRE-OBSERVATION)
 
@@ -454,17 +556,44 @@ that its effect on current status is none. The next A091 read is
 a repaired-instrument read, never an untouched confirmation, and
 no description may claim otherwise.
 
-**MACHINE-BOUND DISCLOSURE FIELDS (v2.5, channel-2 order G — the
-packet checker FAILS a real calibration candidate lacking this
-block):** prior_viewed_artifact_path, prior_viewed_artifact_sha256,
-prior_viewed_evidence_commit_full (b421039...),
-prior_viewed_attestation_commit_full (044153b...),
-prior_viewed_removal_commit_full (2fa8e9d...),
-prior_calibration_status = NULL_CALIBRATED, prior_g = 0.0,
-prior_tau = 0.02, prior_L = 0, prior_rms = 0.0,
-prior_scoring_rows = 51, prior_fit_directions = [DOWN, UP],
-prior_disposition = VOID_PRE_V2.3, prior_board_effect = NONE.
-Full 40-hex hashes in the packet, never abbreviated labels.
+**MACHINE-BOUND DISCLOSURE FIELDS (v2.5; EXACT VALUES FROZEN IN
+THE CRITERION v2.6, channel-2 order 11 — the packet checker FAILS
+a real calibration candidate lacking this block):**
+
+    prior_viewed_artifact_path =
+        tuning/a091-response-model-calibration-reg1v22-aaa1c17-20260721T113736Z/summary.json
+    prior_viewed_artifact_sha256 =
+        b7e7f66bc307a0f0b68f6938b78ae55719ee43f648164019dbaada46ad3553f1
+        (committed bytes at the evidence commit)
+    prior_viewed_evidence_commit_full =
+        b42103962f2ee8445f3d2cd51897006b1da97714
+    prior_viewed_attestation_commit_full =
+        044153b55cb543b5141b910e8893c65ce92fa36b
+    prior_viewed_removal_commit_full =
+        2fa8e9d8059f5031b211e7cf28742b0bfe535d4b
+    prior_calibration_status = NULL_CALIBRATED
+    prior_g = 0.0; prior_tau = 0.02; prior_L = 0; prior_rms = 0.0
+    prior_scoring_rows = 51
+    prior_fit_directions = [DOWN, UP]
+    prior_disposition = VOID_PRE_V2.3
+    prior_board_effect = NONE
+
+**OUTCOME-SYMMETRY MACHINE LEDGER (v2.6, channel-2 on R77-78 §1
+— the walk's question becomes a typed record; one row per
+post-observational amendment in every real packet):**
+
+    amendment_id; amendment_commit;
+    prior_result_seen;
+    status_independent_defect_statement;
+    evidence_establishing_the_defect;
+    opposite_result_counterfactual;
+    same_amendment_under_opposite_result (YES/NO);
+    effect_on_evidentiary_burden (RAISES/LOWERS/NEUTRAL);
+    channel1_disposition; channel2_disposition.
+
+A NO answer does not prohibit the amendment; it forces the typed
+classification OUTCOME_RESPONSIVE and bars describing it as an
+ordinary instrument correction.
 
 **OUTCOME-SYMMETRY CHECK (channel-1 on R76, standing rule of the
 program):** every POST-OBSERVATIONAL amendment must be justified
