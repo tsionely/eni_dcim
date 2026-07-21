@@ -1,0 +1,13 @@
+{
+  "base_setpoint_mono_ns": 169002578699600,
+  "feature_rows_in_archive": 224,
+  "feature_rows_merged_to_tick_grid": 224,
+  "features_path": "tuning\\taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z\\features_archive.csv",
+  "flight_id": "20260719T201851-50f9dcc8",
+  "flight_log_path": "fixtures\\20260719T204430-phase6i-r-rate-ab\\20260719T201851-50f9dcc8-flight.jsonl",
+  "forced_withhold_path": "tuning\\taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z\\forced_withhold_samples.csv",
+  "frame_transform_derivation": "setpoint.v_body[2] is body-z positive down; world-up commanded reference is v_ref_up = -v_body_z * cos(level_pitch) * cos(level_roll).",
+  "input_rows": 1033,
+  "sentinel_rows": 127,
+  "zero_none_law": "0.0 is retained as a value; absent fields stay absent and become typed ABSENT/OFF_SUPPORT rows, never implicit zero."
+}
