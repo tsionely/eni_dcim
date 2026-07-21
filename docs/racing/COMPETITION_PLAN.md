@@ -43,6 +43,18 @@ Archive truth surfaced: no run has EVER finished the track; best ever
 is 1 gate (6 times, all at 1.8). Plan premise corrected: the race
 objective is MAXIMUM GATES PASSED.
 
+### R1-ALT RESULT (recorded 2026-07-21, logs 423085c..bcd4aa3)
+
+Sakana's self-initiated alternating redo of R1, completed BEFORE the
+R1b instruction reached the sim — still at the default 2.5 m/s (headers
+confirm: only the terminal.enable patch flown). Data recorded: A
+(terminal=true) 1 gate pass in 5; B (terminal=false) 2 in 5; all 10
+aborted on environment collision; zero clip-budget aborts this round
+(variance vs the first series noted). Combined at 2.5 across both
+series: A 1/10, B 2/10. This does NOT decide the A/B (n small, regime
+already disqualified) and does NOT replace R1b. Discipline note:
+alternation + log-header.json with exact_head_flown adopted — keep.
+
 ## Phase R1b — the A/B rerun at the known-good regime (registered before results)
 
 Same protocol as R1 with ONE added patch on both configs:
