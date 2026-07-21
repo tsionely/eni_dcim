@@ -13,9 +13,11 @@ if str(REPO_ROOT) not in sys.path:
 
 from tuning.reg1v2_calibration_source_generator import (
     Candidate,
+    RowsScoredCommonMismatch,
     SOURCE_GENERATOR_PATH,
     STEP_FLOOR_MPS,
     StepWindow,
+    assert_rows_scored_common,
     candidate_score,
     committed_attestation_rows,
     detect_step_windows,
@@ -177,6 +179,20 @@ def fixture_common_support_objective_bites() -> None:
     expect(fit["rows_scored_common"] == 20, "fit summary did not publish rows_scored_common")
 
 
+def fixture_rows_scored_common_corruption_stops() -> None:
+    window = _manual_window_for_lag_objective()
+    fit = fit_response_model([window])
+    corrupted = [dict(row) for row in fit["score_rows"]]
+    expect(corrupted, "no candidate rows available to corrupt")
+    corrupted[0]["rows_scored_common"] = int(corrupted[0]["rows_scored_common"]) + 1
+    try:
+        assert_rows_scored_common(corrupted)
+    except RowsScoredCommonMismatch as exc:
+        expect(exc.code == "ROWS_SCORED_COMMON_MISMATCH", "rows_scored_common mismatch did not carry typed code")
+    else:
+        raise FixtureFailure("corrupted rows_scored_common candidate support did not STOP")
+
+
 def fixture_post_lag_identifiability_gating() -> None:
     windows = detect_step_windows(synthetic_rows())
     high_tau = candidate_score(windows, Candidate(g=0.5, tau_s=1.20, lag_ticks=0))
@@ -272,6 +288,7 @@ def run(repo: Path) -> int:
         ("response_reconstruction_minima", fixture_response_reconstruction_minima),
         ("response_reconstruction_v21_runtime_rules", fixture_response_reconstruction_v21_runtime_rules),
         ("common_support_objective_bites", fixture_common_support_objective_bites),
+        ("rows_scored_common_corruption_stops", fixture_rows_scored_common_corruption_stops),
         ("post_lag_identifiability_gating", fixture_post_lag_identifiability_gating),
         ("null_model_and_grid", fixture_null_model_and_grid),
         ("null_tie_not_null_calibrated", fixture_null_tie_not_null_calibrated),

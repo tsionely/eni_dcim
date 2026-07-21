@@ -55,6 +55,10 @@ class CalibrationSourceError(RuntimeError):
     pass
 
 
+class RowsScoredCommonMismatch(CalibrationSourceError):
+    code = "ROWS_SCORED_COMMON_MISMATCH"
+
+
 @dataclass(frozen=True)
 class Candidate:
     g: float
@@ -388,13 +392,18 @@ def _losses_tied(lhs: float, rhs: float) -> bool:
     return abs(lhs - rhs) / denom <= NULL_TIE_REL_TOL
 
 
+def assert_rows_scored_common(score_rows: Sequence[Mapping[str, object]]) -> int:
+    common_counts = {int(row["rows_scored_common"]) for row in score_rows}
+    if len(common_counts) > 1:
+        raise RowsScoredCommonMismatch(f"ROWS_SCORED_COMMON_MISMATCH: {sorted(common_counts)}")
+    return next(iter(common_counts)) if common_counts else 0
+
+
 def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] | None = None) -> dict[str, object]:
     detected = sorted({w.direction for w in windows})
     usable = [w for w in windows if not w.exclusion_reason and (fit_directions is None or w.direction in fit_directions)]
     score_rows = [candidate_score(usable, cand, fit_directions) for cand in candidate_grid()]
-    common_counts = {int(row["rows_scored_common"]) for row in score_rows}
-    if len(common_counts) > 1:
-        raise CalibrationSourceError(f"rows_scored_common mismatch across candidates: {sorted(common_counts)}")
+    rows_scored_common = assert_rows_scored_common(score_rows)
     eligible = [row for row in score_rows if row["eligible"]]
     null_scores = [row for row in score_rows if row["eligible"] and float(row["g"]) == 0.0]
     null_best = min(null_scores, key=lambda r: float(r["sse"])) if null_scores else None
@@ -435,7 +444,7 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         "detected_directions": detected,
         "fit_directions": sorted(fit_directions) if fit_directions else detected,
         "candidate_count": len(score_rows),
-        "rows_scored_common": next(iter(common_counts)) if common_counts else 0,
+        "rows_scored_common": rows_scored_common,
         "eligible_count": len(eligible),
         "score_rows": score_rows,
         "window_count": len(windows),
