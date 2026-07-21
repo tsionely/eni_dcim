@@ -1,0 +1,19 @@
+{
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "gate clip budget exceeded (11)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 11,
+  "env_hits": 0,
+  "duration_s": 7.924774000013713,
+  "loop_overrun_frac": 0.039473684210526314,
+  "loop_stats": {
+    "ticks": 1976,
+    "overruns": 78,
+    "overrun_frac": 0.039473684210526314,
+    "max_late_us": 20782
+  },
+  "flight_id": "20260721T191452-7bc7968c",
+  "log_dir": "logs\\20260721T191452-7bc7968c"
+}
