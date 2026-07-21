@@ -1,0 +1,11 @@
+{
+  "attestation_type": "publish_then_attest_checker_transcript",
+  "checker_command": "python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json f6614819f1e836fd63eb0421fd98c253238d07fc",
+  "checker_exit_code": 0,
+  "checker_verdict": "MANIFEST VERIFIES (RELEASE-GRADE)",
+  "created_at_utc": "20260721T051030Z",
+  "diagnostic_only": true,
+  "origin_main_at_transcript_time": "f6614819f1e836fd63eb0421fd98c253238d07fc",
+  "reviewed_pushed_tip": "f6614819f1e836fd63eb0421fd98c253238d07fc",
+  "transcript_source_outside_tree": "C:\\Temp\\eni_second_mechanism_packet_checker_f661481.txt"
+}
