@@ -145,19 +145,32 @@ UNIDENTIFIABLE candidates never enter the argmin.
   tripwire above fixture s2. The generator ASSERTS the equality
   at run time; a mismatch is a STOP, and an artifact whose
   candidate rows disagree on it is malformed on its face.**
-  **SCORING_SUPPORT_SHA256 (v2.4, channel-2 on R74-75 §1 — equal
-  cardinality is not equal support; a common-row count proves
-  QUANTITY, a common-row digest proves IDENTITY):** every
-  candidate row also publishes scoring_support_sha256 — the
-  SHA-256 of the canonically SORTED immutable scoring-event keys
-  actually entering the objective, hashed AFTER all alignment,
-  certification, deduplication, response-validity and
-  trace-validity decisions. Identical across all candidates;
-  runtime-asserted alongside the count; mismatch in EITHER field
-  is a hard STOP. The artifact publishes ONE support ledger:
-  window_id, event key, feature_ts_ns, relative_tick,
-  response-validity state, trace-validity state,
-  included_in_objective, exclusion reason.
+  **SCORING_SUPPORT_SHA256 (v2.4; EXACT BYTE CONTRACT v2.5 — a
+  digest whose input bytes are unregistered is not reproducible):**
+  every candidate row also publishes scoring_support_sha256.
+
+      SCORING KEY (fixed types, one per objective row):
+          (window_id: str, flight_id: str, feature_ts_ns: int,
+           assigned_control_tick: int)
+      No scoring key may repeat after canonical normalization
+      (duplicate_scoring_key_count == 0, published).
+      SERIALIZATION: one canonical JSON array per key, exactly
+      ["window_id","flight_id",feature_ts_ns,assigned_control_tick]
+      in that fixed order; UTF-8; no optional whitespace; decimal
+      integers only; records sorted lexicographically by the
+      typed tuple; one LF after EVERY record including the final.
+      scoring_support_sha256 = SHA-256 of that byte stream.
+
+  The support ledger is constructed ONCE, before candidate
+  iteration; candidate rows REFERENCE its count and digest and
+  never independently reconstruct the support. Identical across
+  all candidates; runtime-asserted alongside the count; mismatch
+  in EITHER field is a hard STOP. The artifact publishes:
+  support_ledger_path, support_ledger_sha256, rows_scored_common,
+  scoring_support_sha256, duplicate_scoring_key_count = 0 — and
+  ONE support ledger: window_id, event key, feature_ts_ns,
+  assigned_control_tick, relative_tick, response-validity state,
+  trace-validity state, included_in_objective, exclusion reason.
   Alignment/dedup rules unchanged from v1 (accepted):
   feature_ts_ns to tick grid, nearest tick, max one-tick mismatch
   listed; duplicate frame broadcasts dedup to first.
@@ -224,9 +237,18 @@ measured AFTER the lag, channel-2 Blocker 1.2):
   1. every compared candidate scored on the registered common
      support;
   2. null loss strictly better than EVERY g > 0 eligible
-     candidate's loss beyond the registered tolerance
-     NULL_TIE_REL_TOL = 1e-9 (relative to the larger loss);
+     candidate's loss beyond the registered tolerance;
   3. no g > 0 candidate attains the global minimum.
+  **EXACT COMPARISON SEMANTICS (v2.5, channel-2 order F — never
+  left to source code):** losses are float64 SSE on the common
+  support. gap = best_positive_sse - null_sse. TIE iff
+  gap <= NULL_TIE_REL_TOL * max(best_positive_sse, null_sse,
+  SSE_ABS_FLOOR), with NULL_TIE_REL_TOL = 1e-9 and
+  SSE_ABS_FLOOR = 1e-18 (the floor decides the both-exactly-zero
+  case: 0.0 vs 0.0 is a TIE, hence NOT_IDENTIFIED — a dataset on
+  which every model is perfect identifies nothing). NULL wins iff
+  gap > that bound. The packet publishes null_loss,
+  best_positive_loss, the gap, and the tie-rule verdict.
   A g > 0 candidate tying the null within tolerance, or beating
   it, removes NULL_CALIBRATED: the status is then decided by the
   positive-gain winner's own closed-face check (CALIBRATED or
@@ -265,52 +287,90 @@ DETECTED and listed, whether or not fitted.
 
 ## 2f. Real-run input and identity contracts (v2.3 — channel-2 on R69-73 §7, registered so the source repairs are ancestry-enforceable)
 
-1. **CANONICAL FEATURE-TIME ALIGNMENT (§7.4; EXACT ALGORITHM
-   v2.4):** feature_ts_ns is canonical for certified exposures; a
-   missing exposure time is ABSENT (typed) and may NEVER be
-   synthesized from control time or tick index. Mapping: tick
-   period dt = 0.02 s on the window's control grid;
-   mismatch_ns = feature_ts_ns - control_tick_time_ns; the row
-   maps to the NEAREST control tick by |mismatch|; an EQUIDISTANT
-   exposure (exactly half a period) maps to the EARLIER tick (the
-   registered prior-tick causal convention — never assign a later
-   control tick). The fitted row is labeled by the CONTROL tick;
-   the exposure time is preserved in the ledger. Published per
-   row: signed mismatch_ns and |mismatch_ns|; |mismatch| is
-   <= dt/2 by construction of nearest; an exposure falling
-   outside the window's tick range is OFF_WINDOW (typed). The
-   mismatch LEDGER is mandatory.
+1. **CANONICAL FEATURE-TIME ALIGNMENT (§7.4; CAUSAL-FLOOR
+   ALGORITHM v2.5 — the v2.4 text was internally contradictory:
+   nearest-tick can assign a FUTURE control tick whenever the
+   exposure falls past the midpoint, while the same sentence
+   promised never-later; ledger entry R78):** feature_ts_ns is
+   canonical for certified exposures; a missing exposure time is
+   ABSENT (typed) and may NEVER be synthesized from control time
+   or tick index. THE RULE IS THE CAUSAL FLOOR:
+
+       assigned_control_tick = the LATEST registered control tick
+                               whose timestamp <= feature_ts_ns
+       signed_mismatch_ns    = feature_ts_ns
+                               - assigned_control_tick_time_ns
+       required: 0 <= signed_mismatch_ns <= one control period
+       no prior control tick          -> OFF_WINDOW (typed)
+       mismatch > one control period  -> OFF_WINDOW (typed)
+
+   No future control value can leak into an exposure-aligned row,
+   and no equidistant special case exists. The fitted row is
+   labeled by the assigned CONTROL tick; the exposure time is
+   preserved in the ledger; signed mismatch published per row.
+   The mismatch LEDGER is mandatory.
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
    Accepted TRUE set: {"True", "true", "1"}; accepted FALSE set:
    {"False", "false", "0"}; missing/blank/unknown ->
    ABSENT_CERTIFICATION, fail closed, never default-True.
    Truthiness on a nonempty string is the outlawed pattern.
-3. **CANONICAL FIRST-EXPOSURE DEDUP (§7.5; EXACT KEY v2.4):** the
-   CANONICAL EXPOSURE KEY is (flight_id, frame_id,
-   feature_ts_ns). Collision policy, registered: exact duplicate
-   key -> FIRST file-order occurrence wins; same frame_id with
-   different feature_ts_ns -> typed conflict
-   (EXPOSURE_KEY_CONFLICT), row excluded and listed; same
-   feature_ts_ns with different frame_id -> typed conflict,
-   excluded and listed; any missing key component ->
-   ABSENT_EXPOSURE_KEY, excluded and listed. ONE normalization
-   step applies this BEFORE the detector and the response
-   reconstruction; first wins in EVERY path; every discard
-   listed. A dict keyed by tick that keeps the last row is the
-   outlawed pattern.
-4. **SENTINEL-KEY BINDING (§7.2; MACHINE SCHEMA v2.4):** the
-   real-run CLI REQUIRES, as typed packet fields:
-   sentinel_artifact_path, sentinel_artifact_sha256,
-   sentinel_criterion_commit, sentinel_evidence_commit,
-   sentinel_reviewed_tip, sentinel_key_schema,
-   sentinel_key_count, calibration_key_count,
-   intersection_count, intersection_keys. The generator VERIFIES:
-   sentinel_criterion <= sentinel_evidence <= execution_tip
-   (ancestry); digest(sentinel_evidence_commit:path) ==
-   registered digest; digest(execution_tip:path) == registered
-   digest (survives at tip); intersection_count == 0. Missing
-   fields or an unresolvable commit are STARTUP failures, before
-   any input-window detection.
+3. **CANONICAL FIRST-EXPOSURE DEDUP (§7.5; RUNTIME-ALIGNED
+   IDENTITY v2.5 — the v2.4 three-component key was registered as
+   "exact" without checking the runtime, whose exposure identity
+   IS the feature timestamp (the oracle dedups by ts; robust_slope
+   rejects duplicate timestamps); ledger entry R78):**
+
+       PRIMARY EXPOSURE ID:  (flight_id, feature_ts_ns)
+       CONSISTENCY METADATA: frame_id (never part of identity
+                             until a runtime-equivalence fixture
+                             proves rebroadcasts preserve it and
+                             no runtime path splits on it)
+
+   Collision policy, WHOLE-CLASS semantics (an identity
+   contradiction is never cured by trusting whichever row came
+   first): exact duplicate (same primary ID, identical relevant
+   payload) -> FIRST canonical file-order occurrence retained,
+   discards listed; same primary ID with INCONSISTENT payload ->
+   the ENTIRE conflict class excluded and listed
+   (EXPOSURE_PAYLOAD_CONFLICT); same frame_id across different
+   feature timestamps -> typed FRAME_ID_COLLISION, entire class
+   excluded unless runtime semantics prove frame reuse
+   legitimate; any missing ID component -> ABSENT_EXPOSURE_KEY,
+   excluded and listed. ONE normalization step applies this
+   BEFORE the detector and the response reconstruction; first
+   wins in EVERY path only for byte-identical duplicates; every
+   discard listed. A dict keyed by tick that keeps the last row
+   is the outlawed pattern.
+4. **SENTINEL-KEY BINDING (§7.2; STAGED SCHEMA v2.5 — the v2.4
+   schema demanded calibration-derived counts as CLI inputs
+   before detection, inviting the caller to supply the answer
+   the generator must compute; ledger entry R78):**
+
+   STARTUP-BOUND INPUTS (CLI-required, verified before any
+   window detection):
+       sentinel_artifact_path, sentinel_artifact_sha256,
+       sentinel_criterion_commit, sentinel_evidence_commit,
+       sentinel_reviewed_tip, sentinel_key_schema.
+   The generator then READS the committed sentinel artifact and
+   derives sentinel_key_count and sentinel_keys.
+
+   POST-DETECTION DERIVED OUTPUTS (computed, never accepted):
+       calibration_key_schema, calibration_key_count,
+       calibration_keys, intersection_count, intersection_keys.
+
+   PRE-FIT EQUATIONS, all mandatory:
+       sentinel_criterion_commit <= sentinel_evidence_commit
+           <= sentinel_reviewed_tip <= execution_tip  (ancestry);
+       digest(sentinel_evidence_commit:path) ==
+       digest(sentinel_reviewed_tip:path) ==
+       digest(execution_tip:path) == sentinel_artifact_sha256
+           (the artifact survives unchanged at all three);
+       sentinel_key_schema == calibration_key_schema ==
+       the registered canonical key schema (two incomparable
+       encodings can produce a trivially empty intersection);
+       intersection_count == 0.
+   Missing fields, an unresolvable commit, or a schema mismatch
+   are STARTUP/PRE-FIT failures.
 5. **TYPED TRACE VALIDATION (§7.6):** transport completeness is
    about VALUES, not keys — every trace field non-empty and from
    its registered value set; a present key with a blank or
@@ -322,18 +382,22 @@ DETECTED and listed, whether or not fitted.
    boolean is replaced by a typed scope: SYNTHETIC_DIAGNOSTIC /
    REG2_CALIBRATION_CANDIDATE / VOID. A calibration candidate
    moves no board by itself, but it is not a synthetic dry run.
-8. **IDENTITY CHAIN (§7.1; EXACT HASH v2.4 — "or later" is not a
-   machine identity):** the source names GOVERNING_REG1_COMMIT as
-   ONE full 40-hex immutable hash — the exact commit containing
-   every operative amendment of this registration (for the next
-   source round: the commit introducing the v2.4 text; each
-   further amendment updates the binding with itself, or the
-   generator fails ancestry in substance). The packet proves
-   GOVERNING_REG1_COMMIT <= source_generator_commit <=
-   execution_tip <= artifact_commit, where
-   source_generator_commit is the ACTUAL last commit supplying
-   the executed source bytes (discovered from git history of the
-   source path) — never HEAD copied into both fields.
+8. **IDENTITY CHAIN (§7.1; EXACT HASH v2.4; SELF-REFERENCE
+   RESOLVED v2.5, channel-2 §8):** a criterion cannot contain its
+   own not-yet-created hash; the lawful meaning is that the NEXT
+   SOURCE COMMIT hard-binds the full 40-hex hash of its COMPLETE
+   governing criterion ancestor — the final amendment commit,
+   whichever it is when the source lands (after this v2.5 round:
+   the commit introducing this text, superseding 3fe25ea as
+   governing). The packet proves GOVERNING_REG1_COMMIT <=
+   source_generator_commit <= execution_tip <= artifact_commit,
+   where source_generator_commit is the ACTUAL last commit
+   supplying the executed source bytes (discovered from git
+   history of the source path) — never HEAD copied into both
+   fields — and additionally publishes
+   source_generator_sha256_at_source_commit ==
+   source_generator_sha256_at_execution_tip (the executed bytes
+   are the registered bytes).
 9. **REQUIRED SOURCE FIXTURES (consolidated roster; the prior
    green suites remain valid history and do NOT satisfy this):**
    (iv) 3 unique timestamps -> both legs ABSENT, never 0.0;
@@ -356,9 +420,20 @@ DETECTED and listed, whether or not fitted.
    STOP; (s14) g = 0 null winner at a domain boundary -> status
    decided by loss ordering, never killed by negative-g or
    nuisance faces; (s15) missing feature_ts_ns -> typed absence,
-   never synthesized; (s16) two equidistant control ticks ->
-   the registered earlier-tick result, deterministically; (s17)
-   sentinel bytes altered at execution tip -> startup refusal.
+   never synthesized; (s16) SUPERSEDED by the v2.5 causal floor
+   (no equidistant case exists under it; retained as history);
+   (s17) sentinel bytes altered at execution tip -> startup
+   refusal; **(v2.5 additions, channel-2 on R76:)** (s18)
+   exposure at 0.75 periods after the earlier tick -> the CAUSAL
+   FLOOR selects the earlier tick, never the nearer future one;
+   (s19) sentinel and calibration key schemas differ -> hard
+   refusal; (s20) NULL_CALIBRATED serialization ->
+   tau/L/profile NOT_APPLICABLE with the five null fields
+   present; (s21) same support in different input order ->
+   identical canonical digest; (s22) one substituted key at
+   equal cardinality -> different digest and STOP; (s23)
+   conflicting exposure-identity group -> the registered
+   WHOLE-GROUP disposition, never first-row trust.
 
 ## 2g. PRIOR-VIEWING DISCLOSURE (v2.4 — this round is PRE-ADJUDICATIVE, not PRE-OBSERVATION)
 
@@ -378,6 +453,18 @@ real-run contracts incomplete; provenance rules incomplete); and
 that its effect on current status is none. The next A091 read is
 a repaired-instrument read, never an untouched confirmation, and
 no description may claim otherwise.
+
+**MACHINE-BOUND DISCLOSURE FIELDS (v2.5, channel-2 order G — the
+packet checker FAILS a real calibration candidate lacking this
+block):** prior_viewed_artifact_path, prior_viewed_artifact_sha256,
+prior_viewed_evidence_commit_full (b421039...),
+prior_viewed_attestation_commit_full (044153b...),
+prior_viewed_removal_commit_full (2fa8e9d...),
+prior_calibration_status = NULL_CALIBRATED, prior_g = 0.0,
+prior_tau = 0.02, prior_L = 0, prior_rms = 0.0,
+prior_scoring_rows = 51, prior_fit_directions = [DOWN, UP],
+prior_disposition = VOID_PRE_V2.3, prior_board_effect = NONE.
+Full 40-hex hashes in the packet, never abbreviated labels.
 
 **OUTCOME-SYMMETRY CHECK (channel-1 on R76, standing rule of the
 program):** every POST-OBSERVATIONAL amendment must be justified
@@ -430,24 +517,47 @@ exposure-aligned prior tick; mixed-owner intervals split first; a
 generator finding the opposite sign "works better" has found
 evidence AGAINST the mechanism, not a knob.
 
-## 4. NUMERIC BLOCK (REG-2 v2 — EMPTY by construction)
+## 4. NUMERIC BLOCK (REG-2 v2 — EMPTY by construction; BRANCH-TYPED v2.5, channel-2 order A: a NULL result has no identified tau/L and no three-dimensional profile box — serializing a first-listed nuisance coordinate would revive exactly what the collapsed null class prohibits)
 
-    g    = PENDING_CALIBRATION
-    tau  = PENDING_CALIBRATION
-    L    = PENDING_CALIBRATION
-    calibration_status          = PENDING (must be CALIBRATED or
-                                  NULL_CALIBRATED; UNCALIBRATABLE /
-                                  NOT_IDENTIFIED cannot fill this
-                                  block)
+    calibration_status = PENDING (must be CALIBRATED or
+                         NULL_CALIBRATED; UNCALIBRATABLE /
+                         NOT_IDENTIFIED cannot fill this block)
+    model_class        = PENDING (POSITIVE_GAIN | NULL_CONTRIBUTION)
+
+    IF model_class = POSITIVE_GAIN (calibration_status CALIBRATED):
+        g           = required, > 0
+        tau         = required
+        L           = required
+        profile_box = required, locally closed on every face
+        residual_rms_at_optimum = required
+        null_model_rms          = required (always published)
+
+    IF model_class = NULL_CONTRIBUTION (status NULL_CALIBRATED):
+        g           = 0.0
+        tau         = NOT_APPLICABLE (never a number)
+        L           = NOT_APPLICABLE (never a number)
+        profile_box = NOT_APPLICABLE_NULL_CLASS
+        required instead:
+            null_loss
+            best_positive_loss
+            null_to_positive_loss_gap
+            positive_global_minimizer_count
+            null_tie_rule_result
+        (a representative null grid row may appear in the
+         candidate TABLE; it is never serialized here as
+         calibrated physical tau/L numerics)
+
+    COMMON to both branches:
     calibration_artifact_path   = PENDING
     calibration_artifact_sha256 = PENDING (committed bytes)
     calibration_interval_keys   = PENDING (disjoint from sentinel)
-    residual_rms_at_optimum     = PENDING
-    null_model_rms              = PENDING (always published)
-    profile_box                 = PENDING (closed on every face, or
-                                  the status is NOT_IDENTIFIED)
     row_level_owner_trace       = PENDING (per fitted row)
-    source_generator_commit     = PENDING
+    source_generator_commit     = PENDING (actual source-bytes
+                                  commit, with
+                                  source_generator_sha256 at both
+                                  the source commit and the
+                                  execution tip)
+    prior_viewing_block         = PENDING (2g machine fields)
 
 Any change to Sections 1-3b after REG-2(v2) voids and restarts
 again.
