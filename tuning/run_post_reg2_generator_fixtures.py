@@ -507,6 +507,14 @@ def fixture_m_runtime_twin_equivalence() -> None:
     ]
     assert_absent_rate_case("below-minimum-support-3-unique", sparse, 0.04)
 
+    subspan = [
+        {"row_key": "subspan_000", "ts_s": 0.00, "e_meas_m": 1.00, "certified_full": True},
+        {"row_key": "subspan_001", "ts_s": 0.02, "e_meas_m": 0.99, "certified_full": True},
+        {"row_key": "subspan_002", "ts_s": 0.04, "e_meas_m": 0.98, "certified_full": True},
+        {"row_key": "subspan_003", "ts_s": 0.06, "e_meas_m": 0.97, "certified_full": True},
+    ]
+    assert_runtime_reconstruction_case("subspan-four-unique-no-span-gate", subspan, 0.06)
+
 
 def run(repo: Path) -> int:
     fixtures: list[tuple[str, Callable[[], None]]] = [

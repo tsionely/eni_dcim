@@ -15,10 +15,12 @@ from tuning.reg1v2_calibration_source_generator import (
     Candidate,
     SOURCE_GENERATOR_PATH,
     STEP_FLOOR_MPS,
+    StepWindow,
     candidate_score,
     committed_attestation_rows,
     detect_step_windows,
     fit_response_model,
+    predict_window,
     reconstruct_v_full_raw,
     synthetic_dry_run,
     synthetic_null_rows,
@@ -62,7 +64,7 @@ def fixture_response_reconstruction_minima() -> None:
     rate, status, meta = reconstruct_v_full_raw(rows, 1.00)
     expect(status == "VALID", f"synthetic response was not valid: {status}")
     expect(abs(float(rate) - 0.25) < 1e-12, "Theil-Sen response reconstruction mismatch")
-    expect(meta["fresh_tail_samples"] >= 4 and meta["fresh_tail_span_s"] >= 0.15, "fresh-tail minima were not met")
+    expect(meta["fresh_tail_samples"] >= 4, "fresh-tail sample minimum was not met")
     expect(meta["recent_samples"] <= 12 and meta["last_sample_cap"] == 12, "last-12 cap metadata missing")
 
     short_rate, short_status, short_meta = reconstruct_v_full_raw(rows[:3], 0.04)
@@ -106,6 +108,84 @@ def fixture_response_reconstruction_v21_runtime_rules() -> None:
     expect(abs(float(dup_rate) - 0.22) < 1e-12, "duplicate timestamp was treated as a new exposure")
     expect(dup_meta["history_samples"] == 18, "duplicate timestamp was not rejected from unique history")
 
+    subspan = [
+        {"tick": 0, "ts_s": 0.00, "e_meas_m": 1.00, "certified_full": True},
+        {"tick": 1, "ts_s": 0.02, "e_meas_m": 0.99, "certified_full": True},
+        {"tick": 2, "ts_s": 0.04, "e_meas_m": 0.98, "certified_full": True},
+        {"tick": 3, "ts_s": 0.06, "e_meas_m": 0.97, "certified_full": True},
+    ]
+    sub_rate, sub_status, sub_meta = reconstruct_v_full_raw(subspan, 0.06)
+    expect(sub_status == "VALID", f"sub-span exact-_slope_of fixture returned {sub_status}")
+    expect(abs(float(sub_rate) - 0.5) < 1e-12, "sub-span fixture added a non-runtime span gate")
+    expect(0.0 < sub_meta["fresh_tail_span_s"] < 0.15, "sub-span fixture did not exercise the removed span gate")
+
+
+def _manual_window_for_lag_objective() -> StepWindow:
+    rows: list[dict[str, object]] = []
+    l0_pred = predict_window(
+        StepWindow("tmp", 0, "up", 0.0, 1.0, 0.0, list(range(20)), [], ""),
+        Candidate(g=1.0, tau_s=0.04, lag_ticks=0),
+    )
+    l10_pred = predict_window(
+        StepWindow("tmp", 0, "up", 0.0, 1.0, 0.0, list(range(20)), [], ""),
+        Candidate(g=1.0, tau_s=0.04, lag_ticks=10),
+    )
+    for tick in range(20):
+        meas = l0_pred[tick] if tick < 10 else l10_pred[tick]
+        rows.append({
+            "event_id": "objective_step",
+            "row_key": f"objective_{tick:03d}",
+            "tick": tick,
+            "relative_tick": tick,
+            "ts_s": tick * 0.02,
+            "feature_ts_ns": tick * 20_000_000,
+            "v_ref_up_mps": 1.0,
+            "v_meas_mps": meas,
+            "response_status": "VALID",
+            "trace_complete": True,
+        })
+    return StepWindow("objective_step", 0, "up", 0.0, 1.0, 0.0, list(range(20)), rows, "")
+
+
+def _retired_candidate_specific_sse(window: StepWindow, candidate: Candidate) -> float:
+    preds = predict_window(window, candidate)
+    total = 0.0
+    for row in window.rows:
+        rel_tick = int(row["relative_tick"])
+        if rel_tick < candidate.lag_ticks:
+            continue
+        total += (float(row["v_meas_mps"]) - preds[int(row["tick"])]) ** 2
+    return total
+
+
+def fixture_common_support_objective_bites() -> None:
+    window = _manual_window_for_lag_objective()
+    c0 = Candidate(g=1.0, tau_s=0.04, lag_ticks=0)
+    c10 = Candidate(g=1.0, tau_s=0.04, lag_ticks=10)
+    new0 = candidate_score([window], c0)
+    new10 = candidate_score([window], c10)
+    retired0 = _retired_candidate_specific_sse(window, c0)
+    retired10 = _retired_candidate_specific_sse(window, c10)
+    expect(new0["rows_used"] == new10["rows_used"] == 20, "common-support scoring used candidate-dependent row counts")
+    expect(float(new0["sse"]) < float(new10["sse"]), "common-support scoring did not select the registered lag")
+    expect(retired10 < retired0, "fixture does not expose the retired candidate-specific censoring bug")
+
+
+def fixture_post_lag_identifiability_gating() -> None:
+    windows = detect_step_windows(synthetic_rows())
+    high_tau = candidate_score(windows, Candidate(g=0.5, tau_s=1.20, lag_ticks=0))
+    expect(high_tau["eligible"] is False, "tau longer than observed post-lag horizon should be ineligible")
+    expect(high_tau["candidate_type"] == "UNIDENTIFIABLE", "ineligible candidate did not carry UNIDENTIFIABLE type")
+    expect(high_tau["failing_rule"] == "HORIZON_LT_TAU", "horizon gate reason mismatch")
+
+    lag_horizon = candidate_score(windows, Candidate(g=0.5, tau_s=0.50, lag_ticks=25))
+    expect(lag_horizon["post_lag_rows"] >= 8, "large-lag fixture failed to retain post-lag rows")
+    expect(lag_horizon["eligible"] is False, "large-lag short post-lag horizon should be ineligible")
+    expect(lag_horizon["failing_rule"] == "HORIZON_LT_TAU", "post-lag horizon gate reason mismatch")
+
+    too_late = candidate_score(windows, Candidate(g=0.5, tau_s=0.02, lag_ticks=25))
+    expect(too_late["rows_used"] >= too_late["post_lag_rows"], "scoring and post-lag support were conflated")
+
 
 def fixture_null_model_and_grid() -> None:
     windows = detect_step_windows(synthetic_null_rows())
@@ -116,13 +196,25 @@ def fixture_null_model_and_grid() -> None:
     expect(float(fit["best"]["g"]) == 0.0, "null-calibrated best did not land at g=0")
 
 
-def fixture_identifiability_gating() -> None:
-    windows = detect_step_windows(synthetic_rows())
-    high_tau = candidate_score(windows, Candidate(g=0.5, tau_s=1.20, lag_ticks=0))
-    expect(high_tau["eligible"] is False, "tau longer than observed horizon should be ineligible")
-    expect(high_tau["ineligible_reason"] == "HORIZON_LT_TAU", "horizon gate reason mismatch")
-    high_lag = candidate_score(windows, Candidate(g=0.5, tau_s=0.20, lag_ticks=25))
-    expect("eligible" in high_lag and "rows_used" in high_lag, "lag eligibility row missing required fields")
+def fixture_null_tie_not_null_calibrated() -> None:
+    rows = []
+    for tick in range(20):
+        rows.append({
+            "event_id": "null_tie",
+            "row_key": f"null_tie_{tick:03d}",
+            "tick": tick,
+            "relative_tick": tick,
+            "ts_s": tick * 0.02,
+            "feature_ts_ns": tick * 20_000_000,
+            "v_ref_up_mps": 0.0,
+            "v_meas_mps": 0.0,
+            "response_status": "VALID",
+            "trace_complete": True,
+        })
+    window = StepWindow("null_tie", 0, "up", 0.0, 0.0, 0.0, list(range(20)), rows, "")
+    fit = fit_response_model([window])
+    expect(fit["calibration_status"] == "NOT_IDENTIFIED", f"null tie must be NOT_IDENTIFIED, got {fit['calibration_status']}")
+    expect(fit["null_tied_positive"] is True, "null-tie diagnostic flag missing")
 
 
 def fixture_direction_applicability() -> None:
@@ -149,7 +241,7 @@ def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     expect(prov["source_generator_path"] == SOURCE_GENERATOR_PATH, "source generator path not bound")
     expect(prov["source_generator_commit"] == head, "source generator commit does not equal execution tip")
     expect(prov["execution_tip"] == head, "execution tip mismatch")
-    expect(prov["reg1_commit"] == "62c9648", "REG-1v2.1 commit binding mismatch")
+    expect(prov["reg1_commit"] == "ee0bb6a", "REG-1v2.2 commit binding mismatch")
     expect(prov["input_digests"][0]["path"].startswith("synthetic://"), "synthetic dry-run should not bind A091 input")
     expect("attestation" in prov["attestation_policy"], "attestation child policy missing")
 
@@ -165,8 +257,10 @@ def run(repo: Path) -> int:
         ("step_detector_floor_merge_and_windows", fixture_step_detector_floor_merge_and_windows),
         ("response_reconstruction_minima", fixture_response_reconstruction_minima),
         ("response_reconstruction_v21_runtime_rules", fixture_response_reconstruction_v21_runtime_rules),
+        ("common_support_objective_bites", fixture_common_support_objective_bites),
+        ("post_lag_identifiability_gating", fixture_post_lag_identifiability_gating),
         ("null_model_and_grid", fixture_null_model_and_grid),
-        ("identifiability_gating", fixture_identifiability_gating),
+        ("null_tie_not_null_calibrated", fixture_null_tie_not_null_calibrated),
         ("direction_applicability", fixture_direction_applicability),
         ("row_level_trace", fixture_row_level_trace),
         ("provenance_and_committed_bytes", lambda: fixture_provenance_and_committed_bytes(repo)),

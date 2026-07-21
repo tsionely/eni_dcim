@@ -25,7 +25,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from aigp.planning.vertical_terminal import robust_slope
 
-REG1_COMMIT = "62c9648"
+REG1_COMMIT = "ee0bb6a"
 SOURCE_GENERATOR_PATH = "tuning/reg1v2_calibration_source_generator.py"
 DT_S = 0.02
 STEP_FLOOR_MPS = 0.35
@@ -36,8 +36,8 @@ POST_CAP_TICKS = 50
 RATE_MAX_GAP_S = 0.12
 RATE_LAST_SAMPLE_CAP = 12
 RATE_MIN_SAMPLES = 4
-RATE_MIN_SPAN_S = 0.15
 MIN_VALID_ROWS = 8
+NULL_TIE_REL_TOL = 1e-9
 G_VALUES = [round(i * 0.05, 2) for i in range(31)]
 TAU_VALUES = [round(i * 0.02, 2) for i in range(1, 61)]
 L_VALUES = list(range(26))
@@ -187,7 +187,7 @@ def reconstruct_v_full_raw(rows: Sequence[Mapping[str, object]], anchor_ts_s: fl
         "max_gap_s": RATE_MAX_GAP_S,
         "last_sample_cap": RATE_LAST_SAMPLE_CAP,
     }
-    if len(xs) < RATE_MIN_SAMPLES or span < RATE_MIN_SPAN_S:
+    if len(xs) < RATE_MIN_SAMPLES:
         return None, "ABSENT_RESPONSE", meta
     slope = robust_slope(xs, ys)
     if slope is None:
@@ -310,9 +310,10 @@ def predict_window(window: StepWindow, candidate: Candidate) -> dict[int, float]
 
 
 def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_directions: set[str] | None = None) -> dict[str, object]:
-    rows_used = 0
+    scoring_rows = 0
+    post_lag_rows = 0
     sse = 0.0
-    max_horizon_s = 0.0
+    max_post_lag_horizon_s = 0.0
     for window in windows:
         if window.exclusion_reason:
             continue
@@ -323,33 +324,42 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
             if row["response_status"] != "VALID" or not row["trace_complete"]:
                 continue
             rel_tick = int(row["relative_tick"])
-            if rel_tick < candidate.lag_ticks:
-                continue
             meas = _num(row.get("v_meas_mps"))
             pred = preds.get(int(row["tick"]))
             if meas is None or pred is None:
                 continue
-            rows_used += 1
-            max_horizon_s = max(max_horizon_s, rel_tick * DT_S)
+            scoring_rows += 1
+            if rel_tick >= candidate.lag_ticks:
+                post_lag_rows += 1
+                max_post_lag_horizon_s = max(max_post_lag_horizon_s, (rel_tick - candidate.lag_ticks) * DT_S)
             sse += (meas - pred) ** 2
-    eligible = rows_used >= MIN_VALID_ROWS and max_horizon_s >= candidate.tau_s
+    eligible = post_lag_rows >= MIN_VALID_ROWS and max_post_lag_horizon_s >= candidate.tau_s
+    if eligible:
+        failing_rule = ""
+    elif post_lag_rows < MIN_VALID_ROWS:
+        failing_rule = "INSUFFICIENT_POST_LAG_ROWS"
+    else:
+        failing_rule = "HORIZON_LT_TAU"
     return {
         "g": candidate.g,
         "tau_s": candidate.tau_s,
         "L_ticks": candidate.lag_ticks,
-        "rows_used": rows_used,
-        "max_horizon_s": max_horizon_s,
+        "rows_used": scoring_rows,
+        "scoring_rows": scoring_rows,
+        "post_lag_rows": post_lag_rows,
+        "max_horizon_s": max_post_lag_horizon_s,
+        "max_post_lag_horizon_s": max_post_lag_horizon_s,
         "sse": sse,
-        "mse": (sse / rows_used) if rows_used else None,
-        "rms_mps": math.sqrt(sse / rows_used) if rows_used else None,
+        "mse": (sse / scoring_rows) if scoring_rows else None,
+        "rms_mps": math.sqrt(sse / scoring_rows) if scoring_rows else None,
         "eligible": eligible,
-        "ineligible_reason": "" if eligible else ("INSUFFICIENT_ROWS" if rows_used < MIN_VALID_ROWS else "HORIZON_LT_TAU"),
+        "candidate_type": "ELIGIBLE" if eligible else "UNIDENTIFIABLE",
+        "failing_rule": failing_rule,
+        "ineligible_reason": failing_rule,
     }
 
 
 def _open_face(best: Mapping[str, object], eligible_scores: Sequence[Mapping[str, object]]) -> bool:
-    if float(best["g"]) == 0.0:
-        return False
     if float(best["g"]) in {min(G_VALUES), max(G_VALUES)}:
         return True
     if float(best["tau_s"]) in {min(TAU_VALUES), max(TAU_VALUES)}:
@@ -365,6 +375,18 @@ def _open_face(best: Mapping[str, object], eligible_scores: Sequence[Mapping[str
     return False
 
 
+def _strictly_better_loss(lhs: float, rhs: float) -> bool:
+    if lhs >= rhs:
+        return False
+    denom = max(abs(lhs), abs(rhs), 1e-300)
+    return (rhs - lhs) / denom > NULL_TIE_REL_TOL
+
+
+def _losses_tied(lhs: float, rhs: float) -> bool:
+    denom = max(abs(lhs), abs(rhs), 1e-300)
+    return abs(lhs - rhs) / denom <= NULL_TIE_REL_TOL
+
+
 def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] | None = None) -> dict[str, object]:
     detected = sorted({w.direction for w in windows})
     usable = [w for w in windows if not w.exclusion_reason and (fit_directions is None or w.direction in fit_directions)]
@@ -372,24 +394,40 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
     eligible = [row for row in score_rows if row["eligible"]]
     null_scores = [row for row in score_rows if row["eligible"] and float(row["g"]) == 0.0]
     null_best = min(null_scores, key=lambda r: float(r["sse"])) if null_scores else None
+    positive = [row for row in eligible if float(row["g"]) > 0.0]
+    positive_best = min(positive, key=lambda r: float(r["sse"])) if positive else None
+    null_strictly_better = (
+        null_best is not None
+        and all(_strictly_better_loss(float(null_best["sse"]), float(row["sse"])) for row in positive)
+    )
+    null_tied_positive = (
+        null_best is not None
+        and any(_losses_tied(float(null_best["sse"]), float(row["sse"])) for row in positive)
+    )
     if not usable or not eligible:
         status = "UNCALIBRATABLE"
         best = None
-    else:
-        best = eligible[0]
-        for row in eligible[1:]:
-            if float(row["sse"]) < float(best["sse"]):
-                best = row
-        if float(best["g"]) == 0.0:
-            status = "NULL_CALIBRATED"
+    elif null_strictly_better:
+        status = "NULL_CALIBRATED"
+        best = null_best
+    elif positive_best is not None:
+        best = positive_best
+        if null_tied_positive:
+            status = "NOT_IDENTIFIED"
         elif _open_face(best, eligible):
             status = "NOT_IDENTIFIED"
         else:
             status = "CALIBRATED"
+    else:
+        status = "NULL_CALIBRATED"
+        best = null_best
     return {
         "calibration_status": status,
         "best": best,
         "null_model_score": null_best,
+        "null_tie_rel_tol": NULL_TIE_REL_TOL,
+        "null_strictly_better_than_positive": null_strictly_better,
+        "null_tied_positive": null_tied_positive,
         "detected_directions": detected,
         "fit_directions": sorted(fit_directions) if fit_directions else detected,
         "candidate_count": len(score_rows),
