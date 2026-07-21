@@ -1,0 +1,19 @@
+RESTART ROUND V2.1 REG-1V2.1 SOURCE FIXTURE TRANSCRIPT
+generated_utc=2026-07-21T10:43:49Z
+repo=C:\Users\tsion\Projects\eni_dcim_qa
+head=a042f4a67e39d5d889a5ab7c91e57da2078d5fcb
+required_ancestor=139a4d1
+command=py tuning\run_reg1v2_calibration_source_fixtures.py
+REG-1V2 CALIBRATION SOURCE FIXTURES
+repo=C:\Users\tsion\Projects\eni_dcim_qa
+head=a042f4a67e39d5d889a5ab7c91e57da2078d5fcb
+scope=DIAGNOSTIC synthetic dry-run only; no A091; no FlightSim/DCGame; no intervention artifacts
+PASS step_detector_floor_merge_and_windows
+PASS response_reconstruction_minima
+PASS response_reconstruction_v21_runtime_rules
+PASS null_model_and_grid
+PASS identifiability_gating
+PASS direction_applicability
+PASS row_level_trace
+PASS provenance_and_committed_bytes
+SUMMARY passed=8 failed=0 total=8
