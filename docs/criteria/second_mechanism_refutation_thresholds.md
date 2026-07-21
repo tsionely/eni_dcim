@@ -77,7 +77,24 @@ mixed-ownership windows are analyzed per rider R3.
 
 - **PLANT SIGNAL**: the exact logged APPLIED vertical command /
   plant input stream (per-era field named in the artifact) — never
-  an arbiter selection or desired target.
+  an arbiter selection or desired target. **(Amendment after the
+  first intervention run, BEFORE any rerun: the run fed
+  `rate_feed_forward_mps` — an internal feed-forward column of
+  precisely the prohibited class — and its stream failed physical
+  plausibility in BOTH signs. The plant signal is the LOGGED
+  SETPOINT VERTICAL, setpoint.v_body[2], converted to world-up by
+  the adapter's own equation v_up = -v_bz * cos(level_pitch) *
+  cos(level_roll), with the conversion derived in writing in the
+  artifact.)**
+- **PLANT-STREAM VALIDITY PRE-CHECK** (sign-only, no invented
+  constant): a stream claimed as "what physically moved the
+  vehicle" must POSITIVELY correlate with the vehicle's measured
+  motion. The artifact publishes corr(plant stream, oracle
+  reference motion) per era BEFORE the judge runs; a non-positive
+  correlation is an automatic INVALID-INPUT — the intervention
+  cannot proceed to a verdict on that stream. (The first run's
+  stream measured corr = -0.265: invalid input, no verdict
+  branch fired.)
 - **COMMAND SEMANTICS**: 0.0 is observed zero activity; None/absent
   is missing input; no truthiness filter may merge them.
 - **TIMING**: exact withheld-window boundaries; prior-tick and
