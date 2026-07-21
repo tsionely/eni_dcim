@@ -25,7 +25,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from aigp.planning.vertical_terminal import robust_slope
 
-REG1_COMMIT = "139a4d1"
+REG1_COMMIT = "62c9648"
 SOURCE_GENERATOR_PATH = "tuning/reg1v2_calibration_source_generator.py"
 DT_S = 0.02
 STEP_FLOOR_MPS = 0.35

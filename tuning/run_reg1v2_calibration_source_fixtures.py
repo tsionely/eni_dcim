@@ -149,7 +149,7 @@ def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     expect(prov["source_generator_path"] == SOURCE_GENERATOR_PATH, "source generator path not bound")
     expect(prov["source_generator_commit"] == head, "source generator commit does not equal execution tip")
     expect(prov["execution_tip"] == head, "execution tip mismatch")
-    expect(prov["reg1_commit"] == "139a4d1", "REG-1 commit binding mismatch")
+    expect(prov["reg1_commit"] == "62c9648", "REG-1v2.1 commit binding mismatch")
     expect(prov["input_digests"][0]["path"].startswith("synthetic://"), "synthetic dry-run should not bind A091 input")
     expect("attestation" in prov["attestation_policy"], "attestation child policy missing")
 
