@@ -68,14 +68,25 @@ UNIDENTIFIABLE candidates never enter the argmin.
   certified-FULL series through observe(), force the
   FULL->SIDE downgrade latch, read oracle.rate_anchor_v_raw); leg
   2 is the reconstruction; EXACT equality asserted by execution
-  over a battery that includes a DENSE series (> 12 samples in
-  0.5 s — exposes any fixed-window impostor), a GAPPED series
-  (exposes fresh-tail violations), and duplicate timestamps; a
-  fixture whose two legs share an implementation is VOID —
-  equality of a function with itself proves nothing; (b) SAME-ROW
-  validation on every row where the checkpoint column and the
-  reconstruction both exist anywhere in the archive — equality
-  within 1e-9 published; disagreement is a STOP, not a footnote.
+  over a FOUR-member battery: (i) a DENSE series (> 12 samples in
+  0.5 s — exposes any fixed-window impostor), (ii) a GAPPED
+  series (exposes fresh-tail violations), (iii) duplicate
+  timestamps including a poisoned rebroadcast, and (iv)
+  BELOW-MINIMUM SUPPORT (channel-1 on R69, registered before the
+  v2.1 calibration run: a series with only 3 unique timestamps —
+  BOTH legs must emit ABSENT/None or a typed absence error, NEVER
+  0.0, asserted by execution; this welds the fixture to the
+  zero/None law at exactly the edge where sparse support could
+  mint false zeros — the R68 §3 candidate explanation). A fixture
+  whose two legs share an implementation is VOID — equality of a
+  function with itself proves nothing; the comparison spec
+  declares the INDEPENDENCE BOUNDARY of its legs (channel-1's
+  checklist item, adopted): leg 1 imports only from src/aigp's
+  shipped classes, leg 2 may share nothing with leg 1 above
+  robust_slope itself. (b) SAME-ROW validation on every row where
+  the checkpoint column and the reconstruction both exist
+  anywhere in the archive — equality within 1e-9 published;
+  disagreement is a STOP, not a footnote.
 - **STEP DETECTOR v2** (deterministic, fit-blind; the v1 floor's
   units error is corrected):
   1. STEP EVENT at tick k if |v_ref[k] - v_ref[k-1]| >= 0.35 m/s —
