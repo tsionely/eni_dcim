@@ -62,12 +62,49 @@ def fixture_response_reconstruction_minima() -> None:
     rate, status, meta = reconstruct_v_full_raw(rows, 1.00)
     expect(status == "VALID", f"synthetic response was not valid: {status}")
     expect(abs(float(rate) - 0.25) < 1e-12, "Theil-Sen response reconstruction mismatch")
-    expect(meta["history_samples"] >= 4 and meta["history_span_s"] >= 0.15, "history minima were not met")
+    expect(meta["fresh_tail_samples"] >= 4 and meta["fresh_tail_span_s"] >= 0.15, "fresh-tail minima were not met")
+    expect(meta["recent_samples"] <= 12 and meta["last_sample_cap"] == 12, "last-12 cap metadata missing")
 
     short_rate, short_status, short_meta = reconstruct_v_full_raw(rows[:3], 0.04)
     expect(short_rate is None, "insufficient history returned a rate")
     expect(short_status == "ABSENT_RESPONSE", "insufficient history did not type ABSENT_RESPONSE")
-    expect(short_meta["history_samples"] < 4, "short-history fixture did not exercise sample minimum")
+    expect(short_meta["fresh_tail_samples"] < 4, "short-history fixture did not exercise sample minimum")
+
+
+def fixture_response_reconstruction_v21_runtime_rules() -> None:
+    dense: list[dict[str, object]] = []
+    for i in range(25):
+        ts = i * 0.02
+        if ts <= 0.24:
+            e_meas = 1.75 - 0.05 * ts
+        else:
+            e_meas = 1.75 - 0.05 * 0.24 - 0.35 * (ts - 0.24)
+        dense.append({"tick": i, "ts_s": ts, "e_meas_m": e_meas, "certified_full": True})
+    dense_rate, dense_status, dense_meta = reconstruct_v_full_raw(dense, 0.48)
+    expect(dense_status == "VALID", f"dense v2.1 reconstruction invalid: {dense_status}")
+    expect(abs(float(dense_rate) - 0.35) < 1e-12, "dense fixture did not use the last-12 cap")
+    expect(dense_meta["history_samples"] == 25 and dense_meta["recent_samples"] == 12, "dense fixture did not expose >12 history")
+
+    gapped: list[dict[str, object]] = []
+    for i, ts in enumerate([0.18, 0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 0.32, 0.34]):
+        gapped.append({"tick": i, "ts_s": ts, "e_meas_m": 3.0 - 0.65 * ts, "certified_full": True})
+    for i, ts in enumerate([0.50, 0.52, 0.54, 0.56, 0.58, 0.60, 0.62, 0.64, 0.66, 0.68], start=20):
+        gapped.append({"tick": i, "ts_s": ts, "e_meas_m": 1.2 - 0.12 * (ts - 0.50), "certified_full": True})
+    gap_rate, gap_status, gap_meta = reconstruct_v_full_raw(gapped, 0.68)
+    expect(gap_status == "VALID", f"gapped v2.1 reconstruction invalid: {gap_status}")
+    expect(abs(float(gap_rate) - 0.12) < 1e-12, "gapped fixture fitted across an outage")
+    expect(gap_meta["history_samples"] == 19 and gap_meta["fresh_tail_samples"] == 10, "fresh-tail outage accounting drifted")
+
+    duplicate: list[dict[str, object]] = []
+    for i in range(18):
+        ts = i * 0.02
+        duplicate.append({"tick": i, "ts_s": ts, "e_meas_m": 1.5 - 0.22 * ts, "certified_full": True})
+        if i == 10:
+            duplicate.append({"tick": 1000, "ts_s": ts, "e_meas_m": 99.0, "certified_full": True})
+    dup_rate, dup_status, dup_meta = reconstruct_v_full_raw(duplicate, 0.34)
+    expect(dup_status == "VALID", f"duplicate v2.1 reconstruction invalid: {dup_status}")
+    expect(abs(float(dup_rate) - 0.22) < 1e-12, "duplicate timestamp was treated as a new exposure")
+    expect(dup_meta["history_samples"] == 18, "duplicate timestamp was not rejected from unique history")
 
 
 def fixture_null_model_and_grid() -> None:
@@ -127,6 +164,7 @@ def run(repo: Path) -> int:
     fixtures: list[tuple[str, Callable[[], None]]] = [
         ("step_detector_floor_merge_and_windows", fixture_step_detector_floor_merge_and_windows),
         ("response_reconstruction_minima", fixture_response_reconstruction_minima),
+        ("response_reconstruction_v21_runtime_rules", fixture_response_reconstruction_v21_runtime_rules),
         ("null_model_and_grid", fixture_null_model_and_grid),
         ("identifiability_gating", fixture_identifiability_gating),
         ("direction_applicability", fixture_direction_applicability),

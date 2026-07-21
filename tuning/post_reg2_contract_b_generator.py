@@ -16,7 +16,16 @@ from pathlib import Path
 import re
 import statistics
 import subprocess
+import sys
 from typing import Callable, Iterable, Mapping, Sequence
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from aigp.planning.vertical_owner import TerminalOracle
+from aigp.planning.vertical_terminal import robust_slope
 
 REG2_COMMIT = "1440fde4026249dff86728dfd75736b35187e7fe"
 REG2_DOC_PATH = Path("docs/criteria/legacy_response_model_registration.md")
@@ -35,6 +44,8 @@ QUIET_RMS_MPS = 0.05
 EST_MIN_UNIQUE_AGES = 4
 EST_MIN_SPAN_S = 0.15
 EST_MIN_ROWS = 4
+RATE_MAX_GAP_S = 0.12
+RATE_LAST_SAMPLE_CAP = 12
 TERM_OWNER_TOKENS = ("TERM", "physical_TERM_episode_A091")
 FINAL_VERDICT_BRANCHES = {
     "CONFIRMED_SUFFICIENT_FOR_EVALUATOR",
@@ -411,55 +422,116 @@ def theil_sen_slope(xs: Sequence[float], ys: Sequence[float]) -> float | None:
     return float(statistics.median(slopes))
 
 
-def _certified_full_history_xy(
+def _certified_full_observations(
     samples: Sequence[Mapping[str, object]],
     anchor_ts_s: float,
     *,
-    window_s: float = 0.50,
     ts_key: str = "ts_s",
     e_key: str = "e_meas_m",
-) -> tuple[list[float], list[float]]:
-    start_s = anchor_ts_s - window_s
-    window: list[tuple[float, float]] = []
-    for sample in samples:
+) -> list[tuple[float, float]]:
+    observations: list[tuple[float, int, float]] = []
+    for order, sample in enumerate(samples):
         if not bool(sample.get("certified_full", True)):
             continue
         ts = _num(sample.get(ts_key))
         e_meas = _num(sample.get(e_key))
         if ts is None or e_meas is None:
             continue
-        if start_s <= ts <= anchor_ts_s:
-            window.append((ts, e_meas))
-    window.sort()
-    return [ts for ts, _ in window], [e for _, e in window]
+        if ts <= anchor_ts_s:
+            observations.append((ts, order, e_meas))
+    observations.sort(key=lambda row: (row[0], row[1]))
+    return [(ts, e_meas) for ts, _order, e_meas in observations]
+
+
+def _dedupe_increasing(points: Sequence[tuple[float, float]]) -> list[tuple[float, float]]:
+    deduped: list[tuple[float, float]] = []
+    for ts, e_meas in points:
+        if deduped and ts <= deduped[-1][0]:
+            continue
+        deduped.append((ts, e_meas))
+    return deduped
+
+
+def _certified_full_points(
+    samples: Sequence[Mapping[str, object]],
+    anchor_ts_s: float,
+    *,
+    ts_key: str = "ts_s",
+    e_key: str = "e_meas_m",
+) -> list[tuple[float, float]]:
+    return _dedupe_increasing(_certified_full_observations(samples, anchor_ts_s, ts_key=ts_key, e_key=e_key))
+
+
+def _fresh_tail(points: Sequence[tuple[float, float]], *, max_gap_s: float = RATE_MAX_GAP_S) -> list[tuple[float, float]]:
+    if len(points) < 2:
+        return list(points)
+    i = len(points) - 1
+    while i > 0 and points[i][0] - points[i - 1][0] <= max_gap_s:
+        i -= 1
+    return list(points[i:])
+
+
+def _rate_anchor_v_raw_from_points(points: Sequence[tuple[float, float]]) -> float:
+    tail = _fresh_tail(points)
+    recent = tail[-RATE_LAST_SAMPLE_CAP:]
+    slope = robust_slope([ts for ts, _ in recent], [e for _, e in recent])
+    if slope is None:
+        raise ValueError("insufficient certified FULL fresh-tail history for rate_anchor_v_raw")
+    return -float(slope)
+
+
+def _local_de_dt(points: Sequence[tuple[float, float]]) -> float:
+    tail = _fresh_tail(points)
+    recent = tail[-RATE_LAST_SAMPLE_CAP:]
+    slope = robust_slope([ts for ts, _ in recent], [e for _, e in recent])
+    if slope is not None:
+        return float(slope)
+    if len(points) >= 2 and points[-1][0] > points[-2][0]:
+        return (points[-1][1] - points[-2][1]) / (points[-1][0] - points[-2][0])
+    return 0.0
+
+
+def _drive_real_terminal_oracle_rate_anchor(observations: Sequence[tuple[float, float]]) -> float:
+    """Leg 1 for fixture (m): feed the shipped oracle and force FULL->SIDE."""
+    points = _dedupe_increasing(observations)
+    if len(points) < 4:
+        raise ValueError("insufficient FULL points for oracle latch")
+    oracle = TerminalOracle(max_gap_s=RATE_MAX_GAP_S)
+    for ts, e_meas in observations:
+        oracle.observe(ts, e_meas, "FULL_QUAD")
+        oracle.observe(ts, e_meas, "SIDE_PAIR")
+
+    last_ts, last_e = points[-1]
+    slope = _local_de_dt(points)
+    # Keep SIDE fresh while FULL becomes stale, so the shipped downgrade path
+    # latches rate_anchor_v_raw from the FULL history.
+    for dt in (0.02, 0.06, 0.10, 0.14):
+        ts = last_ts + dt
+        e_meas = last_e + slope * dt
+        oracle.observe(ts, e_meas, "SIDE_PAIR")
+        if oracle.active_source == "SIDE_PAIR" and oracle.rate_anchor_v_raw is not None:
+            return float(oracle.rate_anchor_v_raw)
+    if oracle.rate_anchor_v_raw is None:
+        raise ValueError("real TerminalOracle did not produce rate_anchor_v_raw")
+    return float(oracle.rate_anchor_v_raw)
 
 
 def runtime_twin_rate_anchor_v_raw(
     samples: Sequence[Mapping[str, object]],
     anchor_ts_s: float,
-    *,
-    window_s: float = 0.50,
 ) -> float:
-    """Runtime twin of rate_anchor_v_raw from certified FULL e_meas history."""
-    xs, ys = _certified_full_history_xy(samples, anchor_ts_s, window_s=window_s)
-    slope = theil_sen_slope(xs, ys)
-    if slope is None:
-        raise ValueError("insufficient certified FULL history for runtime twin rate")
-    return -slope
+    """Fixture leg that drives the real runtime oracle through observe()."""
+    observations = _certified_full_observations(samples, anchor_ts_s)
+    return _drive_real_terminal_oracle_rate_anchor(observations)
 
 
 def calibration_artifact_reconstructed_v_raw(
     samples: Sequence[Mapping[str, object]],
     anchor_ts_s: float,
-    *,
-    window_s: float = 0.50,
 ) -> float:
-    """Calibration artifact reconstruction: -Theil-Sen(d e_meas/dt)."""
-    xs, ys = _certified_full_history_xy(samples, anchor_ts_s, window_s=window_s)
-    slope = theil_sen_slope(xs, ys)
-    if slope is None:
-        raise ValueError("insufficient certified FULL history for calibration reconstruction")
-    return -slope
+    """REG-1v2.1 reconstruction of rate_anchor_v_raw from FULL history."""
+    points = _certified_full_points(samples, anchor_ts_s)
+    return _rate_anchor_v_raw_from_points(points)
 
 
 def ols_slope_intercept(xs: Sequence[float], ys: Sequence[float]) -> tuple[float | None, float | None]:

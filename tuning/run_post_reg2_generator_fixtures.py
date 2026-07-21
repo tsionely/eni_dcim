@@ -10,6 +10,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import statistics
 import subprocess
 import sys
 from typing import Callable
@@ -394,22 +395,94 @@ def fixture_l_precedence_earlier_branch_wins() -> None:
     expect(result["branch_order"] == 2, "precedence branch order mismatch")
 
 
+def fixed_window_impostor_rate(samples: list[dict[str, object]], anchor_ts_s: float, window_s: float = 0.50) -> float:
+    pts: list[tuple[float, float]] = []
+    start_s = anchor_ts_s - window_s
+    for row in samples:
+        if not bool(row.get("certified_full", True)):
+            continue
+        ts = float(row["ts_s"])
+        if start_s <= ts <= anchor_ts_s:
+            pts.append((ts, float(row["e_meas_m"])))
+    pts.sort()
+    deduped: list[tuple[float, float]] = []
+    for ts, e_meas in pts:
+        if deduped and ts <= deduped[-1][0]:
+            continue
+        deduped.append((ts, e_meas))
+    slopes = [
+        (e2 - e1) / (t2 - t1)
+        for i, (t1, e1) in enumerate(deduped)
+        for t2, e2 in deduped[i + 1:]
+        if t2 > t1
+    ]
+    if not slopes:
+        raise FixtureFailure("fixed-window impostor fixture had no slopes")
+    return -float(statistics.median(slopes))
+
+
+def piecewise_e(ts: float, *, break_s: float, e0: float, slope_before: float, slope_after: float) -> float:
+    if ts <= break_s:
+        return e0 + slope_before * ts
+    e_break = e0 + slope_before * break_s
+    return e_break + slope_after * (ts - break_s)
+
+
+def assert_runtime_reconstruction_case(name: str, samples: list[dict[str, object]], anchor_ts_s: float, *, expect_fixed_window_diff: bool = False) -> None:
+    runtime_rate = runtime_twin_rate_anchor_v_raw(samples, anchor_ts_s)
+    calibration_rate = calibration_artifact_reconstructed_v_raw(samples, anchor_ts_s)
+    expect(runtime_rate == calibration_rate, f"{name}: real oracle and calibration reconstruction differ")
+    if expect_fixed_window_diff:
+        impostor = fixed_window_impostor_rate(samples, anchor_ts_s)
+        expect(abs(calibration_rate - impostor) > 1e-3, f"{name}: fixed-window impostor was not exposed")
+
+
 def fixture_m_runtime_twin_equivalence() -> None:
-    anchor_ts_s = 1.00
-    slope_de_dt = -0.42
-    samples = []
-    for i in range(70):
+    dense: list[dict[str, object]] = []
+    for i in range(25):
         ts = i * 0.02
-        samples.append({
+        dense.append({
             "row_key": f"full_{i:03d}",
             "ts_s": ts,
-            "e_meas_m": 1.75 + slope_de_dt * ts,
+            "e_meas_m": piecewise_e(ts, break_s=0.24, e0=1.75, slope_before=-0.05, slope_after=-0.35),
             "certified_full": True,
         })
-    runtime_rate = runtime_twin_rate_anchor_v_raw(samples, anchor_ts_s, window_s=0.50)
-    calibration_rate = calibration_artifact_reconstructed_v_raw(samples, anchor_ts_s, window_s=0.50)
-    expect(runtime_rate == calibration_rate, "runtime twin and calibration reconstruction differ")
-    expect(abs(runtime_rate - 0.42) < 1e-12, "synthetic rate did not reconstruct as expected")
+    assert_runtime_reconstruction_case("dense-last-12", dense, 0.48, expect_fixed_window_diff=True)
+
+    gapped: list[dict[str, object]] = []
+    for i, ts in enumerate([0.18, 0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 0.32, 0.34]):
+        gapped.append({
+            "row_key": f"gap_old_{i:03d}",
+            "ts_s": ts,
+            "e_meas_m": 3.0 - 0.65 * ts,
+            "certified_full": True,
+        })
+    for i, ts in enumerate([0.50, 0.52, 0.54, 0.56, 0.58, 0.60, 0.62, 0.64, 0.66, 0.68]):
+        gapped.append({
+            "row_key": f"gap_new_{i:03d}",
+            "ts_s": ts,
+            "e_meas_m": 1.2 - 0.12 * (ts - 0.50),
+            "certified_full": True,
+        })
+    assert_runtime_reconstruction_case("gapped-fresh-tail", gapped, 0.68, expect_fixed_window_diff=True)
+
+    duplicate: list[dict[str, object]] = []
+    for i in range(18):
+        ts = i * 0.02
+        duplicate.append({
+            "row_key": f"dup_{i:03d}",
+            "ts_s": ts,
+            "e_meas_m": 1.5 - 0.22 * ts,
+            "certified_full": True,
+        })
+        if i == 10:
+            duplicate.append({
+                "row_key": "dup_010_rebroadcast",
+                "ts_s": ts,
+                "e_meas_m": 99.0,
+                "certified_full": True,
+            })
+    assert_runtime_reconstruction_case("duplicate-timestamps", duplicate, 0.34)
 
 
 def run(repo: Path) -> int:

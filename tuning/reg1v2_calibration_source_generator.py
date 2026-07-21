@@ -18,6 +18,13 @@ import subprocess
 import sys
 from typing import Iterable, Mapping, Sequence
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from aigp.planning.vertical_terminal import robust_slope
+
 REG1_COMMIT = "139a4d1"
 SOURCE_GENERATOR_PATH = "tuning/reg1v2_calibration_source_generator.py"
 DT_S = 0.02
@@ -26,7 +33,8 @@ PRE_WINDOW_TICKS = 10
 PRE_STABILITY_MPS = 0.05
 POST_TRANSITION_MPS = 0.05
 POST_CAP_TICKS = 50
-RATE_HISTORY_S = 0.50
+RATE_MAX_GAP_S = 0.12
+RATE_LAST_SAMPLE_CAP = 12
 RATE_MIN_SAMPLES = 4
 RATE_MIN_SPAN_S = 0.15
 MIN_VALID_ROWS = 8
@@ -111,18 +119,6 @@ def world_up_from_body_z(v_body_z: float, level_pitch: float, level_roll: float)
     return -float(v_body_z) * math.cos(float(level_pitch)) * math.cos(float(level_roll))
 
 
-def theil_sen_slope(xs: Sequence[float], ys: Sequence[float]) -> float | None:
-    slopes: list[float] = []
-    for i, xi in enumerate(xs):
-        for j in range(i + 1, len(xs)):
-            dx = xs[j] - xi
-            if dx != 0.0:
-                slopes.append((ys[j] - ys[i]) / dx)
-    if not slopes:
-        return None
-    return float(statistics.median(slopes))
-
-
 def normalize_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, object]]:
     out: list[dict[str, object]] = []
     for index, row in enumerate(rows):
@@ -147,29 +143,53 @@ def normalize_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, objec
     return sorted(out, key=lambda r: int(r["tick"]))
 
 
-def _certified_history(rows: Sequence[Mapping[str, object]], anchor_ts_s: float) -> tuple[list[float], list[float]]:
-    start = anchor_ts_s - RATE_HISTORY_S
-    history: list[tuple[float, float]] = []
-    for row in rows:
+def _certified_history(rows: Sequence[Mapping[str, object]], anchor_ts_s: float) -> list[tuple[float, float]]:
+    history: list[tuple[float, int, float]] = []
+    for order, row in enumerate(rows):
         if not bool(row.get("certified_full", True)):
             continue
         ts = _num(row.get("ts_s"))
         e_meas = _num(row.get("e_meas_m"))
         if ts is None or e_meas is None:
             continue
-        if start <= ts <= anchor_ts_s:
-            history.append((ts, e_meas))
-    history.sort()
-    return [x for x, _ in history], [y for _, y in history]
+        if ts <= anchor_ts_s:
+            history.append((ts, order, e_meas))
+    history.sort(key=lambda row: (row[0], row[1]))
+    deduped: list[tuple[float, float]] = []
+    for ts, _order, e_meas in history:
+        if deduped and ts <= deduped[-1][0]:
+            continue
+        deduped.append((ts, e_meas))
+    return deduped
+
+
+def _fresh_tail(history: Sequence[tuple[float, float]]) -> list[tuple[float, float]]:
+    if len(history) < 2:
+        return list(history)
+    i = len(history) - 1
+    while i > 0 and history[i][0] - history[i - 1][0] <= RATE_MAX_GAP_S:
+        i -= 1
+    return list(history[i:])
 
 
 def reconstruct_v_full_raw(rows: Sequence[Mapping[str, object]], anchor_ts_s: float) -> tuple[float | None, str, dict[str, object]]:
-    xs, ys = _certified_history(rows, anchor_ts_s)
+    history = _certified_history(rows, anchor_ts_s)
+    fresh_tail = _fresh_tail(history)
+    recent = fresh_tail[-RATE_LAST_SAMPLE_CAP:]
+    xs = [ts for ts, _ in recent]
+    ys = [e for _, e in recent]
     span = (max(xs) - min(xs)) if xs else 0.0
-    meta = {"history_samples": len(xs), "history_span_s": span}
+    meta = {
+        "history_samples": len(history),
+        "fresh_tail_samples": len(fresh_tail),
+        "recent_samples": len(recent),
+        "fresh_tail_span_s": span,
+        "max_gap_s": RATE_MAX_GAP_S,
+        "last_sample_cap": RATE_LAST_SAMPLE_CAP,
+    }
     if len(xs) < RATE_MIN_SAMPLES or span < RATE_MIN_SPAN_S:
         return None, "ABSENT_RESPONSE", meta
-    slope = theil_sen_slope(xs, ys)
+    slope = robust_slope(xs, ys)
     if slope is None:
         return None, "ABSENT_RESPONSE", meta
     return -slope, "VALID", meta
