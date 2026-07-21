@@ -8,6 +8,24 @@
   "no_a091": true,
   "no_checkpoint": true,
   "no_flightsim_dcgame": true,
+  "suite_results": [
+    {
+      "suite": "REG-1v2.3 calibration source fixtures",
+      "transcript_path": "tuning/reg1v23-source-generator-attestation-a1993c5-20260721T151905Z/source_fixtures_transcript.txt",
+      "execution_tip": "4194c5d4e1cddce4835f9f033d6a8df1a0fd40ec",
+      "passed": 21,
+      "failed": 0,
+      "total": 21
+    },
+    {
+      "suite": "post-REG2 Step-E generator fixtures",
+      "transcript_path": "tuning/reg1v23-source-generator-attestation-a1993c5-20260721T151905Z/post_reg2_fixtures_transcript.txt",
+      "execution_tip": "4194c5d4e1cddce4835f9f033d6a8df1a0fd40ec",
+      "passed": 18,
+      "failed": 0,
+      "total": 18
+    }
+  ],
   "committed_byte_digests": [
     {
       "path": "tuning/reg1v2_calibration_source_generator.py",
