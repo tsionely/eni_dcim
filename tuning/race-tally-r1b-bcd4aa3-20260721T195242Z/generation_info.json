@@ -1,0 +1,10 @@
+{
+  "analysis_head": "bcd4aa3",
+  "classification_after_pull": "R1-ALT packet, not valid R1b; counted because no *raceprep-r1b* fixture dirs existed.",
+  "created_utc": "20260721T195242Z",
+  "expected_speed_mps": 1.8,
+  "fixture_count": 10,
+  "fixture_glob": "fixtures/*raceprep-r1-alt-*",
+  "note": "No *raceprep-r1b* fixture dirs existed; *raceprep-r1-alt-* is tallied as the only 10-run packet and all rows are flagged as speed deviations. Per 4ef7712, it does not replace R1b.",
+  "rebased_over_before_commit": "4ef7712"
+}

@@ -1,0 +1,3 @@
+config,runs,gates_per_run,full_completion_rate,any_gate_rate,total_gates,collision_aborts,clip_budget_aborts,median_wall_time_s,best_wall_time_s,closest_detection_min_m,closest_detection_median_m,param_deviation_runs
+A,5,0/0/1/0/0,0/5,1/5,1,5,0,14.828013,7.995989,0.961678,2.461235,5
+B,5,1/0/0/0/1,0/5,2/5,2,5,0,13.839983,10.115996,0.645982,1.072475,5

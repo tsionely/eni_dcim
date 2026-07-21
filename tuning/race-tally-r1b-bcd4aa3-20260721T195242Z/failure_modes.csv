@@ -1,0 +1,10 @@
+config,failed_gate,abort_phase,abort_class,count,runs
+A,1,approach,collision,1,9
+A,1,recover,collision,2,"3,7"
+A,1,search,collision,1,1
+A,2,search,collision,1,5
+B,1,hover,collision,1,4
+B,1,recover,collision,1,6
+B,1,search,collision,1,8
+B,2,hover,collision,1,2
+B,2,recover,collision,1,10
