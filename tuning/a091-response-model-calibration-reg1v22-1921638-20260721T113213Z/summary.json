@@ -1,0 +1,350 @@
+{
+  "artifact": "A091_RESPONSE_MODEL_CALIBRATION_REG1V22",
+  "best": {
+    "L_ticks": 0,
+    "candidate_type": "ELIGIBLE",
+    "eligible": true,
+    "failing_rule": "",
+    "g": 0.0,
+    "ineligible_reason": "",
+    "max_horizon_s": 0.72,
+    "max_post_lag_horizon_s": 0.72,
+    "mse": 0.0,
+    "post_lag_rows": 51,
+    "rms_mps": 0.0,
+    "rows_used": 51,
+    "scoring_rows": 51,
+    "sse": 0.0,
+    "tau_s": 0.02
+  },
+  "calibration_rows": 51,
+  "calibration_sentinel_overlap_rows": 0,
+  "calibration_status": "NULL_CALIBRATED",
+  "criterion_ancestor_required": "ee0bb6a",
+  "diagnostic_only": true,
+  "execution_tip": "19216383a55daf932f1ff3e8bfae7344fa2ef83c",
+  "fit_summary": {
+    "best": {
+      "L_ticks": 0,
+      "candidate_type": "ELIGIBLE",
+      "eligible": true,
+      "failing_rule": "",
+      "g": 0.0,
+      "ineligible_reason": "",
+      "max_horizon_s": 0.72,
+      "max_post_lag_horizon_s": 0.72,
+      "mse": 0.0,
+      "post_lag_rows": 51,
+      "rms_mps": 0.0,
+      "rows_used": 51,
+      "scoring_rows": 51,
+      "sse": 0.0,
+      "tau_s": 0.02
+    },
+    "calibration_status": "NULL_CALIBRATED",
+    "candidate_count": 48360,
+    "detected_directions": [
+      "down",
+      "up"
+    ],
+    "eligible_count": 18941,
+    "fit_directions": [
+      "down",
+      "up"
+    ],
+    "null_model_score": {
+      "L_ticks": 0,
+      "candidate_type": "ELIGIBLE",
+      "eligible": true,
+      "failing_rule": "",
+      "g": 0.0,
+      "ineligible_reason": "",
+      "max_horizon_s": 0.72,
+      "max_post_lag_horizon_s": 0.72,
+      "mse": 0.0,
+      "post_lag_rows": 51,
+      "rms_mps": 0.0,
+      "rows_used": 51,
+      "scoring_rows": 51,
+      "sse": 0.0,
+      "tau_s": 0.02
+    },
+    "null_strictly_better_than_positive": true,
+    "null_tie_rel_tol": 1e-09,
+    "null_tied_positive": false,
+    "usable_window_count": 2,
+    "window_count": 18,
+    "windows": [
+      {
+        "direction": "up",
+        "event_id": "step_01",
+        "exclusion_reason": "",
+        "post_level_mps": 0.952120141444416,
+        "post_tick_count": 50,
+        "pre_level_mps": 0.0,
+        "pre_mean_mps": 0.0,
+        "tick": 163,
+        "valid_rows": 33
+      },
+      {
+        "direction": "down",
+        "event_id": "step_02",
+        "exclusion_reason": "",
+        "post_level_mps": 0.0,
+        "post_tick_count": 18,
+        "pre_level_mps": 0.952120141444416,
+        "pre_mean_mps": 0.952120141444416,
+        "tick": 238,
+        "valid_rows": 18
+      },
+      {
+        "direction": "up",
+        "event_id": "step_03",
+        "exclusion_reason": "INSUFFICIENT_ROWS",
+        "post_level_mps": 0.7247849999758255,
+        "post_tick_count": 4,
+        "pre_level_mps": 0.0,
+        "pre_mean_mps": 0.0,
+        "tick": 256,
+        "valid_rows": 4
+      },
+      {
+        "direction": "down",
+        "event_id": "step_04",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": -0.6,
+        "post_tick_count": 2,
+        "pre_level_mps": 1.2769138524645955,
+        "pre_mean_mps": 1.3798854922769295,
+        "tick": 363,
+        "valid_rows": 2
+      },
+      {
+        "direction": "up",
+        "event_id": "step_05",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 1.31844907603327,
+        "post_tick_count": 1,
+        "pre_level_mps": -0.56,
+        "pre_mean_mps": 0.9891543935949223,
+        "tick": 365,
+        "valid_rows": 1
+      },
+      {
+        "direction": "down",
+        "event_id": "step_06",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": -0.43999999999999995,
+        "post_tick_count": 1,
+        "pre_level_mps": 1.3987507604363316,
+        "pre_mean_mps": 0.9806834575411336,
+        "tick": 367,
+        "valid_rows": 1
+      },
+      {
+        "direction": "down",
+        "event_id": "step_07",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": -0.32,
+        "post_tick_count": 2,
+        "pre_level_mps": 1.6401081427965225,
+        "pre_mean_mps": 0.8278735815604398,
+        "tick": 370,
+        "valid_rows": 2
+      },
+      {
+        "direction": "up",
+        "event_id": "step_08",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 0.6999179583145987,
+        "post_tick_count": 1,
+        "pre_level_mps": 0.22201518248472982,
+        "pre_mean_mps": -0.053146807905718206,
+        "tick": 394,
+        "valid_rows": 1
+      },
+      {
+        "direction": "down",
+        "event_id": "step_09",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 0.09531296857034292,
+        "post_tick_count": 1,
+        "pre_level_mps": 0.8871258606622652,
+        "pre_mean_mps": 0.8281785179294474,
+        "tick": 507,
+        "valid_rows": 0
+      },
+      {
+        "direction": "down",
+        "event_id": "step_10",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 0.0,
+        "post_tick_count": 43,
+        "pre_level_mps": 0.404234172197018,
+        "pre_mean_mps": 0.6606203659705157,
+        "tick": 510,
+        "valid_rows": 10
+      },
+      {
+        "direction": "up",
+        "event_id": "step_11",
+        "exclusion_reason": "INSUFFICIENT_ROWS",
+        "post_level_mps": 0.9727394597221243,
+        "post_tick_count": 1,
+        "pre_level_mps": 0.0,
+        "pre_mean_mps": 0.0,
+        "tick": 553,
+        "valid_rows": 0
+      },
+      {
+        "direction": "down",
+        "event_id": "step_12",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": -0.5575784036693306,
+        "post_tick_count": 2,
+        "pre_level_mps": 0.9552474842551766,
+        "pre_mean_mps": 1.0238432699787545,
+        "tick": 585,
+        "valid_rows": 2
+      },
+      {
+        "direction": "up",
+        "event_id": "step_13",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 0.5092128755809943,
+        "post_tick_count": 1,
+        "pre_level_mps": -0.5575784036693306,
+        "pre_mean_mps": 0.687888347568688,
+        "tick": 587,
+        "valid_rows": 1
+      },
+      {
+        "direction": "up",
+        "event_id": "step_14",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 1.1658945578840736,
+        "post_tick_count": 2,
+        "pre_level_mps": 0.7957266396469672,
+        "pre_mean_mps": 0.8535147727461826,
+        "tick": 660,
+        "valid_rows": 2
+      },
+      {
+        "direction": "down",
+        "event_id": "step_15",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 1.0273948079251751,
+        "post_tick_count": 2,
+        "pre_level_mps": 1.4263032903521855,
+        "pre_mean_mps": 1.1465537854039047,
+        "tick": 667,
+        "valid_rows": 2
+      },
+      {
+        "direction": "down",
+        "event_id": "step_16",
+        "exclusion_reason": "INSUFFICIENT_ROWS",
+        "post_level_mps": 0.0,
+        "post_tick_count": 1,
+        "pre_level_mps": 0.9316477876051052,
+        "pre_mean_mps": 0.9316477876051052,
+        "tick": 702,
+        "valid_rows": 1
+      },
+      {
+        "direction": "up",
+        "event_id": "step_17",
+        "exclusion_reason": "INSUFFICIENT_ROWS",
+        "post_level_mps": 2.21312923722391,
+        "post_tick_count": 2,
+        "pre_level_mps": 0.0,
+        "pre_mean_mps": 0.0,
+        "tick": 1011,
+        "valid_rows": 2
+      },
+      {
+        "direction": "down",
+        "event_id": "step_18",
+        "exclusion_reason": "ABSENT_INPUT",
+        "post_level_mps": 1.9897246943970766,
+        "post_tick_count": 1,
+        "pre_level_mps": 2.595839849026476,
+        "pre_mean_mps": 0.9382902362475509,
+        "tick": 1015,
+        "valid_rows": 1
+      }
+    ]
+  },
+  "flight_id": "20260719T201851-50f9dcc8",
+  "frame_transform_derivation": "setpoint.v_body[2] is body-z positive down; world-up commanded reference is v_ref_up = -v_body_z * cos(level_pitch) * cos(level_roll).",
+  "input_digests": [
+    {
+      "path": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_reg1v22_input.csv",
+      "sha256": "c77d6b46d04529d7aac3141008dc9ad3ce02fd5c41884ecb5c40ae4125ad3505"
+    },
+    {
+      "path": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_sentinel_interval_keys.csv",
+      "sha256": "62ce64875a7fa0881bfc8c1d80421c52173865679d48d5021dc825d0e25f54c1"
+    }
+  ],
+  "no_sim_scope": "Replay/CSV only; no FlightSim/DCGame launch.",
+  "null_model_score": {
+    "L_ticks": 0,
+    "candidate_type": "ELIGIBLE",
+    "eligible": true,
+    "failing_rule": "",
+    "g": 0.0,
+    "ineligible_reason": "",
+    "max_horizon_s": 0.72,
+    "max_post_lag_horizon_s": 0.72,
+    "mse": 0.0,
+    "post_lag_rows": 51,
+    "rms_mps": 0.0,
+    "rows_used": 51,
+    "scoring_rows": 51,
+    "sse": 0.0,
+    "tau_s": 0.02
+  },
+  "profile_box_within_10_percent_rms": {
+    "L_ticks": {
+      "count_distinct": 26,
+      "max": 25.0,
+      "min": 0.0
+    },
+    "g": {
+      "count_distinct": 1,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "tau_s": {
+      "count_distinct": 36,
+      "max": 0.72,
+      "min": 0.02
+    }
+  },
+  "profile_candidate_count": 611,
+  "provenance": {
+    "artifact_commit": null,
+    "attestation_policy": "artifact_manifest digests must be computed from committed bytes in a child attestation commit",
+    "exact_command": "tuning\\a091_reg1v22_artifact_builder.py --repo . --input-dir tuning/a091-reg1v22-input-1921638-20260721T113213Z --out-dir tuning/a091-response-model-calibration-reg1v22-1921638-20260721T113213Z",
+    "execution_tip": "19216383a55daf932f1ff3e8bfae7344fa2ef83c",
+    "input_digests": [
+      {
+        "path": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_reg1v22_input.csv",
+        "sha256": "c77d6b46d04529d7aac3141008dc9ad3ce02fd5c41884ecb5c40ae4125ad3505"
+      },
+      {
+        "path": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_sentinel_interval_keys.csv",
+        "sha256": "62ce64875a7fa0881bfc8c1d80421c52173865679d48d5021dc825d0e25f54c1"
+      }
+    ],
+    "reg1_commit": "ee0bb6a",
+    "source_generator_commit": "19216383a55daf932f1ff3e8bfae7344fa2ef83c",
+    "source_generator_path": "tuning/reg1v2_calibration_source_generator.py"
+  },
+  "reg2_note": "REG-2 is not written by this artifact; numeric binding remains a follow-up criterion commit.",
+  "sentinel_unique_rows": 127,
+  "source_input_csv": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_reg1v22_input.csv",
+  "source_sentinel_keys": "tuning\\a091-reg1v22-input-1921638-20260721T113213Z\\a091_sentinel_interval_keys.csv",
+  "zero_none_law": "0.0 is retained as an observed value; None/absent fields are typed and never merged with zero."
+}
