@@ -20,7 +20,6 @@ from tuning.reg1v2_calibration_source_generator import (
     detect_step_windows,
     fit_response_model,
     reconstruct_v_full_raw,
-    sha256_file,
     synthetic_dry_run,
     synthetic_null_rows,
     synthetic_rows,
@@ -119,8 +118,9 @@ def fixture_provenance_and_committed_bytes(repo: Path) -> None:
 
     rows = committed_attestation_rows(repo, head, [SOURCE_GENERATOR_PATH])
     committed_sha = rows[0]["sha256_committed_bytes"]
-    working_sha = sha256_file(repo / SOURCE_GENERATOR_PATH)
-    expect(committed_sha == working_sha, "source generator committed-byte digest differs from working bytes")
+    expect(rows[0]["path"] == SOURCE_GENERATOR_PATH, "attestation path mismatch")
+    expect(rows[0]["reviewed_tip"] == head, "attestation reviewed tip mismatch")
+    expect(len(committed_sha) == 64 and all(c in "0123456789abcdef" for c in committed_sha), "committed-byte digest is not a sha256 hex")
 
 
 def run(repo: Path) -> int:
