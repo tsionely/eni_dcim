@@ -1701,11 +1701,12 @@
     "accounting_mode": "analyzable",
     "result": "Release-grade checker transcript generated outside the tree against pushed tip c438ee5; token MANIFEST VERIFIES (RELEASE-GRADE).",
     "status": "REPORTED",
-    "evidence_commit": "8c0b3c1ff1d1254d85a2562b1106e1cf3fd3aff6",
+    "evidence_commit": "f6520992602442162e421c763c71591e25497203",
     "artifact_type": "DIAGNOSTIC_CHECKER_TRANSCRIPT",
     "diagnostic_only": true,
     "attested_tip": "c438ee5e38cc7150d345c58b1615371866a0af8f",
-    "criterion_ancestor_required": "9a85c73"
+    "criterion_ancestor_required": "9a85c73",
+    "rebase_evidence_commit_fix": "PRE_RERUN_REBASE_ON_fe69759"
   },
   {
     "board_row": 91,
@@ -1722,11 +1723,12 @@
     "accounting_mode": "analyzable",
     "result": "Summary of publish-then-attest checker transcript for Step 1 supersede.",
     "status": "REPORTED",
-    "evidence_commit": "8c0b3c1ff1d1254d85a2562b1106e1cf3fd3aff6",
+    "evidence_commit": "f6520992602442162e421c763c71591e25497203",
     "artifact_type": "DIAGNOSTIC_CHECKER_TRANSCRIPT",
     "diagnostic_only": true,
     "attested_tip": "c438ee5e38cc7150d345c58b1615371866a0af8f",
-    "criterion_ancestor_required": "9a85c73"
+    "criterion_ancestor_required": "9a85c73",
+    "rebase_evidence_commit_fix": "PRE_RERUN_REBASE_ON_fe69759"
   },
   {
     "board_row": 92,
@@ -1743,11 +1745,12 @@
     "accounting_mode": "analyzable",
     "result": "SHA-256 list for Step 1 checker attestation artifacts.",
     "status": "REPORTED",
-    "evidence_commit": "8c0b3c1ff1d1254d85a2562b1106e1cf3fd3aff6",
+    "evidence_commit": "f6520992602442162e421c763c71591e25497203",
     "artifact_type": "DIAGNOSTIC_CHECKER_TRANSCRIPT",
     "diagnostic_only": true,
     "attested_tip": "c438ee5e38cc7150d345c58b1615371866a0af8f",
-    "criterion_ancestor_required": "9a85c73"
+    "criterion_ancestor_required": "9a85c73",
+    "rebase_evidence_commit_fix": "PRE_RERUN_REBASE_ON_fe69759"
   },
   {
     "board_row": 93,
