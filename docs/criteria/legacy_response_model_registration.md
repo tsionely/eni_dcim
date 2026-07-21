@@ -179,21 +179,86 @@ applied (criterion, ownership gating). No generator may flip this
 sign, and a generator observing that the opposite sign "works
 better" has found evidence AGAINST the mechanism, not a knob.
 
-## 4. NUMERIC BLOCK (REG-2 — empty in REG-1 by construction)
+## 4. NUMERIC BLOCK (REG-2 — filled from the pushed calibration artifact at d3aa16e, verified row-by-row before binding)
 
-    g    = PENDING_CALIBRATION
-    tau  = PENDING_CALIBRATION
-    L    = PENDING_CALIBRATION
-    calibration_artifact_path   = PENDING
-    calibration_artifact_sha256 = PENDING
-    calibration_interval_keys   = PENDING (disjoint from sentinel)
-    residual_rms_at_optimum     = PENDING
-    profile_box                 = PENDING
+    g    = 0.50
+    tau  = 0.60 s
+    L    = 0 ticks
+    calibration_artifact_path =
+        tuning/a091-response-model-calibration-0b60e91-20260721T061627Z/
+    calibration_artifact_sha256 (per file):
+        summary.json
+          5b75963dfe127b90625bd942638a12d28c5bc74bb52e805abd049a095e0aecd5
+        grid_candidate_scores.csv       (16,380 rows, full grid)
+          aa5f38745271e9e165e7c90f3b891ed68c3f96c27beff7781cae37cad4ffd106
+        calibration_interval_keys.csv   (13 rows)
+          1a3526bfed17a7b116c68d340c5807fb454a38633376b432388099baab198c59
+        sentinel_interval_keys.csv      (31 rows)
+          f59c7e0b827864c9ecb9fc4e6be338223a0cc6ec667935ad99e560f9950740ed
+        candidate_windows.csv           (12 events, 1 QUALIFY)
+          ac66b934c61dc9a933bb5115ad5085e47a4d66752773d95cd9c7eb44f7a78392
+    calibration_interval_keys = the 13 row keys in
+        calibration_interval_keys.csv (event A091_DOWNSTEP_01,
+        ticks 238..263, phase 'recover'); overlap with the 31
+        sentinel keys = 0 (verified independently at binding)
+    residual_rms_at_optimum = 0.0102753797 m/s
+        (sse 0.001372584553156863, n = 13; unique minimum, no ties)
+    profile_box (fit RMS within 10% of optimum) =
+        g in [0.50, 0.55], tau in [0.56, 0.60] s, L in {0}
 
-REG-2 fills every field above, citing the pushed calibration
-artifact; the generator's ancestry check names REG-2's commit. Any
-change to Section 1-3b after REG-2 voids the registration and
-restarts it.
+**REG-2 TYPED FLAGS (bound with the numerics, adjudication-visible):**
+
+1. **BOUNDARY_OPTIMUM** — the optimum sits ON the declared grid
+   boundary in TWO parameters: g at grid-min (0.50), tau at
+   grid-max (0.60). The profile box hugs that corner and is
+   TRUNCATED on both faces; the unconstrained optimum may lie
+   outside (lower g, higher tau). Registered consequences: the
+   intervention publishes its sensitivity band at the box corners
+   AND labels the two truncated faces OPEN — the band understates
+   uncertainty in exactly those directions and must say so. The
+   grid may NOT be widened now that results are visible; a wider
+   grid is a Section-2 change and voids/restarts the registration
+   per the clause below. Physical reading, recorded not asserted:
+   the measured response reached about half the commanded step and
+   decayed slower than any registered tau — the legacy contribution
+   is SMALLER and SLOWER than raw-reference injection would claim,
+   consistent with the first (void) intervention's both-sign
+   explosion.
+2. **MEASURED_RESPONSE_PROVENANCE** — the frozen checkpoint column
+   `v_full_raw_mps` has NO rows on the calibration support (the
+   qualifying window lies outside the withheld windows the
+   checkpoint covers). The artifact computed the SAME registered
+   quantity by its defining formula — -Theil-Sen(d e_meas/dt) over
+   the prior 0.50 s certified-FULL history, the runtime-twin
+   `rate_anchor_v_raw` semantic named in the same REG-1 sentence —
+   and published `v_full_raw_reconstruction_check.csv` as
+   DISCLOSURE ONLY (all 127 rows used_for_calibration_fit = false;
+   deltas vs the FORCED-WITHHOLD variant are a different semantic
+   by construction). Channel ratification of this reading is
+   requested in RESPONSE-66; if refused, REG-2 voids and restarts.
+3. **TRANSPORT INVERSION (era binding, phase5c)** — the qualifying
+   window is in planner phase 'recover', where the LEGACY
+   (race-planner) path commands vertical (TERM ownership exists
+   only inside the terminal channel's owner arbiter; rider R3).
+   The calibrated triplet is therefore a measurement of the LEGACY
+   ACTUATING PATH ITSELF — no TERM-to-legacy transport is needed
+   for A091's era. Producer: race_planner Setpoint.v_body[2];
+   consumer: the sim velocity-tracking backend via the adapter;
+   frame transform: the adapter equation with A091's level_pitch
+   -0.3106987661062333 / level_roll 0.00025650874109527094
+   (cos_tilt 0.952120141444416). Command-cap sources (binding for
+   the era ledger): the per-phase clips in
+   src/aigp/planning/race_planner.py at d3aa16e
+   (planner.commit.vz_cap_mps = 0.35; align_climb_cap; the
+   in-commit 0.8 hold cap) — no clipping event occurred inside the
+   calibration window (reference peak 0.952 world-up). Eras other
+   than phase5c remain PENDING_TRANSPORT_PROOF -> OFF_SUPPORT for
+   the intervention until their ledger rows are filled.
+
+REG-2 is complete: every REG-1 pending field is filled from the
+pushed calibration artifact; the generator's ancestry check names
+THIS commit. Any change to Section 1-3b after REG-2 voids the
+registration and restarts it.
 
 ## 5. GENERATOR STARTUP CONTRACT (channel-2 on R64 §5 — executable, in this order)
 
