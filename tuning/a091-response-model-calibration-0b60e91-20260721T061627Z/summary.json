@@ -1,0 +1,65 @@
+{
+  "artifact": "A091_RESPONSE_MODEL_CALIBRATION_REG1",
+  "best": {
+    "L_ticks": 0,
+    "g": 0.5,
+    "mse": 0.00010558342716591254,
+    "n_rows": 13,
+    "rms_mps": 0.010275379660426789,
+    "sse": 0.001372584553156863,
+    "tau_s": 0.6
+  },
+  "calibration_rows": 13,
+  "calibration_sentinel_overlap_rows": 0,
+  "calibration_status": "CALIBRATED",
+  "criterion_ancestor_required": "9a85c73",
+  "diagnostic_only": true,
+  "down_step_detector": {
+    "min_valid_rows": 8,
+    "post_window_ticks": 25,
+    "pre_window_stability_mps": 0.05,
+    "pre_window_ticks": 10,
+    "step_delta_threshold_mps": -0.3
+  },
+  "dt_s": 0.02,
+  "fixture_dir": "fixtures/20260719T204430-phase6i-r-rate-ab",
+  "flight_id": "20260719T201851-50f9dcc8",
+  "frame_transform_derivation": "setpoint.v_body[2] is body-z positive down; world-up commanded reference is v_ref_up = -v_body_z * cos(level_pitch) * cos(level_roll). For A091 level_pitch=-0.3106987661062333 and level_roll=0.00025650874109527094, cos_tilt=0.952120141444416.",
+  "generator_commit": "0b60e9104fb04dac81be4e9bb297c2b8668e9f23",
+  "grid": {
+    "L_values": "0..25 ticks ascending",
+    "g_values": "0.50..1.50 step 0.05 ascending",
+    "iteration_order": "L outer, tau middle, g inner; strict less-than, first wins",
+    "tau_values": "0.02..0.60 step 0.02 ascending"
+  },
+  "measured_response_field": "v_full_raw_mps reconstructed as -Theil-Sen(d e_meas/dt) over certified FULL_QUAD history_before 0.50s, matching the checkpoint semantic/runtime twin rate_anchor_v_raw; row timestamps are feature_ts_ns and exposure alignment to command ticks uses mono_ns nearest tick <= one dt.",
+  "merged_step_events": 12,
+  "non_a091_approaches_used_for_fit": false,
+  "profile_box_within_10_percent_rms": {
+    "L_ticks": {
+      "count_distinct": 1,
+      "max": 0.0,
+      "min": 0.0
+    },
+    "g": {
+      "count_distinct": 2,
+      "max": 0.55,
+      "min": 0.5
+    },
+    "tau_s": {
+      "count_distinct": 3,
+      "max": 0.6,
+      "min": 0.56
+    }
+  },
+  "profile_candidate_count": 4,
+  "qualifying_windows": 1,
+  "raw_step_events": 12,
+  "reg1_methodology_commit": "fe69759b7a03b341b118410a536b8310e97f7aaf",
+  "reg2_note": "REG-2 is not written by this artifact; numeric binding is intentionally left to the follow-up criterion commit.",
+  "sentinel_unique_rows": 31,
+  "source_features": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/features_archive.csv",
+  "source_flight_log": "fixtures/20260719T204430-phase6i-r-rate-ab/20260719T201851-50f9dcc8-flight.jsonl",
+  "source_sentinel_keys": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/forced_withhold_samples.csv",
+  "zero_none_law": "0.0 is retained as an observed value; None/absent fields are OFF_SUPPORT/ABSENT_INPUT and are never merged with zero."
+}
