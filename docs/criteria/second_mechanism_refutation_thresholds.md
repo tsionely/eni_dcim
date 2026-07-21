@@ -8,11 +8,16 @@ generator commits must carry this commit as an ancestor.
 
 ## Derivation rules (each threshold cites its registered constant)
 
-- **NEAR-ZERO legacy vertical activity**: RMS(recorded applied
-  vertical in the withheld window) < **0.05 m/s** — the program's
+- **NEAR-ZERO legacy vertical activity**: RMS of the
+  MODEL-PREDICTED LEGACY CONTRIBUTION (Contract B dynamic
+  transform) in the withheld window < **0.05 m/s** — the program's
   registered indistinguishable-from-zero rate constant (the
   transition rate-sign deadband, RESPONSE-19 era; also the oracle
   jump floor). Not derived from any observed activity distribution.
+  **(Q-TYPE, channel-2 on R60-63: the quantity that defines Q is
+  the model-predicted contribution — the physically missing term
+  the falsification claim is about; the raw-reference RMS is
+  published alongside as a DESCRIPTOR, never the Q gate.)**
 - **LARGE |b1|**: |b1| > **0.35 m/s^2** — the release gate constant
   itself. b1 carries sigma_a's units; a deterministic slope
   exceeding the ENTIRE stochastic release budget is "large" by the
@@ -47,34 +52,68 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   these b1 values). It can kill the mechanism (refutation branch
   above) but can never confirm it.
 - **THE INTERVENTION IS THE JUDGE (rider R2)**: rerun the residual
-  evaluation feeding the RECORDED legacy plant-applied vertical
-  stream into the feed-forward. CONFIRMED if per-cluster |b1| mass
-  collapses under the intervention — specifically: the count of
-  clusters with |b1| > 0.35 falls by at least half AND every
-  near-zero-activity cluster sits below 0.35 after intervention.
-  SURVIVES-INTERVENTION => REFUTED regardless of the correlation
-  table.
-  **MACHINE DECISION TABLE (channel-2 on R59 — replaces the prose
-  cells; mutually exclusive, exhaustive). Define: B = physical
-  approaches classified large BEFORE (estimable cuts only); A =
-  the same approaches large AFTER; D = B - A; Q = independent
-  near-zero-activity approaches retaining an estimable large
-  WITHIN-CUT slope after intervention; K = 2. Then:**
+  evaluation with the MODEL-PREDICTED CAUSAL LEGACY CONTRIBUTION
+  included (per the SIGNAL CHAIN below — the only normative signal
+  instruction in this file). The reading is the machine decision
+  table:
+  **MACHINE DECISION TABLE v2 (channel-2 on R60-63 — SET-BASED,
+  replacing the net-count table, whose D = B - A could hide an
+  intervention that created new large approaches behind a resolved
+  one). Evaluated STRICTLY TOP-DOWN; the first matching branch
+  wins, making the branches mutually exclusive and exhaustive by
+  construction. Define, over physical approaches under the
+  committed approach classifier (estimability section):**
 
-      input validity fails            -> INVALID_INPUT
-      Q >= K                          -> REFUTED
-      0 < Q < K                       -> HOLD_INCONCLUSIVE_QUIET_BREACH
-      Q = 0 and D >= ceil(B/2)        -> CONFIRMED_SUFFICIENT_FOR_EVALUATOR
-      Q = 0 and 0 < D < ceil(B/2)     -> CONTRIBUTORY_NOT_SUFFICIENT
-      Q = 0 and D <= 0                -> REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION
+      S_B = approaches classified large BEFORE intervention
+            (estimable cuts only);  B = |S_B|
+      S_A = approaches classified large AFTER intervention
+            (estimable cuts only, common support)
+      R   = |S_B \ S_A|   resolved baseline-large approaches
+      S   = |S_B intersect S_A|   surviving baseline-large approaches
+      N   = |S_A \ S_B|   NEWLY large approaches
+      M   = count of baseline-large approaches lacking valid
+            after-intervention Contract-B input or an estimable
+            after-slope (zero-valued command references are
+            evaluable and NEVER enter M; only absence/invalidity
+            does — missing after-support is never a drop)
+      Q   = independent near-zero-activity approaches retaining an
+            estimable large WITHIN-CUT slope after intervention
+            (activity per the Q-TYPE rule above)
+      K   = 2
 
-  (The last label rejects mechanism-2 as the registered remainder
-  explanation without claiming the physical effect is nonexistent
-  in every regime.)
-  **RESIDUAL ADMISSIBILITY, TYPED BY BRANCH (supersedes the earlier
-  blanket sentence):** INVALID_INPUT -> residual INADMISSIBLE, no
-  verdict; REFUTED (either label) -> residual INADMISSIBLE as a
-  mechanism-corrected drift measurement;
+      1. input validity fails -> INVALID_INPUT
+      2. B = 0                -> NO_REGISTERED_REMAINDER_TO_EXPLAIN
+                                 (NOT_APPLICABLE; never confirmation)
+      3. M > 0                -> HOLD_INCOMPLETE_INTERVENTION_SUPPORT
+      4. N > 0                -> REFUTED_OR_HARMFUL_INTERVENTION
+      5. Q >= K               -> REFUTED
+      6. 0 < Q < K            -> HOLD_INCONCLUSIVE_QUIET_BREACH
+      7. R >= ceil(B/2)       -> CONFIRMED_SUFFICIENT_FOR_EVALUATOR
+      8. 0 < R < ceil(B/2)    -> CONTRIBUTORY_NOT_SUFFICIENT
+      9. R = 0                -> REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION
+
+  (Branches 3-4 clear M = 0 and N = 0 before any counting branch,
+  so by branch 7 the net difference equals R and cannot hide a
+  transition. B = 0 short-circuits at branch 2 — with no registered
+  remainder to explain there is no target, hence NOT_APPLICABLE,
+  never CONFIRMED. The last label rejects mechanism-2 as the
+  registered remainder explanation without claiming the physical
+  effect is nonexistent in every regime. S and N are published per
+  approach ID, not only as counts.)
+  **RESIDUAL ADMISSIBILITY, TYPED FOR EVERY BRANCH (supersedes the
+  earlier blanket sentence AND the earlier partial typing):**
+  INVALID_INPUT -> residual INADMISSIBLE, no verdict;
+  NO_REGISTERED_REMAINDER_TO_EXPLAIN -> no residual claim of any
+  type is generated;
+  HOLD_INCOMPLETE_INTERVENTION_SUPPORT -> residual INADMISSIBLE,
+  no verdict until support is repaired or the missing approaches
+  are conservatively scored as still-large in a rerun;
+  REFUTED_OR_HARMFUL_INTERVENTION -> residual INADMISSIBLE;
+  REFUTED -> residual INADMISSIBLE as a mechanism-corrected drift
+  measurement;
+  HOLD_INCONCLUSIVE_QUIET_BREACH -> residual DIAGNOSTIC_ONLY — no
+  release fit, no gate conclusion; additional mechanism naming or
+  replication required before any further use;
   CONTRIBUTORY_NOT_SUFFICIENT -> residual DIAGNOSTIC_ONLY (next
   naming round's input; never a release fit or gate conclusion);
   CONFIRMED_SUFFICIENT_FOR_EVALUATOR -> residual becomes a
@@ -110,22 +149,38 @@ mixed-ownership windows are analyzed per rider R3.
 
 ## Full specification fields (channel-2 §6, committed before the activity table or counterfactual exists)
 
-- **PLANT SIGNAL**: the exact logged APPLIED vertical command /
-  plant input stream (per-era field named in the artifact) — never
-  an arbiter selection or desired target. **(Amendment after the
-  first intervention run, BEFORE any rerun: the run fed
-  `rate_feed_forward_mps` — an internal feed-forward column of
-  precisely the prohibited class — and its stream failed physical
-  plausibility in BOTH signs. The plant signal is the LOGGED
-  SETPOINT VERTICAL, setpoint.v_body[2], converted to world-up by
-  the adapter's own equation v_up = -v_bz * cos(level_pitch) *
-  cos(level_roll), with the conversion derived in writing in the
-  artifact — TYPED per the STREAM CONTRACT below as a COMMANDED
-  VELOCITY REFERENCE (Contract B), resolving the wording that
-  simultaneously prohibited "desired targets" and selected a
-  setpoint: the prohibition targets INTERNAL/arbiter fields; the
-  logged innermost command enters only through the declared
-  response model, never raw subtraction.)**
+- **SIGNAL CHAIN (channel-2 on R60-63 — the ONE normative signal
+  instruction. Every earlier "plant-applied stream", "APPLIED
+  vertical command / plant input", or feed-the-feed-forward wording
+  anywhere in this file is VOID and superseded by this block; a
+  generator following any other signal sentence fails ancestry in
+  substance):**
+
+      RAW LOG FIELD:         setpoint.v_body[2]
+      TYPE:                  COMMANDED VELOCITY REFERENCE
+                             (not achieved motion, not plant input)
+      FRAME TRANSFORM:       v_up = -v_bz * cos(level_pitch)
+                                          * cos(level_roll)
+                             (derived in writing in the artifact)
+      DYNAMIC TRANSFORM:     the pre-registered closed-loop
+                             response model —
+                             docs/criteria/legacy_response_model_registration.md,
+                             which must be numerically COMPLETE
+                             (REG-2) before the generator commit
+      INTERVENTION QUANTITY: model-predicted causal legacy
+                             contribution
+      PROHIBITED:            raw subtraction; internal feed-forward
+                             fields (the rate_feed_forward_mps
+                             class); arbiter-selection fields;
+                             treating the setpoint as achieved
+                             motion
+
+  (History, non-normative: the first run fed
+  `rate_feed_forward_mps` — an internal column of precisely the
+  prohibited class — and its stream failed physical plausibility
+  in both signs; VOID_INVALID_INPUT. The prohibition on "desired
+  targets" targets INTERNAL/arbiter fields; the logged innermost
+  command enters only through the declared response model.)
 - **STREAM CONTRACT (channel-2 correction — the zero-lag
   positive-correlation gate is WITHDRAWN):** my earlier sign-only
   correlation pre-check repeated the exact error class this
@@ -171,14 +226,57 @@ A cut enters threshold counting only with: >= 4 unique ages (the
 registered Theil-Sen minimum), age span >= 0.15 s (the registered
 readiness span), and >= 4 rows. One- and two-row cuts are LISTED
 and excluded from counts (a two-point line has no residual degrees
-of freedom — the A114 classification rode one). Cluster
-aggregation publishes BOTH the any-cut count (with cuts-per-
-approach disclosed, since more cuts mean more threshold chances)
-and a support-weighted proportion; neither is adjudicative alone.
-The committed all-approach baseline is **5/23** (3/20 confirmatory,
-2/3 discovery-overlap); the 4/22 figure survives only as a LABELED
-post-hoc sensitivity (zero-stream approach excluded — an exclusion
-no registered rule authorizes, kept as the sensitivity it is).
+of freedom — the A114 classification rode one).
+
+**SLOPE ESTIMATOR, FIXED (channel-2 on R60-63 — committed before
+the rerun; the generator may not choose an estimator after seeing
+which one produces a favorable branch):** the adjudicative
+within-cut slope is **THEIL-SEN** — the median of pairwise slopes
+over row pairs with DISTINCT ages (identical-age pairs are
+excluded: slope undefined); an even pairwise count takes the mean
+of the two middle values. The estimator is chosen because the
+registered >= 4-unique-ages minimum was already named in its
+terms, and channel-2's independent recomputation confirms the
+baseline classification is estimator-stable (OLS agrees on the
+existing checkpoint). Per-cut OLS is published alongside as a
+cross-estimator stability DESCRIPTOR; a cut where the two
+estimators disagree across the 0.35 boundary is FLAGGED in the
+artifact. Approach-level uncertainty continues to run through the
+physical-approach outer cluster (bootstrap/LOAO), never per-cut.
+
+**APPROACH CLASSIFIER, FIXED (channel-2 on R60-63 — the machine
+table requires a binary large/not-large per approach; committed
+here, before the rerun):**
+
+    large_approach = at least one ESTIMABLE cut in the approach
+                     has |b1_theil_sen| > 0.35
+
+The support-weighted proportion is retained as a SECONDARY
+stability/concentration descriptor with cuts-per-approach
+disclosed (more cuts mean more threshold chances) — published
+always, adjudicative never. This supersedes the earlier "neither
+is adjudicative alone" sentence, which named two summaries and no
+classifier: the any-cut rule is now the committed adjudicative
+classifier; the weighted quantity remains its disclosed context.
+
+**BASELINE TYPING (channel-2 on R60-63 — three numbers, three
+types, never interchangeable):**
+
+    5/23  HISTORICAL PRE-ESTIMABILITY MECHANICAL OUTPUT —
+          provenance only; entered the record before the
+          estimability rules existed. Never the machine table's B.
+    4/23  channel-2's independent recomputation under THESE rules
+          on the committed 1,638-row checkpoint (177 cuts, 149
+          estimable; the fifth approach's only large slope rode a
+          two-row cut). Denominator stays 23 — the zero-stream
+          approach is NOT excluded. Status: PENDING
+          POST-CRITERION ARTIFACT AUTHENTICATION.
+    4/22  unauthorized zero-stream-excluded sensitivity — labeled,
+          never a board number.
+
+The machine variable B is derived FRESH from estimable cuts by the
+post-criterion generator at run time; it may not be hard-coded,
+and no narrative may state it as five.
 
 ## Component-to-runtime mapping (channel-1 central ruling — committed BEFORE any A/B/C/D read)
 
@@ -214,18 +312,21 @@ speaks.
 - **TIMING**: exact withheld-window boundaries; prior-tick and
   exposure alignment; no future-command leakage.
 - **PRIMARY PREDICTOR**: a SIGNED, physically derived
-  missing-reference term (the integrated applied vertical the
-  feed-forward never saw); **SECONDARY**: RMS / integrated absolute
-  activity.
+  missing-contribution term (the integrated MODEL-PREDICTED legacy
+  contribution the feed-forward never saw — Contract B chain);
+  **SECONDARY**: RMS / integrated absolute model-predicted
+  contribution, with raw-reference RMS as descriptor.
 - **UNITS**: cut-level observations; physical approach = outer
   cluster for every bound and bootstrap.
 - **NEGATIVE CONTROLS**: true zero-command windows; near-hover
   windows per the committed 0.05 constant; unrelated horizontal
   channels where appropriate.
-- **PRIMARY FALSIFICATION**: near-zero applied legacy activity with
-  persistent large WITHIN-CUT slope refutes (the branch above).
+- **PRIMARY FALSIFICATION**: near-zero MODEL-PREDICTED legacy
+  contribution with persistent large WITHIN-CUT slope refutes (the
+  branch above).
 - **COUNTERFACTUAL ENDPOINT**: recompute the residual with the
-  causal applied reference included; publish whether within-cut
+  model-predicted causal legacy contribution included (Contract B
+  chain, registered response model); publish whether within-cut
   slopes and the conservative U95 collapse. The counterfactual is
   FRESH EVIDENCE GENERATION — post-criterion generator mandatory
   even with no simulator rerun.
@@ -243,14 +344,18 @@ speaks.
   rows). Driver attribution is read from this decomposition, never
   from visual association.
 
-## Guard line (channel-1, binding): the intervention is evaluation-side FOREVER
+## MECHANISM-2 AUTHORITY BOUNDARY (channel-2 on R60-63 — supersedes the "evaluation-side FOREVER" heading and paragraph)
 
-The intervention modifies the EVALUATION HARNESS only. No branch of
-mechanism-2 — confirmed, refuted, or contributory — authorizes any
-flight-code change: the zero/None ring purity is a FEATURE (the
-same law that makes the flight code right is the law that makes the
-archive evaluation under-modeled), and the "fix" belongs to the
-evaluation side permanently.
+The intervention modifies the EVALUATION HARNESS only. Mechanism-2
+evidence does not authorize a flight-code change. A different,
+independently named mechanism (e.g., the separately filed
+latch-quality-admission hypothesis) may do so only through its own
+criterion, its own evidence, both-channel approval, and full
+shipping-build revalidation. The zero/None ring purity remains a
+FEATURE: the same law that makes the flight code right is the law
+that makes the archive evaluation under-modeled — but "forever" is
+not this criterion's to rule; authority boundaries are per
+mechanism, per evidence path.
 
 ## Rider R4 — the A091 sentinel
 
@@ -284,6 +389,17 @@ UNATTRIBUTED_POST_M1_M2_SIGNED_STRUCTURE — a residual class, not
 yet a physical mechanism; and if A091's large within-cut slopes
 persist too, the third structure may be AGE-DEPENDENT, not
 intercept-only.
+
+**Row-level proof (channel-2 on R60-63, binding):** the sentinel
+artifact proves the no-op at ROW level, never by rounded fit
+equality alone. It publishes: exact command-event/row keys; owner
+state per row; the correction term per row (exactly 0.0 on
+TERM-owned rows); before/after residual equality per row; slice
+SHA-256 before and after; and every mixed-owner exclusion listed
+with its reason. The A091 CALIBRATION interval (which feeds the
+response-model registration) and the SENTINEL interval are
+identified separately and may not be the same rows wearing two
+hats.
 
 **Guard-scope wording (channel-2, binding):** no outcome of the
 mechanism-2 intervention, BY ITSELF, authorizes a flight-code
