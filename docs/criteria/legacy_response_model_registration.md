@@ -668,6 +668,16 @@ knowingly as outcome-responsive). A row classified
 OUTCOME_RESPONSIVE with no consequence, or with an unknown
 consequence string, is a packet-checker FAILURE.
 
+**WALK DISCLOSURE (channel-1 on R81, standing rule of the
+program): every channel walk PUBLISHES the hostile-instance list
+it ran — the all-candidate-scores discipline applied to the
+walker itself. A nod without a published instance list is a
+presence-audit, not a contract-audit; and the book is the
+instance GENERATOR (ledger-driven hostility): before every nod,
+each relevant book line — clock domains, zero/None, units,
+placement, identity/cardinality, vacuity, partition — runs
+against the clause as a computed number, not a read sentence.**
+
 **OUTCOME-SYMMETRY CHECK (channel-1 on R76, standing rule of the
 program):** every POST-OBSERVATIONAL amendment must be justified
 WITHOUT reference to the status it benefits, and both-channel
