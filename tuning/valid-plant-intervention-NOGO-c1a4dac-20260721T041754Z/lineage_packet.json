@@ -1,0 +1,9 @@
+{
+  "creation_time_utc": "2026-07-21T04:17:54.226304+00:00",
+  "report_generator_commit": "c1a4dac4e50ad5cf4f52b6f49fe4da4054256f12",
+  "criterion_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "legacy_response_model_registration_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "viewed_response64": true,
+  "viewed_old_output_statement": "Existing 6824773 diagnostic output was viewed only to supersede it after RESPONSE64; no closure read is claimed from it.",
+  "sim_lock_protocol": "No sim launch; safety checks were performed before replay/generation in this round."
+}

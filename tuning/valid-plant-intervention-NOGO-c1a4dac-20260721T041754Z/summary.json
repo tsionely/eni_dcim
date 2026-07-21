@@ -1,0 +1,12 @@
+{
+  "diagnostic_only": true,
+  "status": "NO_GO_PER_RESPONSE64",
+  "repo_head_at_report_generation": "c1a4dac4e50ad5cf4f52b6f49fe4da4054256f12",
+  "criterion_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "legacy_response_model_registration_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "reason": "REG-1 numeric block is pending REG-2; RESPONSE64 says valid-stream rerun is NO-GO until A091 calibration artifact, REG-2, and machine fixtures are ancestors.",
+  "superseded_artifact_dir": "tuning/valid-plant-intervention-DIAGNOSTIC-6824773-20260721T040921Z",
+  "supersede_type": "NON_ADJUDICATIVE_SUPERSEDED_BY_RESPONSE64",
+  "sim_scope": "CSV/report only; no FlightSim/DCGame launch",
+  "next_required_step": "Produce A091 calibration artifact under REG-1, wait for REG-2 numeric registration, then rewrite generator/fixtures and rerun publish-then-attest."
+}
