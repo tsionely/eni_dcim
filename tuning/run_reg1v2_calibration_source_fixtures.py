@@ -234,6 +234,14 @@ def fixture_row_level_trace() -> None:
             expect(field in row, f"trace field {field} missing")
 
 
+def fixture_sentinel_disjoint_exclusion() -> None:
+    rows = synthetic_rows()
+    windows = detect_step_windows(rows, sentinel_keys={"syn_0020"})
+    expect(windows[0].exclusion_reason == "SENTINEL_DISJOINT", "sentinel key did not exclude overlapping window")
+    fit = fit_response_model(windows)
+    expect(fit["usable_window_count"] == 1, "sentinel-excluded window leaked into usable fit set")
+
+
 def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
     dry = synthetic_dry_run(repo)
@@ -263,6 +271,7 @@ def run(repo: Path) -> int:
         ("null_tie_not_null_calibrated", fixture_null_tie_not_null_calibrated),
         ("direction_applicability", fixture_direction_applicability),
         ("row_level_trace", fixture_row_level_trace),
+        ("sentinel_disjoint_exclusion", fixture_sentinel_disjoint_exclusion),
         ("provenance_and_committed_bytes", lambda: fixture_provenance_and_committed_bytes(repo)),
     ]
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()

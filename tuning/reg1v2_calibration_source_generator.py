@@ -458,6 +458,16 @@ def read_csv_rows(path: Path) -> list[dict[str, object]]:
         return list(csv.DictReader(f))
 
 
+def read_sentinel_keys(path: Path) -> list[str]:
+    rows = read_csv_rows(path)
+    keys: list[str] = []
+    for row in rows:
+        key = row.get("row_key")
+        if key:
+            keys.append(str(key))
+    return keys
+
+
 def input_digest_rows(paths: Sequence[str]) -> list[dict[str, str]]:
     rows = []
     for value in paths:
@@ -559,6 +569,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--repo", default=".")
     parser.add_argument("--synthetic-dry-run", action="store_true")
     parser.add_argument("--input-csv")
+    parser.add_argument("--sentinel-keys-csv")
     parser.add_argument("--out-dir")
     parser.add_argument("--fit-direction", choices=["up", "down", "both"], default="both")
     args = parser.parse_args(argv)
@@ -570,14 +581,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("--input-csv and --out-dir are required outside --synthetic-dry-run")
     input_path = Path(args.input_csv).resolve()
     rows = read_csv_rows(input_path)
-    windows = detect_step_windows(rows)
+    input_paths = [str(input_path)]
+    sentinel_keys: list[str] = []
+    if args.sentinel_keys_csv:
+        sentinel_path = Path(args.sentinel_keys_csv).resolve()
+        sentinel_keys = read_sentinel_keys(sentinel_path)
+        input_paths.append(str(sentinel_path))
+    windows = detect_step_windows(rows, sentinel_keys=sentinel_keys)
     fit_dirs = None if args.fit_direction == "both" else {args.fit_direction}
     fit = fit_response_model(windows, fit_dirs)
     packet = {
         "artifact": "REG1V2_CALIBRATION_PACKET",
         "diagnostic_only": True,
         "fit_summary": {k: v for k, v in fit.items() if k not in {"score_rows"}},
-        "provenance": provenance_packet(repo, [str(input_path)], " ".join(sys.argv)),
+        "sentinel_key_count": len(sentinel_keys),
+        "provenance": provenance_packet(repo, input_paths, " ".join(sys.argv)),
     }
     write_packet(Path(args.out_dir), packet, fit["score_rows"])
     return 0
