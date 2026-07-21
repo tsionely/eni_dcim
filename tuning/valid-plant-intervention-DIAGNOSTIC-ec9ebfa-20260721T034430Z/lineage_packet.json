@@ -1,0 +1,22 @@
+{
+  "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)",
+  "before_formula": "r_before = v_ref_oracle_mps - v_latch_true_mps",
+  "checkpoint_evidence_commit": "c19602f384bc30b0a53d649238b429f9085b6b8f",
+  "computation_commit": "de19d881ce8fa0ddc27dd71d7306d0d366c43e90",
+  "creation_time_utc": "2026-07-21T03:44:30.822180+00:00",
+  "criterion_commit": "4056acb7f2bd9a111727459dc6cd52fbd3ed92a7",
+  "features_archive": "tuning/taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z/features_archive.csv",
+  "fit_backend": "local_constrained_variance_no_scipy",
+  "input_count": 27,
+  "input_manifest_path": "tuning/valid-plant-intervention-DIAGNOSTIC-ec9ebfa-20260721T034430Z/checkpoint_input_manifest.json",
+  "input_manifest_sha256": "9ef2b4dbdf86f53fe9b5993fac16e1819759c3b52902c4a51dace99e5ef28f3f",
+  "plant_formula": "v_up = -v_bz * cos(level_pitch) * cos(level_roll)",
+  "plant_signal": "flight.jsonl setpoint.<v_body|vel_body|velocity_body>[2] converted to world-up",
+  "report_generator_commit": "ec9ebfa3252d787c8fb6a9e24c33fbac70510537",
+  "response58_commit": "c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead",
+  "response61_commit": "4056acb7f2bd9a111727459dc6cd52fbd3ed92a7",
+  "response62_commit": "1c363707d2f36edde333f4182bfa8c43fc117645",
+  "response_model": "pure-delay commanded-reference response calibrated from A091; zero-lag sensitivity disclosed",
+  "source_checkpoint_dir": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z",
+  "stream_contract": "Contract B: commanded velocity reference"
+}
