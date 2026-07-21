@@ -1,0 +1,20 @@
+﻿{
+    "artifact":  "POST_REG2_GENERATOR_STEP_E_SUPPLEMENT_FIXTURE_TRANSCRIPT",
+    "diagnostic_only":  true,
+    "code_commit":  "a003ef5157d89609f36d5d03166ec688ad4f8077",
+    "required_ancestor":  "1440fde4026249dff86728dfd75736b35187e7fe",
+    "ancestry_1440fde":  "OK",
+    "current_reg2_state":  "REG-2(v2) numeric block pending by construction; startup fixture verifies fail-closed before checkpoint/result hooks",
+    "scope":  "replay/csv only; no FlightSim/DCGame; no intervention artifacts; code-only transcript",
+    "fixture_passed":  18,
+    "fixture_failed":  0,
+    "includes_fixture_m_runtime_twin_equivalence":  true,
+    "includes_verdict_finality_column":  true,
+    "intervention_step_f":  "NO_GO_NOT_RUN",
+    "transcript_path":  "tuning/post-reg2-generator-stepE-supplement-a003ef5-20260721T071846Z/fixture_transcript.txt",
+    "transcript_sha256":  "039ee846bd3f4c252b0ab0bf758592ac66b2f2280700918f4076a037f58ab0c4",
+    "generator_path":  "tuning/post_reg2_contract_b_generator.py",
+    "generator_sha256":  "9f5503365717384aac6e3764934abd366a819e56c331fe04382a8ead1b11c631",
+    "fixture_runner_path":  "tuning/run_post_reg2_generator_fixtures.py",
+    "fixture_runner_sha256":  "b142cb8db1776862b780e35a055496845f6020a2506303d7af08b9e55012a08a"
+}
