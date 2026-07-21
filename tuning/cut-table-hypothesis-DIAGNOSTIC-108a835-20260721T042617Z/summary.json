@@ -1,0 +1,20 @@
+{
+  "diagnostic_only": true,
+  "repo_head": "108a835f417df568018ad9d2f48e1d989bae97a1",
+  "criterion_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "response60_commit": "26fb3b47f676ddf1aa98d2492a574d3ec7763875",
+  "response64_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "status": "DIAGNOSTIC_CROSSTAB_ONLY_NO_INTERVENTION_RERUN",
+  "reason_no_intervention_rerun": "RESPONSE64 holds the valid-stream rerun NO-GO until REG-2 and machine fixtures are ancestors.",
+  "cut_source": "tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_anchor_policy_samples.csv",
+  "cut_units_total": 26,
+  "cut_units_estimable": 12,
+  "cut_repair_worsened_units": 0,
+  "cut_repair_worsened_fraction": 0.0,
+  "cluster_appendix_source": "tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_new_per_cluster_split.csv",
+  "cluster_units_total": 23,
+  "cluster_units_analyzable": 23,
+  "cluster_repair_worsened_units": 2,
+  "cluster_repair_worsened_fraction": 0.08695652173913043,
+  "source_limitation": "Full 23 forced sample row CSV has no old/new delta; true cut-level old/new evidence is limited to taskB five-cluster diagnostic source."
+}

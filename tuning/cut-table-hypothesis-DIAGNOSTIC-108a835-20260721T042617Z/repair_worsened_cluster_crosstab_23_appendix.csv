@@ -1,0 +1,5 @@
+diagnostic_only,report_generator_commit,criterion_commit,unit,auth_bin,abs_v_latch_bin,units_total,units_estimable_or_analyzable,repair_worsened_units,repair_worsened_fraction,median_auth_at_latch,median_abs_v_latch_mps,median_delta_abs_b0_new_minus_old_mps,max_delta_abs_b0_new_minus_old_mps
+True,108a835f417df568018ad9d2f48e1d989bae97a1,9a85c7365994e87941636ccd567a87f42c417a21,physical_approach_cluster_appendix,0.50-0.80,<0.50,3,3,1,0.3333333333333333,0.7119286855061848,0.0,0.0,0.06445453609783253
+True,108a835f417df568018ad9d2f48e1d989bae97a1,9a85c7365994e87941636ccd567a87f42c417a21,physical_approach_cluster_appendix,<0.50,1.00-2.00,1,1,0,0.0,0.21983742713928223,1.2960100199896838,-0.4521775111574877,-0.4521775111574877
+True,108a835f417df568018ad9d2f48e1d989bae97a1,9a85c7365994e87941636ccd567a87f42c417a21,physical_approach_cluster_appendix,<0.50,<0.50,2,2,0,0.0,0.2763923406600952,0.0,0.0,0.0
+True,108a835f417df568018ad9d2f48e1d989bae97a1,9a85c7365994e87941636ccd567a87f42c417a21,physical_approach_cluster_appendix,>=0.999,<0.50,17,17,1,0.058823529411764705,1.0,0.0,0.0,0.4296048568852042

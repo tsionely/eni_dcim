@@ -1,0 +1,4 @@
+source_csv,finding,rows_checked,max_abs_new_minus_old_residual_diff
+tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_forced_withhold_samples.csv,r_v_new_mps equals r_v_mps in every row; not usable for repair-worsened cut-table classification,1638,0.0
+tuning/taskB-five-cluster-DIAGNOSTIC-bb0dbcf-20260720T183318Z/DIAGNOSTIC_anchor_policy_samples.csv,"usable cut-level old/new residual source, but covers five diagnostic clusters only",119,
+tuning/ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z/02_shadow_b0_new_per_cluster_split.csv,"usable 23-approach old/new b0 source, but approach-level only, not cut-level",23,
