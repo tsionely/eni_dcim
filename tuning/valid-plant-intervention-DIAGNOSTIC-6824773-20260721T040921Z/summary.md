@@ -1,9 +1,9 @@
 # Contract-B Plant-Stream Intervention Rerun
 
 Scope: DIAGNOSTIC, CSV/log replay only; no FlightSim/DCGame launch.
-Repo HEAD: `ec9ebfa3252d787c8fb6a9e24c33fbac70510537`.
-Criterion commit: `4056acb7f2bd9a111727459dc6cd52fbd3ed92a7`.
-Input manifest: `tuning/valid-plant-intervention-DIAGNOSTIC-ec9ebfa-20260721T034430Z/checkpoint_input_manifest.json`.
+Repo HEAD: `68247733f97d385e3f5f34803cc20623bcd0998b`.
+Criterion commit: `4d4827c4cb63029535e9f15124b9f084662f5137`.
+Input manifest: `tuning/valid-plant-intervention-DIAGNOSTIC-6824773-20260721T040921Z/checkpoint_input_manifest.json`.
 Input manifest sha256: `9ef2b4dbdf86f53fe9b5993fac16e1819759c3b52902c4a51dace99e5ef28f3f`.
 
 ## Plant Stream
@@ -23,9 +23,13 @@ Non-positive zero-lag scopes: `phase6i/r-rate-ab=-0.6814289403069921, phase6k/co
 ## Judge
 
 Judge status: `RUN_CONTRACT_B_RESPONSE_MODEL`.
-Intervention verdict: `NO_COLLAPSE_OR_UNJUDGED`.
-Large cluster count before: `4`.
-Large cluster count after: `22`.
+Intervention verdict: `REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION`.
+Residual admissibility: `INADMISSIBLE_as_corrected_mechanism_drift_measurement`.
+B before-large approaches: `4`.
+A same-approach large-after: `4`.
+D collapsed approaches: `0`.
+Q quiet-after-large approaches: `0`.
+Large cluster count after total: `22`.
 Clusters dropped by intervention: `[]`.
 Prediction refutation branch met: `False`.
 Driver decomposition status: `RUN`.
