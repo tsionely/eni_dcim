@@ -75,7 +75,30 @@ def rec(
     return row
 
 
-def fixture_startup_current_reg2_digest_guard(repo: Path) -> None:
+def synthetic_completed_reg2_text(repo: Path, *, status: str = "CALIBRATED") -> str:
+    text = (repo / "docs/criteria/legacy_response_model_registration.md").read_text(encoding="utf-8")
+    calibration_dir = repo / "tuning/a091-response-model-calibration-0b60e91-20260721T061627Z"
+    digest_lines = []
+    for name in CALIBRATION_DIGESTS:
+        actual = hashlib.sha256((calibration_dir / name).read_bytes()).hexdigest()
+        digest_lines.append(f"        {name}\n          {actual}")
+    block = "\n".join([
+        "## 4. NUMERIC BLOCK (SYNTHETIC COMPLETE REG-2 FOR STARTUP FIXTURE ONLY)",
+        "",
+        "    g    = 0.50",
+        "    tau  = 0.60 s",
+        "    L    = 0 ticks",
+        f"    calibration_status          = {status}",
+        "    calibration_artifact_path =",
+        "        tuning/a091-response-model-calibration-0b60e91-20260721T061627Z/",
+        "    calibration_artifact_sha256 (per file):",
+        *digest_lines,
+        "",
+    ])
+    return re.sub(r"## 4\. NUMERIC BLOCK.*?(?=\n## 5\.)", block, text, count=1, flags=re.S)
+
+
+def fixture_startup_current_reg2_pending_guard(repo: Path) -> None:
     touched = {"checkpoint": False, "result": False}
 
     def checkpoint_loader() -> list[dict[str, object]]:
@@ -89,22 +112,15 @@ def fixture_startup_current_reg2_digest_guard(repo: Path) -> None:
     try:
         startup_contract(repo, checkpoint_loader=checkpoint_loader, result_dir_factory=result_dir_factory, touch_checkpoint=True)
     except StartupContractError as exc:
-        expect(exc.code == "CALIBRATION_DIGEST_MISMATCH", f"unexpected startup error code {exc.code}")
-        expect(not touched["checkpoint"], "checkpoint loader ran after digest mismatch")
-        expect(not touched["result"], "result directory factory ran after digest mismatch")
+        expect(exc.code == "REG2_CALIBRATION_STATUS_PENDING", f"unexpected startup error code {exc.code}")
+        expect(not touched["checkpoint"], "checkpoint loader ran after pending REG-2")
+        expect(not touched["result"], "result directory factory ran after pending REG-2")
         return
-    raise FixtureFailure("current REG-2 digest mismatch unexpectedly passed")
+    raise FixtureFailure("current pending REG-2 unexpectedly passed")
 
 
-def fixture_startup_digest_aligned_reg2_override(repo: Path) -> None:
-    text = (repo / "docs/criteria/legacy_response_model_registration.md").read_text(encoding="utf-8")
-    aligned = text
-    calibration_dir = repo / "tuning/a091-response-model-calibration-0b60e91-20260721T061627Z"
-    for name in CALIBRATION_DIGESTS:
-        actual = hashlib.sha256((calibration_dir / name).read_bytes()).hexdigest()
-        pattern = re.compile(r"(" + re.escape(name) + r"(?:[^\n]*)\n\s*)([0-9a-f]{64})")
-        aligned, n = pattern.subn(lambda m, digest=actual: m.group(1) + digest, aligned, count=1)
-        expect(n == 1, f"digest slot for {name} was not found")
+def fixture_startup_completed_reg2_override(repo: Path) -> None:
+    completed = synthetic_completed_reg2_text(repo, status="CALIBRATED")
     touched = {"checkpoint": False, "result": False}
 
     def checkpoint_loader() -> list[dict[str, object]]:
@@ -117,7 +133,7 @@ def fixture_startup_digest_aligned_reg2_override(repo: Path) -> None:
 
     audit = startup_contract(
         repo,
-        reg2_text_override=aligned,
+        reg2_text_override=completed,
         checkpoint_loader=checkpoint_loader,
         result_dir_factory=result_dir_factory,
         touch_checkpoint=True,
@@ -125,16 +141,14 @@ def fixture_startup_digest_aligned_reg2_override(repo: Path) -> None:
     expect(audit.model.g == 0.50, "REG-2 g was not parsed as 0.50")
     expect(audit.model.tau_s == 0.60, "REG-2 tau was not parsed as 0.60")
     expect(audit.model.lag_ticks == 0, "REG-2 L was not parsed as 0")
-    expect(touched["checkpoint"], "digest-aligned happy path did not touch checkpoint")
-    expect(touched["result"], "digest-aligned happy path did not reach result factory")
+    expect(touched["checkpoint"], "completed REG-2 happy path did not touch checkpoint")
+    expect(touched["result"], "completed REG-2 happy path did not reach result factory")
     expect(audit.calibration_key_count == 13, "calibration key count drifted")
     expect(audit.sentinel_key_count == 31, "sentinel key count drifted")
     expect(audit.calibration_sentinel_overlap == 0, "calibration/sentinel key sets overlap")
 
-
 def fixture_startup_incomplete_reg2_fails_before_checkpoint(repo: Path) -> None:
-    text = (repo / "docs/criteria/legacy_response_model_registration.md").read_text(encoding="utf-8")
-    bad_text = re.sub(r"g\s*=\s*0\.50", "g    = PENDING_CALIBRATION", text, count=1)
+    bad_text = synthetic_completed_reg2_text(repo, status="NOT_IDENTIFIED")
     touched = {"checkpoint": False, "result": False}
 
     def checkpoint_loader() -> list[dict[str, object]]:
@@ -154,13 +168,12 @@ def fixture_startup_incomplete_reg2_fails_before_checkpoint(repo: Path) -> None:
             touch_checkpoint=True,
         )
     except StartupContractError as exc:
-        expect(exc.code == "REG2_PENDING_FIELD", f"unexpected startup error code {exc.code}")
-        expect(not touched["checkpoint"], "checkpoint loader ran after incomplete REG-2")
-        expect(not touched["result"], "result directory factory ran after incomplete REG-2")
+        expect(exc.code == "REG2_CALIBRATION_STATUS_NOT_IDENTIFIED", f"unexpected startup error code {exc.code}")
+        expect(not touched["checkpoint"], "checkpoint loader ran after NOT_IDENTIFIED REG-2")
+        expect(not touched["result"], "result directory factory ran after NOT_IDENTIFIED REG-2")
         expect(not exc.checkpoint_touched, "exception reports checkpoint_touched=True")
         return
-    raise FixtureFailure("incomplete REG-2 did not fail")
-
+    raise FixtureFailure("NOT_IDENTIFIED REG-2 did not fail")
 
 def fixture_boundary_profile_rows() -> None:
     rows = sensitivity_profile_rows(ContractBModel(g=0.5, tau_s=0.6, lag_ticks=0))
@@ -230,6 +243,15 @@ def fixture_c_newly_large_refuted_or_harmful() -> None:
 def fixture_d_zero_baseline_not_applicable() -> None:
     summary = evaluate_cut_records([rec("SMALL", "small", 0.10, 0.10)])
     expect(branch(summary) == "NO_REGISTERED_REMAINDER_TO_EXPLAIN", "fixture d did not return NOT_APPLICABLE branch")
+    expect(summary["branch_order"] == 4, "fixture d B=0 complete support branch order mismatch")
+
+    missing = evaluate_cut_records([rec("SMALL_MISS", "small_missing", 0.10, after_exit_reason="ABSENT_INPUT")])
+    expect(branch(missing) == "HOLD_INCOMPLETE_INTERVENTION_SUPPORT", "fixture d M_HARM did not precede B=0")
+    expect(missing["branch_order"] == 2, "fixture d M_HARM precedence order mismatch")
+
+    newly_large = evaluate_cut_records([rec("NEW_ONLY", "small_to_large", 0.10, 0.70)])
+    expect(branch(newly_large) == "REFUTED_OR_HARMFUL_INTERVENTION", "fixture d N did not precede B=0")
+    expect(newly_large["branch_order"] == 3, "fixture d N precedence order mismatch")
 
 
 def fixture_e_one_quiet_breach_holds_quiet() -> None:
@@ -369,7 +391,7 @@ def fixture_l_precedence_earlier_branch_wins() -> None:
         "Q_ids": ["Q1", "Q2"],
     })
     expect(result["branch"] == "HOLD_INCOMPLETE_INTERVENTION_SUPPORT", "precedence did not select earlier HOLD branch")
-    expect(result["branch_order"] == 3, "precedence branch order mismatch")
+    expect(result["branch_order"] == 2, "precedence branch order mismatch")
 
 
 def fixture_m_runtime_twin_equivalence() -> None:
@@ -392,8 +414,8 @@ def fixture_m_runtime_twin_equivalence() -> None:
 
 def run(repo: Path) -> int:
     fixtures: list[tuple[str, Callable[[], None]]] = [
-        ("startup_current_reg2_digest_guard", lambda: fixture_startup_current_reg2_digest_guard(repo)),
-        ("startup_digest_aligned_reg2_override", lambda: fixture_startup_digest_aligned_reg2_override(repo)),
+        ("startup_current_reg2_pending_guard", lambda: fixture_startup_current_reg2_pending_guard(repo)),
+        ("startup_completed_reg2_override", lambda: fixture_startup_completed_reg2_override(repo)),
         ("startup_incomplete_reg2_fails_before_checkpoint", lambda: fixture_startup_incomplete_reg2_fails_before_checkpoint(repo)),
         ("boundary_profile_rows", fixture_boundary_profile_rows),
         ("era_gating", fixture_era_gating),

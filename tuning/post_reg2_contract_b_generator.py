@@ -18,7 +18,7 @@ import statistics
 import subprocess
 from typing import Callable, Iterable, Mapping, Sequence
 
-REG2_COMMIT = "9393f9419ab00dabf1bd88ad095088ab984607ad"
+REG2_COMMIT = "1440fde4026249dff86728dfd75736b35187e7fe"
 REG2_DOC_PATH = Path("docs/criteria/legacy_response_model_registration.md")
 CALIBRATION_DIR = Path("tuning/a091-response-model-calibration-0b60e91-20260721T061627Z")
 CALIBRATION_DIGESTS = {
@@ -133,6 +133,13 @@ def _numeric_block(text: str) -> str:
 
 def parse_reg2_numeric_block(text: str) -> tuple[ContractBModel, Path, dict[str, str]]:
     block = _numeric_block(text)
+    status_match = re.search(r"^\s*calibration_status\s*=\s*([A-Z_]+)", block, re.MULTILINE)
+    if status_match:
+        status = status_match.group(1)
+        if status in {"PENDING", "VOID", "UNCALIBRATABLE", "NOT_IDENTIFIED"}:
+            raise StartupContractError(f"REG2_CALIBRATION_STATUS_{status}", f"REG-2 calibration_status={status} is fail-closed")
+        if status not in {"CALIBRATED", "NULL_CALIBRATED"}:
+            raise StartupContractError("REG2_CALIBRATION_STATUS_UNKNOWN", f"REG-2 calibration_status={status} is unknown")
     if "PENDING" in block or "PENDING_CALIBRATION" in block:
         raise StartupContractError("REG2_PENDING_FIELD", "REG-2 numeric block still contains pending fields")
     g_match = re.search(r"^\s*g\s*=\s*([0-9.]+)\s*$", block, re.MULTILINE)
@@ -153,7 +160,6 @@ def parse_reg2_numeric_block(text: str) -> tuple[ContractBModel, Path, dict[str,
         Path(path_match.group(1)),
         digest_pairs,
     )
-
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8-sig") as f:
@@ -506,13 +512,27 @@ def fit_cut(points: Sequence[Mapping[str, object]], residual_key: str = "r_v_mps
     }
 
 
-def points_for_line(slope: float, intercept: float = 0.0, ages: Sequence[float] = (0.0, 0.06, 0.16, 0.24, 0.32)) -> list[dict[str, float]]:
-    return [{"age_s": float(a), "r_v_mps": float(intercept + slope * a)} for a in ages]
+def points_for_line(slope: float, intercept: float = 0.0, ages: Sequence[float] = (0.0, 0.06, 0.16, 0.24, 0.32)) -> list[dict[str, object]]:
+    return [
+        {"event_key": f"evt_{idx:02d}", "age_s": float(a), "r_v_mps": float(intercept + slope * a)}
+        for idx, a in enumerate(ages)
+    ]
 
 
 def rms(values: Iterable[float]) -> float:
     vals = [float(v) for v in values]
     return math.sqrt(sum(v * v for v in vals) / len(vals)) if vals else 0.0
+
+
+def _point_event_key(point: Mapping[str, object], index: int) -> str:
+    return str(point.get("event_key") or point.get("row_key") or f"idx_{index:04d}")
+
+
+def _key_points(points: Sequence[Mapping[str, object]]) -> dict[str, Mapping[str, object]]:
+    keyed: dict[str, Mapping[str, object]] = {}
+    for index, point in enumerate(points):
+        keyed[_point_event_key(point, index)] = point
+    return keyed
 
 
 def evaluate_cut_records(records: Sequence[Mapping[str, object]], *, input_validity_ok: bool = True) -> dict[str, object]:
@@ -521,13 +541,33 @@ def evaluate_cut_records(records: Sequence[Mapping[str, object]], *, input_valid
     for rec in records:
         aid = str(rec["approach_id"])
         cid = str(rec["cut_id"])
-        before_fit = fit_cut(rec.get("before_points", []), "r_v_mps")
+        before_points = list(rec.get("before_points", []))
+        after_points_raw = rec.get("after_points")
+        after_points = list(after_points_raw or [])
         after_exit = str(rec.get("after_exit_reason", "") or "")
-        after_points = rec.get("after_points")
-        after_fit = fit_cut(after_points or [], "r_v_mps") if after_points is not None and not after_exit else {"estimable": False, "exit_reason": after_exit or "ABSENT_INPUT"}
-        paired = bool(before_fit.get("estimable") and after_fit.get("estimable") and not after_exit)
         if after_exit and after_exit not in EXIT_REASONS:
             raise ValueError(f"unregistered exit reason {after_exit}")
+
+        before_by_key = _key_points(before_points)
+        after_by_key = _key_points(after_points)
+        E_B = set(before_by_key)
+        E_A = set(after_by_key) if after_points_raw is not None and not after_exit else set()
+        E_P = E_B & E_A
+
+        before_descriptor_fit = fit_cut(before_points, "r_v_mps")
+        if after_points_raw is not None and not after_exit:
+            paired_before_points = [before_by_key[k] for k in sorted(E_P)]
+            paired_after_points = [after_by_key[k] for k in sorted(E_P)]
+            before_fit = fit_cut(paired_before_points, "r_v_mps")
+            after_fit = fit_cut(paired_after_points, "r_v_mps")
+            paired = bool(before_fit.get("estimable") and after_fit.get("estimable"))
+            if not paired and before_descriptor_fit.get("estimable"):
+                before_fit = before_descriptor_fit
+        else:
+            before_fit = before_descriptor_fit
+            after_fit = {"estimable": False, "exit_reason": after_exit or "ABSENT_INPUT"}
+            paired = False
+
         activity = rec.get("model_activity_rms_mps")
         if activity is None:
             corrections = rec.get("correction_terms_mps", [])
@@ -535,8 +575,13 @@ def evaluate_cut_records(records: Sequence[Mapping[str, object]], *, input_valid
         row = {
             "approach_id": aid,
             "cut_id": cid,
+            "E_B_count": len(E_B),
+            "E_A_count": len(E_A),
+            "E_P_count": len(E_P),
+            "paired_event_keys": ";".join(sorted(E_P)),
             "before_estimable": bool(before_fit.get("estimable")),
             "after_estimable": bool(after_fit.get("estimable")),
+            "before_descriptor_estimable": bool(before_descriptor_fit.get("estimable")),
             "paired_support": paired,
             "before_large": bool(before_fit.get("large_theil_sen")),
             "after_large": bool(after_fit.get("large_theil_sen")),
@@ -545,6 +590,7 @@ def evaluate_cut_records(records: Sequence[Mapping[str, object]], *, input_valid
             "near_zero_activity": float(activity) < QUIET_RMS_MPS,
             "b1_before_theil_sen_mps2": before_fit.get("b1_theil_sen_mps2", ""),
             "b1_before_ols_mps2": before_fit.get("b1_ols_mps2", ""),
+            "b1_before_descriptor_theil_sen_mps2": before_descriptor_fit.get("b1_theil_sen_mps2", ""),
             "b1_after_theil_sen_mps2": after_fit.get("b1_theil_sen_mps2", ""),
             "b1_after_ols_mps2": after_fit.get("b1_ols_mps2", ""),
             "boundary_disagreement_before": bool(before_fit.get("theil_sen_ols_boundary_disagreement")),
@@ -602,7 +648,6 @@ def evaluate_cut_records(records: Sequence[Mapping[str, object]], *, input_valid
     summary.update(decision)
     return summary
 
-
 def residual_admissibility_for_branch(branch: str) -> str:
     mapping = {
         "INVALID_INPUT": "INADMISSIBLE",
@@ -631,14 +676,14 @@ def resolve_decision(summary: Mapping[str, object]) -> dict[str, object]:
     if not input_ok:
         branch = "INVALID_INPUT"
         order = 1
-    elif B == 0:
-        branch = "NO_REGISTERED_REMAINDER_TO_EXPLAIN"
-        order = 2
     elif M_RESOLUTION > 0 or M_HARM > 0:
         branch = "HOLD_INCOMPLETE_INTERVENTION_SUPPORT"
-        order = 3
+        order = 2
     elif N:
         branch = "REFUTED_OR_HARMFUL_INTERVENTION"
+        order = 3
+    elif B == 0:
+        branch = "NO_REGISTERED_REMAINDER_TO_EXPLAIN"
         order = 4
     elif len(Q_ids) >= 2:
         branch = "REFUTED"
