@@ -56,6 +56,20 @@ UNIDENTIFIABLE candidates never enter the argmin.
      UNIQUE-timestamp samples, duplicates rejected, >= 4 unique
      points required;
   4. v_full_raw = -slope.
+  **EXACT-_slope_of CONTRACT (v2.2, channel-2 Blocker 3 —
+  resolving the span-gate mismatch by choosing exactness): the
+  reconstruction contains NO condition _slope_of does not. The
+  0.15 s span gate some implementations added is REMOVED from the
+  reconstructed quantity — _slope_of has no span condition; the
+  only absence rule is robust_slope's own >= 4 unique timestamps
+  (plus fresh-tail truncation). The oracle's min_span_s maturity
+  predicate is a SEPARATE readiness concept, not part of the rate
+  value, and may not be smuggled into it. Battery member (v),
+  required: a series with 4 unique timestamps spanning LESS than
+  0.15 s — BOTH legs produce equal VALUES (not ABSENT), asserting
+  by execution that no extra gate exists. It cannot be called the
+  exact _slope_of algorithm and silently contain a condition
+  _slope_of does not.**
   Rows failing the minimums are ABSENT_RESPONSE (typed), never
   zero-filled. **The v1 description ("prior 0.50 s window") was
   NOT the runtime computation — the registration author copied the
@@ -114,35 +128,72 @@ UNIDENTIFIABLE candidates never enter the argmin.
      No burn-in inside calibration windows — the transient IS the
      signal. (The intervention's burn-in rule, Section 3, is
      unchanged.)
-- **OBJECTIVE**: sum of squared (v_meas[k] - v_hat[k]) over valid
-  rows of qualifying windows, equal weight per row; window count
-  and per-window rows published. Alignment/dedup rules unchanged
-  from v1 (accepted): feature_ts_ns to tick grid, nearest tick,
-  max one-tick mismatch listed; duplicate frame broadcasts dedup
-  to first.
+- **OBJECTIVE — ONE COMMON ROW SET (v2.2, channel-2 on R67-68
+  Blocker 1: raw SSE across candidate-dependent row sets is
+  INADMISSIBLE — a larger L could win merely by summing fewer
+  residuals):** every candidate is scored on the SAME support —
+  all valid rows of every qualifying window. Pre-lag rows are
+  PREDICTED, never discarded: for relative_tick < L the model
+  prediction uses the registered pre-event reference (as the
+  predict path already defines). Loss = sum of squared
+  (v_meas[k] - v_hat[k]) over that common set, equal weight per
+  row; window count and per-window rows published.
+  Alignment/dedup rules unchanged from v1 (accepted):
+  feature_ts_ns to tick grid, nearest tick, max one-tick mismatch
+  listed; duplicate frame broadcasts dedup to first.
 - **NULL-MODEL SCORE**: the g = 0 row is in the domain; every
   calibration publishes it explicitly beside the winner.
 
 ## 2c. Identifiability gating (v2 — a lookup minimum is not an identified model)
 
-Per candidate, per qualifying-window set:
+Per candidate, per qualifying-window set (v2.2 — the horizon is
+measured AFTER the lag, channel-2 Blocker 1.2):
 
-- L is ELIGIBLE only if valid rows beyond L * dt number >= 8.
-- tau is ELIGIBLE only if the observed excited post-step horizon
-  >= tau (at least one time constant observed).
-- Ineligible candidates are typed UNIDENTIFIABLE, listed, and
-  EXCLUDED from the argmin — a tie-break may never select them.
+- L is ELIGIBLE only if valid rows with relative_tick >= L number
+  >= 8 (identifiability is post-lag support; scoring support is
+  the common set above — the two are DIFFERENT sets and never
+  conflated).
+- tau is ELIGIBLE only if the POST-LAG excited horizon
+  max((relative_tick - L) * dt) >= tau — time observed after the
+  candidate's own lag, never from the event (a 50-tick window
+  with L = 25 observes 0.48 s, not 0.98 s).
+- Ineligible candidates are typed UNIDENTIFIABLE, listed with the
+  failing rule, and EXCLUDED from the argmin — a tie-break may
+  never select them.
 - If the argmin over eligible candidates lies on an OPEN face of
   the eligible domain (any face whose beyond-side is excluded by
-  eligibility or by the domain edge, except g = 0 which is now
-  interior-includable), calibration_status = NOT_IDENTIFIED.
-- An argmin AT g = 0 exactly is a RESULT: NULL_CALIBRATED — the
-  identified legacy contribution is zero; it feeds the mechanism
-  table honestly (a mechanism whose modeled contribution is null
-  predicts no resolution — the table's R = 0 branch will say so).
+  eligibility or by the domain edge), calibration_status =
+  NOT_IDENTIFIED.
+- **NULL_CALIBRATED (v2.2 — never from one first-winning cell,
+  channel-2 Blocker 2; at g = 0 tau and L are nuisance parameters
+  and the prediction is identically zero, so on the common
+  support all g = 0 cells share ONE loss, the null loss):**
+  NULL_CALIBRATED requires ALL of:
+  1. every compared candidate scored on the registered common
+     support;
+  2. null loss strictly better than EVERY g > 0 eligible
+     candidate's loss beyond the registered tolerance
+     NULL_TIE_REL_TOL = 1e-9 (relative to the larger loss);
+  3. no g > 0 candidate attains the global minimum.
+  A g > 0 candidate tying the null within tolerance, or beating
+  it, removes NULL_CALIBRATED: the status is then decided by the
+  positive-gain winner's own closed-face check (CALIBRATED or
+  NOT_IDENTIFIED). g = 0 receives NO exemption from this
+  comparison — the gain direction toward positive contribution
+  must be genuinely closed by the loss ordering, not by walking
+  order.
 - calibration_status in {UNCALIBRATABLE, NOT_IDENTIFIED} =>
   NO ADJUDICATIVE REG-2. The prior-tick/zero-lag fallback remains
   DIAGNOSTIC ONLY and can never fill REG-2 or support the judge.
+- **REQUIRED SOURCE FIXTURES for this section (executed before
+  the A091 run):** (s1) a large-lag candidate with >= 8 post-lag
+  rows but post-lag horizon < tau -> UNIDENTIFIABLE with
+  HORIZON_LT_TAU on the corrected measure; (s2) a synthetic case
+  where candidate-specific row censoring would select the WRONG
+  lag while common-support scoring selects the right one —
+  asserting the objective contract bites; (s3) a null tie: a
+  g > 0 candidate equal to the null within tolerance ->
+  NOT_IDENTIFIED, never NULL_CALIBRATED.
 
 ## 2d. Command-direction applicability (v2)
 
