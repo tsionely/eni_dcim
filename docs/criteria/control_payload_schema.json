@@ -1,0 +1,76 @@
+{
+  "byte_contract": "UTF-8, LF, two-space indent, sorted keys",
+  "fields": [
+    {
+      "law": "finite-only; NaN/Inf refusal; -0.0 -> +0.0; big-endian IEEE-754 canonical bytes",
+      "path": "setpoint.v_body[2]",
+      "type": "float64"
+    },
+    {
+      "enum": [
+        "align",
+        "approach",
+        "commit",
+        "hover",
+        "recover",
+        "retreat",
+        "search",
+        "takeoff"
+      ],
+      "path": "planner_phase",
+      "type": "str",
+      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+    },
+    {
+      "enum": [
+        "LEGACY",
+        "TERM",
+        "MIXED_SPLIT"
+      ],
+      "path": "term_owner_state",
+      "type": "str",
+      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+    },
+    {
+      "enum": [
+        "setpoint.v_body[2]",
+        "term_channel"
+      ],
+      "path": "arbiter_vertical_source",
+      "type": "str",
+      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+    },
+    {
+      "law": "same float law",
+      "path": "adapter_input_v_body_z",
+      "type": "float64"
+    },
+    {
+      "law": "same float law",
+      "path": "post_limit_command_v_body_z",
+      "type": "float64"
+    },
+    {
+      "enum": [
+        "not_clipped",
+        "clipped"
+      ],
+      "path": "clip_status",
+      "type": "str",
+      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+    },
+    {
+      "law": "same float law; frame/sign input",
+      "path": "level_pitch_rad",
+      "type": "float64"
+    },
+    {
+      "law": "same float law; frame/sign input",
+      "path": "level_roll_rad",
+      "type": "float64"
+    }
+  ],
+  "missing_field": "typed ABSENT; mixed presence within a class = inconsistency",
+  "note": "Conflict adjudication reads EXACTLY these fields; record fields outside this schema are ignored for conflict purposes.",
+  "schema_id": "control_payload_schema_v1"
+}

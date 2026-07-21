@@ -45,13 +45,18 @@ UNIDENTIFIABLE candidates never enter the argmin.
 - **Source**: the A091 physical episode (20260719T201851),
   command-step intervals selected by the deterministic detector.
   Calibration intervals DISJOINT from the A091 sentinel interval.
-  **SOURCE-LOG BINDING (v2.6.3, channel-2 order A6): the packet
-  binds source_log_paths + source_log_sha256 per file as STARTUP
-  inputs (like the sentinel binding); the registered selector is
-  DETERMINISTIC and PRE-RESULT: ALL control and feature records
-  of flight_id 20260719T201851-50f9dcc8 in the committed
-  recording — no sub-selection, no file chosen after seeing
-  contents.**
+  **SOURCE-LOG BINDING (v2.6.3; COMMIT-BOUND v2.6.4, channel-2 on
+  R84-85 §4.1 — caller-chosen paths with digests identify bytes
+  but never prove completeness):** the packet binds
+  source_log_criterion_commit <= source_log_evidence_commit <=
+  execution_tip (ancestry); the PATH LIST is frozen as EVERY file
+  under the committed recording directory of flight_id
+  20260719T201851-50f9dcc8 at the evidence commit, ordered
+  lexicographically by repository-relative path (the
+  deterministic repository-wide selector — the caller chooses
+  nothing); digest(evidence_commit:path) ==
+  digest(execution_tip:path) per file, all published. ALL control
+  and feature records within those files — no sub-selection.**
 - **MEASURED RESPONSE (v2.1 — registered from the CODE, not from
   the v1 artifact's description; amended pre-calibration, REG-2(v2)
   still empty):** the registered source is the EXACT runtime
@@ -469,18 +474,17 @@ DETECTED and listed, whether or not fitted.
 
    **CONTROL PRIMARY ID AND PAYLOAD (v2.6.1, channel-2 §7):**
    control primary ID = (flight_id, control_segment_id,
-   control_mono_ns). CONTROL RELEVANT PAYLOAD, frozen ordered
-   list (EXPANDED v2.6.3, channel-2 H2 — any field that changes
-   owner, source, frame, clipping, or correction semantics
-   participates in conflict adjudication; identical setpoints
-   with contradictory physical stories may never be selected by
-   order): (setpoint.v_body[2], planner_phase,
-   vertical_owner_state, arbiter_selected_source, adapter_input,
-   post_limit_command, clip_status, and every frame/sign field
-   on the record — floats under the one float law: finite-only,
-   NaN/Inf -> parse refusal, -0.0 normalized to +0.0; strings
-   under strict closed-set parsing; missing -> typed ABSENT, and
-   mixed presence within a class is an inconsistency). Duplicate control primary ID with
+   control_mono_ns). CONTROL RELEVANT PAYLOAD (v2.6.3; CLOSED MACHINE SCHEMA
+   v2.6.4, channel-2 §4.2 — "every frame/sign field" was an open
+   universe): the payload is EXACTLY the fields, types, and
+   closed enums of the committed schema artifact
+   docs/criteria/control_payload_schema.json (same byte contract
+   as the profile config; digest walked with the criterion). Any
+   record field outside the schema is ignored for conflict
+   purposes; any schema field missing/unknown-valued follows the
+   schema's typed disposition; floats under the one float law;
+   strings under strict closed-set parsing; missing -> typed
+   ABSENT, mixed presence within a class = inconsistency. Duplicate control primary ID with
    inconsistent payload -> CONTROL_IDENTITY_CONFLICT, the ENTIRE
    control-identity class excluded and listed.
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
@@ -693,9 +697,16 @@ DETECTED and listed, whether or not fitted.
    (s40) input: support reasons empty + model reason
    INSUFFICIENT_PRIMARY_WINDOWS -> expected:
    NO_ARM_MALFORMED_PACKET.
-   (s41) input: support reasons nonempty + model
-   UNCALIBRATABLE(PROVENANCE_FAILURE) -> expected:
-   NO_ARM_NONCOLLECTION_FAILURE, never armed.
+   (s41) REDEFINED (v2.6.4 — the v2.6.3 case was unreachable:
+   PROVENANCE_FAILURE is instrument-axis and executes at branch
+   1): input: support reasons nonempty + model
+   UNCALIBRATABLE("reason_zzz_unregistered") -> expected:
+   NO_ARM_NONCOLLECTION_FAILURE at branch 3 (unknown codes fail
+   closed). Companion (s41b): instrument FAIL
+   (PROVENANCE_FAILURE) + any support state -> expected: branch 1
+   NO_ARM_INSTRUMENT_REPAIR; and a packet claiming instrument
+   PASS while carrying an instrument-axis reason -> branch 2
+   NO_ARM_MALFORMED_PACKET.
    (s42) input: profile config bytes differing from the
    registered table in one tick value -> expected:
    profile-digest mismatch, Gate-3 refusal.
@@ -719,6 +730,15 @@ DETECTED and listed, whether or not fitted.
    (s48) input: the float 1.0 serialized under both endian
    conventions -> expected: exactly one accepted canonical form
    (big-endian IEEE-754 hex), the other refused.
+   (s49) input: an evaluator omitting predicate 3 and
+   self-reporting registered_predicates_n = 2 == evaluated 2 ->
+   expected: NO_ARM_MALFORMED_PACKET — the registered count is
+   DERIVED from the frozen ID set, never accepted from the
+   producer.
+   (s50) input: P5 command sequence +0.30 followed by -0.30
+   (error sign flip) -> expected: the slew limiter caps the
+   per-tick change at 0.15; the raw 0.60 swing is UNREPRESENTABLE
+   in the commanded stream; no detector event exists.
    **RERUN RULE (v2.6): the prior 21/21 + 18/18 greens are valid
    HISTORY of the cases they executed under their v2.3-bound
    source — never summed into final-contract coverage. One

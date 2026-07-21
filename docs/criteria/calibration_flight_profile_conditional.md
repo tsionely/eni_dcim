@@ -65,8 +65,15 @@ walked by both channels:
         COMPUTED-COMPLETENESS ATTESTATION (v3.1, channel-1 on
         ADVISORY-31 — empty-by-failure must never read as
         empty-by-adequacy): the packet asserts
-        predicates_evaluated_n == registered_predicates_n beside
-        the set, with per-predicate evaluated flags; an empty set
+        predicates_evaluated_n == registered_predicates_n, where
+        registered_predicates_n = 3 is DERIVED from the frozen
+        registry registered_predicate_ids =
+        {INSUFFICIENT_PRIMARY_WINDOWS,
+        INSUFFICIENT_COMMON_SUPPORT_ROWS,
+        NO_ELIGIBLE_POSITIVE_COMPARATOR_DUE_TO_SUPPORT_HORIZON}
+        — never accepted from the result producer (v3.2,
+        channel-2 §5; fixture s49) — with one evaluated flag and
+        result PER exact ID; an empty set
         WITHOUT that attestation is NO_ARM_MALFORMED_PACKET at
         arming branch 2, never adequacy. An empty set is never
         adequacy evidence unless its emptiness is attested — the
@@ -106,9 +113,30 @@ walked by both channels:
         NO_ELIGIBLE_POSITIVE_COMPARATOR_DUE_TO_SUPPORT_HORIZON
             pairs with: UNCALIBRATABLE_NO_POSITIVE_COMPARATOR
             only.
-    A model support-class reason (e.g. INSUFFICIENT_ROWS
-    variants) maps by THIS matrix alone — an implementation
-    never decides membership by string resemblance.
+    **ADEQUATE ROW (v3.2, channel-2 §6.1):** support reasons
+    empty (attested) pairs with: CALIBRATED, NULL_CALIBRATED,
+    NOT_IDENTIFIED — and NOTHING else; a support-class
+    UNCALIBRATABLE reason beside an empty support set, or any
+    UNCALIBRATABLE beside attested-adequate support, is
+    NO_ARM_MALFORMED_PACKET.
+    **MULTI-REASON COMPOSITION (§6.2):** the model reason field
+    is SET-VALUED (reason_set); compatibility requires EVERY
+    support reason to have its matrix counterpart present and
+    EVERY model reason to have its support counterpart —
+    intersection semantics, both directions; the 1-window/13-row
+    hostile carries both pairs.
+    **CLOSED ENUMS (§6.3):** support-class model reasons =
+    {INSUFFICIENT_PRIMARY_WINDOWS,
+    INSUFFICIENT_VALID_RESPONSE_ROWS,
+    NO_POSITIVE_COMPARATOR_SUPPORT_HORIZON}; non-support model
+    reasons = exactly the instrument-axis enum (which executes at
+    branch 1, never branch 3); ANY other string ->
+    NO_ARM_MALFORMED_PACKET or branch-3 fail-closed per s41 —
+    "every other string is non-support" is dead; unknown is
+    MALFORMED, never reclassified.
+    A model support-class reason maps by THIS matrix alone — an
+    implementation never decides membership by string
+    resemblance.
 
 ARMING RULE (v3 — TOP-DOWN, first match wins, channel-2 §9:
 the v2 general rule and the UNCALIBRATABLE allowlist conflicted
@@ -211,10 +239,18 @@ history disclosed.
                           0.10 -> 0.0; per-tick update; missing
                           altitude sample -> hold previous
                           command, count it; 5 consecutive
-                          missing -> SCRIPT TERMINATES. Command
-                          magnitude <= 0.30 < 0.35 and every
-                          single-tick change < 0.35: P5 can
-                          never mint a detector window.
+                          missing -> SCRIPT TERMINATES. **SLEW LIMIT (v3.2,
+                          channel-2 §7 — the v3.1 inference was
+                          FALSE: clamp output can swing +0.30 ->
+                          -0.30 = 0.60 on an error sign flip;
+                          ledger entry R86): after the clamp,
+                          |v_cmd[i] - v_cmd[i-1]| <= 0.15 per
+                          tick, enforced in the law itself.**
+                          With magnitude <= 0.30 AND per-tick
+                          change <= 0.15 < 0.35, no P5
+                          transition can qualify as a detector
+                          event — now BY THE REGISTERED LAW, not
+                          by inference (fixture s50).
                           SUCCESS: |e_alt| <= 0.15 for 10
                           consecutive ticks AND reference at
                           0.0. Altitude source: the shipped
@@ -235,14 +271,23 @@ history disclosed.
       ingests under Section 4 like any data; the primitive
       count records how far the script got.** NO in-flight
       retry, ever.
-      P0 PREDICATE (v3.1, H11 — every primitive, including the
-      FIRST, begins from the same registered state): reference
-      at 0.0 AND |e_alt| <= 0.15 for 10 consecutive ticks AND
-      forward range in [4.0, 4.5] m; P0 not achieved within 200
-      ticks -> SCRIPT TERMINATES (never a primitive from an
-      unverified state).
+      P0A — ALTITUDE-REFERENCE ACQUISITION (v3.2, channel-2 §8
+      — the v3.1 P0 was circular: e_alt needed alt_ref, and P0
+      created it): executed ONCE, before primitive 1: collect 25
+      consecutive VALID altitude samples (validity per the
+      binding artifact) whose spread (max - min) <= 0.10 m;
+      alt_ref = their median, IMMUTABLE for the whole script
+      (never re-latched between primitives); acquisition not
+      achieved within 300 ticks -> SCRIPT NEVER STARTS.
+      P0B — START-STATE VERIFICATION (every primitive, including
+      the first): reference at 0.0 AND |alt - alt_ref| <= 0.15
+      for 10 consecutive ticks AND forward range in [4.0, 4.5]
+      m; not achieved within 200 ticks -> SCRIPT TERMINATES
+      (never a primitive from an unverified state).
       max total duration  = 120 s wall clock, hard abort after
-      max vertical excursion = +/- 1.5 m about band center ->
+      max vertical excursion (v3.2 — typed against ALTITUDE,
+      channel-2 §9; "band center" is a forward-range number and
+      never an altitude reference): |alt - alt_ref| > 1.5 m ->
                           hard abort (script terminates, standard
                           recovery/landing; partial data ingests
                           under Section 4 like any data)
@@ -295,8 +340,17 @@ history disclosed.
   LF newlines, two-space indent, sorted keys, decimal numbers —
   and the digest is the SHA-256 of its COMMITTED BYTES (git
   show at the governing commit). Gate 3 compares THAT digest;
-  any drift is a refusal. The config binds the exact field
-  names for altitude and range sources at Gate-3 walk.**
+  any drift is a refusal. **FIELD-BINDING ARCHITECTURE = OPTION B (v3.2, channel-2 §10):
+  the profile-law JSON stays IMMUTABLE; the exact
+  altitude/range source fields land in a SEPARATE Gate-3
+  binding artifact with its own schema, ancestry, digest, and
+  both-channel walk; the flight-ingestion generator must descend
+  from that binding before reading flight data. GATE-3
+  COMPLETENESS (channel-1 on R84-85, beside identity): at
+  arming, the EFFECTIVE config (profile-law JSON + binding
+  artifact) contains ZERO PENDING markers — any pending marker
+  is a typed Gate-3 refusal; identity (digest match) and
+  completeness (no pending) are TWO checks, both mandatory.**
 - **Implementation**: the scripted profile is an ISOLATED planner
   mode — off by default, config-gated, zero changes to the race
   path, TERM disabled. It is flight-adjacent code and therefore
