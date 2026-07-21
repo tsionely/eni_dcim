@@ -32,8 +32,12 @@ non-identification, cited, not the 23):**
     L   : 0, 1, ..., 25 ticks
 
 Iteration order L-outer/tau/g-inner ascending; IEEE-754 float64
-strict less-than; FIRST-wins tie-break; all candidate scores
-published. Candidates are ELIGIBILITY-GATED per Section 2c —
+strict less-than for the RAW ARGMIN COMPUTATION ONLY — the
+argmin is a numeric scan; STATUS and minimizer-set membership are
+decided by the registered loss_equal relation, and FIRST-wins
+selects nothing but the DISPLAY representative, chosen only after
+the full equivalence class is published (v2.6.2); all candidate
+scores published. Candidates are ELIGIBILITY-GATED per Section 2c —
 UNIDENTIFIABLE candidates never enter the argmin.
 
 ## 2. Calibration source and detector (v2)
@@ -149,9 +153,15 @@ UNIDENTIFIABLE candidates never enter the argmin.
   digest whose input bytes are unregistered is not reproducible):**
   every candidate row also publishes scoring_support_sha256.
 
-      SCORING KEY (fixed types, one per objective row):
+      SCORING KEY (fixed types, one per objective row;
+      CONTROL IDENTITY v2.6.2 — assigned_control_tick was an
+      undefined post-bridge field; support identity uses the
+      REGISTERED control identity):
           (window_id: str, flight_id: str, feature_ts_ns: int,
-           assigned_control_tick: int)
+           assigned_control_segment_id: int,
+           assigned_control_mono_ns: int)
+      A logged tick number may be PUBLISHED as a descriptor but
+      never carries support identity.
       CANONICAL window_id (v2.6; SEGMENT-QUALIFIED v2.6.1 — the
       v2.6 form collided across clock resets reusing the same
       mono_ns):
@@ -165,25 +175,27 @@ UNIDENTIFIABLE candidates never enter the argmin.
       No scoring key may repeat after canonical normalization:
       a duplicate is a HARD STOP, never a silent set conversion
       (duplicate_scoring_key_count published, must equal 0).
-      SERIALIZATION (v2.6; BYTE-UNIQUE v2.6.1 — JSON permits
-      "A/B" and "A\/B" for one value; an escape-ambiguous encoder
-      is two truths): the actual field VALUES as a JSON array
+      SERIALIZATION (v2.6; BYTE-UNIQUE v2.6.1; ALPHABET AND
+      TUPLE FIXED v2.6.2 — the v2.6.1 sentence confused slash
+      with pipe, a nonsense clause inside a byte contract; ledger
+      entry R83): the actual field VALUES as a JSON array
       [window_id, flight_id, feature_ts_ns,
-      assigned_control_tick]. STRING ALPHABET, restricted:
-      ASCII 0x20-0x7E EXCLUDING double-quote (0x22), backslash
-      (0x5C), and forward-slash (0x2F is permitted ONLY in the
-      window_id separator role as the literal pipe '|' is used —
-      concretely: permitted characters are A-Z a-z 0-9 and
-      "_-|.:+" — any other character -> ledger-construction
-      refusal). NO escape sequences exist by construction; a
-      serializer emitting any backslash fails. Integers decimal
-      only — no floats, no null, no NaN, no string coercion;
-      UTF-8 (pure ASCII by the alphabet rule); separators (","
-      and ":") with no optional whitespace; records sorted by
-      the TYPED tuple (string, string, int, int) with string
-      order = ASCII BYTE order; exactly one LF after EVERY
-      record including the final. scoring_support_sha256 =
-      SHA-256 of that byte stream. **THIS BLOCK is the
+      assigned_control_segment_id, assigned_control_mono_ns].
+      STRING ALPHABET, the clean rule: permitted characters are
+      EXACTLY A-Z, a-z, 0-9, underscore, hyphen, pipe (0x7C),
+      period, colon, plus — nothing else: no quote, no
+      backslash, no slash, no space; any other character ->
+      ledger-construction refusal. NO escape sequences exist by
+      construction; a serializer emitting any backslash fails.
+      Integers decimal only — no floats, no null, no NaN, no
+      string coercion; UTF-8 (pure ASCII by the alphabet rule);
+      separators ("," and ":") with no optional whitespace;
+      records sorted by the TYPED tuple (string, string, int,
+      int, int) with string order = ASCII BYTE order; exactly
+      one LF after EVERY record including the final.
+      scoring_support_sha256 = SHA-256 of that byte stream.
+      key_encoder_id = REG1_KEY_ENCODER_V1, carried in the
+      packet. **THIS BLOCK is the
       registered KEY-SERIALIZATION CONTRACT — the sentinel
       keyset uses THIS encoder verbatim on [flight_id,
       feature_ts_ns] (the earlier "2f.9 value rules"
@@ -257,7 +269,9 @@ measured AFTER the lag, channel-2 Blocker 1.2):
 - **POSITIVE-G MULTIPLE-MINIMIZER RULE (v2.3, §7.10 — first-wins
   is reproducibility, never identification):** the artifact
   publishes global_minimizer_count, every global-minimizer
-  coordinate (ties within NULL_TIE_REL_TOL), and a
+  coordinate — membership decided by the ONE registered
+  loss_equal relation (v2.6.2; the earlier relative-only "within
+  NULL_TIE_REL_TOL" wording is dead) — and a
   prediction-equivalence status. Distinct positive-g minimizers
   => NOT_IDENTIFIED, unless a PRE-REGISTERED equivalence-class
   rule proves their intervention contribution identical on every
@@ -328,13 +342,19 @@ measured AFTER the lag, channel-2 Blocker 1.2):
   only AFTER the full equivalence class is published); and
   prediction-equivalence testing. The tri-state epsilon above IS
   this function's bound applied to the gap.
-  A g > 0 candidate tying the null within tolerance, or beating
-  it, removes NULL_CALIBRATED: the status is then decided by the
-  positive-gain winner's own closed-face check (CALIBRATED or
-  NOT_IDENTIFIED). g = 0 receives NO exemption from this
-  comparison — the gain direction toward positive contribution
-  must be genuinely closed by the loss ordering, not by walking
-  order.
+  [VOID_SUPERSEDED_BY_V2_6_2: the sentence that stood here sent
+  a null/positive TIE to the positive winner's closed-face path
+  — contradicting the tri-state table, under which TIE is
+  TERMINAL NOT_IDENTIFIED for this calibration. The exclusive
+  decision: no eligible positive comparator ->
+  UNCALIBRATABLE_NO_POSITIVE_COMPARATOR; NULL_STRICTLY_BETTER ->
+  evaluate NULL_CALIBRATED requirements;
+  TIE -> NOT_IDENTIFIED, terminal; POSITIVE_STRICTLY_BETTER ->
+  construct the complete positive loss_equal equivalence class;
+  more than one non-equivalent positive minimizer ->
+  NOT_IDENTIFIED; exactly one prediction-equivalence class ->
+  the local positive-g face rule. A POSITIVE-BETTER outcome never
+  rescues a tie; walking order never decides anything.]
 - calibration_status in {UNCALIBRATABLE, NOT_IDENTIFIED} =>
   NO ADJUDICATIVE REG-2. The prior-tick/zero-lag fallback remains
   DIAGNOSTIC ONLY and can never fill REG-2 or support the judge.
@@ -373,21 +393,21 @@ DETECTED and listed, whether or not fitted.
    promised never-later; ledger entry R78):** feature_ts_ns is
    canonical for certified exposures; a missing exposure time is
    ABSENT (typed) and may NEVER be synthesized from control time
-   or tick index. THE RULE IS THE CAUSAL FLOOR:
-
-       assigned_control_tick = the LATEST registered control tick
-                               whose timestamp <= feature_ts_ns
-       signed_mismatch_ns    = feature_ts_ns
-                               - assigned_control_tick_time_ns
-       required: 0 <= signed_mismatch_ns <= one control period
-       no prior control tick          -> OFF_WINDOW (typed)
-       mismatch > one control period  -> OFF_WINDOW (typed)
-
-   No future control value can leak into an exposure-aligned row,
-   and no equidistant special case exists. The fitted row is
-   labeled by the assigned CONTROL tick; the exposure time is
-   preserved in the ledger; signed mismatch published per row.
-   The mismatch LEDGER is mandatory.
+   or tick index.
+   [VOID_SUPERSEDED_BY_V2_6_1 (v2.6.2, channel-2 on R81 §2): the
+   formula that stood here compared feature_ts_ns (EPOCH) to the
+   control timeline — the exact cross-domain inequality the
+   clock bridge below outlaws. The ONLY executable join is the
+   CONTROL TIMELINE block below: entirely monotonic,
+   feature_record_mono_ns against control mono_ns, within flight
+   and segment. A correct amendment does not supersede an
+   incompatible sentence merely by appearing later in the file —
+   the incompatible sentence is dead, by name, here.]
+   The causal-floor PRINCIPLE stands: no future control value
+   ever leaks into an exposure-aligned row; no equidistant case
+   exists; the fitted row is labeled by the assigned control row;
+   the exposure identity time is preserved in the ledger; the
+   signed-mismatch LEDGER is mandatory.
    **CONTROL TIMELINE (v2.6; CLOCK BRIDGE v2.6.1 — the v2.6 join
    compared EPOCH feature_ts_ns against MONOTONIC setpoint
    mono_ns, two different clocks ~1.78e9 seconds apart on the
@@ -405,11 +425,22 @@ DETECTED and listed, whether or not fitted.
    THE JOIN, entirely in the monotonic domain: control timestamp
    field = the replay-attached setpoint record's mono_ns;
    WITHIN-FLIGHT (partition flight_id), within SEGMENT.
-   **CONTROL_SEGMENT_ID (v2.6.1): segments are determined ON THE
-   COMMITTED SOURCE-LOG BYTES in record order — segment index
-   increments at each mono_ns decrease — BEFORE any sorting or
-   deduplication; committed record order is immutable data, CSV
-   reordering after the fact cannot move a reset boundary.**
+   **CONTROL_SEGMENT_ID (v2.6.1; RESET-VS-DISORDER v2.6.2 — a
+   mono_ns decrease alone does not distinguish a process-clock
+   reset from one out-of-order record; automatic-decrease
+   segmentation could invent a false segment at a late-written
+   row):** segmentation operates ONLY on the canonical CONTROL
+   stream (the replay-attached setpoint records), read from the
+   COMMITTED source-log bytes in record order, with the packet
+   binding: exact source-log path, source-log sha256, the
+   control-record class used, and source_record_index (the
+   committed ordinal, carried on every derived row so a
+   reordered downstream copy reconstructs identical segments —
+   fixture s37). Rules: a mono_ns decrease WITH an explicit
+   reset/process marker in the log -> new segment; a mono_ns
+   decrease WITHOUT that evidence -> CONTROL_ORDER_CONFLICT,
+   fail closed (never a silently invented segment); feature-row
+   ordering NEVER participates in reset detection.
    assigned control row = argmax(control_mono_ns) subject to same
    flight AND same segment AND control_mono_ns <=
    feature_record_mono_ns; accept only 0 <= mismatch <= one
@@ -453,13 +484,23 @@ DETECTED and listed, whether or not fitted.
    the ENTIRE conflict class excluded and listed
    (EXPOSURE_PAYLOAD_CONFLICT); any missing ID component ->
    ABSENT_EXPOSURE_KEY, excluded and listed.
-   **RELEVANT PAYLOAD, FROZEN (v2.6 — the field list is never
-   chosen after seeing which rows conflict):**
-       e_meas_m        : float64, exact byte equality after
-                         canonical parse
+   **RELEVANT PAYLOAD, FROZEN (v2.6; v2.6.2 — the v2.6 list
+   omitted the feature record's OWN mono_ns, the entire clock
+   bridge: two "exact duplicates" could join different control
+   commands by file order without a conflict; ledger entry R83):**
+       feature_record_mono_ns : int, exact equality — same
+                         primary ID with different mono_ns ->
+                         EXPOSURE_CLOCK_CONFLICT, entire class
+                         excluded
+       e_meas_m        : float64
        certified_full  : the parsed tri-state (2f.2)
-       range_z_m       : float64, exact byte equality, when
-                         present on the record
+       range_z_m       : float64, when present on the record
+       level_pitch_rad : float64 (body-to-world transform input)
+       level_roll_rad  : float64 (body-to-world transform input)
+   ONE FLOAT LAW for every payload field, exposure and control
+   alike (v2.6.2): finite-only parse; NaN/Inf -> refusal; -0.0
+   normalized to +0.0 before comparison; equality on the
+   canonical float64 bytes after normalization.
    A relevant field missing on SOME records of a class while
    present on others is a payload INCONSISTENCY (the class
    excludes); missing on ALL records is typed absence, not
@@ -502,10 +543,15 @@ DETECTED and listed, whether or not fitted.
        the registered canonical key schema (two incomparable
        encodings can produce a trivially empty intersection);
        intersection_count == 0.
-   **THE COMMON KEY SCHEMA, FROZEN (v2.6):** the primary exposure
-   identity (flight_id, feature_ts_ns), serialized per the 2f.9
-   value rules — never row_key, frame_id, or any
-   implementation label. sentinel_artifact_path is
+   **THE COMMON KEY SCHEMA, FROZEN (v2.6; REFERENCE FIXED
+   v2.6.2):** the primary exposure identity (flight_id,
+   feature_ts_ns), serialized by THE KEY-SERIALIZATION CONTRACT
+   named in the SCORING_SUPPORT_SHA256 block — the same encoder,
+   verbatim, carried in the packet as key_encoder_id =
+   REG1_KEY_ENCODER_V1 beside both keyset digests; no
+   section-number indirection (the "2f.9 value rules" pointer
+   that stood here was the fixture roster — stale, dead) — never
+   row_key, frame_id, or any implementation label. sentinel_artifact_path is
    REPOSITORY-RELATIVE and must be the same path at all three
    checked commits. Duplicate keys within EITHER set are a
    failure. Missing fields, an unresolvable commit, or a schema
@@ -732,8 +778,13 @@ evidence AGAINST the mechanism, not a knob.
 ## 4. NUMERIC BLOCK (REG-2 v2 — EMPTY by construction; BRANCH-TYPED v2.5, channel-2 order A: a NULL result has no identified tau/L and no three-dimensional profile box — serializing a first-listed nuisance coordinate would revive exactly what the collapsed null class prohibits)
 
     calibration_status = PENDING (must be CALIBRATED or
-                         NULL_CALIBRATED; UNCALIBRATABLE /
-                         NOT_IDENTIFIED cannot fill this block)
+                         NULL_CALIBRATED; UNCALIBRATABLE,
+                         UNCALIBRATABLE_NO_POSITIVE_COMPARATOR,
+                         and NOT_IDENTIFIED cannot fill this
+                         block — the no-comparator status is a
+                         first-class member of every closed enum
+                         and startup parser, never a child label
+                         of generic UNCALIBRATABLE)
     model_class        = PENDING (POSITIVE_GAIN | NULL_CONTRIBUTION)
 
     IF model_class = POSITIVE_GAIN (calibration_status CALIBRATED):
