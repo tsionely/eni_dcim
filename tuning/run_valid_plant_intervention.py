@@ -8,9 +8,10 @@ converting it to world-up with the adapter equation:
 
     v_up = -v_bz * cos(level_pitch) * cos(level_roll)
 
-The committed criterion requires a plant-stream validity pre-check before
-the intervention judge. A non-positive per-era correlation with the oracle
-reference motion marks the input INVALID-INPUT and stops before judge/decomp.
+The current criterion withdraws the earlier zero-lag correlation gate:
+setpoint.v_body[2] is Contract-B COMMANDED VELOCITY REFERENCE, so the judge
+uses a declared lag-aware response model and keeps the correlation table as
+diagnostic disclosure only.
 """
 from __future__ import annotations
 
@@ -28,6 +29,14 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0, str(ROOT / "tuning"))
+from run_shadow_residual_diagnostics import (  # noqa: E402
+    cluster_bootstrap_fast,
+    fit_release_fast,
+    loao_sensitivity_fast,
+)
+
 SOURCE_DIR = ROOT / "tuning" / "ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z"
 FEATURES_ARCHIVE = ROOT / "tuning" / "taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z" / "features_archive.csv"
 OUT_PREFIX = "valid-plant-intervention-DIAGNOSTIC"
@@ -35,12 +44,17 @@ LOCK_PATH = Path("C:/Temp/eni_dcim_sim.lock")
 
 CRITERION = ROOT / "docs" / "criteria" / "second_mechanism_refutation_thresholds.md"
 RESPONSE58 = ROOT / "docs" / "thinktank" / "RESPONSE58.md"
+RESPONSE61 = ROOT / "docs" / "thinktank" / "RESPONSE61.md"
+RESPONSE62 = ROOT / "docs" / "thinktank" / "RESPONSE62.md"
 
 COMPUTATION_COMMIT = "de19d881ce8fa0ddc27dd71d7306d0d366c43e90"
 CHECKPOINT_EVIDENCE_COMMIT = "c19602f384bc30b0a53d649238b429f9085b6b8f"
 NEAR_ZERO_RMS_MPS = 0.05
 LARGE_B1_MPS2 = 0.35
 AUTH_FULL = 0.999
+MIN_UNIQUE_AGES = 4
+MIN_CUT_ROWS = 4
+MIN_AGE_SPAN_S = 0.15
 
 CHECKPOINT_FILES = [
     SOURCE_DIR / "02_shadow_forced_withhold_samples.csv",
@@ -254,12 +268,16 @@ def packet(head: str, out_dir: Path, samples: list[dict[str, str]]) -> dict[str,
         "report_generator_commit": head,
         "criterion_commit": last_commit_for(CRITERION),
         "response58_commit": last_commit_for(RESPONSE58),
+        "response61_commit": last_commit_for(RESPONSE61),
+        "response62_commit": last_commit_for(RESPONSE62),
         "source_checkpoint_dir": SOURCE_DIR.relative_to(ROOT).as_posix(),
         "features_archive": FEATURES_ARCHIVE.relative_to(ROOT).as_posix(),
         "plant_signal": "flight.jsonl setpoint.<v_body|vel_body|velocity_body>[2] converted to world-up",
         "plant_formula": "v_up = -v_bz * cos(level_pitch) * cos(level_roll)",
+        "stream_contract": "Contract B: commanded velocity reference",
+        "response_model": "pure-delay commanded-reference response calibrated from A091; zero-lag sensitivity disclosed",
         "before_formula": "r_before = v_ref_oracle_mps - v_latch_true_mps",
-        "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + logged_setpoint_vz_up_mps)",
+        "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)",
         **inputs,
     }
 
@@ -272,6 +290,8 @@ def meta(p: dict[str, Any]) -> dict[str, Any]:
         "report_generator_commit": p["report_generator_commit"],
         "criterion_commit": p["criterion_commit"],
         "response58_commit": p["response58_commit"],
+        "response61_commit": p["response61_commit"],
+        "response62_commit": p["response62_commit"],
         "creation_time_utc": p["creation_time_utc"],
         "source_checkpoint_dir": p["source_checkpoint_dir"],
         "input_manifest_path": p["input_manifest_path"],
@@ -280,7 +300,7 @@ def meta(p: dict[str, Any]) -> dict[str, Any]:
 
 
 def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str, str], dict[str, str]],
-                   p: dict[str, Any]) -> list[dict[str, Any]]:
+                   p: dict[str, Any], response_lag_s: float = 0.0) -> list[dict[str, Any]]:
     setpoint_cache: dict[Path, list[dict[str, Any]]] = {}
     rows = []
     for row in samples:
@@ -293,14 +313,23 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
         sp = setpoint_at(setpoints, mono_ns)
         if sp is None:
             raise SystemExit(f"no setpoint at/before mono_ns={mono_ns} for {log_path}")
+        lagged_mono_ns = mono_ns - int(round(float(response_lag_s) * 1e9))
+        lagged_sp = setpoint_at(setpoints, lagged_mono_ns)
         level_pitch = float(feature.get("level_pitch_rad") or 0.0)
         level_roll = float(feature.get("level_roll_rad") or 0.0)
         logged_vz_up = convert_body_z_to_world_up(float(sp["v_body_z"]), level_pitch, level_roll)
+        delayed_vz_up = (
+            convert_body_z_to_world_up(float(lagged_sp["v_body_z"]), level_pitch, level_roll)
+            if lagged_sp is not None else None
+        )
         feature_vz_up = fnum(feature.get("setpoint_vz_up_mps"))
         v_ref = fnum(row.get("v_ref_oracle_mps"))
         v_latch = fnum(row.get("v_latch_true_mps"))
         r_before = v_ref - v_latch if v_ref is not None and v_latch is not None else ""
-        r_after = v_ref - (v_latch + logged_vz_up) if v_ref is not None and v_latch is not None else ""
+        r_after = (
+            v_ref - (v_latch + delayed_vz_up)
+            if v_ref is not None and v_latch is not None and delayed_vz_up is not None else ""
+        )
         rows.append({
             **row,
             "era": feature.get("era", ""),
@@ -315,6 +344,13 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
             "level_pitch_rad": level_pitch,
             "level_roll_rad": level_roll,
             "logged_setpoint_vz_up_mps": logged_vz_up,
+            "response_lag_s": response_lag_s,
+            "lagged_setpoint_mono_ns": lagged_sp["mono_ns"] if lagged_sp is not None else "",
+            "lagged_setpoint_age_s": (
+                (mono_ns - int(lagged_sp["mono_ns"])) / 1e9
+                if lagged_sp is not None else ""
+            ),
+            "delayed_logged_setpoint_vz_up_mps": delayed_vz_up if delayed_vz_up is not None else "",
             "features_archive_setpoint_vz_up_mps": feature_vz_up if feature_vz_up is not None else "",
             "features_archive_setpoint_diff_mps": (
                 logged_vz_up - feature_vz_up if feature_vz_up is not None else ""
@@ -322,7 +358,7 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
             "truth_vz_up_mps": feature.get("truth_vz_up_mps", ""),
             "plant_stream_derivation": p["plant_formula"],
             "r_before_mps": r_before,
-            "r_after_valid_plant_mps": r_after,
+            "r_after_contract_b_mps": r_after,
             "before_formula": p["before_formula"],
             "after_formula": p["after_formula"],
         })
@@ -335,23 +371,26 @@ def validity_precheck(p: dict[str, Any], rows: list[dict[str, Any]]) -> tuple[li
         exposure_key = (row["flight_id"], row["frame_id"], row["feature_ts_ns"])
         grouped[(row.get("era", ""), row.get("recording_regime", ""))][exposure_key] = row
     out = []
-    invalid = False
     for (era, regime), exposure_map in sorted(grouped.items()):
         uniq = list(exposure_map.values())
         plant = [fnum(r.get("logged_setpoint_vz_up_mps")) for r in uniq]
+        delayed = [fnum(r.get("delayed_logged_setpoint_vz_up_mps")) for r in uniq]
         oracle = [fnum(r.get("v_ref_oracle_mps")) for r in uniq]
         truth = [fnum(r.get("truth_vz_up_mps")) for r in uniq]
         plant_oracle = [(x, y) for x, y in zip(plant, oracle) if x is not None and y is not None]
+        delayed_oracle = [(x, y) for x, y in zip(delayed, oracle) if x is not None and y is not None]
         plant_truth = [(x, y) for x, y in zip(plant, truth) if x is not None and y is not None]
+        delayed_truth = [(x, y) for x, y in zip(delayed, truth) if x is not None and y is not None]
         c_oracle = corr([x for x, _ in plant_oracle], [y for _, y in plant_oracle])
+        c_delayed_oracle = corr([x for x, _ in delayed_oracle], [y for _, y in delayed_oracle])
         c_truth = corr([x for x, _ in plant_truth], [y for _, y in plant_truth])
+        c_delayed_truth = corr([x for x, _ in delayed_truth], [y for _, y in delayed_truth])
         if c_oracle is None:
-            status = "NOT_EVALUABLE_ZERO_VARIANCE_OR_N_LT_2"
+            status = "DIAGNOSTIC_NOT_EVALUABLE_ZERO_VARIANCE_OR_N_LT_2"
         elif c_oracle > 0.0:
-            status = "PASS_POSITIVE"
+            status = "DIAGNOSTIC_POSITIVE"
         else:
-            status = "INVALID_INPUT_NON_POSITIVE"
-            invalid = True
+            status = "DIAGNOSTIC_NON_POSITIVE_GATE_WITHDRAWN"
         out.append({
             **meta(p),
             "scope": "era_recording_regime_unique_exposures",
@@ -361,13 +400,86 @@ def validity_precheck(p: dict[str, Any], rows: list[dict[str, Any]]) -> tuple[li
             "plant_field_source": "flight.jsonl setpoint stream",
             "plant_world_up_formula": p["plant_formula"],
             "corr_logged_plant_vs_oracle_ref": c_oracle if c_oracle is not None else "",
+            "corr_delayed_logged_plant_vs_oracle_ref": c_delayed_oracle if c_delayed_oracle is not None else "",
             "corr_logged_plant_vs_truth_vz_up_diagnostic": c_truth if c_truth is not None else "",
-            "decision_column": "corr_logged_plant_vs_oracle_ref",
+            "corr_delayed_logged_plant_vs_truth_vz_up_diagnostic": c_delayed_truth if c_delayed_truth is not None else "",
+            "decision_column": "none",
             "decision_status": status,
-            "invalid_input": status == "INVALID_INPUT_NON_POSITIVE",
-            "judge_may_run_for_scope": status == "PASS_POSITIVE",
+            "invalid_input": False,
+            "judge_may_run_for_scope": True,
+            "criterion_note": "zero-lag positive-correlation gate withdrawn in RESPONSE61; table is diagnostic only",
         })
-    return out, not invalid
+    return out, True
+
+
+def lag_calibration_from_a091(p: dict[str, Any], rows: list[dict[str, Any]]) -> tuple[float, list[dict[str, Any]]]:
+    exposure_rows: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in rows:
+        if row.get("cluster_id") == "20260719T201851-50f9dcc8:A1":
+            exposure_rows[(row["flight_id"], row["frame_id"], row["feature_ts_ns"])] = row
+    ordered = sorted(exposure_rows.values(), key=lambda r: int(r["mono_ns"]))
+    if len(ordered) < 4:
+        return 0.0, [{
+            **meta(p),
+            "calibration_source": "A091",
+            "status": "UNCALIBRATABLE_DEFAULT_ZERO_LAG",
+            "reason": "fewer than 4 A091 unique exposures",
+        }]
+    t0 = int(ordered[0]["mono_ns"]) / 1e9
+    command = [
+        (int(r["mono_ns"]) / 1e9 - t0, fnum(r.get("logged_setpoint_vz_up_mps")))
+        for r in ordered
+    ]
+    truth = [
+        (int(r["mono_ns"]) / 1e9 - t0, fnum(r.get("truth_vz_up_mps")))
+        for r in ordered if fnum(r.get("truth_vz_up_mps")) is not None
+    ]
+
+    def at_or_before(series: list[tuple[float, float | None]], t_s: float) -> float | None:
+        prev = None
+        for ts, value in series:
+            if ts <= t_s:
+                prev = value
+            else:
+                break
+        return prev
+
+    grid_rows = []
+    best_lag_s = 0.0
+    best_corr = None
+    for lag_ms in range(0, 301, 10):
+        lag_s = lag_ms / 1000.0
+        xs: list[float] = []
+        ys: list[float] = []
+        for t_s, y in truth:
+            x = at_or_before(command, t_s - lag_s)
+            if x is not None and y is not None:
+                xs.append(float(x))
+                ys.append(float(y))
+        c = corr(xs, ys)
+        row = {
+            **meta(p),
+            "calibration_source": "A091",
+            "lag_ms": lag_ms,
+            "pairs": len(xs),
+            "corr_delayed_command_vs_truth_vz_up": c if c is not None else "",
+            "status": "GRID_ROW",
+            "selection_rule": "max corr(command(t-lag), truth_vz_up(t)) over A091 only; no 23-approach fitting",
+        }
+        grid_rows.append(row)
+        if c is not None and (best_corr is None or c > best_corr):
+            best_corr = c
+            best_lag_s = lag_s
+    grid_rows.append({
+        **meta(p),
+        "calibration_source": "A091",
+        "lag_ms": int(round(best_lag_s * 1000)),
+        "pairs": "",
+        "corr_delayed_command_vs_truth_vz_up": best_corr if best_corr is not None else "",
+        "status": "SELECTED_LAG",
+        "selection_rule": "A091-only physical calibration source; pure-delay response model",
+    })
+    return best_lag_s, grid_rows
 
 
 def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -378,9 +490,12 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
     for (cluster_id, cut_id), group in sorted(groups.items()):
         ages = [x for x in (fnum(r.get("age_s")) for r in group) if x is not None]
         before = [x for x in (fnum(r.get("r_before_mps")) for r in group) if x is not None]
-        after = [x for x in (fnum(r.get("r_after_valid_plant_mps")) for r in group) if x is not None]
-        plant = [x for x in (fnum(r.get("logged_setpoint_vz_up_mps")) for r in group) if x is not None]
+        after = [x for x in (fnum(r.get("r_after_contract_b_mps")) for r in group) if x is not None]
+        plant = [x for x in (fnum(r.get("delayed_logged_setpoint_vz_up_mps")) for r in group) if x is not None]
         auth = [x for x in (fnum(r.get("auth_at_latch")) for r in group) if x is not None]
+        unique_ages = sorted(set(round(x, 9) for x in ages))
+        age_span = (max(ages) - min(ages)) if ages else 0.0
+        estimable = len(group) >= MIN_CUT_ROWS and len(unique_ages) >= MIN_UNIQUE_AGES and age_span >= MIN_AGE_SPAN_S
         b0_before, b1_before = linreg(ages, before)
         b0_after, b1_after = linreg(ages, after)
         plant_rms = rms(plant)
@@ -396,8 +511,12 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
             "era": group[0].get("era", ""),
             "recording_regime": group[0].get("recording_regime", ""),
             "n_rows": len(group),
+            "n_unique_ages": len(unique_ages),
             "age_min_s": min(ages) if ages else "",
             "age_max_s": max(ages) if ages else "",
+            "age_span_s": age_span if ages else "",
+            "estimable_cut": estimable,
+            "estimability_rule": ">=4 rows, >=4 unique ages, age span >=0.15s",
             "auth_at_latch_median": auth_med,
             "auth_ge_0p999": auth_full,
             "logged_plant_rms_mps": plant_rms,
@@ -405,13 +524,13 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
             "b0_before_mps": b0_before,
             "b1_before_mps2": b1_before,
             "abs_b1_before_mps2": abs(b1_before) if isinstance(b1_before, float) else "",
-            "large_b1_before": isinstance(b1_before, float) and abs(b1_before) > LARGE_B1_MPS2,
+            "large_b1_before": estimable and isinstance(b1_before, float) and abs(b1_before) > LARGE_B1_MPS2,
             "b0_after_valid_plant_mps": b0_after,
             "b1_after_valid_plant_mps2": b1_after,
             "abs_b1_after_valid_plant_mps2": abs(b1_after) if isinstance(b1_after, float) else "",
-            "large_b1_after": isinstance(b1_after, float) and abs(b1_after) > LARGE_B1_MPS2,
+            "large_b1_after": estimable and isinstance(b1_after, float) and abs(b1_after) > LARGE_B1_MPS2,
             "prediction_filter_refutation_cut": (
-                auth_full and near_zero and isinstance(b1_before, float) and abs(b1_before) > LARGE_B1_MPS2
+                estimable and auth_full and near_zero and isinstance(b1_before, float) and abs(b1_before) > LARGE_B1_MPS2
             ),
             "plant_signal": p["plant_signal"],
             "after_formula": p["after_formula"],
@@ -419,43 +538,250 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
     return out
 
 
-def summarize_invalid(p: dict[str, Any], precheck: list[dict[str, Any]], rows: list[dict[str, Any]]) -> dict[str, Any]:
-    invalid_rows = [r for r in precheck if r["decision_status"] == "INVALID_INPUT_NON_POSITIVE"]
+def cluster_intervention_rows(p: dict[str, Any], cuts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in cuts:
+        groups[row["cluster_id"]].append(row)
+    out = []
+    for cluster_id, group in sorted(groups.items()):
+        estimable = [r for r in group if str(r.get("estimable_cut")) == "True"]
+        before_large = [r for r in estimable if str(r.get("large_b1_before")) == "True"]
+        after_large = [r for r in estimable if str(r.get("large_b1_after")) == "True"]
+        near_zero = [r for r in estimable if str(r.get("near_zero_logged_plant_activity")) == "True"]
+        weights = [int(r.get("n_rows") or 0) for r in estimable]
+        before_weighted = (
+            sum(w for w, r in zip(weights, estimable) if str(r.get("large_b1_before")) == "True") / sum(weights)
+            if weights and sum(weights) > 0 else ""
+        )
+        after_weighted = (
+            sum(w for w, r in zip(weights, estimable) if str(r.get("large_b1_after")) == "True") / sum(weights)
+            if weights and sum(weights) > 0 else ""
+        )
+        out.append({
+            **meta(p),
+            "cluster_id": cluster_id,
+            "flight_id": group[0].get("flight_id", ""),
+            "flight": group[0].get("flight", ""),
+            "era": group[0].get("era", ""),
+            "recording_regime": group[0].get("recording_regime", ""),
+            "n_cuts_total": len(group),
+            "n_cuts_estimable": len(estimable),
+            "n_cuts_excluded": len(group) - len(estimable),
+            "large_any_cut_before": bool(before_large),
+            "large_any_cut_after": bool(after_large),
+            "large_support_weighted_before": before_weighted,
+            "large_support_weighted_after": after_weighted,
+            "near_zero_estimable_cuts": len(near_zero),
+            "near_zero_any_after_large": any(str(r.get("large_b1_after")) == "True" for r in near_zero),
+            "refutation_candidate_cuts": sum(1 for r in estimable if str(r.get("prediction_filter_refutation_cut")) == "True"),
+            "max_abs_b1_before_mps2": max([float(r["abs_b1_before_mps2"]) for r in estimable if fnum(r.get("abs_b1_before_mps2")) is not None], default=""),
+            "max_abs_b1_after_mps2": max([float(r["abs_b1_after_valid_plant_mps2"]) for r in estimable if fnum(r.get("abs_b1_after_valid_plant_mps2")) is not None], default=""),
+        })
+    return out
+
+
+def fit_linear_predictor(cuts: list[dict[str, Any]], target_key: str) -> list[float]:
+    xs = []
+    ys = []
+    for row in cuts:
+        y = fnum(row.get(target_key))
+        auth = fnum(row.get("auth_at_latch_median"))
+        plant = fnum(row.get("logged_plant_rms_mps"))
+        if y is None or auth is None or plant is None:
+            continue
+        xs.append([1.0, auth, plant])
+        ys.append(y)
+    if len(xs) < 3:
+        return [statistics.fmean(ys) if ys else 0.0, 0.0, 0.0]
+    # Small normal-equation solver for 3 coefficients.
+    a = [[0.0] * 3 for _ in range(3)]
+    b = [0.0] * 3
+    for x, y in zip(xs, ys):
+        for i in range(3):
+            b[i] += x[i] * y
+            for j in range(3):
+                a[i][j] += x[i] * x[j]
+    # Ridge keeps singular all-auth/all-plant cases invertible without changing scale materially.
+    for i in range(3):
+        a[i][i] += 1e-9
+    for col in range(3):
+        pivot = max(range(col, 3), key=lambda r: abs(a[r][col]))
+        a[col], a[pivot] = a[pivot], a[col]
+        b[col], b[pivot] = b[pivot], b[col]
+        div = a[col][col]
+        if abs(div) < 1e-18:
+            return [statistics.fmean(ys), 0.0, 0.0]
+        for j in range(col, 3):
+            a[col][j] /= div
+        b[col] /= div
+        for r in range(3):
+            if r == col:
+                continue
+            factor = a[r][col]
+            for j in range(col, 3):
+                a[r][j] -= factor * a[col][j]
+            b[r] -= factor * b[col]
+    return b
+
+
+def pred(coeffs: list[float], row: dict[str, Any]) -> float:
+    auth = fnum(row.get("auth_at_latch_median")) or 0.0
+    plant = fnum(row.get("logged_plant_rms_mps")) or 0.0
+    return coeffs[0] + coeffs[1] * auth + coeffs[2] * plant
+
+
+def driver_decomposition(p: dict[str, Any], samples: list[dict[str, Any]],
+                         cuts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    estimable_cuts = [r for r in cuts if str(r.get("estimable_cut")) == "True"]
+    estimable_cut_ids = {r["cut_id"] for r in estimable_cuts}
+    cuts_by_id = {r["cut_id"]: r for r in estimable_cuts}
+    sample_rows = [r for r in samples if r["cut_id"] in estimable_cut_ids]
+    out_samples = []
+    for held_out in sorted({r["cluster_id"] for r in sample_rows}):
+        train_cuts = [r for r in estimable_cuts if r["cluster_id"] != held_out]
+        coeff_before = fit_linear_predictor(train_cuts, "b0_before_mps")
+        coeff_after = fit_linear_predictor(train_cuts, "b0_after_valid_plant_mps")
+        for row in [r for r in sample_rows if r["cluster_id"] == held_out]:
+            cut = cuts_by_id[row["cut_id"]]
+            r_before = fnum(row.get("r_before_mps"))
+            r_after = fnum(row.get("r_after_contract_b_mps"))
+            if r_before is None or r_after is None:
+                continue
+            b_pred = pred(coeff_before, cut)
+            d_pred = pred(coeff_after, cut)
+            base = {
+                **meta(p),
+                "cluster_id": row["cluster_id"],
+                "flight_id": row["flight_id"],
+                "cut_id": row["cut_id"],
+                "frame_id": row["frame_id"],
+                "age_s": row["age_s"],
+                "command_regime": row.get("command_regime", ""),
+                "crossfit_held_out_cluster": held_out,
+                "raw_before_r_v_mps": r_before,
+                "contract_b_after_r_v_mps": r_after,
+                "predicted_b0_before_from_train_mps": b_pred,
+                "predicted_b0_after_from_train_mps": d_pred,
+                "A_raw_shadow_residual_mps": r_before,
+                "B_cut_intercept_adjusted_mps": r_before - b_pred,
+                "C_response_adjusted_mps": r_after,
+                "D_both_adjusted_mps": r_after - d_pred,
+            }
+            out_samples.append(base)
+
+    fit_rows = []
+    loao_rows = []
+    for label, key in [
+        ("A_raw_shadow_residual", "A_raw_shadow_residual_mps"),
+        ("B_cut_intercept_adjusted", "B_cut_intercept_adjusted_mps"),
+        ("C_response_adjusted", "C_response_adjusted_mps"),
+        ("D_both_adjusted", "D_both_adjusted_mps"),
+    ]:
+        fit_input = [
+            {
+                "cluster_id": r["cluster_id"],
+                "flight_id": r["flight_id"],
+                "age_s": r["age_s"],
+                "r_v_mps": r[key],
+            }
+            for r in out_samples if fnum(r.get(key)) is not None
+        ]
+        if not fit_input:
+            continue
+        fit = fit_release_fast(fit_input)
+        boot = cluster_bootstrap_fast(fit_input)
+        u95 = max(float(fit["profile_u95_sigma_a_mps2"]), float(boot["cluster_bootstrap_u95_sigma_a_mps2"]))
+        fit_rows.append({
+            **meta(p),
+            "driver": label,
+            "n_clusters": len({r["cluster_id"] for r in fit_input}),
+            "n_rows": len(fit_input),
+            "point_sigma_a_mps2": fit["sigma_a_mps2"],
+            "profile_u95_sigma_a_mps2": fit["profile_u95_sigma_a_mps2"],
+            "approach_bootstrap_u95_sigma_a_mps2": boot["cluster_bootstrap_u95_sigma_a_mps2"],
+            "u95_conservative_mps2": u95,
+            "b0_mps": fit["b0"],
+            "b1_mps_per_s": fit["b1"],
+            "profile_nearly_flat": fit["profile_nearly_flat"],
+            "crossfit": "approach-outer; intercept predictors trained excluding held-out approach",
+        })
+        for row in loao_sensitivity_fast(fit_input):
+            loao_rows.append({**meta(p), "driver": label, **row})
+    return out_samples, fit_rows, loao_rows
+
+
+def summarize_contract(p: dict[str, Any], diagnostic_corr: list[dict[str, Any]], rows: list[dict[str, Any]],
+                       cuts: list[dict[str, Any]], clusters: list[dict[str, Any]],
+                       lag_s: float, driver_fits: list[dict[str, Any]]) -> dict[str, Any]:
     max_feature_diff = max(
         [abs(x) for x in (fnum(r.get("features_archive_setpoint_diff_mps")) for r in rows) if x is not None],
         default=0.0,
     )
+    before_large = [r for r in clusters if str(r.get("large_any_cut_before")) == "True"]
+    after_large = [r for r in clusters if str(r.get("large_any_cut_after")) == "True"]
+    before_ids = {r["cluster_id"] for r in before_large}
+    after_ids = {r["cluster_id"] for r in after_large}
+    dropped_ids = sorted(before_ids - after_ids)
+    near_zero_bad = [
+        r for r in clusters
+        if int(r.get("near_zero_estimable_cuts") or 0) > 0
+        and str(r.get("near_zero_any_after_large")) == "True"
+    ]
+    refutation_clusters = sorted({
+        r["cluster_id"] for r in cuts if str(r.get("prediction_filter_refutation_cut")) == "True"
+    })
+    fell_by_half = len(after_large) <= (len(before_large) / 2.0) if before_large else False
+    some_drop = bool(dropped_ids)
+    near_zero_compliant = not near_zero_bad
+    if fell_by_half and near_zero_compliant:
+        verdict = "CONFIRMED"
+    elif some_drop and near_zero_compliant:
+        verdict = "CONTRIBUTORY_NOT_SUFFICIENT"
+    elif len(refutation_clusters) >= 2:
+        verdict = "REFUTED_BY_QUIET_CELL"
+    else:
+        verdict = "NO_COLLAPSE_OR_UNJUDGED"
     return {
         "diagnostic_only": True,
         "repo_head": p["report_generator_commit"],
         "criterion_commit": p["criterion_commit"],
         "response58_commit": p["response58_commit"],
+        "response61_commit": p["response61_commit"],
+        "response62_commit": p["response62_commit"],
         "input_manifest_path": p["input_manifest_path"],
         "input_manifest_sha256": p["input_manifest_sha256"],
         "plant_signal": p["plant_signal"],
         "plant_formula": p["plant_formula"],
+        "stream_contract": p["stream_contract"],
+        "response_model": p["response_model"],
+        "a091_calibrated_lag_s": lag_s,
         "n_samples": len(rows),
         "n_clusters": len({r["cluster_id"] for r in rows}),
         "n_unique_exposures": len({(r["flight_id"], r["frame_id"], r["feature_ts_ns"]) for r in rows}),
         "max_abs_diff_vs_features_archive_setpoint_vz_up_mps": max_feature_diff,
-        "validity_precheck_passed": len(invalid_rows) == 0,
-        "invalid_input_scopes": [
+        "correlation_table_status": "DIAGNOSTIC_ONLY_GATE_WITHDRAWN",
+        "correlation_negative_scopes": [
             {
                 "era": r["era"],
                 "recording_regime": r["recording_regime"],
                 "corr_logged_plant_vs_oracle_ref": r["corr_logged_plant_vs_oracle_ref"],
             }
-            for r in invalid_rows
+            for r in diagnostic_corr if fnum(r.get("corr_logged_plant_vs_oracle_ref")) is not None
+            and float(r["corr_logged_plant_vs_oracle_ref"]) <= 0.0
         ],
-        "judge_status": (
-            "NOT_RUN_INVALID_INPUT_PRECHECK"
-            if invalid_rows else "ELIGIBLE_TO_RUN"
-        ),
-        "driver_decomposition_status": (
-            "NOT_RUN_INVALID_INPUT_PRECHECK"
-            if invalid_rows else "ELIGIBLE_TO_RUN"
-        ),
-        "stop_rule": "non-positive per-era oracle-reference correlation => INVALID-INPUT before judge",
+        "estimable_cuts": sum(1 for r in cuts if str(r.get("estimable_cut")) == "True"),
+        "excluded_cuts": sum(1 for r in cuts if str(r.get("estimable_cut")) != "True"),
+        "large_cluster_count_before": len(before_large),
+        "large_cluster_count_after": len(after_large),
+        "clusters_dropped_by_intervention": dropped_ids,
+        "large_count_fell_by_half": fell_by_half,
+        "near_zero_after_large_count": len(near_zero_bad),
+        "prediction_refutation_candidate_clusters": refutation_clusters,
+        "prediction_refutation_branch_met": len(refutation_clusters) >= 2,
+        "intervention_verdict": verdict,
+        "post_intervention_residual_admissible_input": "plant_stream_samples.csv:r_after_contract_b_mps",
+        "driver_decomposition_status": "RUN",
+        "driver_count": len(driver_fits),
     }
 
 
@@ -473,8 +799,14 @@ def run(args: argparse.Namespace) -> Path:
     out_dir.mkdir(parents=True, exist_ok=False)
     p = packet(head, out_dir, samples)
     features = load_features()
-    enriched = enrich_samples(samples, features, p)
-    precheck, may_run_judge = validity_precheck(p, enriched)
+    zero_lag_enriched = enrich_samples(samples, features, p, response_lag_s=0.0)
+    lag_s, lag_rows = lag_calibration_from_a091(p, zero_lag_enriched)
+    enriched = enrich_samples(samples, features, p, response_lag_s=lag_s)
+    diagnostic_corr, _may_run_judge = validity_precheck(p, enriched)
+    zero_lag_cuts = cut_intervention_rows(p, zero_lag_enriched)
+    cuts = cut_intervention_rows(p, enriched)
+    clusters = cluster_intervention_rows(p, cuts)
+    driver_samples, driver_fits, driver_loao = driver_decomposition(p, enriched, cuts)
 
     write_text(
         out_dir / "plant_stream_derivation.md",
@@ -490,6 +822,11 @@ def run(args: argparse.Namespace) -> Path:
             "component is read from `setpoint.v_body[2]` when present, otherwise",
             "`setpoint.vel_body[2]` or `setpoint.velocity_body[2]`.",
             "",
+            "Stream contract: Contract B, commanded velocity reference. The logged",
+            "setpoint is the innermost commanded reference delivered to the velocity",
+            "backend, not achieved motion. The counterfactual therefore enters through",
+            "the declared response model rather than raw zero-lag subtraction.",
+            "",
             "The world-up conversion follows the adapter equation registered in",
             "the criterion:",
             "",
@@ -499,11 +836,26 @@ def run(args: argparse.Namespace) -> Path:
             "climb in the NED/body convention used by the planner tests, so the",
             "leading minus maps climb to positive world-up.",
             "",
+            f"Response model: pure-delay command reference, lag calibrated from A091 only at `{lag_s:.3f}` s.",
+            "For each feature row:",
+            "",
+            "`delayed_logged_setpoint_vz_up_mps = setpoint_world_up_at_or_before(feature_mono_ns - lag)`",
+            "",
+            "The intervention residual is:",
+            "",
+            "`r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)`",
+            "",
+            "The old zero-lag correlation gate is withdrawn by RESPONSE61 and is",
+            "published only as diagnostic disclosure.",
+            "",
         ]) + "\n",
     )
+    write_json(out_dir / "lineage_packet.json", p)
+    write_csv(out_dir / "lag_calibration_a091.csv", lag_rows)
     write_csv(out_dir / "plant_stream_samples.csv", [
         {
             **meta(p),
+            "approach_id": r.get("approach_id", ""),
             "cluster_id": r["cluster_id"],
             "cut_id": r["cut_id"],
             "flight_id": r["flight_id"],
@@ -523,16 +875,29 @@ def run(args: argparse.Namespace) -> Path:
             "level_pitch_rad": r["level_pitch_rad"],
             "level_roll_rad": r["level_roll_rad"],
             "logged_setpoint_vz_up_mps": r["logged_setpoint_vz_up_mps"],
+            "response_lag_s": r["response_lag_s"],
+            "lagged_setpoint_mono_ns": r["lagged_setpoint_mono_ns"],
+            "lagged_setpoint_age_s": r["lagged_setpoint_age_s"],
+            "delayed_logged_setpoint_vz_up_mps": r["delayed_logged_setpoint_vz_up_mps"],
             "features_archive_setpoint_vz_up_mps": r["features_archive_setpoint_vz_up_mps"],
             "features_archive_setpoint_diff_mps": r["features_archive_setpoint_diff_mps"],
             "v_ref_oracle_mps": r["v_ref_oracle_mps"],
             "truth_vz_up_mps": r["truth_vz_up_mps"],
+            "v_latch_true_mps": r.get("v_latch_true_mps", ""),
             "r_before_mps": r["r_before_mps"],
-            "r_after_valid_plant_mps": r["r_after_valid_plant_mps"],
+            "r_after_contract_b_mps": r["r_after_contract_b_mps"],
+            "before_formula": r["before_formula"],
+            "after_formula": r["after_formula"],
         }
         for r in enriched
     ])
-    write_csv(out_dir / "validity_precheck_by_era.csv", precheck)
+    write_csv(out_dir / "contract_b_diagnostic_correlation_by_era.csv", diagnostic_corr)
+    write_csv(out_dir / "zero_lag_sensitivity_cut.csv", zero_lag_cuts)
+    write_csv(out_dir / "intervention_cut_b1_before_after_contract_b.csv", cuts)
+    write_csv(out_dir / "intervention_cluster_b1_before_after_contract_b.csv", clusters)
+    write_csv(out_dir / "driver_decomposition_samples.csv", driver_samples)
+    write_csv(out_dir / "driver_decomposition_fit.csv", driver_fits)
+    write_csv(out_dir / "driver_decomposition_loao.csv", driver_loao)
 
     field_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for r in enriched:
@@ -549,44 +914,36 @@ def run(args: argparse.Namespace) -> Path:
             "clusters": len({r["cluster_id"] for r in group}),
             "plant_stream": p["plant_signal"],
             "world_up_conversion": p["plant_formula"],
+            "stream_contract": p["stream_contract"],
+            "response_model": p["response_model"],
+            "response_lag_s": lag_s,
             "setpoint_age_max_s": max(ages) if ages else "",
             "command_semantics": "0.0 is observed zero command; absent field is missing; no truthiness filter",
-            "mixed_ownership_handling": "reported by era/recording_regime; judge is gated by validity precheck before any pooled read",
+            "mixed_ownership_handling": "reported by era/recording_regime; TERM/common-arm rows remain disclosed, no silent pooling by ownership state",
+            "feed_forward_reference_used_by_sigma_eval": "delayed logged setpoint world-up reference per Contract B",
         })
     write_csv(out_dir / "harness_stream_disclosure.csv", disclosure)
 
-    summary = summarize_invalid(p, precheck, enriched)
-    if may_run_judge:
-        cuts = cut_intervention_rows(p, enriched)
-        write_csv(out_dir / "intervention_cut_b1_before_after_valid_plant.csv", cuts)
-        summary["judge_status"] = "RUN"
-        summary["large_cluster_count_before"] = len({
-            r["cluster_id"] for r in cuts if str(r.get("large_b1_before")) == "True"
-        })
-        summary["large_cluster_count_after"] = len({
-            r["cluster_id"] for r in cuts if str(r.get("large_b1_after")) == "True"
-        })
-        summary["prediction_refutation_candidate_clusters"] = sorted({
-            r["cluster_id"] for r in cuts if str(r.get("prediction_filter_refutation_cut")) == "True"
-        })
-    else:
-        write_csv(out_dir / "judge_not_run_invalid_input.csv", [{
-            **meta(p),
-            "judge_status": "NOT_RUN_INVALID_INPUT_PRECHECK",
-            "driver_decomposition_status": "NOT_RUN_INVALID_INPUT_PRECHECK",
-            "reason": "At least one era/recording_regime had non-positive corr(logged plant stream, oracle reference motion).",
-            "criterion_stop_rule": "Non-positive => INVALID-INPUT, stop, report.",
-        }])
+    summary = summarize_contract(p, diagnostic_corr, enriched, cuts, clusters, lag_s, driver_fits)
 
     write_json(out_dir / "summary.json", summary)
-    invalid_text = ", ".join(
+    corr_text = ", ".join(
         f"{r['era']}/{r['recording_regime']}={r['corr_logged_plant_vs_oracle_ref']}"
-        for r in summary["invalid_input_scopes"]
+        for r in summary["correlation_negative_scopes"]
     )
+    driver_lines = [
+        (
+            f"- `{r['driver']}`: point `{r['point_sigma_a_mps2']}`, "
+            f"profile U95 `{r['profile_u95_sigma_a_mps2']}`, "
+            f"bootstrap U95 `{r['approach_bootstrap_u95_sigma_a_mps2']}`, "
+            f"conservative `{r['u95_conservative_mps2']}`"
+        )
+        for r in driver_fits
+    ]
     write_text(
         out_dir / "summary.md",
         "\n".join([
-            "# Valid-Plant Intervention Rerun",
+            "# Contract-B Plant-Stream Intervention Rerun",
             "",
             "Scope: DIAGNOSTIC, CSV/log replay only; no FlightSim/DCGame launch.",
             f"Repo HEAD: `{head}`.",
@@ -598,17 +955,29 @@ def run(args: argparse.Namespace) -> Path:
             "",
             "The stream is read from archived `flight.jsonl` setpoint records and",
             "converted with `v_up = -v_bz * cos(level_pitch) * cos(level_roll)`.",
+            "It is typed as Contract B commanded velocity reference, with pure-delay",
+            "response before entering the counterfactual residual.",
+            f"A091 selected response lag: `{lag_s}` seconds.",
             f"Max abs diff versus `features_archive.setpoint_vz_up_mps`: `{summary['max_abs_diff_vs_features_archive_setpoint_vz_up_mps']}`.",
             "",
-            "## Validity Pre-Check",
+            "## Diagnostic Correlation",
             "",
-            f"Passed: `{summary['validity_precheck_passed']}`.",
-            f"Invalid scopes: `{invalid_text}`.",
+            "The old zero-lag positive-correlation gate is withdrawn; these rows are diagnostic only.",
+            f"Non-positive zero-lag scopes: `{corr_text}`.",
             "",
             "## Judge",
             "",
-            f"Judge status: `{summary['judge_status']}`.",
+            f"Judge status: `RUN_CONTRACT_B_RESPONSE_MODEL`.",
+            f"Intervention verdict: `{summary['intervention_verdict']}`.",
+            f"Large cluster count before: `{summary['large_cluster_count_before']}`.",
+            f"Large cluster count after: `{summary['large_cluster_count_after']}`.",
+            f"Clusters dropped by intervention: `{summary['clusters_dropped_by_intervention']}`.",
+            f"Prediction refutation branch met: `{summary['prediction_refutation_branch_met']}`.",
             f"Driver decomposition status: `{summary['driver_decomposition_status']}`.",
+            "",
+            "## A/B/C/D",
+            "",
+            *(driver_lines or ["No driver decomposition rows were generated."]),
             "",
         ]) + "\n",
     )
