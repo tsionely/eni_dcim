@@ -1,0 +1,19 @@
+﻿{
+    "artifact":  "POST_REG2_GENERATOR_STEP_E_FIXTURE_TRANSCRIPT",
+    "diagnostic_only":  true,
+    "code_commit":  "48d567be38d8da640123cf2f42a8a91cdacc1c86",
+    "required_reg2_commit":  "9393f9419ab00dabf1bd88ad095088ab984607ad",
+    "ancestry_9393f94":  "OK",
+    "scope":  "replay/csv only; no FlightSim/DCGame; no intervention artifacts",
+    "fixture_passed":  17,
+    "fixture_failed":  0,
+    "transcript_path":  "tuning/post-reg2-generator-stepE-48d567b-20260721T070816Z/fixture_transcript.txt",
+    "transcript_sha256":  "7cdbb5b5dcf909a38ee1d515b522fce0d5151cd4ea38867fe3d7b1da22809e5c",
+    "generator_path":  "tuning/post_reg2_contract_b_generator.py",
+    "generator_sha256":  "d0cecca1c7f36a21f07f3c766d47cfd5a888ab25d8ca5a1d5e98b3c7dc4d5043",
+    "fixture_runner_path":  "tuning/run_post_reg2_generator_fixtures.py",
+    "fixture_runner_sha256":  "d88e0e11d3d951301ccf7c96bfc98fb8fb8618da933e17a2450cb8a2926c8c6c",
+    "startup_current_reg2_digest_guard":  "PASS - current REG-2 calibration digest mismatch fails before checkpoint/result hooks",
+    "startup_digest_aligned_override":  "PASS - digest-aligned REG-2 text reaches checkpoint/result hooks after all startup gates",
+    "intervention_step_f":  "NO_GO_NOT_RUN"
+}
