@@ -41,21 +41,41 @@ UNIDENTIFIABLE candidates never enter the argmin.
 - **Source**: the A091 physical episode (20260719T201851),
   command-step intervals selected by the deterministic detector.
   Calibration intervals DISJOINT from the A091 sentinel interval.
-- **MEASURED RESPONSE (v2 — registered IN ADVANCE, replacing the
-  v1 checkpoint-column reference that was ABSENT on calibration
-  support):** the registered source is the EXACT reconstruction
-  procedure, identical to the runtime FULL_RATE_ANCHOR
-  computation: for each certified-FULL exposure at feature_ts_ns,
-  v_full_raw = -Theil-Sen slope of e_meas over the certified-FULL
-  samples in the prior 0.50 s, subject to the runtime minimums
-  (>= 4 samples, >= 0.15 s span); rows failing the minimums are
-  ABSENT_RESPONSE (typed), never zero-filled. VALIDATION, both
-  legs mandatory: (a) fixture (m) — one synthetic series through
-  the runtime code path and the reconstruction, exact equality
-  asserted by execution; (b) SAME-ROW validation on every row
-  where the checkpoint column and the reconstruction both exist
-  anywhere in the archive — equality within 1e-9 published;
-  disagreement is a STOP, not a footnote.
+- **MEASURED RESPONSE (v2.1 — registered from the CODE, not from
+  the v1 artifact's description; amended pre-calibration, REG-2(v2)
+  still empty):** the registered source is the EXACT runtime
+  algorithm of rate_anchor_v_raw
+  (src/aigp/planning/vertical_owner.py, _slope_of), which is NOT
+  a fixed-window fit: for each certified-FULL exposure at
+  feature_ts_ns,
+  1. FRESH TAIL: walk back from the newest sample while
+     consecutive gaps stay within the oracle's max_gap_s (0.12 s
+     default) — a slope is never fitted across an outage;
+  2. LAST-12 CAP: at most the final 12 fresh-tail samples enter;
+  3. robust_slope (vertical_terminal.py): Theil-Sen over
+     UNIQUE-timestamp samples, duplicates rejected, >= 4 unique
+     points required;
+  4. v_full_raw = -slope.
+  Rows failing the minimums are ABSENT_RESPONSE (typed), never
+  zero-filled. **The v1 description ("prior 0.50 s window") was
+  NOT the runtime computation — the registration author copied the
+  artifact's summary instead of the code; entered in the ledger
+  (RESPONSE-69). The reconstruction implementation must import
+  robust_slope from the flight code and replicate
+  _fresh_tail/_slope_of exactly — never re-derive them.**
+  VALIDATION, both legs mandatory: (a) fixture (m) — leg 1 drives
+  the REAL oracle class from src/aigp (feed the synthetic
+  certified-FULL series through observe(), force the
+  FULL->SIDE downgrade latch, read oracle.rate_anchor_v_raw); leg
+  2 is the reconstruction; EXACT equality asserted by execution
+  over a battery that includes a DENSE series (> 12 samples in
+  0.5 s — exposes any fixed-window impostor), a GAPPED series
+  (exposes fresh-tail violations), and duplicate timestamps; a
+  fixture whose two legs share an implementation is VOID —
+  equality of a function with itself proves nothing; (b) SAME-ROW
+  validation on every row where the checkpoint column and the
+  reconstruction both exist anywhere in the archive — equality
+  within 1e-9 published; disagreement is a STOP, not a footnote.
 - **STEP DETECTOR v2** (deterministic, fit-blind; the v1 floor's
   units error is corrected):
   1. STEP EVENT at tick k if |v_ref[k] - v_ref[k-1]| >= 0.35 m/s —
