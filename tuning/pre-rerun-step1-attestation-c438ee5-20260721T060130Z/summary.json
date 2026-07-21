@@ -1,0 +1,11 @@
+{
+  "artifact": "PRE_RERUN_STEP1_RELEASE_GRADE_ATTESTATION",
+  "attested_tip": "c438ee5e38cc7150d345c58b1615371866a0af8f",
+  "attested_tip_was_pushed_before_transcript": true,
+  "checker_command": "python tools/release_manifest.py docs/release/evidence_manifest_5c69823.json c438ee5e38cc7150d345c58b1615371866a0af8f",
+  "checker_result_token": "MANIFEST VERIFIES (RELEASE-GRADE)",
+  "criterion_ancestor_required": "9a85c73",
+  "diagnostic_only": true,
+  "transcript_path": "tuning/pre-rerun-step1-attestation-c438ee5-20260721T060130Z/checker_transcript_c438ee5.txt",
+  "transcript_sha256": "0aa882f040685eefd68a4646b7cdfb2e41db4977373c9c2f6a6601f1307cacd5"
+}
