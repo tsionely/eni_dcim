@@ -463,6 +463,8 @@ def read_sentinel_keys(path: Path) -> list[str]:
     keys: list[str] = []
     for row in rows:
         key = row.get("row_key")
+        if not key and row.get("flight_id") and row.get("frame_id") and row.get("feature_ts_ns"):
+            key = f"{row['flight_id']}|frame={row['frame_id']}|feature_ts_ns={row['feature_ts_ns']}"
         if key:
             keys.append(str(key))
     return keys

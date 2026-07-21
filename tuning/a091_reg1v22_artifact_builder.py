@@ -228,9 +228,12 @@ def build_input(repo: Path, input_dir: Path, features_path: Path, flight_log_pat
     _write_csv(input_csv, input_rows)
 
     forced_rows = [
-        row for row in read_csv_rows(repo / forced_path)
+        dict(row) for row in read_csv_rows(repo / forced_path)
         if row.get("flight_id") == FLIGHT_ID
     ]
+    for row in forced_rows:
+        if not row.get("row_key") and row.get("flight_id") and row.get("frame_id") and row.get("feature_ts_ns"):
+            row["row_key"] = f"{row['flight_id']}|frame={row['frame_id']}|feature_ts_ns={row['feature_ts_ns']}"
     sentinel_csv = input_dir / "a091_sentinel_interval_keys.csv"
     _write_csv(sentinel_csv, forced_rows)
 
