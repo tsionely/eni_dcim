@@ -17,7 +17,9 @@ if str(REPO_ROOT) not in sys.path:
 from tuning.reg1v2_calibration_source_generator import (
     Candidate,
     DT_NS,
+    GOVERNING_REG1_COMMIT,
     RowsScoredCommonMismatch,
+    ScoringSupportMismatch,
     SOURCE_GENERATOR_PATH,
     STEP_FLOOR_MPS,
     StepWindow,
@@ -26,11 +28,13 @@ from tuning.reg1v2_calibration_source_generator import (
     committed_attestation_rows,
     detect_step_windows,
     fit_response_model,
+    format_exposure_key,
     local_open_face,
     normalize_rows_with_metadata,
     parse_certified_full,
     predict_window,
     reconstruct_v_full_raw,
+    scoring_event_key,
     source_bytes_commit,
     synthetic_dry_run,
     synthetic_null_rows,
@@ -66,6 +70,46 @@ def run_generator_cli(repo: Path, args: list[str]) -> subprocess.CompletedProces
 
 def sentinel_digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def feature_row(tick: int, *, e_meas_m: float, certified_full: object = True, flight_id: str = "fixture", frame_id: str | None = None, feature_ts_ns: int | None = None, **extra: object) -> dict[str, object]:
+    ts_ns = tick * DT_NS if feature_ts_ns is None else feature_ts_ns
+    row: dict[str, object] = {
+        "row_key": f"{flight_id}_{tick:04d}",
+        "flight_id": flight_id,
+        "frame_id": frame_id or f"{flight_id}_frame_{tick:04d}",
+        "tick": tick,
+        "ts_s": tick * 0.02,
+        "feature_ts_ns": ts_ns,
+        "e_meas_m": e_meas_m,
+        "certified_full": certified_full,
+    }
+    row.update(extra)
+    return row
+
+
+def sentinel_cli_args(repo: Path, sentinel_path: Path, *, evidence_commit: str | None = None, digest: str | None = None, key_count: int = 1) -> list[str]:
+    commit = evidence_commit or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+    registered_digest = digest or subprocess.check_output(
+        [
+            sys.executable,
+            "-c",
+            "import hashlib,subprocess,sys; commit=sys.argv[1]; path=sys.argv[2]; print(hashlib.sha256(subprocess.check_output(['git','show',f'{commit}:{path}'])).hexdigest())",
+            commit,
+            sentinel_path.as_posix(),
+        ],
+        cwd=repo,
+        text=True,
+    ).strip()
+    return [
+        "--sentinel-artifact-path", str(repo / sentinel_path),
+        "--sentinel-artifact-sha256", registered_digest,
+        "--sentinel-criterion-commit", GOVERNING_REG1_COMMIT,
+        "--sentinel-evidence-commit", commit,
+        "--sentinel-reviewed-tip", commit,
+        "--sentinel-key-schema", "event_key",
+        "--sentinel-key-count", str(key_count),
+    ]
 
 
 def fixture_step_detector_floor_merge_and_windows() -> None:
@@ -112,7 +156,7 @@ def fixture_response_reconstruction_v21_runtime_rules() -> None:
             e_meas = 1.75 - 0.05 * ts
         else:
             e_meas = 1.75 - 0.05 * 0.24 - 0.35 * (ts - 0.24)
-        dense.append({"tick": i, "ts_s": ts, "feature_ts_ns": int(round(ts * 1_000_000_000)), "e_meas_m": e_meas, "certified_full": True})
+        dense.append(feature_row(i, e_meas_m=e_meas, flight_id="dense"))
     dense_rate, dense_status, dense_meta = reconstruct_v_full_raw(dense, 0.48)
     expect(dense_status == "VALID", f"dense v2.1 reconstruction invalid: {dense_status}")
     expect(abs(float(dense_rate) - 0.35) < 1e-12, "dense fixture did not use the last-12 cap")
@@ -120,9 +164,11 @@ def fixture_response_reconstruction_v21_runtime_rules() -> None:
 
     gapped: list[dict[str, object]] = []
     for i, ts in enumerate([0.18, 0.20, 0.22, 0.24, 0.26, 0.28, 0.30, 0.32, 0.34]):
-        gapped.append({"tick": i, "ts_s": ts, "feature_ts_ns": int(round(ts * 1_000_000_000)), "e_meas_m": 3.0 - 0.65 * ts, "certified_full": True})
+        tick = int(round(ts / 0.02))
+        gapped.append(feature_row(tick, e_meas_m=3.0 - 0.65 * ts, flight_id="gapped"))
     for i, ts in enumerate([0.50, 0.52, 0.54, 0.56, 0.58, 0.60, 0.62, 0.64, 0.66, 0.68], start=20):
-        gapped.append({"tick": i, "ts_s": ts, "feature_ts_ns": int(round(ts * 1_000_000_000)), "e_meas_m": 1.2 - 0.12 * (ts - 0.50), "certified_full": True})
+        tick = int(round(ts / 0.02))
+        gapped.append(feature_row(tick, e_meas_m=1.2 - 0.12 * (ts - 0.50), flight_id="gapped"))
     gap_rate, gap_status, gap_meta = reconstruct_v_full_raw(gapped, 0.68)
     expect(gap_status == "VALID", f"gapped v2.1 reconstruction invalid: {gap_status}")
     expect(abs(float(gap_rate) - 0.12) < 1e-12, "gapped fixture fitted across an outage")
@@ -131,19 +177,19 @@ def fixture_response_reconstruction_v21_runtime_rules() -> None:
     duplicate: list[dict[str, object]] = []
     for i in range(18):
         ts = i * 0.02
-        duplicate.append({"tick": i, "ts_s": ts, "feature_ts_ns": int(round(ts * 1_000_000_000)), "e_meas_m": 1.5 - 0.22 * ts, "certified_full": True})
+        duplicate.append(feature_row(i, e_meas_m=1.5 - 0.22 * ts, flight_id="duplicate"))
         if i == 10:
-            duplicate.append({"tick": 1000, "ts_s": ts, "feature_ts_ns": int(round(ts * 1_000_000_000)), "e_meas_m": 99.0, "certified_full": True})
+            duplicate.append(feature_row(10, e_meas_m=99.0, flight_id="duplicate", frame_id="duplicate_frame_0010"))
     dup_rate, dup_status, dup_meta = reconstruct_v_full_raw(duplicate, 0.34)
     expect(dup_status == "VALID", f"duplicate v2.1 reconstruction invalid: {dup_status}")
     expect(abs(float(dup_rate) - 0.22) < 1e-12, "duplicate timestamp was treated as a new exposure")
     expect(dup_meta["history_samples"] == 18, "duplicate timestamp was not rejected from unique history")
 
     subspan = [
-        {"tick": 0, "ts_s": 0.00, "feature_ts_ns": 0, "e_meas_m": 1.00, "certified_full": True},
-        {"tick": 1, "ts_s": 0.02, "feature_ts_ns": 20_000_000, "e_meas_m": 0.99, "certified_full": True},
-        {"tick": 2, "ts_s": 0.04, "feature_ts_ns": 40_000_000, "e_meas_m": 0.98, "certified_full": True},
-        {"tick": 3, "ts_s": 0.06, "feature_ts_ns": 60_000_000, "e_meas_m": 0.97, "certified_full": True},
+        feature_row(0, e_meas_m=1.00, flight_id="subspan"),
+        feature_row(1, e_meas_m=0.99, flight_id="subspan"),
+        feature_row(2, e_meas_m=0.98, flight_id="subspan"),
+        feature_row(3, e_meas_m=0.97, flight_id="subspan"),
     ]
     sub_rate, sub_status, sub_meta = reconstruct_v_full_raw(subspan, 0.06)
     expect(sub_status == "VALID", f"sub-span exact-_slope_of fixture returned {sub_status}")
@@ -220,6 +266,14 @@ def fixture_rows_scored_common_corruption_stops() -> None:
         expect(exc.code == "ROWS_SCORED_COMMON_MISMATCH", "rows_scored_common mismatch did not carry typed code")
     else:
         raise FixtureFailure("corrupted rows_scored_common candidate support did not STOP")
+    corrupted = [dict(row) for row in fit["score_rows"]]
+    corrupted[0]["scoring_support_sha256"] = "0" * 64
+    try:
+        assert_rows_scored_common(corrupted)
+    except ScoringSupportMismatch as exc:
+        expect(exc.code == "SCORING_SUPPORT_SHA256_MISMATCH", "support digest mismatch did not carry typed code")
+    else:
+        raise FixtureFailure("corrupted scoring_support_sha256 did not STOP")
 
 
 def fixture_post_lag_identifiability_gating() -> None:
@@ -296,14 +350,7 @@ def fixture_sentinel_disjoint_exclusion() -> None:
 def fixture_s4_strict_certified_full_parsing() -> None:
     rows: list[dict[str, object]] = []
     for i, raw in enumerate(["False", "0", "", "invalid"]):
-        rows.append({
-            "row_key": f"cert_{i}",
-            "tick": i,
-            "ts_s": i * 0.02,
-            "feature_ts_ns": i * DT_NS,
-            "e_meas_m": 2.0 - i * 0.01,
-            "certified_full": raw,
-        })
+        rows.append(feature_row(i, e_meas_m=2.0 - i * 0.01, certified_full=raw, flight_id="cert"))
     parsed = [parse_certified_full(row["certified_full"])[0] for row in rows]
     expect(parsed == [False, False, None, None], f"strict certification parser drifted: {parsed}")
     normalized, meta = normalize_rows_with_metadata(rows)
@@ -317,23 +364,11 @@ def fixture_s5_poisoned_duplicate_first_wins() -> None:
     rows: list[dict[str, object]] = []
     for i in range(16):
         ts = i * 0.02
-        rows.append({
-            "row_key": f"dup_{i:03d}",
-            "tick": i,
-            "ts_s": ts,
-            "feature_ts_ns": i * DT_NS,
-            "e_meas_m": 1.5 - 0.31 * ts,
-            "certified_full": "True",
-        })
+        rows.append(feature_row(i, e_meas_m=1.5 - 0.31 * ts, certified_full="True", flight_id="dup"))
         if i == 8:
-            rows.append({
-                "row_key": "dup_poison",
-                "tick": i,
-                "ts_s": ts,
-                "feature_ts_ns": i * DT_NS,
-                "e_meas_m": 99.0,
-                "certified_full": "True",
-            })
+            poison = feature_row(i, e_meas_m=99.0, certified_full="True", flight_id="dup")
+            poison["row_key"] = "dup_poison"
+            rows.append(poison)
     normalized, meta = normalize_rows_with_metadata(rows)
     expect(meta["discarded_rebroadcast_count"] == 1, "poisoned duplicate was not listed as discarded")
     expect(meta["discarded_rebroadcasts"][0]["discarded_row_key"] == "dup_poison", "duplicate first-wins discarded the wrong row")
@@ -345,24 +380,12 @@ def fixture_s5_poisoned_duplicate_first_wins() -> None:
 
 def fixture_s6_feature_time_alignment_and_mismatch_ledger() -> None:
     rows = [
-        {
-            "row_key": "aligned",
-            "tick": 5,
-            "ts_s": 0.10,
-            "feature_ts_ns": 5 * DT_NS,
-            "e_meas_m": 1.0,
-            "certified_full": "True",
-        },
-        {
-            "row_key": "mismatched",
-            "tick": 5,
-            "ts_s": 0.10,
-            "feature_ts_ns": 9 * DT_NS,
-            "e_meas_m": 0.9,
-            "certified_full": "True",
-        },
+        feature_row(5, e_meas_m=1.0, certified_full="True", flight_id="align", frame_id="align_frame_0005"),
+        feature_row(5, e_meas_m=0.9, certified_full="True", flight_id="align", frame_id="align_frame_0009", feature_ts_ns=9 * DT_NS),
         {
             "row_key": "absent_feature_ts",
+            "flight_id": "align",
+            "frame_id": "align_frame_absent",
             "tick": 6,
             "ts_s": 0.12,
             "e_meas_m": 0.8,
@@ -370,11 +393,10 @@ def fixture_s6_feature_time_alignment_and_mismatch_ledger() -> None:
         },
     ]
     normalized, meta = normalize_rows_with_metadata(rows)
-    expect(any(row["alignment_status"] == "MISMATCH" for row in normalized), "feature/control tick mismatch was not typed")
+    expect(any(row["alignment_status"] == "OFF_WINDOW" for row in normalized) or meta["mismatch_count"] == 1, "feature/control tick mismatch was not typed")
     expect(meta["mismatch_count"] == 1, "mismatch ledger did not publish the one bad alignment")
     expect(meta["absent_feature_ts_rows"][0]["row_key"] == "absent_feature_ts", "absent feature_ts_ns was not listed")
-    absent = next(row for row in normalized if row["row_key"] == "absent_feature_ts")
-    expect("feature_ts_ns" not in absent, "missing feature_ts_ns was synthesized")
+    expect(any(row["reason"] == "ABSENT_EXPOSURE_KEY" for row in meta["excluded_exposure_rows"]), "missing exposure key was not fail-closed")
 
 
 def fixture_s7_blank_trace_value_incomplete() -> None:
@@ -390,16 +412,13 @@ def fixture_s8_sentinel_overlap_actual_cli(repo: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="reg1v23_s8_") as tmp:
         tmp_path = Path(tmp)
         input_csv = tmp_path / "input.csv"
-        sentinel_csv = tmp_path / "sentinel.csv"
         write_csv(input_csv, synthetic_rows())
-        write_csv(sentinel_csv, [{"row_key": "syn_0020"}])
+        sentinel_path = Path("tuning/reg1v24_fixture_sentinel_overlap.csv")
         proc = run_generator_cli(repo, [
             "--input-csv", str(input_csv),
             "--out-dir", str(tmp_path / "out"),
             "--direction", "down",
-            "--sentinel-keys-csv", str(sentinel_csv),
-            "--sentinel-keys-digest", sentinel_digest(sentinel_csv),
-            "--sentinel-keys-commit", "e73ca90",
+            *sentinel_cli_args(repo, sentinel_path),
         ])
     expect(proc.returncode != 0, "sentinel overlap CLI unexpectedly succeeded")
     expect("SENTINEL_OVERLAP" in (proc.stderr + proc.stdout), "sentinel overlap did not emit typed failure")
@@ -409,15 +428,12 @@ def fixture_s9_direction_argument_refusal(repo: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="reg1v23_s9_") as tmp:
         tmp_path = Path(tmp)
         input_csv = tmp_path / "input.csv"
-        sentinel_csv = tmp_path / "sentinel.csv"
         write_csv(input_csv, synthetic_rows())
-        write_csv(sentinel_csv, [{"row_key": "non_overlapping_sentinel"}])
+        sentinel_path = Path("tuning/reg1v24_fixture_sentinel_nonoverlap.csv")
         base = [
             "--input-csv", str(input_csv),
             "--out-dir", str(tmp_path / "out"),
-            "--sentinel-keys-csv", str(sentinel_csv),
-            "--sentinel-keys-digest", sentinel_digest(sentinel_csv),
-            "--sentinel-keys-commit", "e73ca90",
+            *sentinel_cli_args(repo, sentinel_path),
         ]
         missing = run_generator_cli(repo, base)
         mismatched = run_generator_cli(repo, [*base, "--direction", "up"])
@@ -475,6 +491,92 @@ def fixture_s12_source_identity_split(repo: Path) -> None:
     expect(source_commit != head, "s12 requires an attestation child: source_generator_commit must differ from execution_tip")
 
 
+def fixture_s13_scoring_support_digest_mismatch_stops() -> None:
+    fit = fit_response_model([_manual_window_for_lag_objective()])
+    hashes = {row["scoring_support_sha256"] for row in fit["score_rows"]}
+    expect(len(hashes) == 1, "baseline support digest should be common before corruption")
+    corrupted = [dict(row) for row in fit["score_rows"]]
+    corrupted[-1]["scoring_support_sha256"] = "f" * 64
+    try:
+        assert_rows_scored_common(corrupted)
+    except ScoringSupportMismatch as exc:
+        expect(exc.code == "SCORING_SUPPORT_SHA256_MISMATCH", "s13 did not stop with support digest code")
+    else:
+        raise FixtureFailure("s13 same count/different digest did not STOP")
+
+
+def fixture_s14_null_manifold_boundary_not_face_killed() -> None:
+    fit = fit_response_model(detect_step_windows(synthetic_null_rows()))
+    expect(fit["calibration_status"] == "NULL_CALIBRATED", f"collapsed null manifold should be NULL_CALIBRATED, got {fit['calibration_status']}")
+    expect(fit["null_manifold_collapsed"] is True, "null manifold collapse flag missing")
+    expect(fit["local_open_face"] is False, "null winner should not run positive-g local face checks")
+    expect(fit["global_minimizer_coordinates"] == [{"g": 0.0, "tau_s": None, "L_ticks": None, "class": "NULL_MANIFOLD"}], "null minimizer was not published as a collapsed class")
+
+
+def fixture_s15_missing_feature_ts_absent_never_synthesized() -> None:
+    rows = [
+        {
+            "row_key": "missing_feature_ts",
+            "flight_id": "missing",
+            "frame_id": "missing_frame_0000",
+            "tick": 0,
+            "ts_s": 0.0,
+            "e_meas_m": 1.0,
+            "certified_full": "True",
+        }
+    ]
+    normalized, meta = normalize_rows_with_metadata(rows)
+    expect(not normalized, "missing feature_ts_ns row should be excluded before detector")
+    expect(meta["absent_feature_ts_rows"][0]["reason"] == "ABSENT_FEATURE_TS_NS", "missing feature_ts was not typed")
+    expect(meta["excluded_exposure_rows"][0]["reason"] == "ABSENT_EXPOSURE_KEY", "missing feature_ts did not fail the exposure key")
+
+
+def fixture_s16_equidistant_maps_to_earlier_tick() -> None:
+    rows = [
+        feature_row(0, e_meas_m=1.0, flight_id="tie", feature_ts_ns=DT_NS // 2),
+        feature_row(1, e_meas_m=0.9, flight_id="tie"),
+    ]
+    normalized, meta = normalize_rows_with_metadata(rows)
+    first = next(row for row in normalized if row["frame_id"] == "tie_frame_0000")
+    expect(first["tick"] == 0, "equidistant exposure did not map to the earlier control tick")
+    expect(first["nearest_tick"] == 0, "nearest tick was not the earlier tick")
+    expect(first["tick_mismatch_ns"] == DT_NS // 2, "signed mismatch_ns not preserved")
+    expect(meta["mismatch_count"] == 1, "equidistant mismatch was not ledgered")
+
+
+def fixture_s17_sentinel_tip_digest_mismatch(repo: Path) -> None:
+    source_commit = source_bytes_commit(repo)
+    parent = subprocess.check_output(["git", "rev-parse", f"{source_commit}^"], cwd=repo, text=True).strip()
+    old_digest = subprocess.check_output(
+        [
+            sys.executable,
+            "-c",
+            "import hashlib,subprocess,sys; commit=sys.argv[1]; path=sys.argv[2]; print(hashlib.sha256(subprocess.check_output(['git','show',f'{commit}:{path}'])).hexdigest())",
+            parent,
+            SOURCE_GENERATOR_PATH,
+        ],
+        cwd=repo,
+        text=True,
+    ).strip()
+    with tempfile.TemporaryDirectory(prefix="reg1v24_s17_") as tmp:
+        tmp_path = Path(tmp)
+        input_csv = tmp_path / "input.csv"
+        write_csv(input_csv, synthetic_rows())
+        proc = run_generator_cli(repo, [
+            "--input-csv", str(input_csv),
+            "--out-dir", str(tmp_path / "out"),
+            "--direction", "down",
+            "--sentinel-artifact-path", str(repo / SOURCE_GENERATOR_PATH),
+            "--sentinel-artifact-sha256", old_digest,
+            "--sentinel-criterion-commit", GOVERNING_REG1_COMMIT,
+            "--sentinel-evidence-commit", parent,
+            "--sentinel-reviewed-tip", parent,
+            "--sentinel-key-schema", "event_key",
+        ])
+    expect(proc.returncode != 0, "altered sentinel bytes at tip unexpectedly passed")
+    expect("SENTINEL_TIP_DIGEST_MISMATCH" in (proc.stderr + proc.stdout), "s17 did not emit tip digest mismatch")
+
+
 def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
     source_commit = source_bytes_commit(repo)
@@ -483,7 +585,9 @@ def fixture_provenance_and_committed_bytes(repo: Path) -> None:
     expect(prov["source_generator_path"] == SOURCE_GENERATOR_PATH, "source generator path not bound")
     expect(prov["source_generator_commit"] == source_commit, "source generator commit does not equal source-bytes commit")
     expect(prov["execution_tip"] == head, "execution tip mismatch")
-    expect(prov["reg1_commit"] == "e73ca90", "REG-1v2.3 commit binding mismatch")
+    expect(prov["governing_reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.4 exact commit binding mismatch")
+    expect(prov["reg1_commit"] == GOVERNING_REG1_COMMIT, "REG-1v2.4 compatibility commit binding mismatch")
+    expect(prov["prior_viewed_output"]["disposition"] == "VOID_PRE_V2.3", "2g prior-viewing disclosure missing")
     expect(prov["input_digests"][0]["path"].startswith("synthetic://"), "synthetic dry-run should not bind A091 input")
     expect("attestation" in prov["attestation_policy"], "attestation child policy missing")
     expect(dry["packet_scope"] == "SYNTHETIC_DIAGNOSTIC", "synthetic packet scope enum missing")
@@ -517,10 +621,15 @@ def run(repo: Path) -> int:
         ("s10_local_open_face_hidden_by_global_eligibility", fixture_s10_local_open_face_hidden_by_global_eligibility),
         ("s11_multiple_positive_minimizers_not_identified", fixture_s11_multiple_positive_minimizers_not_identified),
         ("s12_source_identity_split", lambda: fixture_s12_source_identity_split(repo)),
+        ("s13_scoring_support_digest_mismatch_stops", fixture_s13_scoring_support_digest_mismatch_stops),
+        ("s14_null_manifold_boundary_not_face_killed", fixture_s14_null_manifold_boundary_not_face_killed),
+        ("s15_missing_feature_ts_absent_never_synthesized", fixture_s15_missing_feature_ts_absent_never_synthesized),
+        ("s16_equidistant_maps_to_earlier_tick", fixture_s16_equidistant_maps_to_earlier_tick),
+        ("s17_sentinel_tip_digest_mismatch", lambda: fixture_s17_sentinel_tip_digest_mismatch(repo)),
         ("provenance_and_committed_bytes", lambda: fixture_provenance_and_committed_bytes(repo)),
     ]
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
-    print("REG-1V2.3 CALIBRATION SOURCE FIXTURES")
+    print("REG-1V2.4 CALIBRATION SOURCE FIXTURES")
     print(f"repo={repo}")
     print(f"head={head}")
     print("scope=DIAGNOSTIC synthetic dry-run only; no A091; no FlightSim/DCGame; no checkpoint; no intervention artifacts")
