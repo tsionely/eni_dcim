@@ -1,0 +1,14 @@
+{
+    "env_hits":  0,
+    "abort_phase":  "recover",
+    "total_gates":  "not exposed in telemetry",
+    "flight_id":  "20260721T191718-7bc7968c",
+    "track":  "verified R2-TRAINING",
+    "terminal_enable":  true,
+    "label":  "race-prep R1 config A run 3",
+    "abort_reason":  "gate clip budget exceeded (11)",
+    "gates_passed":  0,
+    "wall_time_s":  7.447980099997949,
+    "config":  "A",
+    "gate_clips":  12
+}
