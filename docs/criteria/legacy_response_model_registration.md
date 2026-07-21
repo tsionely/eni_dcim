@@ -138,6 +138,13 @@ UNIDENTIFIABLE candidates never enter the argmin.
   predict path already defines). Loss = sum of squared
   (v_meas[k] - v_hat[k]) over that common set, equal weight per
   row; window count and per-window rows published.
+  **ROWS_SCORED_COMMON COLUMN (channel-1 on R73, binding): every
+  candidate-score row publishes rows_scored_common, and the value
+  is IDENTICAL across all candidates in one artifact — the
+  common-support invariant made eyeball-visible, a second
+  tripwire above fixture s2. The generator ASSERTS the equality
+  at run time; a mismatch is a STOP, and an artifact whose
+  candidate rows disagree on it is malformed on its face.**
   Alignment/dedup rules unchanged from v1 (accepted):
   feature_ts_ns to tick grid, nearest tick, max one-tick mismatch
   listed; duplicate frame broadcasts dedup to first.
