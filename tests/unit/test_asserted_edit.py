@@ -35,3 +35,16 @@ def test_no_committed_script_bypasses_the_asserted_path():
         if "docs/criteria" in text and ".replace(" in text:
             offenders.append(str(p))
     assert not offenders, f"bare .replace on criteria in: {offenders}"
+
+
+def test_chained_anchor_on_never_existed_text_raises():
+    """F5 companion (ADVISORY-32): the R84 no-op's exact shape — an
+    edit anchored on text a PRIOR failed edit was supposed to create.
+    Zero matches must raise, breaking the fabrication chain at link
+    two."""
+    import pytest as _pytest
+    from tools.asserted_edit import AnchorMiss, asserted_replace
+    file_text = "roster ends at (s33) here"
+    never_created = "(s43) missing or inconsistent profile"
+    with _pytest.raises(AnchorMiss):
+        asserted_replace(file_text, never_created, "X")

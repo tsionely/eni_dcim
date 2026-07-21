@@ -144,6 +144,13 @@ walked by both channels:
     alternative is dead with branch 3 itself); "every other
     string is non-support" is dead; unknown is MALFORMED, never
     reclassified.
+    **EMPTY-INTERSECTION RULE (F3, channel-1 ADVISORY-32):
+    under zero/None the empty set is a VALUE — a reason
+    combination whose matrix rows share NO permitted primary
+    status is NO_ARM_MALFORMED_PACKET unless an EXPLICIT
+    compatibility clause (like the no-comparator clause above)
+    names it; matrix totality is checked by IDENTITY — every
+    axis-state combination present BY NAME — never by count.**
     A model support-class reason maps by THIS matrix alone — an
     implementation never decides membership by string
     resemblance.
@@ -267,7 +274,19 @@ history disclosed.
                           recurrence still applies. The success
                           predicate reads the POST-SLEW command
                           (reference at 0.0 means v_cmd == 0.0
-                          exactly).**
+                          exactly). **F1 PIN (channel-1
+                          ADVISORY-32): the 0.35 detector's
+                          change operator spans EXACTLY ONE tick
+                          (|v_ref[k] - v_ref[k-1]|, REG-1 step
+                          detector rule 1) — so any per-tick
+                          bound < 0.35 suffices; 0.15 is
+                          registered as <= 0.35/2 exclusive
+                          (0.175), guarding even a hypothetical
+                          two-tick change operator with margin
+                          (rider-1 derivation). The slew's
+                          reference is the previous COMMANDED
+                          value v_cmd[i-1], never a raw
+                          target.**
                           With magnitude <= 0.30 AND per-tick
                           change <= 0.15 < 0.35, no P5
                           transition can qualify as a detector
@@ -307,12 +326,20 @@ history disclosed.
       m; not achieved within 200 ticks -> SCRIPT TERMINATES
       (never a primitive from an unverified state).
       max total duration  = 120 s wall clock, hard abort after
-      max vertical excursion (v3.2 — typed against ALTITUDE,
-      channel-2 §9; "band center" is a forward-range number and
-      never an altitude reference): |alt - alt_ref| > 1.5 m ->
-                          hard abort (script terminates, standard
-                          recovery/landing; partial data ingests
-                          under Section 4 like any data)
+      max vertical excursion (v3.2; F2 ABSOLUTE FLOOR v3.4,
+      channel-1 ADVISORY-32 — a ref-relative bound alone bounds
+      nothing absolute): |alt - alt_ref| > 1.5 m -> hard abort;
+      AND the absolute floor alt < alt_ref - 0.5 m -> hard abort
+      (the primitives climb and re-trim — material travel BELOW
+      the latched reference is never scripted and always
+      aborts). DERIVATIONS (rider 1): 1.5 = 2x the maximum
+      commanded per-primitive excursion (P1+P2 integrate to
+      ~0.75 m at +0.50 m/s); 25 acquisition samples = 2 x the
+      runtime last-12 evidence cap + 1 (odd, so the median is an
+      actual sample); 0.10 m spread = the registered FULL_QUAD
+      certificate outer sigma. (script terminates, standard
+      recovery/landing; partial data ingests under Section 4
+      like any data)
       range guard         = abort outside [3.0, 5.5] m from gate
       clip/saturation     = shipped limiter behavior; every clip
                           event listed

@@ -55,9 +55,16 @@ UNIDENTIFIABLE candidates never enter the argmin.
   DETERMINISTICALLY as the FIRST commit in main history
   containing the recording directory (its introduction commit,
   outcome-independent) — the exact directory path, the exact path
-  list, path-list SHA-256, per-file committed-byte SHA-256, and
-  the zero/multiple-directory resolution rule (zero -> refusal;
-  multiple candidates -> refusal, never a choice).** the packet binds
+  list (ordered BYTEWISE on the restricted alphabet — F4,
+  channel-1 ADVISORY-32: locale collation can reverse "B"/"a"
+  and break digest-list identity; bytewise is pinned, consistent
+  with the big-endian float canon), path-list SHA-256, per-file
+  committed-byte SHA-256, and the zero/multiple-directory
+  resolution rule (zero -> refusal; multiple candidates ->
+  refusal, never a choice). A path present at the evidence
+  commit and absent (or byte-different) at the execution tip ->
+  SOURCE_LOG_MUTATED_AT_TIP, a typed STARTUP refusal — deleted
+  evidence still existed.** the packet binds
   source_log_criterion_commit <= source_log_evidence_commit <=
   execution_tip (ancestry); the PATH LIST is frozen as EVERY file
   under the committed recording directory of flight_id
@@ -780,6 +787,13 @@ DETECTED and listed, whether or not fitted.
    complete run of every still-relevant fixture, under ONE source
    commit descending from the final criterion, at ONE pushed tip,
    is the only coverage that counts.**
+   **ROSTER-BY-NAME LAW (F5, channel-1 ADVISORY-32 — a range
+   label is not a roster: "s1-s50" hides s41b): the attested
+   battery ENUMERATES every fixture BY NAME — s1..s53 plus s41b
+   plus the battery members (i)-(v) plus every companion case —
+   and the transcript lists each name with its verdict. CONTRACT
+   CARDINALITY < CONTRACT IDENTITY, applied to coverage
+   itself.**
 
 ## 2g. PRIOR-VIEWING DISCLOSURE (v2.4 — this round is PRE-ADJUDICATIVE, not PRE-OBSERVATION)
 
