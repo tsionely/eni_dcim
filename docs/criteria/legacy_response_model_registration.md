@@ -152,26 +152,45 @@ UNIDENTIFIABLE candidates never enter the argmin.
       SCORING KEY (fixed types, one per objective row):
           (window_id: str, flight_id: str, feature_ts_ns: int,
            assigned_control_tick: int)
-      CANONICAL window_id (v2.6 — never detector enumeration or
-      file order, which would let reordered input change the
-      digest of unchanged support):
+      CANONICAL window_id (v2.6; SEGMENT-QUALIFIED v2.6.1 — the
+      v2.6 form collided across clock resets reusing the same
+      mono_ns):
           window_id = "W|" + flight_id + "|" +
+                      decimal(control_segment_id) + "|" +
                       decimal(event_control_mono_ns) + "|" +
                       direction("DOWN"/"UP")
-          — derived from immutable event data only.
+          — derived from immutable event data only; the segment
+          id comes from the committed-record-order rule (2f.1),
+          so reordered input can move neither resets nor IDs.
       No scoring key may repeat after canonical normalization:
       a duplicate is a HARD STOP, never a silent set conversion
       (duplicate_scoring_key_count published, must equal 0).
-      SERIALIZATION (v2.6 exact): the actual field VALUES as a
-      JSON array [window_id, flight_id, feature_ts_ns,
-      assigned_control_tick]; strings required ASCII (non-ASCII
-      -> ledger-construction refusal); integers decimal only —
-      no floats, no null, no NaN, no string coercion; UTF-8;
-      separators ("," and ":") with no optional whitespace;
-      records sorted by the TYPED tuple (string, string, int,
-      int); exactly one LF after EVERY record including the
-      final. scoring_support_sha256 = SHA-256 of that byte
-      stream.
+      SERIALIZATION (v2.6; BYTE-UNIQUE v2.6.1 — JSON permits
+      "A/B" and "A\/B" for one value; an escape-ambiguous encoder
+      is two truths): the actual field VALUES as a JSON array
+      [window_id, flight_id, feature_ts_ns,
+      assigned_control_tick]. STRING ALPHABET, restricted:
+      ASCII 0x20-0x7E EXCLUDING double-quote (0x22), backslash
+      (0x5C), and forward-slash (0x2F is permitted ONLY in the
+      window_id separator role as the literal pipe '|' is used —
+      concretely: permitted characters are A-Z a-z 0-9 and
+      "_-|.:+" — any other character -> ledger-construction
+      refusal). NO escape sequences exist by construction; a
+      serializer emitting any backslash fails. Integers decimal
+      only — no floats, no null, no NaN, no string coercion;
+      UTF-8 (pure ASCII by the alphabet rule); separators (","
+      and ":") with no optional whitespace; records sorted by
+      the TYPED tuple (string, string, int, int) with string
+      order = ASCII BYTE order; exactly one LF after EVERY
+      record including the final. scoring_support_sha256 =
+      SHA-256 of that byte stream. **THIS BLOCK is the
+      registered KEY-SERIALIZATION CONTRACT — the sentinel
+      keyset uses THIS encoder verbatim on [flight_id,
+      feature_ts_ns] (the earlier "2f.9 value rules"
+      cross-reference pointed at the fixture roster and is
+      corrected here); sentinel_keyset_sha256 and
+      calibration_keyset_sha256 are computed with it and
+      published.**
 
   The support ledger is constructed ONCE, before candidate
   iteration; candidate rows REFERENCE its count and digest and
@@ -285,12 +304,30 @@ measured AFTER the lag, channel-2 Blocker 1.2):
       POSITIVE_STRICTLY_BETTER -> the positive-g winner's own
         minimizer-set and local-face path
 
-  **NON-VACUITY (v2.6): eligible_positive_candidate_count == 0 ->
-  UNCALIBRATABLE_NO_POSITIVE_COMPARATOR (or NOT_IDENTIFIED),
-  NEVER NULL_CALIBRATED — "better than every member of an empty
-  family" is vacuous truth, not identification.** The packet
-  publishes null_loss, best_positive_loss, gap, epsilon, the
-  tri-state verdict, and the eligible-positive count.
+  **NON-VACUITY (v2.6; UNIQUE STATUS v2.6.1 — a branch cannot be
+  both a typed disposition and an implementation choice):**
+  eligible_positive_candidate_count == 0 -> EXACTLY
+  UNCALIBRATABLE_NO_POSITIVE_COMPARATOR (NOT_IDENTIFIED may
+  remain a reporting parent class, never the serialized primary
+  status), REG-2 effect NONE, never NULL_CALIBRATED — "better
+  than every member of an empty family" is vacuous truth, not
+  identification. The packet publishes null_loss,
+  best_positive_loss, gap, epsilon, the tri-state verdict, and
+  the eligible-positive count.
+  **ONE LOSS-EQUIVALENCE FUNCTION (v2.6.1, channel-2 §5 — the
+  same pair may not be "tied" in one section and ordered in
+  another):**
+
+      loss_equal(a, b) := |a - b| <=
+          max(LOSS_REL_TOL * max(|a|, |b|), LOSS_ABS_TOL)
+      LOSS_REL_TOL = 1e-9;  LOSS_ABS_TOL = 1e-18
+
+  This ONE relation governs: null-vs-best-positive; positive
+  global-minimizer membership and global_minimizer_count; local
+  neighbor comparison; first-wins display-row selection (chosen
+  only AFTER the full equivalence class is published); and
+  prediction-equivalence testing. The tri-state epsilon above IS
+  this function's bound applied to the gap.
   A g > 0 candidate tying the null within tolerance, or beating
   it, removes NULL_CALIBRATED: the status is then decided by the
   positive-gain winner's own closed-face check (CALIBRATED or
@@ -351,21 +388,46 @@ DETECTED and listed, whether or not fitted.
    labeled by the assigned CONTROL tick; the exposure time is
    preserved in the ledger; signed mismatch published per row.
    The mismatch LEDGER is mandatory.
-   **CONTROL TIMELINE (v2.6, channel-2 §6 — "the latest tick" is
-   defined against the ACTUAL LOGGED timeline, never a global
-   epoch rounding, which can cross a flight origin, clock reset,
-   or absent tick):** control timestamp field = the
-   replay-attached setpoint record's mono_ns; the join is
-   WITHIN-FLIGHT (partition key flight_id), split into SEGMENTS
-   at any clock reset (mono_ns decrease) — never join across a
-   reset. assigned control row = argmax(control_mono_ns) subject
-   to same flight/segment and control_mono_ns <= exposure time;
-   accept only 0 <= mismatch <= one registered control period.
-   Fail-closed types: OFF_WINDOW_NO_CAUSAL_CONTROL (no prior
-   control row); OFF_WINDOW_CONTROL_GAP (prior row older than one
-   period); CONTROL_IDENTITY_CONFLICT (duplicate control
-   timestamp, conflicting payload); ABSENT_CONTROL_TIME (missing
-   — never synthesized).
+   **CONTROL TIMELINE (v2.6; CLOCK BRIDGE v2.6.1 — the v2.6 join
+   compared EPOCH feature_ts_ns against MONOTONIC setpoint
+   mono_ns, two different clocks ~1.78e9 seconds apart on the
+   A091 hostile instance; ledger entry R81):**
+
+   TWO CLOCKS, TWO ROLES: feature_ts_ns (epoch) is the IDENTITY
+   clock — exposure identity, dedup, sentinel keys. The JOIN
+   clock is MONOTONIC: every feature record LOGS ITS OWN mono_ns
+   beside feature_ts_ns (verified on the committed A091 key
+   files) — the bridge is the logged PAIR on each record, never
+   an arithmetic transform, never a synthesized value. A feature
+   record missing mono_ns -> ABSENT_CONTROL_TIME (typed), row
+   OFF support.
+
+   THE JOIN, entirely in the monotonic domain: control timestamp
+   field = the replay-attached setpoint record's mono_ns;
+   WITHIN-FLIGHT (partition flight_id), within SEGMENT.
+   **CONTROL_SEGMENT_ID (v2.6.1): segments are determined ON THE
+   COMMITTED SOURCE-LOG BYTES in record order — segment index
+   increments at each mono_ns decrease — BEFORE any sorting or
+   deduplication; committed record order is immutable data, CSV
+   reordering after the fact cannot move a reset boundary.**
+   assigned control row = argmax(control_mono_ns) subject to same
+   flight AND same segment AND control_mono_ns <=
+   feature_record_mono_ns; accept only 0 <= mismatch <= one
+   registered control period. Row-level published: feature_ts_ns,
+   feature mono_ns, assigned control mono_ns, signed mismatch.
+   Fail-closed types: OFF_WINDOW_NO_CAUSAL_CONTROL;
+   OFF_WINDOW_CONTROL_GAP; CONTROL_IDENTITY_CONFLICT (below);
+   ABSENT_CONTROL_TIME.
+
+   **CONTROL PRIMARY ID AND PAYLOAD (v2.6.1, channel-2 §7):**
+   control primary ID = (flight_id, control_segment_id,
+   control_mono_ns). CONTROL RELEVANT PAYLOAD, frozen ordered
+   list: (setpoint.v_body[2] : float64, finite required — NaN/Inf
+   -> parse refusal; -0.0 normalized to +0.0 before comparison;
+   missing -> typed ABSENT, and mixed presence within a class is
+   an inconsistency). Duplicate control primary ID with
+   inconsistent payload -> CONTROL_IDENTITY_CONFLICT, the ENTIRE
+   control-identity class excluded and listed.
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
    Accepted TRUE set: {"True", "true", "1"}; accepted FALSE set:
    {"False", "false", "0"}; missing/blank/unknown ->
@@ -594,6 +656,17 @@ post-observational amendment in every real packet):**
 A NO answer does not prohibit the amendment; it forces the typed
 classification OUTCOME_RESPONSIVE and bars describing it as an
 ordinary instrument correction.
+**TYPED CONSEQUENCE (v2.6.1, channel-1 on ADVISORY-30 — "a
+classification without a disposition is a label, and labels
+without dispositions are where drift lives"):** every
+OUTCOME_RESPONSIVE row carries a mandatory consequence field,
+closed enum: VOID_AND_RESTART_UNDER_INDEPENDENT_RATIONALE (the
+amendment re-lands only with a justification that never
+references the seen status) or QUARANTINE_PENDING_REREGISTRATION
+(the amendment is inoperative until both channels ratify it
+knowingly as outcome-responsive). A row classified
+OUTCOME_RESPONSIVE with no consequence, or with an unknown
+consequence string, is a packet-checker FAILURE.
 
 **OUTCOME-SYMMETRY CHECK (channel-1 on R76, standing rule of the
 program):** every POST-OBSERVATIONAL amendment must be justified
