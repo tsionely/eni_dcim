@@ -145,7 +145,39 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   (channel-1): one synthetic input satisfying TWO branch
   predicates simultaneously must land in the EARLIER branch, and
   the fixture asserts the landing — "by construction" is a claim
-  about the evaluator, provable in one executed edge case.**
+  about the evaluator, provable in one executed edge case; and
+  (m) the RUNTIME-TWIN EQUIVALENCE fixture (channel-1 on R66,
+  provenance-ratification condition): one synthetic e_meas series
+  driven through BOTH code paths — the runtime rate_anchor_v_raw
+  path and the calibration reconstruction — equality asserted by
+  execution, because no overlapping archive support exists to
+  prove the equivalence observationally.**
+  **BOUNDARY-OPTIMUM VERDICT CONTINGENCY (channel-1 on R66,
+  pre-committed BEFORE the intervention runs, so the restart
+  cannot be chosen after seeing which verdict appeared): a
+  truncated response model under-subtracts, which blurs both
+  non-confirmation directions — CONTRIBUTORY becomes ambiguous
+  (partial mechanism, or truncated model?) and a REFUTED-family
+  outcome can be MANUFACTURED (slope survival from under-removal,
+  not physics). Therefore, while the BOUNDARY_OPTIMUM flag rides:
+  any outcome in the mechanism-adjudicating branches other than
+  CONFIRMED_SUFFICIENT_FOR_EVALUATOR — that is, REFUTED,
+  HOLD_INCONCLUSIVE_QUIET_BREACH, CONTRIBUTORY_NOT_SUFFICIENT,
+  REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION, and
+  REFUTED_OR_HARMFUL_INTERVENTION — is INTERIM, not final: the
+  ONE-TIME lawful registration restart (grid extension via the
+  Section-2 void clause; rationale independent of the 23 already
+  exists — the calibration's own truncated faces) executes, and
+  the intervention reruns under the extended registration before
+  any verdict becomes final. The process branches INVALID_INPUT,
+  NO_REGISTERED_REMAINDER_TO_EXPLAIN, and
+  HOLD_INCOMPLETE_INTERVENTION_SUPPORT keep their own repairs and
+  do not consume the restart. CONFIRMED stands A FORTIORI:
+  confirmation under a limited model — with N > 0 firing earlier
+  in the top-down order and the sign/frame negative controls
+  guarding — is the stronger evidence, not the weaker. The
+  artifact carries this as a typed column (verdict_finality:
+  FINAL / INTERIM_PENDING_RESTART), never a footnote.**
   **RESIDUAL ADMISSIBILITY, TYPED FOR EVERY BRANCH (supersedes the
   earlier blanket sentence AND the earlier partial typing):**
   INVALID_INPUT -> residual INADMISSIBLE, no verdict;

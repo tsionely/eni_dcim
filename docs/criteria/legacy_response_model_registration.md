@@ -276,3 +276,38 @@ directory may NOT exist pre-REG-2 — pre-REG-2 numeric output is
 VOID / diagnostic history only (the fb1584f-round lesson: the
 sequencing rule must be enforced at PROCESS ENTRY, not by later
 cleanup).
+
+## ANNEX A — channel dispositions on the REG-2 flags (ANNOTATIONS IN PLACE; Sections 1-3b are not edited, per the ruling's own form requirement)
+
+**Channel-1 on RESPONSE-66 (received after REG-2 was pushed at
+9393f94):**
+
+- **Flag 1 (BOUNDARY_OPTIMUM) — proceed under labels, with a
+  PRE-COMMITTED contingency**: a truncated model under-subtracts
+  and can blur or manufacture the non-confirmation cells. Any
+  mechanism-adjudicating outcome other than
+  CONFIRMED_SUFFICIENT_FOR_EVALUATOR, produced while the flag
+  rides, is INTERIM: the one-time lawful restart (grid extension
+  via the Section-2 void clause; rationale independent of the 23 =
+  the calibration's own truncated faces) executes before any
+  verdict is final. CONFIRMED stands a fortiori. Full clause
+  committed in the criterion (decision-table section), where the
+  verdict machinery lives; the artifact carries verdict_finality
+  as a typed column.
+- **Flag 2 (MEASURED_RESPONSE_PROVENANCE) — RATIFIED**: REG-1
+  registered a QUANTITY with a named runtime twin, not a storage
+  location. Conditions: (a) equivalence is proven CONSTRUCTIVELY —
+  the runtime-twin fixture (criterion fixture (m)): one synthetic
+  series through both code paths, equality asserted by execution
+  (no overlapping archive support exists for an observational
+  proof); (b) this ruling is recorded as THIS ANNEX — an
+  annotation alongside the registration, never a semantic edit to
+  a criterion whose evidence exists. The Section-4 void clause is
+  honored by the ratification being explicit.
+- **Transport inversion — approved.** A091 wears three hats with
+  two walls: legacy-path calibrator, TERM no-op sentinel, and the
+  physical episode — all intervals disjoint by construction.
+
+**Channel-2 on RESPONSE-66: PENDING.** Step F (the intervention
+run) remains NO-GO until channel-2's disposition on the two flags
+is received and annexed here.
