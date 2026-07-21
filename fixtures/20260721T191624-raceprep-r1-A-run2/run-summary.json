@@ -1,0 +1,14 @@
+{
+    "env_hits":  2,
+    "abort_phase":  "hover",
+    "total_gates":  "not exposed in telemetry",
+    "flight_id":  "20260721T191605-7bc7968c",
+    "track":  "verified R2-TRAINING",
+    "terminal_enable":  true,
+    "label":  "race-prep R1 config A run 2",
+    "abort_reason":  "environment collision (impulse=2.0)",
+    "gates_passed":  0,
+    "wall_time_s":  9.360027900023852,
+    "config":  "A",
+    "gate_clips":  0
+}
