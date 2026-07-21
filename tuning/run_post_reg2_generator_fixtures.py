@@ -22,6 +22,7 @@ if str(REPO_ROOT) not in sys.path:
 from tuning.post_reg2_contract_b_generator import (
     CALIBRATION_DIGESTS,
     ContractBModel,
+    RateAnchorAbsentError,
     StartupContractError,
     calibration_artifact_reconstructed_v_raw,
     apply_contract_b_response,
@@ -437,6 +438,20 @@ def assert_runtime_reconstruction_case(name: str, samples: list[dict[str, object
         expect(abs(calibration_rate - impostor) > 1e-3, f"{name}: fixed-window impostor was not exposed")
 
 
+def assert_absent_rate_case(name: str, samples: list[dict[str, object]], anchor_ts_s: float) -> None:
+    for leg_name, fn in (
+        ("runtime-oracle", runtime_twin_rate_anchor_v_raw),
+        ("v21-reconstruction", calibration_artifact_reconstructed_v_raw),
+    ):
+        try:
+            value = fn(samples, anchor_ts_s)
+        except RateAnchorAbsentError as exc:
+            expect(exc.code == "ABSENT_RESPONSE", f"{name}/{leg_name}: absence error code mismatch")
+            continue
+        expect(value is None, f"{name}/{leg_name}: sparse support returned {value!r} instead of typed absence/None")
+        expect(value != 0.0, f"{name}/{leg_name}: sparse support minted forbidden 0.0")
+
+
 def fixture_m_runtime_twin_equivalence() -> None:
     dense: list[dict[str, object]] = []
     for i in range(25):
@@ -483,6 +498,14 @@ def fixture_m_runtime_twin_equivalence() -> None:
                 "certified_full": True,
             })
     assert_runtime_reconstruction_case("duplicate-timestamps", duplicate, 0.34)
+
+    sparse = [
+        {"row_key": "sparse_000", "ts_s": 0.00, "e_meas_m": 1.00, "certified_full": True},
+        {"row_key": "sparse_001", "ts_s": 0.02, "e_meas_m": 0.99, "certified_full": True},
+        {"row_key": "sparse_002", "ts_s": 0.04, "e_meas_m": 0.98, "certified_full": True},
+        {"row_key": "sparse_002_rebroadcast", "ts_s": 0.04, "e_meas_m": 99.0, "certified_full": True},
+    ]
+    assert_absent_rate_case("below-minimum-support-3-unique", sparse, 0.04)
 
 
 def run(repo: Path) -> int:

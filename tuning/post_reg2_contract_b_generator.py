@@ -68,6 +68,12 @@ class StartupContractError(RuntimeError):
         self.checkpoint_touched = checkpoint_touched
 
 
+class RateAnchorAbsentError(ValueError):
+    """Typed absence for rate_anchor_v_raw when support is below runtime minimums."""
+
+    code = "ABSENT_RESPONSE"
+
+
 @dataclass(frozen=True)
 class ContractBModel:
     g: float
@@ -476,7 +482,7 @@ def _rate_anchor_v_raw_from_points(points: Sequence[tuple[float, float]]) -> flo
     recent = tail[-RATE_LAST_SAMPLE_CAP:]
     slope = robust_slope([ts for ts, _ in recent], [e for _, e in recent])
     if slope is None:
-        raise ValueError("insufficient certified FULL fresh-tail history for rate_anchor_v_raw")
+        raise RateAnchorAbsentError("ABSENT_RESPONSE: insufficient certified FULL fresh-tail history for rate_anchor_v_raw")
     return -float(slope)
 
 
@@ -494,12 +500,12 @@ def _local_de_dt(points: Sequence[tuple[float, float]]) -> float:
 def _drive_real_terminal_oracle_rate_anchor(observations: Sequence[tuple[float, float]]) -> float:
     """Leg 1 for fixture (m): feed the shipped oracle and force FULL->SIDE."""
     points = _dedupe_increasing(observations)
-    if len(points) < 4:
-        raise ValueError("insufficient FULL points for oracle latch")
     oracle = TerminalOracle(max_gap_s=RATE_MAX_GAP_S)
     for ts, e_meas in observations:
         oracle.observe(ts, e_meas, "FULL_QUAD")
         oracle.observe(ts, e_meas, "SIDE_PAIR")
+    if not points:
+        raise RateAnchorAbsentError("ABSENT_RESPONSE: no certified FULL history for oracle latch")
 
     last_ts, last_e = points[-1]
     slope = _local_de_dt(points)
@@ -512,7 +518,7 @@ def _drive_real_terminal_oracle_rate_anchor(observations: Sequence[tuple[float, 
         if oracle.active_source == "SIDE_PAIR" and oracle.rate_anchor_v_raw is not None:
             return float(oracle.rate_anchor_v_raw)
     if oracle.rate_anchor_v_raw is None:
-        raise ValueError("real TerminalOracle did not produce rate_anchor_v_raw")
+        raise RateAnchorAbsentError("ABSENT_RESPONSE: real TerminalOracle did not produce rate_anchor_v_raw")
     return float(oracle.rate_anchor_v_raw)
 
 
