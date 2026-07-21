@@ -130,6 +130,28 @@ def test_unknown_accounting_mode_fails_closed(tmp_path):
     assert any("unknown accounting_mode" in f for f in fails)
 
 
+def test_procedural_rows_mode_requires_typed_scope(tmp_path):
+    """Channel-2 on R64 §6: procedural_rows counts DISPOSITION TASKS,
+    never approaches — the mode demands a non-statistical
+    evidence_scope and rejects statistical independent_unit claims."""
+    fails = check_manifest(_write(tmp_path, [
+        _row(board_row=1, attempted_n=5, analyzable_n=5, independent_n=5,
+             accounting_mode="procedural_rows",
+             evidence_scope="NO_GO_DISPOSITION",
+             independent_unit="criterion_task"),              # clean
+        _row(board_row=2, attempted_n=5, analyzable_n=5, independent_n=5,
+             accounting_mode="procedural_rows",
+             independent_unit="criterion_task"),   # scope missing
+        _row(board_row=3, attempted_n=5, analyzable_n=5, independent_n=5,
+             accounting_mode="procedural_rows",
+             evidence_scope="NO_GO_DISPOSITION",
+             independent_unit="physical_approach"),  # unit claims stats
+    ]), REPO)
+    assert not any("row 1" in f for f in fails)
+    assert any("row 2" in f and "violates mode" in f for f in fails)
+    assert any("row 3" in f and "violates mode" in f for f in fails)
+
+
 def _mini_repo(tmp_path):
     """Throwaway repo for release-grade scenarios: c1 commits the
     artifact; the caller then evolves history deterministically."""

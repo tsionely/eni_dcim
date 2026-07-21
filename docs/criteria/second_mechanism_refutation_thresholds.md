@@ -71,11 +71,37 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
       R   = |S_B \ S_A|   resolved baseline-large approaches
       S   = |S_B intersect S_A|   surviving baseline-large approaches
       N   = |S_A \ S_B|   NEWLY large approaches
-      M   = count of baseline-large approaches lacking valid
-            after-intervention Contract-B input or an estimable
-            after-slope (zero-valued command references are
-            evaluable and NEVER enter M; only absence/invalidity
-            does — missing after-support is never a drop)
+
+  **COMMON SUPPORT IS CUT-PAIRED (channel-2 on R64 §2 — the
+  approach-level M had two holes: a baseline-large cut with a
+  missing after-estimate could masquerade as a resolved approach
+  behind a surviving small cut, and missing after-support on a
+  baseline-SMALL approach could hide newly introduced harm).
+  Define, per approach j, with the PAIRED CUT KEY
+  (approach_id, cut_id, registered age/event support key):**
+
+      C_B(j) = estimable before-intervention cuts of j
+      C_A(j) = estimable after-intervention cuts of j
+      C_P(j) = cuts of j with valid PAIRED before-and-after support
+
+      M_RESOLUTION = count of baseline-large CUTS (each cut whose
+            |b1| > 0.35 made its approach large) lacking a valid
+            paired after-estimate — an approach may leave S_A ONLY
+            through paired evidence on the cuts that put it there
+      M_HARM = count of before-evaluable approaches (large or
+            small) lacking enough paired after-support to
+            determine newly-large status — absence of after-data
+            is never proof of no new harm
+
+  Zero-valued command references are evaluable and NEVER enter
+  either count; only absence/invalidity does. EVERY support loss
+  carries a typed exit reason (ABSENT_INPUT, BURN_IN, CLIPPED,
+  OWNERSHIP_SPLIT, AGE_LOSS, ESTIMABILITY_FAIL) — listed per cut,
+  never silent. A labeled conservative rerun mode may instead
+  score every missing baseline-large cut as STILL LARGE; missing
+  baseline-small support has no such conversion — nothing proves
+  absent harm except paired data.
+
       Q   = independent near-zero-activity approaches retaining an
             estimable large WITHIN-CUT slope after intervention
             (activity per the Q-TYPE rule above)
@@ -84,7 +110,8 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
       1. input validity fails -> INVALID_INPUT
       2. B = 0                -> NO_REGISTERED_REMAINDER_TO_EXPLAIN
                                  (NOT_APPLICABLE; never confirmation)
-      3. M > 0                -> HOLD_INCOMPLETE_INTERVENTION_SUPPORT
+      3. M_RESOLUTION > 0
+         or M_HARM > 0        -> HOLD_INCOMPLETE_INTERVENTION_SUPPORT
       4. N > 0                -> REFUTED_OR_HARMFUL_INTERVENTION
       5. Q >= K               -> REFUTED
       6. 0 < Q < K            -> HOLD_INCONCLUSIVE_QUIET_BREACH
@@ -92,14 +119,33 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
       8. 0 < R < ceil(B/2)    -> CONTRIBUTORY_NOT_SUFFICIENT
       9. R = 0                -> REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION
 
-  (Branches 3-4 clear M = 0 and N = 0 before any counting branch,
-  so by branch 7 the net difference equals R and cannot hide a
-  transition. B = 0 short-circuits at branch 2 — with no registered
-  remainder to explain there is no target, hence NOT_APPLICABLE,
-  never CONFIRMED. The last label rejects mechanism-2 as the
-  registered remainder explanation without claiming the physical
-  effect is nonexistent in every regime. S and N are published per
-  approach ID, not only as counts.)
+  (Branches 3-4 clear M_RESOLUTION = M_HARM = 0 and N = 0 before
+  any counting branch, so by branch 7 the net difference equals R
+  and cannot hide a transition — and every resolution is PAIRED
+  evidence on the cuts that made the approach large. B = 0
+  short-circuits at branch 2 — with no registered remainder to
+  explain there is no target, hence NOT_APPLICABLE, never
+  CONFIRMED. The last label rejects mechanism-2 as the registered
+  remainder explanation without claiming the physical effect is
+  nonexistent in every regime. S and N are published per approach
+  ID, not only as counts.)
+  **MACHINE FIXTURE REQUIREMENTS (binding — the exhaustiveness
+  claim is HELD until these are committed and green; a table is
+  machine-exhaustive when its edge cases have been RUN):** the
+  generator's fixture suite must contain, minimum: (a) missing
+  baseline-large cut with another surviving small cut in the same
+  approach -> HOLD, never resolved; (b) missing after-support on a
+  baseline-SMALL approach -> HOLD via M_HARM; (c) a newly large
+  approach -> branch 4; (d) B = 0 -> branch 2; (e) one quiet
+  breach and (f) two quiet breaches -> branches 6 and 5; (g)
+  explicit-zero input vs absent input distinguished; (h) A091
+  byte-identical no-op; (i) mixed-owner split; (j) every
+  residual-admissibility branch emitted; (k) a Theil-Sen/OLS
+  boundary disagreement flagged; and (l) the PRECEDENCE FIXTURE
+  (channel-1): one synthetic input satisfying TWO branch
+  predicates simultaneously must land in the EARLIER branch, and
+  the fixture asserts the landing — "by construction" is a claim
+  about the evaluator, provable in one executed edge case.**
   **RESIDUAL ADMISSIBILITY, TYPED FOR EVERY BRANCH (supersedes the
   earlier blanket sentence AND the earlier partial typing):**
   INVALID_INPUT -> residual INADMISSIBLE, no verdict;
@@ -237,11 +283,15 @@ excluded: slope undefined); an even pairwise count takes the mean
 of the two middle values. The estimator is chosen because the
 registered >= 4-unique-ages minimum was already named in its
 terms, and channel-2's independent recomputation confirms the
-baseline classification is estimator-stable (OLS agrees on the
-existing checkpoint). Per-cut OLS is published alongside as a
-cross-estimator stability DESCRIPTOR; a cut where the two
-estimators disagree across the 0.35 boundary is FLAGGED in the
-artifact. Approach-level uncertainty continues to run through the
+APPROACH-LEVEL classification agrees across estimators on the
+existing checkpoint — but the cut-level classifications are NOT
+identical: one boundary disagreement exists
+(20260720T062804-c38fd469:A1:cut04 — Theil-Sen b1 ~ -0.2303, OLS
+b1 ~ -0.4916) and must be flagged, not narrated away; the 4/23
+set is stable because another qualifying cut carries that
+approach. Per-cut OLS is published alongside as a cross-estimator
+stability DESCRIPTOR; every cut where the two estimators disagree
+across the 0.35 boundary is FLAGGED in the artifact. Approach-level uncertainty continues to run through the
 physical-approach outer cluster (bootstrap/LOAO), never per-cut.
 
 **APPROACH CLASSIFIER, FIXED (channel-2 on R60-63 — the machine

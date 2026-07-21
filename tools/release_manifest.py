@@ -42,8 +42,22 @@ REQUIRED_FIELDS = (
 
 # Closed accounting-mode enum: mode -> equation(row, attempted,
 # analyzable) that must hold. Extend ONLY by committed change here.
+#
+# "procedural_rows" (channel-2 on R64 §6): rows that count
+# PROCEDURAL DISPOSITION TASKS (e.g. a NO-GO packet's D-H task
+# list), never physical approaches, observations, or analyzable
+# residual units. Such a row must say so in type: evidence_scope
+# is mandatory and must name a non-statistical scope, and the
+# independent_unit must not claim approaches/clusters.
+_PROCEDURAL_SCOPES = {"NO_GO_DISPOSITION"}
+_STATISTICAL_UNITS = {"physical_approach", "approach", "cluster"}
 ACCOUNTING_MODES = {
     "analyzable": lambda row, att, ana: row.get("independent_n") == ana,
+    "procedural_rows": lambda row, att, ana: (
+        row.get("independent_n") == ana
+        and row.get("evidence_scope") in _PROCEDURAL_SCOPES
+        and row.get("independent_unit") not in _STATISTICAL_UNITS
+    ),
 }
 
 
