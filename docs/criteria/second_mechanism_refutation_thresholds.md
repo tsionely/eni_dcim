@@ -104,6 +104,43 @@ mixed-ownership windows are analyzed per rider R3.
   cannot proceed to a verdict on that stream. (The first run's
   stream measured corr = -0.265: invalid input, no verdict
   branch fired.)
+  **QUIET-CELL EXEMPTION (channel-1, necessary): clusters below
+  the registered 0.05 RMS activity floor are EXEMPT from the
+  correlation pre-check — a near-zero stream has nothing to
+  correlate, and these are precisely the mechanism's quiet
+  prediction cells; without the exemption the pre-check would
+  invalidate the very cells that test the mechanism. The
+  pre-check gates ACTIVE streams only.**
+
+## Component-to-runtime mapping (channel-1 central ruling — committed BEFORE any A/B/C/D read)
+
+Before decomposition numbers are read, the mapping of components to
+runtime terms is FIXED, in both directions:
+
+- **WITHIN-CUT drift over an anchor's life** (fit B's residual
+  slope family) is the runtime's actual exposure — it and ONLY it
+  scores against the 0.35 sigma_a gate.
+- **BETWEEN-CUT intercept structure** (what fit B removes) maps to
+  the ANCHOR/ZERO-AGE terms — the sigma_0 / latch-quality /
+  admission machinery — because live operation re-anchors and
+  resets it. It is PRICED THERE EXPLICITLY (pseudo-floor family),
+  never dropped.
+- Both error directions are barred by this pre-commitment: no
+  laundering of between-cut structure INTO the gate
+  (over-conservatism is also an error), and no silent removal of a
+  genuine within-cut component FROM it (under-conservatism). The
+  mapping cannot be chosen after seeing which mapping passes.
+
+## Cut-table hypothesis (flagged pre-table, channel-1)
+
+To be answered by the cut-level table, not assumed: are the cuts
+the unattenuated repair WORSENED (A071-class, b0_shadow +0.86)
+precisely the low-auth / large-|v_latch| cuts? If yes, the
+authority schedule was wrongly SUPPRESSING bad latched slopes, and
+the repair's refinement direction is a LATCH-QUALITY ADMISSION
+(latch or refuse; never attenuate) — the per-channel-trust
+doctrine completing itself. Hypothesis status until the table
+speaks.
 - **COMMAND SEMANTICS**: 0.0 is observed zero activity; None/absent
   is missing input; no truthiness filter may merge them.
 - **TIMING**: exact withheld-window boundaries; prior-tick and
