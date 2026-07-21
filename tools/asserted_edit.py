@@ -22,9 +22,14 @@ def asserted_replace(text: str, old: str, new: str, expect: int = 1) -> str:
 
 
 def asserted_edit_file(path: str, old: str, new: str, expect: int = 1) -> int:
+    # Atomic: a write failure can never leave a partial criterion.
+    import os, tempfile
     with open(path, encoding="utf-8") as f:
         src = f.read()
     out = asserted_replace(src, old, new, expect)
-    with open(path, "w", encoding="utf-8") as f:
+    d = os.path.dirname(path) or "."
+    fd, tmp = tempfile.mkstemp(dir=d, suffix=".tmp")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write(out)
+    os.replace(tmp, path)
     return expect

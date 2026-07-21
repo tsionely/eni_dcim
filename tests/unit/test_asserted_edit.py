@@ -20,3 +20,18 @@ def test_missed_anchor_raises_loudly():
 def test_multi_match_is_also_a_miss():
     with pytest.raises(AnchorMiss):
         asserted_replace("x y x", "x", "z")  # 2 matches, expected 1
+
+
+def test_no_committed_script_bypasses_the_asserted_path():
+    """Universal-use scan (channel-2 on R86 §7): no committed tool
+    may call bare .replace on criterion files. The asserted path is
+    the only lawful editor of docs/criteria."""
+    import pathlib
+    offenders = []
+    for p in pathlib.Path("tools").glob("**/*.py"):
+        if p.name == "asserted_edit.py":
+            continue
+        text = p.read_text(encoding="utf-8")
+        if "docs/criteria" in text and ".replace(" in text:
+            offenders.append(str(p))
+    assert not offenders, f"bare .replace on criteria in: {offenders}"

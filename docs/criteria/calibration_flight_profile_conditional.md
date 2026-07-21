@@ -111,8 +111,17 @@ walked by both channels:
             NULL_CALIBRATED, NOT_IDENTIFIED,
             UNCALIBRATABLE(INSUFFICIENT_VALID_RESPONSE_ROWS);
         NO_ELIGIBLE_POSITIVE_COMPARATOR_DUE_TO_SUPPORT_HORIZON
-            pairs with: UNCALIBRATABLE_NO_POSITIVE_COMPARATOR
-            only.
+            pairs with: UNCALIBRATABLE_NO_POSITIVE_COMPARATOR —
+            **AND (v3.3, channel-2 on R86 H2: the matrix failed a
+            lawful multi-reason hostile) that primary status is
+            EXPLICITLY COMPATIBLE with any ADDITIONAL
+            support-starvation reasons simultaneously true:
+            a packet may carry {INSUFFICIENT_PRIMARY_WINDOWS,
+            NO_ELIGIBLE_POSITIVE_COMPARATOR_DUE_TO_SUPPORT_HORIZON}
+            (or rows, or all three) beside primary
+            UNCALIBRATABLE_NO_POSITIVE_COMPARATOR with the
+            matching reason_set — a valid STARVED packet, never
+            MALFORMED.**
     **ADEQUATE ROW (v3.2, channel-2 §6.1):** support reasons
     empty (attested) pairs with: CALIBRATED, NULL_CALIBRATED,
     NOT_IDENTIFIED — and NOTHING else; a support-class
@@ -131,9 +140,10 @@ walked by both channels:
     NO_POSITIVE_COMPARATOR_SUPPORT_HORIZON}; non-support model
     reasons = exactly the instrument-axis enum (which executes at
     branch 1, never branch 3); ANY other string ->
-    NO_ARM_MALFORMED_PACKET or branch-3 fail-closed per s41 —
-    "every other string is non-support" is dead; unknown is
-    MALFORMED, never reclassified.
+    NO_ARM_MALFORMED_PACKET, always (v3.3 — the "or branch-3"
+    alternative is dead with branch 3 itself); "every other
+    string is non-support" is dead; unknown is MALFORMED, never
+    reclassified.
     A model support-class reason maps by THIS matrix alone — an
     implementation never decides membership by string
     resemblance.
@@ -149,10 +159,12 @@ reason):
        insufficient-windows model reason; or a support reason
        without its matching model evidence)
            -> NO_ARM_MALFORMED_PACKET
-    3. model UNCALIBRATABLE with reason OUTSIDE the
-       support-starvation allowlist
-           -> NO_ARM_NONCOLLECTION_FAILURE (a flight never cures
-              an instrument)
+    3. [DELETED v3.3, channel-2 on R86 H1: branch 3 had no
+       lawful registered member — known non-support reasons are
+       instrument-axis (branch 1), unknown strings are MALFORMED
+       (branch 2). An unknown reason cannot be both MALFORMED and
+       a lawful branch input. Unknown model reason -> ALWAYS
+       NO_ARM_MALFORMED_PACKET at branch 2.]
     4. calibration_support_reasons nonempty
            -> ARM_PENDING_FIVE_GATES
     5. calibration_support_reasons empty
@@ -239,13 +251,23 @@ history disclosed.
                           0.10 -> 0.0; per-tick update; missing
                           altitude sample -> hold previous
                           command, count it; 5 consecutive
-                          missing -> SCRIPT TERMINATES. **SLEW LIMIT (v3.2,
-                          channel-2 §7 — the v3.1 inference was
-                          FALSE: clamp output can swing +0.30 ->
-                          -0.30 = 0.60 on an error sign flip;
-                          ledger entry R86): after the clamp,
-                          |v_cmd[i] - v_cmd[i-1]| <= 0.15 per
-                          tick, enforced in the law itself.**
+                          missing -> SCRIPT TERMINATES. **SLEW LIMIT (v3.2) AND
+                          EXACT RECURRENCE (v3.3, channel-2 on
+                          R86 §4 — a bound excludes the 0.60
+                          jump but selects no single command;
+                          the experiment is ONE sequence):
+                          target[i] = deadbanded
+                          clamp(-0.30 * e_alt[i], -0.30, +0.30);
+                          delta[i] = clamp(target[i] -
+                          v_cmd[i-1], -0.15, +0.15);
+                          v_cmd[i] = v_cmd[i-1] + delta[i].
+                          v_cmd at P5 entry = 0.0 (P4 ends
+                          there). On a missing altitude sample:
+                          target[i] = target[i-1] (held), the
+                          recurrence still applies. The success
+                          predicate reads the POST-SLEW command
+                          (reference at 0.0 means v_cmd == 0.0
+                          exactly).**
                           With magnitude <= 0.30 AND per-tick
                           change <= 0.15 < 0.35, no P5
                           transition can qualify as a detector

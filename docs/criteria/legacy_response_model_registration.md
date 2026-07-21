@@ -45,9 +45,19 @@ UNIDENTIFIABLE candidates never enter the argmin.
 - **Source**: the A091 physical episode (20260719T201851),
   command-step intervals selected by the deterministic detector.
   Calibration intervals DISJOINT from the A091 sentinel interval.
-  **SOURCE-LOG BINDING (v2.6.3; COMMIT-BOUND v2.6.4, channel-2 on
-  R84-85 §4.1 — caller-chosen paths with digests identify bytes
-  but never prove completeness):** the packet binds
+  **SOURCE-LOG BINDING (v2.6.3; COMMIT-BOUND v2.6.4; PRE-RUN
+  INPUT-BINDING ARTIFACT v2.6.5, channel-2 on R86 §5 — someone
+  still chose the history point; now nothing is chosen at run
+  time): a committed INPUT-BINDING ARTIFACT must exist BEFORE the
+  result-producing generator runs, with criterion commit <=
+  input-binding commit <= source-generator commit <= execution
+  tip, containing: source_log_evidence_commit_full — FROZEN
+  DETERMINISTICALLY as the FIRST commit in main history
+  containing the recording directory (its introduction commit,
+  outcome-independent) — the exact directory path, the exact path
+  list, path-list SHA-256, per-file committed-byte SHA-256, and
+  the zero/multiple-directory resolution rule (zero -> refusal;
+  multiple candidates -> refusal, never a choice).** the packet binds
   source_log_criterion_commit <= source_log_evidence_commit <=
   execution_tip (ancestry); the PATH LIST is frozen as EVERY file
   under the committed recording directory of flight_id
@@ -478,8 +488,23 @@ DETECTED and listed, whether or not fitted.
    v2.6.4, channel-2 §4.2 — "every frame/sign field" was an open
    universe): the payload is EXACTLY the fields, types, and
    closed enums of the committed schema artifact
-   docs/criteria/control_payload_schema.json (same byte contract
-   as the profile config; digest walked with the criterion). Any
+   docs/criteria/control_payload_schema.json v2 (same byte
+   contract as the profile config; digest walked with the
+   criterion; the future source startup contract binds the
+   schema's exact path, digest, and commit). **v2 SEMANTICS
+   (v2.6.5, channel-2 on R86 §6): three SEPARATE failure types —
+   CONTROL_SCHEMA_UNKNOWN_VALUE (one record, unregistered enum
+   value), CONTROL_SCHEMA_MISSING_REQUIRED_FIELD, and
+   CONTROL_IDENTITY_CONFLICT (two records, one identity,
+   inconsistent valid payloads) — all fail closed, never share a
+   label. Per-field REQUIREDNESS registered in the schema
+   (required_for_conflict_check / required_for_calibration_support
+   / missing_disposition): a class uniformly missing a
+   support-required field is OFF support or an instrument
+   failure, never an inert ABSENT. MIXED_SPLIT is a PRE-SPLIT
+   BOUNDARY MARKER: it never enters a fit; rows are re-labeled
+   pure LEGACY/TERM by the split or excluded — a fitted row with
+   owner MIXED_SPLIT is a contract violation.** Any
    record field outside the schema is ignored for conflict
    purposes; any schema field missing/unknown-valued follows the
    schema's typed disposition; floats under the one float law;
@@ -701,8 +726,10 @@ DETECTED and listed, whether or not fitted.
    PROVENANCE_FAILURE is instrument-axis and executes at branch
    1): input: support reasons nonempty + model
    UNCALIBRATABLE("reason_zzz_unregistered") -> expected:
-   NO_ARM_NONCOLLECTION_FAILURE at branch 3 (unknown codes fail
-   closed). Companion (s41b): instrument FAIL
+   NO_ARM_MALFORMED_PACKET at branch 2 (v3.3, channel-2 on R86 H1
+   — my v2.6.4 redefinition contradicted the closed-enum law one
+   clause above it: unknown is MALFORMED, always; branch 3 is
+   DELETED — it had no lawful registered member). Companion (s41b): instrument FAIL
    (PROVENANCE_FAILURE) + any support state -> expected: branch 1
    NO_ARM_INSTRUMENT_REPAIR; and a packet claiming instrument
    PASS while carrying an instrument-axis reason -> branch 2
@@ -735,10 +762,18 @@ DETECTED and listed, whether or not fitted.
    expected: NO_ARM_MALFORMED_PACKET — the registered count is
    DERIVED from the frozen ID set, never accepted from the
    producer.
-   (s50) input: P5 command sequence +0.30 followed by -0.30
-   (error sign flip) -> expected: the slew limiter caps the
-   per-tick change at 0.15; the raw 0.60 swing is UNREPRESENTABLE
-   in the commanded stream; no detector event exists.
+   (s50) STRENGTHENED (v3.3 — a magnitude bound proves absence
+   of the jump, not identity of the sequence): input: v_cmd =
+   +0.30, target flips to -0.30 and holds -> expected EXACT
+   post-slew sequence +0.15, 0.00, -0.15, -0.30 under the v3.3
+   recurrence; any other sequence fails; no detector event
+   exists at any step.
+   (s51) input: windows-starved + no-positive-comparator ->
+   expected: valid STARVED packet, ARM_PENDING_FIVE_GATES.
+   (s52) input: rows-starved + no-positive-comparator ->
+   expected: valid STARVED packet, ARM_PENDING_FIVE_GATES.
+   (s53) input: all three starvation reasons -> expected: one
+   packet representing all three without MALFORMED status.
    **RERUN RULE (v2.6): the prior 21/21 + 18/18 greens are valid
    HISTORY of the cases they executed under their v2.3-bound
    source — never summed into final-contract coverage. One

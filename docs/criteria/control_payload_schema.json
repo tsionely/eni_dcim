@@ -1,9 +1,17 @@
 {
   "byte_contract": "UTF-8, LF, two-space indent, sorted keys",
+  "failure_types": {
+    "CONTROL_IDENTITY_CONFLICT": "two records, one identity, inconsistent VALID payloads",
+    "CONTROL_SCHEMA_MISSING_REQUIRED_FIELD": "one record, required field absent",
+    "CONTROL_SCHEMA_UNKNOWN_VALUE": "one record, unregistered enum value"
+  },
   "fields": [
     {
       "law": "finite-only; NaN/Inf refusal; -0.0 -> +0.0; big-endian IEEE-754 canonical bytes",
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "setpoint.v_body[2]",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "float64"
     },
     {
@@ -17,9 +25,12 @@
         "search",
         "takeoff"
       ],
+      "missing_disposition": "ROW_ABSENT_TYPED",
       "path": "planner_phase",
+      "required_for_calibration_support": false,
+      "required_for_conflict_check": true,
       "type": "str",
-      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+      "unknown_value": "CONTROL_SCHEMA_UNKNOWN_VALUE"
     },
     {
       "enum": [
@@ -27,27 +38,39 @@
         "TERM",
         "MIXED_SPLIT"
       ],
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "term_owner_state",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "str",
-      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+      "unknown_value": "CONTROL_SCHEMA_UNKNOWN_VALUE"
     },
     {
       "enum": [
         "setpoint.v_body[2]",
         "term_channel"
       ],
+      "missing_disposition": "ROW_ABSENT_TYPED",
       "path": "arbiter_vertical_source",
+      "required_for_calibration_support": false,
+      "required_for_conflict_check": true,
       "type": "str",
-      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+      "unknown_value": "CONTROL_SCHEMA_UNKNOWN_VALUE"
     },
     {
       "law": "same float law",
+      "missing_disposition": "ROW_ABSENT_TYPED",
       "path": "adapter_input_v_body_z",
+      "required_for_calibration_support": false,
+      "required_for_conflict_check": true,
       "type": "float64"
     },
     {
       "law": "same float law",
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "post_limit_command_v_body_z",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "float64"
     },
     {
@@ -55,22 +78,32 @@
         "not_clipped",
         "clipped"
       ],
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "clip_status",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "str",
-      "unknown_value": "CONTROL_IDENTITY_CONFLICT"
+      "unknown_value": "CONTROL_SCHEMA_UNKNOWN_VALUE"
     },
     {
       "law": "same float law; frame/sign input",
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "level_pitch_rad",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "float64"
     },
     {
       "law": "same float law; frame/sign input",
+      "missing_disposition": "CLASS_OFF_SUPPORT",
       "path": "level_roll_rad",
+      "required_for_calibration_support": true,
+      "required_for_conflict_check": true,
       "type": "float64"
     }
   ],
   "missing_field": "typed ABSENT; mixed presence within a class = inconsistency",
+  "mixed_split_rule": "MIXED_SPLIT is a PRE-SPLIT BOUNDARY MARKER: never enters a fit; rows are re-labeled pure LEGACY/TERM by the split or excluded; a fitted row with owner MIXED_SPLIT is a contract violation",
   "note": "Conflict adjudication reads EXACTLY these fields; record fields outside this schema are ignored for conflict purposes.",
-  "schema_id": "control_payload_schema_v1"
+  "schema_id": "control_payload_schema_v2"
 }
