@@ -1,0 +1,67 @@
+{
+  "artifact": "REG1V24_SOURCE_GENERATOR_BATTERY_ATTESTATION",
+  "diagnostic_token": "DIAGNOSTIC",
+  "packet_scope": "SYNTHETIC_DIAGNOSTIC",
+  "governing_reg1_commit": "3fe25ea7eff64bac7910788536c0af7db470b341",
+  "source_generator_commit": "7ca6d237432209a53a5990897c8acd0351bdae78",
+  "tested_execution_tip": "b11f3f897024dd55721e4695b4f539a51e1b2c56",
+  "remote_verified_before_battery": true,
+  "created_utc": "2026-07-21T16:06:14Z",
+  "no_a091": true,
+  "no_checkpoint": true,
+  "no_calibration_candidate_directory": true,
+  "no_flightsim_dcgame": true,
+  "suite_results": [
+    {
+      "suite": "REG-1v2.4 calibration source fixtures",
+      "transcript_path": "tuning/reg1v24-source-battery-b11f3f8-20260721T160614Z/source_battery_transcript.txt",
+      "passed": 26,
+      "failed": 0,
+      "total": 26
+    }
+  ],
+  "committed_byte_digests": [
+    {
+      "path": "tuning/reg1v2_calibration_source_generator.py",
+      "reviewed_tip": "b11f3f897024dd55721e4695b4f539a51e1b2c56",
+      "sha256_committed_bytes": "4a7ef7afc5af4ac8afaa2d8ed3a90967b1d1e90458e45dbfdf6c85f5b69fc5a0"
+    },
+    {
+      "path": "tuning/run_reg1v2_calibration_source_fixtures.py",
+      "reviewed_tip": "b11f3f897024dd55721e4695b4f539a51e1b2c56",
+      "sha256_committed_bytes": "34e1ebd2e08bcb1a70cbcdfde37146f2c2029c0bff0fae437d155b60734e03d4"
+    },
+    {
+      "path": "tuning/reg1v24_fixture_sentinel_overlap.csv",
+      "reviewed_tip": "b11f3f897024dd55721e4695b4f539a51e1b2c56",
+      "sha256_committed_bytes": "3ad4de215bb83ff2e5c4377c1d98f07f644e28d484579af8bda97435d269d5d6"
+    },
+    {
+      "path": "tuning/reg1v24_fixture_sentinel_nonoverlap.csv",
+      "reviewed_tip": "b11f3f897024dd55721e4695b4f539a51e1b2c56",
+      "sha256_committed_bytes": "0f8a804a41b3d0d6a6765b590b8aecc3cfed7884b29d3e4d9d28ca51302a351c"
+    }
+  ],
+  "fixture_roster_mapping": [
+    {"roster": "(iv)", "fixture": "iv_v_response_reconstruction_v21_runtime_rules"},
+    {"roster": "(v)", "fixture": "iv_v_response_reconstruction_v21_runtime_rules"},
+    {"roster": "s1", "fixture": "s1_post_lag_identifiability_gating"},
+    {"roster": "s2", "fixture": "s2_common_support_objective_bites"},
+    {"roster": "s3", "fixture": "s3_null_tie_not_null_calibrated"},
+    {"roster": "s4", "fixture": "s4_strict_certified_full_parsing"},
+    {"roster": "s5", "fixture": "s5_poisoned_duplicate_first_wins"},
+    {"roster": "s6", "fixture": "s6_feature_time_alignment_and_mismatch_ledger"},
+    {"roster": "s7", "fixture": "s7_blank_trace_value_incomplete"},
+    {"roster": "s8", "fixture": "s8_sentinel_overlap_actual_cli"},
+    {"roster": "s9", "fixture": "s9_direction_argument_refusal"},
+    {"roster": "s10", "fixture": "s10_local_open_face_hidden_by_global_eligibility"},
+    {"roster": "s11", "fixture": "s11_multiple_positive_minimizers_not_identified"},
+    {"roster": "s12", "fixture": "s12_source_identity_split"},
+    {"roster": "s13", "fixture": "s13_scoring_support_digest_mismatch_stops"},
+    {"roster": "s14", "fixture": "s14_null_manifold_boundary_not_face_killed"},
+    {"roster": "s15", "fixture": "s15_missing_feature_ts_absent_never_synthesized"},
+    {"roster": "s16", "fixture": "s16_equidistant_maps_to_earlier_tick"},
+    {"roster": "s17", "fixture": "s17_sentinel_tip_digest_mismatch"},
+    {"roster": "rows_scored_common_corruption", "fixture": "rows_scored_common_corruption_micro_fixture"}
+  ]
+}
