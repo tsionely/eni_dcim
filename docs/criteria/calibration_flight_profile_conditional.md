@@ -88,7 +88,27 @@ walked by both channels:
          entry R81)
 
     calibration_model_status: CALIBRATED / NULL_CALIBRATED /
-        NOT_IDENTIFIED / UNCALIBRATABLE(reason)
+        NOT_IDENTIFIED / UNCALIBRATABLE_NO_POSITIVE_COMPARATOR /
+        UNCALIBRATABLE(reason) — the model-reason enum is CLOSED:
+        {INSUFFICIENT_PRIMARY_WINDOWS,
+         INSUFFICIENT_VALID_RESPONSE_ROWS} are the only
+        support-class reasons; every other string is non-support.
+
+    **CROSS-AXIS COMPATIBILITY MATRIX (v3.1, channel-2 H12 —
+    every permitted pair named; every unnamed pair is
+    NO_ARM_MALFORMED_PACKET):**
+        INSUFFICIENT_PRIMARY_WINDOWS pairs with: CALIBRATED,
+            NULL_CALIBRATED, NOT_IDENTIFIED,
+            UNCALIBRATABLE(INSUFFICIENT_PRIMARY_WINDOWS);
+        INSUFFICIENT_COMMON_SUPPORT_ROWS pairs with: CALIBRATED,
+            NULL_CALIBRATED, NOT_IDENTIFIED,
+            UNCALIBRATABLE(INSUFFICIENT_VALID_RESPONSE_ROWS);
+        NO_ELIGIBLE_POSITIVE_COMPARATOR_DUE_TO_SUPPORT_HORIZON
+            pairs with: UNCALIBRATABLE_NO_POSITIVE_COMPARATOR
+            only.
+    A model support-class reason (e.g. INSUFFICIENT_ROWS
+    variants) maps by THIS matrix alone — an implementation
+    never decides membership by string resemblance.
 
 ARMING RULE (v3 — TOP-DOWN, first match wins, channel-2 §9:
 the v2 general rule and the UNCALIBRATABLE allowlist conflicted
@@ -179,20 +199,48 @@ history disclosed.
         P3 down-step      = one tick, +0.50 -> 0.0 exactly
         P4 post-step hold = 75 ticks at exactly 0.0; counter
                           starts the tick after P3
-        P5 recovery       = altitude re-trim to BAND CENTER
-                          = 4.25 m from gate face (the numeric
-                          center of 3.5-5.0), commanded through
-                          the same shipped interface at
-                          reference magnitude <= 0.35 m/s;
-                          SUCCESS PREDICATE: |range - 4.25| <=
-                          0.25 m for 10 consecutive ticks;
-                          TIMEOUT = 150 ticks
-      FAILED PRIMITIVE (one rule, one timeout — the v2 100/200
-      inconsistency is dead): a primitive that has not reached
-      its P5 success predicate within 300 ticks TOTAL from its
-      P1 start is FAILED_PRIMITIVE — logged, counted, the script
-      advances to the next primitive's P1; NO in-flight retry
-      beyond the fixed 10 primitives
+        P5 recovery       = ALTITUDE re-trim, deterministic
+                          per-tick LAW (v3.1, channel-2 H10; the
+                          v3 range-conflation is corrected —
+                          forward range [3.0,5.5] is a GUARD,
+                          altitude is what P5 re-trims):
+                          e_alt[i] = alt[i] - alt_ref (alt_ref
+                          latched once at script P0);
+                          v_up_cmd[i] = clamp(-0.30 * e_alt[i],
+                          -0.30, +0.30), deadband |e_alt| <=
+                          0.10 -> 0.0; per-tick update; missing
+                          altitude sample -> hold previous
+                          command, count it; 5 consecutive
+                          missing -> SCRIPT TERMINATES. Command
+                          magnitude <= 0.30 < 0.35 and every
+                          single-tick change < 0.35: P5 can
+                          never mint a detector window.
+                          SUCCESS: |e_alt| <= 0.15 for 10
+                          consecutive ticks AND reference at
+                          0.0. Altitude source: the shipped
+                          estimator's anchored world-altitude
+                          output; the exact field name, clock,
+                          sign, and validity rule are bound in
+                          the machine-readable profile config
+                          (below) and walked at Gate 3.
+      ONE DEADLINE (v3.1, channel-2 H9 — the v3 150/300 pair
+      summed to 311 > 300; the 150-tick phase timeout is dead):
+      the TOTAL primitive budget is 350 ticks from that
+      primitive's P1 tick 0 (25+60+1+75 = 161 scripted + up to
+      189 for P5); the ONLY deadline is the total.
+      FAILED PRIMITIVE = P5 success not reached at tick 349 ->
+      **THE SCRIPT TERMINATES (v3.1, channel-2 H11 — a failed
+      reset can never be followed by an "identical" next
+      primitive): standard recovery/landing; partial data
+      ingests under Section 4 like any data; the primitive
+      count records how far the script got.** NO in-flight
+      retry, ever.
+      P0 PREDICATE (v3.1, H11 — every primitive, including the
+      FIRST, begins from the same registered state): reference
+      at 0.0 AND |e_alt| <= 0.15 for 10 consecutive ticks AND
+      forward range in [4.0, 4.5] m; P0 not achieved within 200
+      ticks -> SCRIPT TERMINATES (never a primitive from an
+      unverified state).
       max total duration  = 120 s wall clock, hard abort after
       max vertical excursion = +/- 1.5 m about band center ->
                           hard abort (script terminates, standard
@@ -212,9 +260,15 @@ history disclosed.
   to satisfy pre-window, floor, and horizon exactly) minus
   headroom for two failures. The adequacy MINIMUM remains 2
   windows / 16 rows (Section 2 derivations); 8 is a design
-  target, never an adjudicative threshold. UP-transitions (the
-  P1 ramps) are DETECTED and listed per 2d — never fitted unless
-  a separate up-direction validation is later registered.
+  target, never an adjudicative threshold. **P1 CORRECTION
+  (v3.1, channel-2 H7 — the v3 sentence was FALSE under the
+  registered detector): the P1 ramp moves 0.02 m/s per tick,
+  BELOW the 0.35 per-tick step floor — it creates ZERO detector
+  step events; it is listed as SCRIPT PROVENANCE only. The ONLY
+  detector events this script can create are the P3 down-steps:
+  P5 commands are bounded to 0.30 m/s with every single-tick
+  change < 0.35 by the registered law below, so no P5 transition
+  can ever qualify (channel-2 H8, closed BY CONSTRUCTION).**
   **INGESTION SYMMETRY (channel-1 rider 3): the flight's windows
   meet the same detector and eligibility rules as A091's, with
   zero flight-specific allowances.** **METROLOGY PROVENANCE
@@ -235,15 +289,21 @@ history disclosed.
   row is carried with that answer and its derivation, and any
   future profile change re-answers it or takes an
   OUTCOME_RESPONSIVE consequence. The profile carries a
-  PROFILE-CONFIG DIGEST (sha256 of the exact script table); any
-  drift from the registered table is a Gate-3 refusal.**
+  PROFILE-CONFIG DIGEST with a BYTE CONTRACT (v3.1, channel-2
+  H13): the machine-readable table is the committed file
+  docs/criteria/calibration_flight_profile_config.json — UTF-8,
+  LF newlines, two-space indent, sorted keys, decimal numbers —
+  and the digest is the SHA-256 of its COMMITTED BYTES (git
+  show at the governing commit). Gate 3 compares THAT digest;
+  any drift is a refusal. The config binds the exact field
+  names for altitude and range sources at Gate-3 walk.**
 - **Implementation**: the scripted profile is an ISOLATED planner
   mode — off by default, config-gated, zero changes to the race
   path, TERM disabled. It is flight-adjacent code and therefore
   requires its own two-channel review before the flight; its
   existence changes nothing about the blocked shipping path.
 
-## 4. DATA CONTRACT (the flight inherits every v2.5 law)
+## 4. DATA CONTRACT (the flight inherits the FINAL GOVERNING REG-1 generation — the v2.5 heading was stale, dead by name; v3.1)
 
 The flight's recordings are ingested by the SAME FINAL-GENERATION
 source generator (the final REG-1 commit's contract — the v2.5
@@ -278,7 +338,10 @@ free episodes requires its own registration.
 
 ## 6. Standing
 
-Registered pre-outcome. Arms only by Section 2. Authorizes
+[VOID_SUPERSEDED_BY_V3 (v3.1, channel-2 H6): "Registered
+pre-outcome" stood here — the same false tense the opening
+already corrected; dead by name.] Registered PRE-ADJUDICATIVE,
+POST-OBSERVATION. Arms only by Section 2. Authorizes
 nothing by itself. Sakana STANDBY; cohort-4 HOLD; the blocked
 shipping path stays blocked; no mechanism verdict, no admissible
 residual, no HOLD-lift signature exists.

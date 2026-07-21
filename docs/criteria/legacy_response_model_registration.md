@@ -45,6 +45,13 @@ UNIDENTIFIABLE candidates never enter the argmin.
 - **Source**: the A091 physical episode (20260719T201851),
   command-step intervals selected by the deterministic detector.
   Calibration intervals DISJOINT from the A091 sentinel interval.
+  **SOURCE-LOG BINDING (v2.6.3, channel-2 order A6): the packet
+  binds source_log_paths + source_log_sha256 per file as STARTUP
+  inputs (like the sentinel binding); the registered selector is
+  DETERMINISTIC and PRE-RESULT: ALL control and feature records
+  of flight_id 20260719T201851-50f9dcc8 in the committed
+  recording — no sub-selection, no file chosen after seeing
+  contents.**
 - **MEASURED RESPONSE (v2.1 — registered from the CODE, not from
   the v1 artifact's description; amended pre-calibration, REG-2(v2)
   still empty):** the registered source is the EXACT runtime
@@ -211,9 +218,13 @@ UNIDENTIFIABLE candidates never enter the argmin.
   in EITHER field is a hard STOP. The artifact publishes:
   support_ledger_path, support_ledger_sha256, rows_scored_common,
   scoring_support_sha256, duplicate_scoring_key_count = 0 — and
-  ONE support ledger: window_id, event key, feature_ts_ns,
-  assigned_control_tick, relative_tick, response-validity state,
-  trace-validity state, included_in_objective, exclusion reason.
+  ONE support ledger (v2.6.3 — the stale assigned_control_tick
+  field is dead; the ledger carries the REGISTERED control
+  identity): window_id, event key, feature_ts_ns,
+  assigned_control_segment_id, assigned_control_mono_ns,
+  relative_tick, response-validity state, trace-validity state,
+  included_in_objective, exclusion reason. A logged tick number,
+  if published anywhere, is a descriptor tied to no identity.
   [VOID_SUPERSEDED_BY_V2_5 (v2.6, channel-2 on R77-78 §3): the
   sentence that stood here — "nearest tick, dedup to first" —
   contradicted the causal-floor and whole-conflict-class rules
@@ -436,11 +447,17 @@ DETECTED and listed, whether or not fitted.
    control-record class used, and source_record_index (the
    committed ordinal, carried on every derived row so a
    reordered downstream copy reconstructs identical segments —
-   fixture s37). Rules: a mono_ns decrease WITH an explicit
-   reset/process marker in the log -> new segment; a mono_ns
-   decrease WITHOUT that evidence -> CONTROL_ORDER_CONFLICT,
-   fail closed (never a silently invented segment); feature-row
-   ordering NEVER participates in reset detection.
+   fixture s37). Rules (v2.6.3, channel-2 H3 — "an explicit marker" was an
+   unnamed concept; NO reset-marker field is registered in the
+   logger contract): EVERY mono_ns decrease in the control
+   stream -> CONTROL_ORDER_CONFLICT, fail closed — a segment is
+   NEVER auto-created; one flight is one segment unless and
+   until a marker field is registered from the logger's
+   documented contract and walked by both channels (that future
+   registration must freeze field name, accepted value set,
+   strict parser, marker position relative to the decrease, and
+   marker-without-decrease behavior); feature-row ordering NEVER
+   participates in reset detection.
    assigned control row = argmax(control_mono_ns) subject to same
    flight AND same segment AND control_mono_ns <=
    feature_record_mono_ns; accept only 0 <= mismatch <= one
@@ -453,10 +470,17 @@ DETECTED and listed, whether or not fitted.
    **CONTROL PRIMARY ID AND PAYLOAD (v2.6.1, channel-2 §7):**
    control primary ID = (flight_id, control_segment_id,
    control_mono_ns). CONTROL RELEVANT PAYLOAD, frozen ordered
-   list: (setpoint.v_body[2] : float64, finite required — NaN/Inf
-   -> parse refusal; -0.0 normalized to +0.0 before comparison;
-   missing -> typed ABSENT, and mixed presence within a class is
-   an inconsistency). Duplicate control primary ID with
+   list (EXPANDED v2.6.3, channel-2 H2 — any field that changes
+   owner, source, frame, clipping, or correction semantics
+   participates in conflict adjudication; identical setpoints
+   with contradictory physical stories may never be selected by
+   order): (setpoint.v_body[2], planner_phase,
+   vertical_owner_state, arbiter_selected_source, adapter_input,
+   post_limit_command, clip_status, and every frame/sign field
+   on the record — floats under the one float law: finite-only,
+   NaN/Inf -> parse refusal, -0.0 normalized to +0.0; strings
+   under strict closed-set parsing; missing -> typed ABSENT, and
+   mixed presence within a class is an inconsistency). Duplicate control primary ID with
    inconsistent payload -> CONTROL_IDENTITY_CONFLICT, the ENTIRE
    control-identity class excluded and listed.
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
@@ -498,9 +522,12 @@ DETECTED and listed, whether or not fitted.
        level_pitch_rad : float64 (body-to-world transform input)
        level_roll_rad  : float64 (body-to-world transform input)
    ONE FLOAT LAW for every payload field, exposure and control
-   alike (v2.6.2): finite-only parse; NaN/Inf -> refusal; -0.0
-   normalized to +0.0 before comparison; equality on the
-   canonical float64 bytes after normalization.
+   alike (v2.6.2; BYTE ORDER v2.6.3, channel-2 H5): finite-only
+   parse; NaN/Inf -> refusal; -0.0 normalized to +0.0 before
+   comparison; equality on the canonical float64 bytes after
+   normalization, where canonical = BIG-ENDIAN (network-order)
+   IEEE-754, rendered as 16 lowercase hex characters wherever a
+   textual form is needed; any other encoding is refused.
    A relevant field missing on SOME records of a class while
    present on others is a payload INCONSISTENCY (the class
    excludes); missing on ALL records is typed absence, not
@@ -638,6 +665,60 @@ DETECTED and listed, whether or not fitted.
    refusal before fitting; (s33) source bytes committed earlier
    than execution tip -> distinct full hashes reported, byte
    equality proved.
+
+   **FIXTURE DEFINITIONS s34-s48 (v2.6.3 — REGISTERED AS
+   EXECUTABLE DEFINITIONS, each with input and expected
+   disposition; the R83 claim that these existed was false — the
+   editing script's replace missed its anchor and printed success
+   unconditionally; ledger entry R85):**
+   (s34) input: a join attempt comparing epoch feature_ts_ns
+   against control mono_ns -> expected: hard failure, no join
+   result field exists in the output at all.
+   (s35) input: two rows, same (flight_id, feature_ts_ns),
+   feature mono_ns 100 vs 120, all else equal -> expected:
+   EXPOSURE_CLOCK_CONFLICT, entire class excluded, zero rows
+   enter support.
+   (s36) input: control stream mono order 100,120,110,130, no
+   reset marker -> expected: CONTROL_ORDER_CONFLICT fail-closed;
+   no segment invented; the packet's instrument_validity = FAIL.
+   (s37) input: a downstream copy of identical rows in shuffled
+   order, each carrying source_record_index -> expected:
+   identical segment IDs, window IDs, and scoring_support_sha256.
+   (s38) input: null loss and one positive loss with
+   loss_equal(a,b) true -> expected: terminal NOT_IDENTIFIED;
+   asserting the positive face path was NEVER entered.
+   (s39) input: one qualifying window, 13 objective rows ->
+   expected: STARVED with BOTH INSUFFICIENT_PRIMARY_WINDOWS and
+   INSUFFICIENT_COMMON_SUPPORT_ROWS present.
+   (s40) input: support reasons empty + model reason
+   INSUFFICIENT_PRIMARY_WINDOWS -> expected:
+   NO_ARM_MALFORMED_PACKET.
+   (s41) input: support reasons nonempty + model
+   UNCALIBRATABLE(PROVENANCE_FAILURE) -> expected:
+   NO_ARM_NONCOLLECTION_FAILURE, never armed.
+   (s42) input: profile config bytes differing from the
+   registered table in one tick value -> expected:
+   profile-digest mismatch, Gate-3 refusal.
+   (s43) input: arming packet lacking the profile symmetry row
+   (or carrying one with an unanswered counterfactual) ->
+   expected: arming-packet refusal.
+   (s44) input: support-predicate evaluator raising on predicate
+   2 of 3, emitting an empty reason set with
+   predicates_evaluated_n = 2 != 3 -> expected:
+   NO_ARM_MALFORMED_PACKET, never ADEQUATE.
+   (s45) input: two control rows, same
+   (flight, segment, mono_ns), same setpoint, owner LEGACY vs
+   TERM -> expected: CONTROL_IDENTITY_CONFLICT, whole class
+   excluded (owner is payload, never order-selected).
+   (s46) input: same, but clip_status false vs true -> expected:
+   CONTROL_IDENTITY_CONFLICT, whole class excluded.
+   (s47) input: a mono_ns decrease adjacent to a blank / "False"
+   / misplaced marker-like field -> expected:
+   CONTROL_ORDER_CONFLICT in every case (no marker field is
+   registered; no decrease is ever a lawful reset).
+   (s48) input: the float 1.0 serialized under both endian
+   conventions -> expected: exactly one accepted canonical form
+   (big-endian IEEE-754 hex), the other refused.
    **RERUN RULE (v2.6): the prior 21/21 + 18/18 greens are valid
    HISTORY of the cases they executed under their v2.3-bound
    source — never summed into final-contract coverage. One
