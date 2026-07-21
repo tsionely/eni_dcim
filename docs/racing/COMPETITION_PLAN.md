@@ -33,6 +33,28 @@ DECISION RULE (registered now, before results): higher full-run
 gate completion wins; tie -> faster median; a crash disqualifies
 the config at that speed setting.
 
+### R1 RESULT (recorded 2026-07-21, logs 3ff2cf1..667f313)
+
+0/10 gates, both configs; both crash classes present. Under the rule
+above: NO winner — the defaults regime is disqualified for both. Root
+cause (docs/racing/R1_AUTOPSY.md): R1 flew the default
+commit speed 2.5 m/s; every historical gate pass flew 1.8 via patch.
+Archive truth surfaced: no run has EVER finished the track; best ever
+is 1 gate (6 times, all at 1.8). Plan premise corrected: the race
+objective is MAXIMUM GATES PASSED.
+
+## Phase R1b — the A/B rerun at the known-good regime (registered before results)
+
+Same protocol as R1 with ONE added patch on both configs:
+`planner.commit.speed_mps=1.8`. 5 runs per config, alternating
+A,B,A,B,... SAME decision rule as R1, with one amendment registered
+now: an abort-without-collision (e.g. clip-budget only) does NOT
+disqualify; only a collision-class crash does. If both configs crash
+in all runs again, the config with more gate passes, then the one
+with fewer collision aborts, is the working baseline for triage — the
+week continues on engineering, not on ladder steps. Run-summaries
+must include the flown code_commit.
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
