@@ -61,7 +61,16 @@ walked by both channels:
                  ineligibility reasons are all HORIZON_LT_TAU /
                  INSUFFICIENT_ROWS — the mechanical
                  identifiability-starvation definition)
-        ADEQUATE iff the reason set is EMPTY;
+        ADEQUATE iff the reason set is EMPTY **UNDER THE
+        COMPUTED-COMPLETENESS ATTESTATION (v3.1, channel-1 on
+        ADVISORY-31 — empty-by-failure must never read as
+        empty-by-adequacy): the packet asserts
+        predicates_evaluated_n == registered_predicates_n beside
+        the set, with per-predicate evaluated flags; an empty set
+        WITHOUT that attestation is NO_ARM_MALFORMED_PACKET at
+        arming branch 2, never adequacy. An empty set is never
+        adequacy evidence unless its emptiness is attested — the
+        zero-minting law at the set level.**
         STARVED iff it is NONEMPTY (all reasons published).
         ADEQUATE is captioned MINIMALLY ADEQUATE FOR
         WITHIN-FLIGHT MODEL IDENTIFICATION — it never implies
