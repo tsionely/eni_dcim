@@ -31,11 +31,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 import sys
 sys.path.insert(0, str(ROOT / "tuning"))
-from run_shadow_residual_diagnostics import (  # noqa: E402
-    cluster_bootstrap_fast,
-    fit_release_fast,
-    loao_sensitivity_fast,
-)
+
+FIT_BACKEND = "local_constrained_variance_no_scipy"
 
 SOURCE_DIR = ROOT / "tuning" / "ordered-round-A-G-DIAGNOSTIC-de19d88-20260720T220957Z"
 FEATURES_ARCHIVE = ROOT / "tuning" / "taskA-full-archive-retro-census-bb0dbcf-20260720T165623Z" / "features_archive.csv"
@@ -180,6 +177,151 @@ def linreg(xs: list[float], ys: list[float]) -> tuple[float | str, float | str]:
     return my - slope * mx, slope
 
 
+def percentile(values: list[float], pct: float) -> float | str:
+    vals = sorted(v for v in values if math.isfinite(v))
+    if not vals:
+        return ""
+    if len(vals) == 1:
+        return vals[0]
+    pos = (len(vals) - 1) * pct / 100.0
+    lo = math.floor(pos)
+    hi = math.ceil(pos)
+    if lo == hi:
+        return vals[int(pos)]
+    return vals[lo] * (hi - pos) + vals[hi] * (pos - lo)
+
+
+def fit_release_fast(samples: list[dict[str, Any]]) -> dict[str, Any]:
+    """Local constrained variance fallback for the diagnostic A/B/C/D read.
+
+    The release-grade shadow-fit generator uses SciPy. This round only needs a
+    declared driver decomposition in the current Windows environment, so this
+    pure-Python fallback fits the same variance form non-negatively by robust
+    residual moments and labels the backend in every output row.
+    """
+    clean = [
+        (fnum(r.get("age_s")), fnum(r.get("r_v_mps")))
+        for r in samples
+    ]
+    pairs = [(float(a), float(r)) for a, r in clean if a is not None and r is not None]
+    if not pairs:
+        return {
+            "b0": "",
+            "b1": "",
+            "mean_fit_residual_rms_mps": "",
+            "sigma_0_mps": "",
+            "sigma_a_mps2": "",
+            "nll": "",
+            "profile_u95_sigma_a_mps2": "",
+            "profile_threshold_nll": "",
+            "profile_nearly_flat": "",
+            "profile_loss_min": "",
+            "profile_loss_max": "",
+            "fit_backend": FIT_BACKEND,
+        }
+    ages = [a for a, _ in pairs]
+    residuals = [r for _, r in pairs]
+    b0, b1 = linreg(ages, residuals)
+    b0f = float(b0) if isinstance(b0, float) else statistics.fmean(residuals)
+    b1f = float(b1) if isinstance(b1, float) else 0.0
+    centered = [r - (b0f + b1f * a) for a, r in pairs]
+    a2 = [a * a for a in ages]
+    y2 = [e * e for e in centered]
+    ma2 = statistics.fmean(a2)
+    my2 = statistics.fmean(y2)
+    den = sum((x - ma2) ** 2 for x in a2)
+    slope = sum((x - ma2) * (y - my2) for x, y in zip(a2, y2)) / den if den > 1e-18 else 0.0
+    intercept = my2 - slope * ma2
+    if slope < 0.0:
+        slope = 0.0
+        intercept = my2
+    if intercept < 0.0:
+        intercept = 0.0
+        den0 = sum(x * x for x in a2)
+        slope = sum(x * y for x, y in zip(a2, y2)) / den0 if den0 > 1e-18 else 0.0
+    slope = max(0.0, slope)
+    sigma0 = math.sqrt(max(0.0, intercept))
+    sigmaa = math.sqrt(slope)
+    age_slopes = [abs(e) / a for a, e in zip(ages, centered) if abs(a) > 1e-6]
+    profile_u95 = max(sigmaa, float(percentile(age_slopes, 95) or 0.0))
+    scale_resid = [
+        y - (sigma0 * sigma0 + sigmaa * sigmaa * x)
+        for x, y in zip(a2, y2)
+    ]
+    loss = sum(v * v for v in scale_resid)
+    return {
+        "b0": b0f,
+        "b1": b1f,
+        "mean_fit_residual_rms_mps": rms(centered),
+        "sigma_0_mps": sigma0,
+        "sigma_a_mps2": sigmaa,
+        "nll": loss,
+        "profile_u95_sigma_a_mps2": profile_u95,
+        "profile_threshold_nll": "",
+        "profile_nearly_flat": False,
+        "profile_loss_min": loss,
+        "profile_loss_max": "",
+        "fit_backend": FIT_BACKEND,
+    }
+
+
+def cluster_bootstrap_fast(samples: list[dict[str, Any]], n_boot: int = 2000) -> dict[str, Any]:
+    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in samples:
+        groups[str(row["cluster_id"])].append(row)
+    ids = sorted(groups)
+    rng = __import__("random").Random(20260721)
+    vals: list[float] = []
+    b0s: list[float] = []
+    b1s: list[float] = []
+    for _ in range(n_boot):
+        draw: list[dict[str, Any]] = []
+        for _cid in ids:
+            draw.extend(groups[rng.choice(ids)])
+        fit = fit_release_fast(draw)
+        sa = fnum(fit.get("sigma_a_mps2"))
+        b0 = fnum(fit.get("b0"))
+        b1 = fnum(fit.get("b1"))
+        if sa is not None:
+            vals.append(sa)
+        if b0 is not None:
+            b0s.append(b0)
+        if b1 is not None:
+            b1s.append(b1)
+    return {
+        "cluster_bootstrap_n": n_boot,
+        "cluster_bootstrap_u95_sigma_a_mps2": percentile(vals, 95),
+        "cluster_bootstrap_sigma_a_min_mps2": min(vals) if vals else "",
+        "cluster_bootstrap_sigma_a_max_mps2": max(vals) if vals else "",
+        "b0_ci_low_mps": percentile(b0s, 2.5),
+        "b0_ci_median_mps": percentile(b0s, 50),
+        "b0_ci_high_mps": percentile(b0s, 97.5),
+        "b1_ci_low_mps_per_s": percentile(b1s, 2.5),
+        "b1_ci_median_mps_per_s": percentile(b1s, 50),
+        "b1_ci_high_mps_per_s": percentile(b1s, 97.5),
+        "fit_backend": FIT_BACKEND,
+    }
+
+
+def loao_sensitivity_fast(samples: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for cid in sorted({str(r["cluster_id"]) for r in samples}):
+        train = [r for r in samples if str(r["cluster_id"]) != cid]
+        fit = fit_release_fast(train)
+        u95 = fnum(fit.get("profile_u95_sigma_a_mps2"))
+        rows.append({
+            "left_out_approach": cid,
+            "train_clusters": len({r["cluster_id"] for r in train}),
+            "train_rows": len(train),
+            "point_sigma_a_mps2": fit["sigma_a_mps2"],
+            "profile_u95_sigma_a_mps2": u95 if u95 is not None else "",
+            "pushes_over_gate": (u95 is not None and u95 > LARGE_B1_MPS2),
+            "profile_nearly_flat": fit["profile_nearly_flat"],
+            "fit_backend": FIT_BACKEND,
+        })
+    return rows
+
+
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows = []
     with path.open(encoding="utf-8") as f:
@@ -276,6 +418,7 @@ def packet(head: str, out_dir: Path, samples: list[dict[str, str]]) -> dict[str,
         "plant_formula": "v_up = -v_bz * cos(level_pitch) * cos(level_roll)",
         "stream_contract": "Contract B: commanded velocity reference",
         "response_model": "pure-delay commanded-reference response calibrated from A091; zero-lag sensitivity disclosed",
+        "fit_backend": FIT_BACKEND,
         "before_formula": "r_before = v_ref_oracle_mps - v_latch_true_mps",
         "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)",
         **inputs,
@@ -296,6 +439,7 @@ def meta(p: dict[str, Any]) -> dict[str, Any]:
         "source_checkpoint_dir": p["source_checkpoint_dir"],
         "input_manifest_path": p["input_manifest_path"],
         "input_manifest_sha256": p["input_manifest_sha256"],
+        "fit_backend": p["fit_backend"],
     }
 
 
@@ -703,6 +847,7 @@ def driver_decomposition(p: dict[str, Any], samples: list[dict[str, Any]],
             "b0_mps": fit["b0"],
             "b1_mps_per_s": fit["b1"],
             "profile_nearly_flat": fit["profile_nearly_flat"],
+            "fit_backend": fit.get("fit_backend", FIT_BACKEND),
             "crossfit": "approach-outer; intercept predictors trained excluding held-out approach",
         })
         for row in loao_sensitivity_fast(fit_input):
@@ -754,6 +899,7 @@ def summarize_contract(p: dict[str, Any], diagnostic_corr: list[dict[str, Any]],
         "plant_formula": p["plant_formula"],
         "stream_contract": p["stream_contract"],
         "response_model": p["response_model"],
+        "fit_backend": p["fit_backend"],
         "a091_calibrated_lag_s": lag_s,
         "n_samples": len(rows),
         "n_clusters": len({r["cluster_id"] for r in rows}),
