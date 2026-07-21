@@ -1,0 +1,9 @@
+{
+  "artifact": "REG1V24_SOURCE_TIP_MARKER",
+  "diagnostic_token": "DIAGNOSTIC",
+  "packet_scope": "SYNTHETIC_DIAGNOSTIC",
+  "purpose": "Non-source child commit so source_generator_commit is discoverable separately from execution_tip during the synthetic battery.",
+  "no_a091": true,
+  "no_checkpoint": true,
+  "no_flightsim_dcgame": true
+}
