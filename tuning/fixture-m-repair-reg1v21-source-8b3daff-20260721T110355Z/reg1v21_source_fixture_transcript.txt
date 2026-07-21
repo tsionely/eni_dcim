@@ -1,0 +1,13 @@
+REG-1V2 CALIBRATION SOURCE FIXTURES
+repo=C:\Users\tsion\Projects\eni_dcim_qa
+head=8b3daff427851d9fcece3b9c15cb537fef02e610
+scope=DIAGNOSTIC synthetic dry-run only; no A091; no FlightSim/DCGame; no intervention artifacts
+PASS step_detector_floor_merge_and_windows
+PASS response_reconstruction_minima
+PASS response_reconstruction_v21_runtime_rules
+PASS null_model_and_grid
+PASS identifiability_gating
+PASS direction_applicability
+PASS row_level_trace
+PASS provenance_and_committed_bytes
+SUMMARY passed=8 failed=0 total=8

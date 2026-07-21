@@ -1,0 +1,24 @@
+POST-REG2 GENERATOR FIXTURES
+repo=C:\Users\tsion\Projects\eni_dcim_qa
+head=8b3daff427851d9fcece3b9c15cb537fef02e610
+sim_lock=False
+scope=DIAGNOSTIC replay/csv only; no FlightSim/DCGame; no intervention artifacts
+PASS startup_current_reg2_pending_guard
+PASS startup_completed_reg2_override
+PASS startup_incomplete_reg2_fails_before_checkpoint
+PASS boundary_profile_rows
+PASS era_gating
+PASS a_missing_large_behind_small_holds
+PASS b_missing_after_support_baseline_small_holds_harm
+PASS c_newly_large_refuted_or_harmful
+PASS d_zero_baseline_not_applicable
+PASS e_one_quiet_breach_holds_quiet
+PASS f_two_quiet_breaches_refute
+PASS g_zero_vs_absent_input
+PASS h_a091_term_noop_byte_identical
+PASS i_mixed_owner_split
+PASS j_all_residual_admissibility_branches
+PASS k_theil_sen_ols_boundary_disagreement_flagged
+PASS l_precedence_earlier_branch_wins
+PASS m_runtime_twin_equivalence
+SUMMARY passed=18 failed=0 total=18

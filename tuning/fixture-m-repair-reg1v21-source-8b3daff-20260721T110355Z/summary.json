@@ -1,0 +1,44 @@
+{
+  "artifact": "FIXTURE_M_REPAIR_AND_REG1V21_SOURCE_GENERATOR_TRANSCRIPTS",
+  "diagnostic_only": true,
+  "code_commit": "8b3daff427851d9fcece3b9c15cb537fef02e610",
+  "required_ancestor": "62c9648",
+  "ancestry_62c9648": "OK",
+  "scope": "code + fail-closed fixtures only; replay/csv/synthetic only",
+  "no_flightsim_dcgame": true,
+  "no_a091_execution": true,
+  "no_23_checkpoint_read": true,
+  "no_4_of_23_artifact": true,
+  "no_contract_b_residuals": true,
+  "intervention_step_f": "NO_GO_NOT_RUN_NO_REG2_EXISTS",
+  "reg2_behavior": "REG-2(v2) PENDING/VOID remains fail-closed; no intervention artifacts emitted",
+  "fixture_m": {
+    "leg1": "real TerminalOracle from src/aigp/planning/vertical_owner.py driven through observe() with forced FULL_TO_SIDE latch",
+    "leg2": "REG-1v2.1 reconstruction with fresh-tail max_gap_s=0.12, last-12 cap, and robust_slope imported from src/aigp/planning/vertical_terminal.py",
+    "battery": ["dense_gt_12_samples", "gapped_mid_history_outage", "duplicate_timestamps"],
+    "negative_control": "old fixed-0.50s-window reconstruction asserted unequal against leg1 on dense series"
+  },
+  "calibration_source_generator": {
+    "path": "tuning/reg1v2_calibration_source_generator.py",
+    "reg1_commit": "62c9648",
+    "step_floor_command_domain_mps": 0.35,
+    "post_window_cap_s": 1.0,
+    "pre_event_initial_state": "g * pre-window mean",
+    "measured_response_algorithm": "runtime v2.1 fresh-tail, last-12, imported robust_slope",
+    "committed_only_no_a091_run": true
+  },
+  "stepE_fixture_passed": 18,
+  "stepE_fixture_failed": 0,
+  "reg1v21_source_fixture_passed": 8,
+  "reg1v21_source_fixture_failed": 0,
+  "py_compile_exit_code": 0,
+  "transcripts_written_outside_tree_first": [
+    "C:\\Temp\\restart_v21_py_compile_8b3daff.txt",
+    "C:\\Temp\\restart_v21_stepE_fixtures_8b3daff.txt",
+    "C:\\Temp\\restart_v21_source_fixtures_8b3daff.txt"
+  ],
+  "post_reg2_generator_sha256": "388022a93e5340865922324db9695ef98bc954750e25c38ef9ec3bcd545378b4",
+  "post_reg2_fixture_runner_sha256": "0914b20ed031fe986ce3ef83fe938ae6e6d64db27742a86ccc9321c3151be3cd",
+  "source_generator_committed_sha256": "9a1282c12ea31026d0506e07850cade0f6d649caf2ac0739451615af7c6a72c3",
+  "source_fixture_committed_sha256": "a451b5e7f7183dc81eafa1d3b042ad5f3543291e0fcf8c0b6f66e579be06945c"
+}

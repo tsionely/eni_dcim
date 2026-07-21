@@ -1,0 +1,10 @@
+FIXTURE (m) REPAIR + REG-1v2.1 SOURCE PY_COMPILE TRANSCRIPT
+generated_utc=2026-07-21T11:03:55Z
+repo=C:\Users\tsion\Projects\eni_dcim_qa
+head=8b3daff427851d9fcece3b9c15cb537fef02e610
+required_ancestor=62c9648
+command=py -m py_compile tuning\post_reg2_contract_b_generator.py tuning\run_post_reg2_generator_fixtures.py tuning\reg1v2_calibration_source_generator.py tuning\run_reg1v2_calibration_source_fixtures.py
+raw_output_path_first=C:\Temp\restart_v21_py_compile_8b3daff.txt
+exit_code=0
+stdout=
+stderr=
