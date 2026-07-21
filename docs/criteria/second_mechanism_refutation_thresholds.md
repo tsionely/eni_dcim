@@ -94,23 +94,65 @@ mixed-ownership windows are analyzed per rider R3.
   SETPOINT VERTICAL, setpoint.v_body[2], converted to world-up by
   the adapter's own equation v_up = -v_bz * cos(level_pitch) *
   cos(level_roll), with the conversion derived in writing in the
-  artifact.)**
-- **PLANT-STREAM VALIDITY PRE-CHECK** (sign-only, no invented
-  constant): a stream claimed as "what physically moved the
-  vehicle" must POSITIVELY correlate with the vehicle's measured
-  motion. The artifact publishes corr(plant stream, oracle
-  reference motion) per era BEFORE the judge runs; a non-positive
-  correlation is an automatic INVALID-INPUT — the intervention
-  cannot proceed to a verdict on that stream. (The first run's
-  stream measured corr = -0.265: invalid input, no verdict
-  branch fired.)
-  **QUIET-CELL EXEMPTION (channel-1, necessary): clusters below
-  the registered 0.05 RMS activity floor are EXEMPT from the
-  correlation pre-check — a near-zero stream has nothing to
-  correlate, and these are precisely the mechanism's quiet
-  prediction cells; without the exemption the pre-check would
-  invalidate the very cells that test the mechanism. The
-  pre-check gates ACTIVE streams only.**
+  artifact — TYPED per the STREAM CONTRACT below as a COMMANDED
+  VELOCITY REFERENCE (Contract B), resolving the wording that
+  simultaneously prohibited "desired targets" and selected a
+  setpoint: the prohibition targets INTERNAL/arbiter fields; the
+  logged innermost command enters only through the declared
+  response model, never raw subtraction.)**
+- **STREAM CONTRACT (channel-2 correction — the zero-lag
+  positive-correlation gate is WITHDRAWN):** my earlier sign-only
+  correlation pre-check repeated the exact error class this
+  program had just adjudicated — a closed-loop command may
+  legitimately anti-correlate with current motion (braking,
+  overshoot arrest), so zero-lag corr > 0 is neither necessary nor
+  sufficient. Replaced by the typed contract:
+  **CONTRACT B — COMMANDED VELOCITY REFERENCE.**
+  setpoint.v_body[2] is the innermost LOGGED command this
+  architecture delivers to the velocity-tracking backend; it is a
+  COMMANDED REFERENCE, not achieved motion, and is typed as such.
+  The counterfactual residual therefore derives through a DECLARED
+  closed-loop response model, not by raw subtraction. Validity
+  requirements, all published BEFORE the judge:
+  1. source provenance (producer, consumer, log field, control
+     stage);
+  2. frame/sign derivation in writing
+     (v_up = -v_bz * cos(level_pitch) * cos(level_roll));
+  3. causal timing (exposure/control alignment, registered
+     prior-tick semantics, no future leakage);
+  4. typed field semantics (commanded target / post-limiter /
+     actuator input / achieved motion are DIFFERENT signals, named);
+  5. LAG-AWARE response window: predeclared from the physical
+     calibration source — the A091 down-step episode's measured
+     command-to-response delay — never from whichever lag fits the
+     23 discovery approaches; if uncalibratable, the registered
+     prior-tick semantics apply with a published zero-lag
+     sensitivity band, both shown;
+  6. per-era field presence/missingness published before the
+     intervention read;
+  7. negative controls: true zero-command windows, unrelated
+     channels, and a sign/frame-inversion fixture.
+  **QUIET-CELL EXEMPTION (channel-1, retained under the new
+  contract): clusters below the registered 0.05 RMS activity floor
+  are exempt from the lag-aware response check — a near-zero
+  stream has nothing to validate against, and these are precisely
+  the mechanism's quiet prediction cells. Zero is
+  intervention-evaluable; only absence is off support.**
+
+## Slope-estimability rules (channel-2 §6 — committed before any adjudicative slope count)
+
+A cut enters threshold counting only with: >= 4 unique ages (the
+registered Theil-Sen minimum), age span >= 0.15 s (the registered
+readiness span), and >= 4 rows. One- and two-row cuts are LISTED
+and excluded from counts (a two-point line has no residual degrees
+of freedom — the A114 classification rode one). Cluster
+aggregation publishes BOTH the any-cut count (with cuts-per-
+approach disclosed, since more cuts mean more threshold chances)
+and a support-weighted proportion; neither is adjudicative alone.
+The committed all-approach baseline is **5/23** (3/20 confirmatory,
+2/3 discovery-overlap); the 4/22 figure survives only as a LABELED
+post-hoc sensitivity (zero-stream approach excluded — an exclusion
+no registered rule authorizes, kept as the sensitivity it is).
 
 ## Component-to-runtime mapping (channel-1 central ruling — committed BEFORE any A/B/C/D read)
 
