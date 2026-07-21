@@ -43,12 +43,14 @@ CRITERION = ROOT / "docs" / "criteria" / "second_mechanism_refutation_thresholds
 RESPONSE58 = ROOT / "docs" / "thinktank" / "RESPONSE58.md"
 RESPONSE61 = ROOT / "docs" / "thinktank" / "RESPONSE61.md"
 RESPONSE62 = ROOT / "docs" / "thinktank" / "RESPONSE62.md"
+RESPONSE63 = ROOT / "docs" / "thinktank" / "RESPONSE63.md"
 
 COMPUTATION_COMMIT = "de19d881ce8fa0ddc27dd71d7306d0d366c43e90"
 CHECKPOINT_EVIDENCE_COMMIT = "c19602f384bc30b0a53d649238b429f9085b6b8f"
 NEAR_ZERO_RMS_MPS = 0.05
 LARGE_B1_MPS2 = 0.35
 AUTH_FULL = 0.999
+QUIET_REFUTATION_K = 2
 MIN_UNIQUE_AGES = 4
 MIN_CUT_ROWS = 4
 MIN_AGE_SPAN_S = 0.15
@@ -357,12 +359,37 @@ def load_setpoints(log_path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def load_term_statuses(log_path: Path) -> list[dict[str, Any]]:
+    rows = []
+    for rec in read_jsonl(log_path):
+        if rec.get("topic") != "term_status":
+            continue
+        data = rec.get("data", {})
+        rows.append({
+            "mono_ns": int(rec.get("mono_ns", 0)),
+            "owner": data.get("owner", ""),
+            "engaged": data.get("engaged", ""),
+            "ready": data.get("ready", ""),
+            "v_bz_applied": data.get("v_bz_applied", ""),
+        })
+    rows.sort(key=lambda r: int(r["mono_ns"]))
+    return rows
+
+
 def setpoint_at(setpoints: list[dict[str, Any]], mono_ns: int) -> dict[str, Any] | None:
     monos = [int(r["mono_ns"]) for r in setpoints]
     idx = bisect.bisect_right(monos, mono_ns) - 1
     if idx < 0:
         return None
     return setpoints[idx]
+
+
+def term_status_at(statuses: list[dict[str, Any]], mono_ns: int) -> dict[str, Any] | None:
+    monos = [int(r["mono_ns"]) for r in statuses]
+    idx = bisect.bisect_right(monos, mono_ns) - 1
+    if idx < 0:
+        return None
+    return statuses[idx]
 
 
 def convert_body_z_to_world_up(v_bz: float, level_pitch: float, level_roll: float) -> float:
@@ -412,15 +439,16 @@ def packet(head: str, out_dir: Path, samples: list[dict[str, str]]) -> dict[str,
         "response58_commit": last_commit_for(RESPONSE58),
         "response61_commit": last_commit_for(RESPONSE61),
         "response62_commit": last_commit_for(RESPONSE62),
+        "response63_commit": last_commit_for(RESPONSE63),
         "source_checkpoint_dir": SOURCE_DIR.relative_to(ROOT).as_posix(),
         "features_archive": FEATURES_ARCHIVE.relative_to(ROOT).as_posix(),
         "plant_signal": "flight.jsonl setpoint.<v_body|vel_body|velocity_body>[2] converted to world-up",
         "plant_formula": "v_up = -v_bz * cos(level_pitch) * cos(level_roll)",
         "stream_contract": "Contract B: commanded velocity reference",
-        "response_model": "pure-delay commanded-reference response calibrated from A091; zero-lag sensitivity disclosed",
+        "response_model": "pure-delay commanded-reference response calibrated from A091; TERM-owned support correction is structural no-op; zero-lag sensitivity disclosed",
         "fit_backend": FIT_BACKEND,
         "before_formula": "r_before = v_ref_oracle_mps - v_latch_true_mps",
-        "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)",
+        "after_formula": "r_after = v_ref_oracle_mps - (v_latch_true_mps + contract_b_correction_vz_up_mps)",
         **inputs,
     }
 
@@ -435,6 +463,7 @@ def meta(p: dict[str, Any]) -> dict[str, Any]:
         "response58_commit": p["response58_commit"],
         "response61_commit": p["response61_commit"],
         "response62_commit": p["response62_commit"],
+        "response63_commit": p["response63_commit"],
         "creation_time_utc": p["creation_time_utc"],
         "source_checkpoint_dir": p["source_checkpoint_dir"],
         "input_manifest_path": p["input_manifest_path"],
@@ -446,17 +475,22 @@ def meta(p: dict[str, Any]) -> dict[str, Any]:
 def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str, str], dict[str, str]],
                    p: dict[str, Any], response_lag_s: float = 0.0) -> list[dict[str, Any]]:
     setpoint_cache: dict[Path, list[dict[str, Any]]] = {}
+    term_status_cache: dict[Path, list[dict[str, Any]]] = {}
     rows = []
     for row in samples:
         feature = features[(row["flight_id"], row["frame_id"], row["feature_ts_ns"])]
         log_path = flight_log_path(row)
         if log_path not in setpoint_cache:
             setpoint_cache[log_path] = load_setpoints(log_path)
+        if log_path not in term_status_cache:
+            term_status_cache[log_path] = load_term_statuses(log_path)
         setpoints = setpoint_cache[log_path]
+        term_statuses = term_status_cache[log_path]
         mono_ns = int(feature["mono_ns"])
         sp = setpoint_at(setpoints, mono_ns)
         if sp is None:
             raise SystemExit(f"no setpoint at/before mono_ns={mono_ns} for {log_path}")
+        ts = term_status_at(term_statuses, mono_ns)
         lagged_mono_ns = mono_ns - int(round(float(response_lag_s) * 1e9))
         lagged_sp = setpoint_at(setpoints, lagged_mono_ns)
         level_pitch = float(feature.get("level_pitch_rad") or 0.0)
@@ -466,13 +500,16 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
             convert_body_z_to_world_up(float(lagged_sp["v_body_z"]), level_pitch, level_roll)
             if lagged_sp is not None else None
         )
+        term_owner = str(ts.get("owner", "")) if ts is not None else ""
+        term_owned_support = term_owner == "term"
+        correction_vz_up = 0.0 if term_owned_support else delayed_vz_up
         feature_vz_up = fnum(feature.get("setpoint_vz_up_mps"))
         v_ref = fnum(row.get("v_ref_oracle_mps"))
         v_latch = fnum(row.get("v_latch_true_mps"))
         r_before = v_ref - v_latch if v_ref is not None and v_latch is not None else ""
         r_after = (
-            v_ref - (v_latch + delayed_vz_up)
-            if v_ref is not None and v_latch is not None and delayed_vz_up is not None else ""
+            v_ref - (v_latch + correction_vz_up)
+            if v_ref is not None and v_latch is not None and correction_vz_up is not None else ""
         )
         rows.append({
             **row,
@@ -485,6 +522,12 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
             "setpoint_mono_ns": sp["mono_ns"],
             "setpoint_age_s": (mono_ns - int(sp["mono_ns"])) / 1e9,
             "logged_setpoint_v_body_z_mps": sp["v_body_z"],
+            "term_status_mono_ns": ts["mono_ns"] if ts is not None else "",
+            "term_status_age_s": (mono_ns - int(ts["mono_ns"])) / 1e9 if ts is not None else "",
+            "term_status_owner": term_owner,
+            "term_status_engaged": ts.get("engaged", "") if ts is not None else "",
+            "term_status_ready": ts.get("ready", "") if ts is not None else "",
+            "term_owned_support": term_owned_support,
             "level_pitch_rad": level_pitch,
             "level_roll_rad": level_roll,
             "logged_setpoint_vz_up_mps": logged_vz_up,
@@ -495,6 +538,8 @@ def enrich_samples(samples: list[dict[str, str]], features: dict[tuple[str, str,
                 if lagged_sp is not None else ""
             ),
             "delayed_logged_setpoint_vz_up_mps": delayed_vz_up if delayed_vz_up is not None else "",
+            "contract_b_correction_vz_up_mps": correction_vz_up if correction_vz_up is not None else "",
+            "ownership_gate_rule": "owner=term => correction 0.0 structural no-op; otherwise delayed logged setpoint world-up",
             "features_archive_setpoint_vz_up_mps": feature_vz_up if feature_vz_up is not None else "",
             "features_archive_setpoint_diff_mps": (
                 logged_vz_up - feature_vz_up if feature_vz_up is not None else ""
@@ -635,15 +680,18 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
         ages = [x for x in (fnum(r.get("age_s")) for r in group) if x is not None]
         before = [x for x in (fnum(r.get("r_before_mps")) for r in group) if x is not None]
         after = [x for x in (fnum(r.get("r_after_contract_b_mps")) for r in group) if x is not None]
-        plant = [x for x in (fnum(r.get("delayed_logged_setpoint_vz_up_mps")) for r in group) if x is not None]
+        raw_plant = [x for x in (fnum(r.get("delayed_logged_setpoint_vz_up_mps")) for r in group) if x is not None]
+        correction = [x for x in (fnum(r.get("contract_b_correction_vz_up_mps")) for r in group) if x is not None]
         auth = [x for x in (fnum(r.get("auth_at_latch")) for r in group) if x is not None]
+        owners = sorted({str(r.get("term_status_owner", "")) for r in group if str(r.get("term_status_owner", ""))})
         unique_ages = sorted(set(round(x, 9) for x in ages))
         age_span = (max(ages) - min(ages)) if ages else 0.0
         estimable = len(group) >= MIN_CUT_ROWS and len(unique_ages) >= MIN_UNIQUE_AGES and age_span >= MIN_AGE_SPAN_S
         b0_before, b1_before = linreg(ages, before)
         b0_after, b1_after = linreg(ages, after)
-        plant_rms = rms(plant)
-        near_zero = isinstance(plant_rms, float) and plant_rms < NEAR_ZERO_RMS_MPS
+        raw_plant_rms = rms(raw_plant)
+        correction_rms = rms(correction)
+        near_zero = isinstance(correction_rms, float) and correction_rms < NEAR_ZERO_RMS_MPS
         auth_med = median(auth)
         auth_full = isinstance(auth_med, float) and auth_med >= AUTH_FULL
         out.append({
@@ -663,8 +711,12 @@ def cut_intervention_rows(p: dict[str, Any], rows: list[dict[str, Any]]) -> list
             "estimability_rule": ">=4 rows, >=4 unique ages, age span >=0.15s",
             "auth_at_latch_median": auth_med,
             "auth_ge_0p999": auth_full,
-            "logged_plant_rms_mps": plant_rms,
+            "term_status_owners": "|".join(owners),
+            "term_owned_rows": sum(1 for r in group if str(r.get("term_owned_support")) == "True"),
+            "logged_plant_rms_mps": raw_plant_rms,
+            "contract_b_correction_rms_mps": correction_rms,
             "near_zero_logged_plant_activity": near_zero,
+            "near_zero_basis": "contract_b_correction_rms_mps after TERM ownership gate",
             "b0_before_mps": b0_before,
             "b1_before_mps2": b1_before,
             "abs_b1_before_mps2": abs(b1_before) if isinstance(b1_before, float) else "",
@@ -730,7 +782,7 @@ def fit_linear_predictor(cuts: list[dict[str, Any]], target_key: str) -> list[fl
     for row in cuts:
         y = fnum(row.get(target_key))
         auth = fnum(row.get("auth_at_latch_median"))
-        plant = fnum(row.get("logged_plant_rms_mps"))
+        plant = fnum(row.get("contract_b_correction_rms_mps"))
         if y is None or auth is None or plant is None:
             continue
         xs.append([1.0, auth, plant])
@@ -770,7 +822,7 @@ def fit_linear_predictor(cuts: list[dict[str, Any]], target_key: str) -> list[fl
 
 def pred(coeffs: list[float], row: dict[str, Any]) -> float:
     auth = fnum(row.get("auth_at_latch_median")) or 0.0
-    plant = fnum(row.get("logged_plant_rms_mps")) or 0.0
+    plant = fnum(row.get("contract_b_correction_rms_mps")) or 0.0
     return coeffs[0] + coeffs[1] * auth + coeffs[2] * plant
 
 
@@ -875,17 +927,35 @@ def summarize_contract(p: dict[str, Any], diagnostic_corr: list[dict[str, Any]],
     refutation_clusters = sorted({
         r["cluster_id"] for r in cuts if str(r.get("prediction_filter_refutation_cut")) == "True"
     })
-    fell_by_half = len(after_large) <= (len(before_large) / 2.0) if before_large else False
-    some_drop = bool(dropped_ids)
+    b_count = len(before_large)
+    a_count = len(before_ids & after_ids)
+    d_count = b_count - a_count
+    q_count = len(near_zero_bad)
+    collapse_threshold = math.ceil(b_count / 2.0) if b_count else 0
+    fell_by_half = d_count >= collapse_threshold if b_count else False
     near_zero_compliant = not near_zero_bad
-    if fell_by_half and near_zero_compliant:
-        verdict = "CONFIRMED"
-    elif some_drop and near_zero_compliant:
+    if q_count >= QUIET_REFUTATION_K:
+        verdict = "REFUTED"
+        residual_admissibility = "INADMISSIBLE_as_mechanism_corrected_drift_measurement"
+    elif 0 < q_count < QUIET_REFUTATION_K:
+        verdict = "HOLD_INCONCLUSIVE_QUIET_BREACH"
+        residual_admissibility = "INADMISSIBLE_pending_quiet_breach_resolution"
+    elif q_count == 0 and d_count >= collapse_threshold and b_count > 0:
+        verdict = "CONFIRMED_SUFFICIENT_FOR_EVALUATOR"
+        residual_admissibility = "CANDIDATE_evaluator_corrected_statistical_input"
+    elif q_count == 0 and 0 < d_count < collapse_threshold:
         verdict = "CONTRIBUTORY_NOT_SUFFICIENT"
+        residual_admissibility = "DIAGNOSTIC_ONLY_next_naming_round_input"
+    elif q_count == 0 and d_count <= 0:
+        verdict = "REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION"
+        residual_admissibility = "INADMISSIBLE_as_corrected_mechanism_drift_measurement"
     elif len(refutation_clusters) >= 2:
+        # Kept unreachable under the machine table except as a consistency guard.
         verdict = "REFUTED_BY_QUIET_CELL"
+        residual_admissibility = "INADMISSIBLE_as_mechanism_corrected_drift_measurement"
     else:
         verdict = "NO_COLLAPSE_OR_UNJUDGED"
+        residual_admissibility = "DIAGNOSTIC_ONLY_unclassified"
     return {
         "diagnostic_only": True,
         "repo_head": p["report_generator_commit"],
@@ -893,6 +963,7 @@ def summarize_contract(p: dict[str, Any], diagnostic_corr: list[dict[str, Any]],
         "response58_commit": p["response58_commit"],
         "response61_commit": p["response61_commit"],
         "response62_commit": p["response62_commit"],
+        "response63_commit": p["response63_commit"],
         "input_manifest_path": p["input_manifest_path"],
         "input_manifest_sha256": p["input_manifest_sha256"],
         "plant_signal": p["plant_signal"],
@@ -918,14 +989,26 @@ def summarize_contract(p: dict[str, Any], diagnostic_corr: list[dict[str, Any]],
         "estimable_cuts": sum(1 for r in cuts if str(r.get("estimable_cut")) == "True"),
         "excluded_cuts": sum(1 for r in cuts if str(r.get("estimable_cut")) != "True"),
         "large_cluster_count_before": len(before_large),
-        "large_cluster_count_after": len(after_large),
+        "large_cluster_count_after_total": len(after_large),
+        "large_cluster_count_after_on_before_support": a_count,
+        "machine_decision_B_before_large_approaches": b_count,
+        "machine_decision_A_same_approaches_large_after": a_count,
+        "machine_decision_D_collapsed_approaches": d_count,
+        "machine_decision_Q_quiet_after_large_approaches": q_count,
+        "machine_decision_K_quiet_refutation": QUIET_REFUTATION_K,
+        "machine_decision_collapse_threshold_ceil_B_over_2": collapse_threshold,
         "clusters_dropped_by_intervention": dropped_ids,
         "large_count_fell_by_half": fell_by_half,
         "near_zero_after_large_count": len(near_zero_bad),
         "prediction_refutation_candidate_clusters": refutation_clusters,
-        "prediction_refutation_branch_met": len(refutation_clusters) >= 2,
+        "prediction_refutation_branch_met": q_count >= QUIET_REFUTATION_K,
         "intervention_verdict": verdict,
-        "post_intervention_residual_admissible_input": "plant_stream_samples.csv:r_after_contract_b_mps",
+        "residual_admissibility": residual_admissibility,
+        "post_intervention_residual_field": "plant_stream_samples.csv:r_after_contract_b_mps",
+        "post_intervention_residual_admissible_input": (
+            "plant_stream_samples.csv:r_after_contract_b_mps"
+            if residual_admissibility.startswith("CANDIDATE") else ""
+        ),
         "driver_decomposition_status": "RUN",
         "driver_count": len(driver_fits),
     }
@@ -983,13 +1066,16 @@ def run(args: argparse.Namespace) -> Path:
             "leading minus maps climb to positive world-up.",
             "",
             f"Response model: pure-delay command reference, lag calibrated from A091 only at `{lag_s:.3f}` s.",
+            "Ownership gate: rows whose prior `term_status.owner` is `term` get",
+            "`contract_b_correction_vz_up_mps = 0.0` as the RESPONSE63 structural no-op.",
+            "All other rows use the delayed logged setpoint world-up value.",
             "For each feature row:",
             "",
             "`delayed_logged_setpoint_vz_up_mps = setpoint_world_up_at_or_before(feature_mono_ns - lag)`",
             "",
             "The intervention residual is:",
             "",
-            "`r_after = v_ref_oracle_mps - (v_latch_true_mps + delayed_logged_setpoint_vz_up_mps)`",
+            "`r_after = v_ref_oracle_mps - (v_latch_true_mps + contract_b_correction_vz_up_mps)`",
             "",
             "The old zero-lag correlation gate is withdrawn by RESPONSE61 and is",
             "published only as diagnostic disclosure.",
@@ -1018,6 +1104,12 @@ def run(args: argparse.Namespace) -> Path:
             "setpoint_mono_ns": r["setpoint_mono_ns"],
             "setpoint_age_s": r["setpoint_age_s"],
             "logged_setpoint_v_body_z_mps": r["logged_setpoint_v_body_z_mps"],
+            "term_status_mono_ns": r["term_status_mono_ns"],
+            "term_status_age_s": r["term_status_age_s"],
+            "term_status_owner": r["term_status_owner"],
+            "term_status_engaged": r["term_status_engaged"],
+            "term_status_ready": r["term_status_ready"],
+            "term_owned_support": r["term_owned_support"],
             "level_pitch_rad": r["level_pitch_rad"],
             "level_roll_rad": r["level_roll_rad"],
             "logged_setpoint_vz_up_mps": r["logged_setpoint_vz_up_mps"],
@@ -1025,6 +1117,8 @@ def run(args: argparse.Namespace) -> Path:
             "lagged_setpoint_mono_ns": r["lagged_setpoint_mono_ns"],
             "lagged_setpoint_age_s": r["lagged_setpoint_age_s"],
             "delayed_logged_setpoint_vz_up_mps": r["delayed_logged_setpoint_vz_up_mps"],
+            "contract_b_correction_vz_up_mps": r["contract_b_correction_vz_up_mps"],
+            "ownership_gate_rule": r["ownership_gate_rule"],
             "features_archive_setpoint_vz_up_mps": r["features_archive_setpoint_vz_up_mps"],
             "features_archive_setpoint_diff_mps": r["features_archive_setpoint_diff_mps"],
             "v_ref_oracle_mps": r["v_ref_oracle_mps"],
@@ -1045,19 +1139,21 @@ def run(args: argparse.Namespace) -> Path:
     write_csv(out_dir / "driver_decomposition_fit.csv", driver_fits)
     write_csv(out_dir / "driver_decomposition_loao.csv", driver_loao)
 
-    field_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    field_groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for r in enriched:
-        field_groups[(r["era"], r["recording_regime"], r["setpoint_field_name"])].append(r)
+        field_groups[(r["era"], r["recording_regime"], r["setpoint_field_name"], r["term_status_owner"])].append(r)
     disclosure = []
-    for (era, regime, field), group in sorted(field_groups.items()):
+    for (era, regime, field, owner), group in sorted(field_groups.items()):
         ages = [x for x in (fnum(r.get("setpoint_age_s")) for r in group) if x is not None]
         disclosure.append({
             **meta(p),
             "era": era,
             "recording_regime": regime,
             "flight_jsonl_setpoint_field": field,
+            "term_status_owner": owner,
             "rows": len(group),
             "clusters": len({r["cluster_id"] for r in group}),
+            "term_owned_rows": sum(1 for r in group if str(r.get("term_owned_support")) == "True"),
             "plant_stream": p["plant_signal"],
             "world_up_conversion": p["plant_formula"],
             "stream_contract": p["stream_contract"],
@@ -1115,8 +1211,12 @@ def run(args: argparse.Namespace) -> Path:
             "",
             f"Judge status: `RUN_CONTRACT_B_RESPONSE_MODEL`.",
             f"Intervention verdict: `{summary['intervention_verdict']}`.",
-            f"Large cluster count before: `{summary['large_cluster_count_before']}`.",
-            f"Large cluster count after: `{summary['large_cluster_count_after']}`.",
+            f"Residual admissibility: `{summary['residual_admissibility']}`.",
+            f"B before-large approaches: `{summary['machine_decision_B_before_large_approaches']}`.",
+            f"A same-approach large-after: `{summary['machine_decision_A_same_approaches_large_after']}`.",
+            f"D collapsed approaches: `{summary['machine_decision_D_collapsed_approaches']}`.",
+            f"Q quiet-after-large approaches: `{summary['machine_decision_Q_quiet_after_large_approaches']}`.",
+            f"Large cluster count after total: `{summary['large_cluster_count_after_total']}`.",
             f"Clusters dropped by intervention: `{summary['clusters_dropped_by_intervention']}`.",
             f"Prediction refutation branch met: `{summary['prediction_refutation_branch_met']}`.",
             f"Driver decomposition status: `{summary['driver_decomposition_status']}`.",
