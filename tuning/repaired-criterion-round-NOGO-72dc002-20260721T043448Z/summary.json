@@ -1,0 +1,56 @@
+{
+  "artifact": "repaired-criterion-round-NOGO-72dc002-20260721T043448Z",
+  "generated_at_utc": "20260721T043448Z",
+  "generator_commit": "72dc0029a2cc306cd6dde1bc30abb7cdd0dd5d10",
+  "requested_minimum_tip": "4056acb",
+  "requested_minimum_tip_is_ancestor": true,
+  "active_criterion_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "legacy_response_model_registration_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "reg2_numeric_block_complete": false,
+  "decision": "NO_GO_PENDING_REG2",
+  "sim_lock_at_start": false,
+  "flight_sim_process_at_start": "none observed",
+  "reason": "Current RESPONSE64 criterion requires a numerically complete REG-2 response model before any Contract B intervention generator may produce residual/verdict fields.",
+  "rows": [
+    {
+      "task": "D",
+      "requested_action": "fix generator zero-fill/input validity behavior",
+      "current_criterion_binding": "typed input-validity gate before residual/verdict; missing input is INVALID_INPUT/OFF_SUPPORT and emits no admissible residual; zero command is observed data",
+      "status": "RECORDED_NO_NUMERIC_JUDGE",
+      "admissible_residual_field": "NO",
+      "artifact_action": "disposition only; no stale generator rerun under pre-REG2 state"
+    },
+    {
+      "task": "E",
+      "requested_action": "apply cut estimability and publish board numbers",
+      "current_criterion_binding": "cut rules: >=4 rows, >=4 unique ages, >=0.15s span; any-cut approach classifier; 5/23 historical, 4/23 pending authenticated post-criterion artifact, 4/22 unauthorized sensitivity",
+      "status": "BLOCKED_FOR_ADJUDICATIVE_BOARD_NUMBER",
+      "admissible_residual_field": "NO",
+      "artifact_action": "previous diagnostic cross-tab remains descriptive; adjudicative B/A/D/Q waits for REG-2-capable generator"
+    },
+    {
+      "task": "F",
+      "requested_action": "valid Contract B intervention with plant/command stream",
+      "current_criterion_binding": "SIGNAL CHAIN requires setpoint.v_body[2] world-up transform through numerically complete pre-registered response model REG-2",
+      "status": "NO_GO_PENDING_REG2",
+      "admissible_residual_field": "NO",
+      "artifact_action": "intervention judge not run; legacy_response_model_registration numeric block is still pending calibration"
+    },
+    {
+      "task": "G",
+      "requested_action": "A/B/C/D nested decomposition, cross-fitted approach-outer",
+      "current_criterion_binding": "component-to-runtime mapping fixed; decomposition depends on the same admissible Contract B intervention input",
+      "status": "NO_GO_PENDING_REG2",
+      "admissible_residual_field": "NO",
+      "artifact_action": "no decomposition verdict generated from inadmissible residuals"
+    },
+    {
+      "task": "H",
+      "requested_action": "manifest supersession rows/checker/transcripts",
+      "current_criterion_binding": "void/diagnostic/no-go rows must be typed; publish then attest at pushed tip",
+      "status": "THIS_ARTIFACT_TO_BE_MANIFESTED",
+      "admissible_residual_field": "NO",
+      "artifact_action": "add this D-H no-go disposition to manifest and verify after commit"
+    }
+  ]
+}
