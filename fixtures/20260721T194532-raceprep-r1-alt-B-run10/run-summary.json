@@ -1,0 +1,13 @@
+{
+    "gate_clips":  3,
+    "abort_phase":  "recover",
+    "flight_id":  "20260721T194509-0308865a",
+    "env_hits":  81,
+    "config":  "B",
+    "run":  10,
+    "r2_verified":  true,
+    "abort_reason":  "environment collision (impulse=2.0)",
+    "gates_passed":  1,
+    "wall_time_s":  13.455984200001694,
+    "total_gates":  "not exposed in telemetry"
+}
