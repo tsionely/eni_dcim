@@ -55,6 +55,15 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   SURVIVES-INTERVENTION => REFUTED regardless of the correlation
   table. The POST-INTERVENTION residual is the admissible drift
   measurement for any subsequent fit.
+  **THE MIDDLE CELL (channel-1 amendment, committed before any
+  valid-stream run): PARTIAL COLLAPSE — some clusters drop,
+  near-zero clusters end compliant, but fewer than half of the
+  >0.35 clusters fall — is dispositioned
+  CONTRIBUTORY-NOT-SUFFICIENT: the post-intervention residuals
+  become the next naming round's INPUT, no gate conclusion is drawn
+  from a partial result, and refutation retains its own K=2
+  condition (partial is never refutation). All under the standing
+  DO-NOT-MOVE default.**
 
 ## Rider R3 — the live-twin declaration (code-side, declared here)
 
@@ -129,6 +138,15 @@ mixed-ownership windows are analyzed per rider R3.
   rows). Driver attribution is read from this decomposition, never
   from visual association.
 
+## Guard line (channel-1, binding): the intervention is evaluation-side FOREVER
+
+The intervention modifies the EVALUATION HARNESS only. No branch of
+mechanism-2 — confirmed, refuted, or contributory — authorizes any
+flight-code change: the zero/None ring purity is a FEATURE (the
+same law that makes the flight code right is the law that makes the
+archive evaluation under-modeled), and the "fix" belongs to the
+evaluation side permanently.
+
 ## Rider R4 — the A091 sentinel
 
 The one physical TERM episode publishes its full row (auth_at_latch,
@@ -136,3 +154,13 @@ delta_latch, b0_old, b0_new, b1, recorded TERM activity). Committed
 reading rule: if auth ~ 1 and b0_new ~ b0_old ~ -0.44, the founding
 -0.437 is RE-ATTRIBUTED away from latch attenuation and the
 consistency anchor becomes a discriminant between mechanisms.
+(FIRED in the 55ba6da round: auth = 1.0, b0 identical at -0.4449 —
+the re-attribution stands recorded in RESPONSE-58.)
+
+**Mechanism-2's own A091 prediction (channel-1, committed before
+the valid-stream run):** on A091 the rings were POPULATED — TERM
+was the actor, the feed-forward was not empty — so mechanism-2
+predicts its within-cut b1 is SMALL and INTERVENTION-INDIFFERENT.
+If that holds while its -0.44 intercept persists, the founding
+number belongs to a THIRD structure, and A091 is the first cell
+where the post-two-mechanisms residual shows its face.
