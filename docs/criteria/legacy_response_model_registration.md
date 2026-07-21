@@ -145,6 +145,19 @@ UNIDENTIFIABLE candidates never enter the argmin.
   tripwire above fixture s2. The generator ASSERTS the equality
   at run time; a mismatch is a STOP, and an artifact whose
   candidate rows disagree on it is malformed on its face.**
+  **SCORING_SUPPORT_SHA256 (v2.4, channel-2 on R74-75 §1 — equal
+  cardinality is not equal support; a common-row count proves
+  QUANTITY, a common-row digest proves IDENTITY):** every
+  candidate row also publishes scoring_support_sha256 — the
+  SHA-256 of the canonically SORTED immutable scoring-event keys
+  actually entering the objective, hashed AFTER all alignment,
+  certification, deduplication, response-validity and
+  trace-validity decisions. Identical across all candidates;
+  runtime-asserted alongside the count; mismatch in EITHER field
+  is a hard STOP. The artifact publishes ONE support ledger:
+  window_id, event key, feature_ts_ns, relative_tick,
+  response-validity state, trace-validity state,
+  included_in_objective, exclusion reason.
   Alignment/dedup rules unchanged from v1 (accepted):
   feature_ts_ns to tick grid, nearest tick, max one-tick mismatch
   listed; duplicate frame broadcasts dedup to first.
@@ -171,13 +184,29 @@ measured AFTER the lag, channel-2 Blocker 1.2):
   the eligible domain (any face whose beyond-side is excluded by
   eligibility or by the domain edge), calibration_status =
   NOT_IDENTIFIED. **LOCAL-FACE RULE (v2.3, channel-2 on R69-73
-  §7.9): openness is decided at the WINNING CELL by inspecting
-  its six outward neighbors with the other coordinates held fixed
-  — (g +/- step, tau, L), (g, tau +/- step, L), (g, tau, L +/- 1)
+  §7.9; SCOPE FIXED v2.4, channel-2 on R74-75 §4): openness is
+  decided at the WINNING CELL by inspecting its six outward
+  neighbors with the other coordinates held fixed —
+  (g +/- step, tau, L), (g, tau +/- step, L), (g, tau, L +/- 1)
   — a face is OPEN when that specific neighbor is outside the
-  domain or ineligible. Global eligibility sets may not stand in:
-  a larger tau eligible at some unrelated lag does not close the
-  winner's own tau face.**
+  domain or ineligible. Global eligibility sets may not stand in.
+  THE LOCAL-FACE CHECK APPLIES TO POSITIVE-g WINNERS ONLY.**
+- **NULL MANIFOLD, COLLAPSED (v2.4 — resolving the g = 0
+  contradiction: a literal face check would call every null
+  winner open at the physically excluded negative-g boundary and
+  expose nuisance tau/L edges):** all g = 0 cells are ONE typed
+  prediction-equivalent candidate class — tau and L are
+  non-operative nuisance coordinates there, with no effect on the
+  predicted contribution. The null class's status is decided ONLY
+  by the common-support loss ordering against every eligible
+  g > 0 candidate (tolerance rule below, no positive-g global
+  minimizer). The negative-g direction is not an empirical open
+  face; nuisance-coordinate boundaries never control status; a
+  null representative row is a display convention, not a cell
+  with faces. PRECEDENCE: a result is never simultaneously
+  NULL_CALIBRATED and NOT_IDENTIFIED — the null class takes the
+  loss-ordering path, positive-g winners take the local-face
+  path, exclusively.
 - **POSITIVE-G MULTIPLE-MINIMIZER RULE (v2.3, §7.10 — first-wins
   is reproducibility, never identification):** the artifact
   publishes global_minimizer_count, every global-minimizer
@@ -236,25 +265,52 @@ DETECTED and listed, whether or not fitted.
 
 ## 2f. Real-run input and identity contracts (v2.3 — channel-2 on R69-73 §7, registered so the source repairs are ancestry-enforceable)
 
-1. **CANONICAL FEATURE-TIME ALIGNMENT (§7.4):** feature_ts_ns is
-   canonical for certified exposures; a missing exposure time is
-   ABSENT (typed) and may NEVER be synthesized from control time
-   or tick index. Nearest-tick mapping, max one-tick mismatch,
-   with a mismatch LEDGER published.
+1. **CANONICAL FEATURE-TIME ALIGNMENT (§7.4; EXACT ALGORITHM
+   v2.4):** feature_ts_ns is canonical for certified exposures; a
+   missing exposure time is ABSENT (typed) and may NEVER be
+   synthesized from control time or tick index. Mapping: tick
+   period dt = 0.02 s on the window's control grid;
+   mismatch_ns = feature_ts_ns - control_tick_time_ns; the row
+   maps to the NEAREST control tick by |mismatch|; an EQUIDISTANT
+   exposure (exactly half a period) maps to the EARLIER tick (the
+   registered prior-tick causal convention — never assign a later
+   control tick). The fitted row is labeled by the CONTROL tick;
+   the exposure time is preserved in the ledger. Published per
+   row: signed mismatch_ns and |mismatch_ns|; |mismatch| is
+   <= dt/2 by construction of nearest; an exposure falling
+   outside the window's tick range is OFF_WINDOW (typed). The
+   mismatch LEDGER is mandatory.
 2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
    Accepted TRUE set: {"True", "true", "1"}; accepted FALSE set:
    {"False", "false", "0"}; missing/blank/unknown ->
    ABSENT_CERTIFICATION, fail closed, never default-True.
    Truthiness on a nonempty string is the outlawed pattern.
-3. **CANONICAL FIRST-EXPOSURE DEDUP (§7.5):** ONE normalization
-   step deduplicates by the immutable exposure key BEFORE the
-   detector and the response reconstruction; first row wins in
-   EVERY path; every discarded rebroadcast listed. A dict keyed
-   by tick that keeps the last row is the outlawed pattern.
-4. **SENTINEL-KEY BINDING (§7.2):** the real-run CLI REQUIRES the
-   sentinel-key artifact path + digest + its criterion/evidence
-   commit; fail if missing; fail on any overlap; publish both key
-   sets and their intersection (must be empty).
+3. **CANONICAL FIRST-EXPOSURE DEDUP (§7.5; EXACT KEY v2.4):** the
+   CANONICAL EXPOSURE KEY is (flight_id, frame_id,
+   feature_ts_ns). Collision policy, registered: exact duplicate
+   key -> FIRST file-order occurrence wins; same frame_id with
+   different feature_ts_ns -> typed conflict
+   (EXPOSURE_KEY_CONFLICT), row excluded and listed; same
+   feature_ts_ns with different frame_id -> typed conflict,
+   excluded and listed; any missing key component ->
+   ABSENT_EXPOSURE_KEY, excluded and listed. ONE normalization
+   step applies this BEFORE the detector and the response
+   reconstruction; first wins in EVERY path; every discard
+   listed. A dict keyed by tick that keeps the last row is the
+   outlawed pattern.
+4. **SENTINEL-KEY BINDING (§7.2; MACHINE SCHEMA v2.4):** the
+   real-run CLI REQUIRES, as typed packet fields:
+   sentinel_artifact_path, sentinel_artifact_sha256,
+   sentinel_criterion_commit, sentinel_evidence_commit,
+   sentinel_reviewed_tip, sentinel_key_schema,
+   sentinel_key_count, calibration_key_count,
+   intersection_count, intersection_keys. The generator VERIFIES:
+   sentinel_criterion <= sentinel_evidence <= execution_tip
+   (ancestry); digest(sentinel_evidence_commit:path) ==
+   registered digest; digest(execution_tip:path) == registered
+   digest (survives at tip); intersection_count == 0. Missing
+   fields or an unresolvable commit are STARTUP failures, before
+   any input-window detection.
 5. **TYPED TRACE VALIDATION (§7.6):** transport completeness is
    about VALUES, not keys — every trace field non-empty and from
    its registered value set; a present key with a blank or
@@ -266,12 +322,18 @@ DETECTED and listed, whether or not fitted.
    boolean is replaced by a typed scope: SYNTHETIC_DIAGNOSTIC /
    REG2_CALIBRATION_CANDIDATE / VOID. A calibration candidate
    moves no board by itself, but it is not a synthetic dry run.
-8. **IDENTITY CHAIN (§7.1):** the packet proves
-   criterion (ee0bb6a or later) <= source_generator_commit <=
-   execution_tip <= artifact_commit, where source_generator_commit
-   is the ACTUAL last commit supplying the executed source bytes —
-   never HEAD copied into both fields. REG1_COMMIT binds the
-   GOVERNING criterion generation, updated with it.
+8. **IDENTITY CHAIN (§7.1; EXACT HASH v2.4 — "or later" is not a
+   machine identity):** the source names GOVERNING_REG1_COMMIT as
+   ONE full 40-hex immutable hash — the exact commit containing
+   every operative amendment of this registration (for the next
+   source round: the commit introducing the v2.4 text; each
+   further amendment updates the binding with itself, or the
+   generator fails ancestry in substance). The packet proves
+   GOVERNING_REG1_COMMIT <= source_generator_commit <=
+   execution_tip <= artifact_commit, where
+   source_generator_commit is the ACTUAL last commit supplying
+   the executed source bytes (discovered from git history of the
+   source path) — never HEAD copied into both fields.
 9. **REQUIRED SOURCE FIXTURES (consolidated roster; the prior
    green suites remain valid history and do NOT satisfy this):**
    (iv) 3 unique timestamps -> both legs ABSENT, never 0.0;
@@ -289,7 +351,33 @@ DETECTED and listed, whether or not fitted.
    eligibility -> NOT_IDENTIFIED; (s11) multiple distinct
    positive-g global minimizers -> NOT_IDENTIFIED; (s12)
    source_generator_commit != execution_tip -> both identities
-   reported correctly.
+   reported correctly; **(v2.4 additions, channel-2 on R74-75:)**
+   (s13) same rows_scored_common but different support digest ->
+   STOP; (s14) g = 0 null winner at a domain boundary -> status
+   decided by loss ordering, never killed by negative-g or
+   nuisance faces; (s15) missing feature_ts_ns -> typed absence,
+   never synthesized; (s16) two equidistant control ticks ->
+   the registered earlier-tick result, deterministically; (s17)
+   sentinel bytes altered at execution tip -> startup refusal.
+
+## 2g. PRIOR-VIEWING DISCLOSURE (v2.4 — this round is PRE-ADJUDICATIVE, not PRE-OBSERVATION)
+
+A calibration-shaped A091 packet was generated and committed
+BEFORE v2.3 landed (b421039, attested 044153b, removed from the
+tree at 2fa8e9d). Its committed summary — read from history, not
+from its removal label — reports calibration_status
+NULL_CALIBRATED, g = 0.0, tau = 0.02, L = 0, RMS = 0.0, 51
+scoring rows, fit directions DOWN AND UP, diagnostic_only, no
+REG-2 written. Disposition: **VOID_PRE_V2.3, non-adjudicative
+history, no REG-2 effect, no mechanism effect, no admissible
+residual — AND THE RESULT WAS VIEWED.** Every subsequent
+calibration packet MUST disclose: prior_viewed_output = the
+044153b diagnostic NULL_CALIBRATED packet with the numbers above;
+why it is void (generator predates v2.3; UP direction included;
+real-run contracts incomplete; provenance rules incomplete); and
+that its effect on current status is none. The next A091 read is
+a repaired-instrument read, never an untouched confirmation, and
+no description may claim otherwise.
 
 ## 2e. Provenance bindings (v2 — the generator-identity gap closed)
 
