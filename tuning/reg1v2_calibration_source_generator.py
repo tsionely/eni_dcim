@@ -25,7 +25,8 @@ if str(SRC_ROOT) not in sys.path:
 
 from aigp.planning.vertical_terminal import robust_slope
 
-REG1_COMMIT = "e73ca90"
+GOVERNING_REG1_COMMIT = "3fe25ea7eff64bac7910788536c0af7db470b341"
+REG1_COMMIT = GOVERNING_REG1_COMMIT
 SOURCE_GENERATOR_PATH = "tuning/reg1v2_calibration_source_generator.py"
 DT_S = 0.02
 DT_NS = 20_000_000
@@ -68,6 +69,10 @@ class CalibrationSourceError(RuntimeError):
 
 class RowsScoredCommonMismatch(CalibrationSourceError):
     code = "ROWS_SCORED_COMMON_MISMATCH"
+
+
+class ScoringSupportMismatch(CalibrationSourceError):
+    code = "SCORING_SUPPORT_SHA256_MISMATCH"
 
 
 @dataclass(frozen=True)
@@ -159,58 +164,72 @@ def canonical_feature_ts_ns(row: Mapping[str, object]) -> tuple[int | None, str]
     return value, "VALID"
 
 
-def _row_alignment_ledger(row: Mapping[str, object], feature_ts_ns: int | None) -> dict[str, object]:
-    tick_raw = row.get("tick")
-    ts = _num(row.get("ts_s"))
+def _nearest_control_tick(feature_ts_ns: int) -> int:
+    quotient, remainder = divmod(feature_ts_ns, DT_NS)
+    if remainder > DT_NS // 2:
+        return quotient + 1
+    return quotient
+
+
+def _row_alignment_ledger(row: Mapping[str, object], feature_ts_ns: int | None, control_ticks: set[int]) -> dict[str, object]:
+    original_tick = int(row["tick"])
     ledger: dict[str, object] = {
         "alignment_status": "VALID",
         "alignment_reason": "",
         "nearest_tick": None,
-        "tick_mismatch": None,
+        "control_tick_original": original_tick,
         "tick_mismatch_ns": None,
+        "abs_tick_mismatch_ns": None,
     }
     if feature_ts_ns is None:
         ledger["alignment_status"] = "ABSENT"
         ledger["alignment_reason"] = "ABSENT_FEATURE_TS_NS"
         return ledger
-    nearest_tick = int(round(feature_ts_ns / DT_NS))
+    nearest_tick = _nearest_control_tick(feature_ts_ns)
     ledger["nearest_tick"] = nearest_tick
-    if tick_raw is not None and str(tick_raw) != "":
-        try:
-            tick = int(tick_raw)
-        except (TypeError, ValueError):
-            ledger["alignment_status"] = "MISMATCH"
-            ledger["alignment_reason"] = "INVALID_TICK"
-            return ledger
-        mismatch = tick - nearest_tick
-        ledger["tick_mismatch"] = mismatch
-        ledger["tick_mismatch_ns"] = mismatch * DT_NS
-        if abs(mismatch) > 1:
-            ledger["alignment_status"] = "MISMATCH"
-            ledger["alignment_reason"] = "FEATURE_CONTROL_TICK_MISMATCH_GT_1"
-    elif ts is not None:
-        mismatch_ns = int(round(ts * 1_000_000_000)) - feature_ts_ns
-        ledger["tick_mismatch_ns"] = mismatch_ns
-        if abs(mismatch_ns) > DT_NS:
-            ledger["alignment_status"] = "MISMATCH"
-            ledger["alignment_reason"] = "FEATURE_CONTROL_TIME_MISMATCH_GT_1_TICK"
+    mismatch_ns = feature_ts_ns - nearest_tick * DT_NS
+    ledger["tick_mismatch_ns"] = mismatch_ns
+    ledger["abs_tick_mismatch_ns"] = abs(mismatch_ns)
+    if nearest_tick not in control_ticks:
+        ledger["alignment_status"] = "OFF_WINDOW"
+        ledger["alignment_reason"] = "OFF_WINDOW"
     return ledger
 
 
-def _immutable_exposure_key(row: Mapping[str, object], feature_ts_ns: int | None) -> tuple[str, str] | None:
+def exposure_key_components(row: Mapping[str, object], feature_ts_ns: int | None) -> tuple[tuple[str, str, int] | None, list[str]]:
+    missing: list[str] = []
+    flight_id = row.get("flight_id")
+    frame_id = row.get("frame_id")
+    if flight_id is None or str(flight_id) == "":
+        missing.append("flight_id")
+    if frame_id is None or str(frame_id) == "":
+        missing.append("frame_id")
     if feature_ts_ns is None:
-        return None
-    flight_id = str(row.get("flight_id", ""))
-    return (flight_id, str(feature_ts_ns))
+        missing.append("feature_ts_ns")
+    if missing:
+        return None, missing
+    return (str(flight_id), str(frame_id), int(feature_ts_ns)), []
+
+
+def format_exposure_key(key: tuple[str, str, int]) -> str:
+    flight_id, frame_id, feature_ts_ns = key
+    return f"{flight_id}|frame_id={frame_id}|feature_ts_ns={feature_ts_ns}"
 
 
 def normalize_rows_with_metadata(rows: Sequence[Mapping[str, object]]) -> tuple[list[dict[str, object]], dict[str, object]]:
     out: list[dict[str, object]] = []
     discarded: list[dict[str, object]] = []
+    excluded: list[dict[str, object]] = []
     mismatch_ledger: list[dict[str, object]] = []
     absent_feature_rows: list[dict[str, object]] = []
     absent_cert_rows: list[dict[str, object]] = []
-    seen_exposures: set[tuple[str, str]] = set()
+    raw_control_ticks: set[int] = set()
+    for index, row in enumerate(rows):
+        tick_raw = row.get("tick")
+        raw_control_ticks.add(int(tick_raw) if tick_raw is not None and str(tick_raw) != "" else index)
+    seen_exposures: set[tuple[str, str, int]] = set()
+    seen_frame_ts: dict[tuple[str, str], int] = {}
+    seen_ts_frame: dict[tuple[str, int], str] = {}
     for index, row in enumerate(rows):
         new = dict(row)
         tick_raw = new.get("tick")
@@ -233,20 +252,59 @@ def normalize_rows_with_metadata(rows: Sequence[Mapping[str, object]]) -> tuple[
         new["certification_absent_reason"] = "" if cert_status == "VALID" else cert_status
         if cert_value is None:
             absent_cert_rows.append({"row_key": new.get("row_key", f"input_{index:06d}"), "reason": cert_status, "raw": new.get("certified_full")})
-        alignment = _row_alignment_ledger(new, feature_ts_ns)
-        new.update(alignment)
-        if alignment["alignment_status"] == "MISMATCH":
-            mismatch_ledger.append({"row_key": new.get("row_key", f"input_{index:06d}"), **alignment})
-        exposure_key = _immutable_exposure_key(new, feature_ts_ns)
-        if exposure_key is not None and exposure_key in seen_exposures:
+        exposure_key, missing_components = exposure_key_components(new, feature_ts_ns)
+        if exposure_key is None:
+            excluded.append({
+                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "reason": "ABSENT_EXPOSURE_KEY",
+                "missing_components": ";".join(missing_components),
+            })
+            continue
+        exposure_key_text = format_exposure_key(exposure_key)
+        new["exposure_key"] = exposure_key_text
+        flight_id, frame_id, feature_ts_int = exposure_key
+        frame_key = (flight_id, frame_id)
+        ts_key = (flight_id, feature_ts_int)
+        if exposure_key in seen_exposures:
             discarded.append({
                 "discarded_row_key": new.get("row_key", f"input_{index:06d}"),
-                "feature_ts_ns": feature_ts_ns,
+                "exposure_key": exposure_key_text,
+                "feature_ts_ns": feature_ts_int,
                 "reason": "DUPLICATE_EXPOSURE_FIRST_WINS",
             })
             continue
-        if exposure_key is not None:
-            seen_exposures.add(exposure_key)
+        if frame_key in seen_frame_ts and seen_frame_ts[frame_key] != feature_ts_int:
+            excluded.append({
+                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "exposure_key": exposure_key_text,
+                "reason": "EXPOSURE_KEY_CONFLICT",
+                "conflict": "SAME_FRAME_ID_DIFFERENT_FEATURE_TS_NS",
+            })
+            continue
+        if ts_key in seen_ts_frame and seen_ts_frame[ts_key] != frame_id:
+            excluded.append({
+                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "exposure_key": exposure_key_text,
+                "reason": "EXPOSURE_KEY_CONFLICT",
+                "conflict": "SAME_FEATURE_TS_NS_DIFFERENT_FRAME_ID",
+            })
+            continue
+        seen_exposures.add(exposure_key)
+        seen_frame_ts[frame_key] = feature_ts_int
+        seen_ts_frame[ts_key] = frame_id
+        alignment = _row_alignment_ledger(new, feature_ts_ns, raw_control_ticks)
+        new.update(alignment)
+        if alignment["alignment_status"] in {"MISMATCH", "OFF_WINDOW"} or alignment.get("tick_mismatch_ns") not in {None, 0}:
+            mismatch_ledger.append({"row_key": new.get("row_key", f"input_{index:06d}"), **alignment})
+        if alignment["alignment_status"] == "OFF_WINDOW":
+            excluded.append({
+                "row_key": new.get("row_key", f"input_{index:06d}"),
+                "exposure_key": exposure_key_text,
+                "reason": "OFF_WINDOW",
+            })
+            continue
+        new["tick"] = int(alignment["nearest_tick"])
+        new["ts_s"] = new["tick"] * DT_S
         if _num(new.get("v_ref_up_mps")) is None:
             v_body_z = _num(new.get("setpoint_v_body_z"))
             level_pitch = _num(new.get("level_pitch"))
@@ -259,6 +317,8 @@ def normalize_rows_with_metadata(rows: Sequence[Mapping[str, object]]) -> tuple[
     meta = {
         "discarded_rebroadcasts": discarded,
         "discarded_rebroadcast_count": len(discarded),
+        "excluded_exposure_rows": excluded,
+        "excluded_exposure_count": len(excluded),
         "mismatch_ledger": mismatch_ledger,
         "mismatch_count": len(mismatch_ledger),
         "absent_feature_ts_rows": absent_feature_rows,
@@ -307,7 +367,8 @@ def _fresh_tail(history: Sequence[tuple[float, float]]) -> list[tuple[float, flo
 
 
 def reconstruct_v_full_raw(rows: Sequence[Mapping[str, object]], anchor_ts_s: float) -> tuple[float | None, str, dict[str, object]]:
-    history = _certified_history(rows, anchor_ts_s)
+    rows_norm, normalization_meta = normalize_rows_with_metadata(rows)
+    history = _certified_history(rows_norm, anchor_ts_s)
     fresh_tail = _fresh_tail(history)
     recent = fresh_tail[-RATE_LAST_SAMPLE_CAP:]
     xs = [ts for ts, _ in recent]
@@ -320,6 +381,7 @@ def reconstruct_v_full_raw(rows: Sequence[Mapping[str, object]], anchor_ts_s: fl
         "fresh_tail_span_s": span,
         "max_gap_s": RATE_MAX_GAP_S,
         "last_sample_cap": RATE_LAST_SAMPLE_CAP,
+        "normalization": normalization_meta,
     }
     if len(xs) < RATE_MIN_SAMPLES:
         return None, "ABSENT_RESPONSE", meta
@@ -351,7 +413,11 @@ def _trace_for_row(row: Mapping[str, object]) -> dict[str, object]:
 
 def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: Iterable[str] = ()) -> list[StepWindow]:
     rows, input_meta = normalize_rows_with_metadata(rows_in)
-    by_tick = {int(r["tick"]): r for r in rows}
+    by_tick: dict[int, dict[str, object]] = {}
+    for row in rows:
+        tick = int(row["tick"])
+        if tick not in by_tick:
+            by_tick[tick] = row
     sentinel_set = {str(k) for k in sentinel_keys}
     raw_step_indices: list[int] = []
     for i in range(1, len(rows)):
@@ -395,7 +461,9 @@ def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: 
         for t in post_ticks:
             src = by_tick[t]
             event_key = str(src.get("row_key"))
-            if event_key in sentinel_set:
+            relative_tick = int(src["tick"]) - tick
+            sentinel_event_key = f"step_{seq:02d}|{src.get('exposure_key', '')}|relative_tick={relative_tick}"
+            if event_key in sentinel_set or sentinel_event_key in sentinel_set:
                 reason = "SENTINEL_DISJOINT"
             v_meas, response_status, response_meta = reconstruct_v_full_raw(rows, float(src["ts_s"]))
             trace = _trace_for_row(src)
@@ -404,9 +472,10 @@ def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: 
                 "event_id": f"step_{seq:02d}",
                 "row_key": event_key,
                 "tick": int(src["tick"]),
-                "relative_tick": int(src["tick"]) - tick,
+                "relative_tick": relative_tick,
                 "ts_s": float(src["ts_s"]),
                 "feature_ts_ns": feature_ts_ns,
+                "exposure_key": src.get("exposure_key", ""),
                 "feature_ts_status": feature_status,
                 "feature_ts_absent_reason": src.get("feature_ts_absent_reason", "" if feature_status == "VALID" else feature_status),
                 "certified_full_parsed": src.get("certified_full_parsed"),
@@ -415,8 +484,9 @@ def detect_step_windows(rows_in: Sequence[Mapping[str, object]], sentinel_keys: 
                 "alignment_status": src.get("alignment_status", ""),
                 "alignment_reason": src.get("alignment_reason", ""),
                 "nearest_tick": src.get("nearest_tick"),
-                "tick_mismatch": src.get("tick_mismatch"),
+                "control_tick_original": src.get("control_tick_original"),
                 "tick_mismatch_ns": src.get("tick_mismatch_ns"),
+                "abs_tick_mismatch_ns": src.get("abs_tick_mismatch_ns"),
                 "v_ref_up_mps": _num(src.get("v_ref_up_mps")),
                 "v_meas_mps": v_meas,
                 "response_status": response_status,
@@ -478,6 +548,7 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
     post_lag_rows = 0
     sse = 0.0
     max_post_lag_horizon_s = 0.0
+    scoring_keys: list[str] = []
     for window in windows:
         if window.exclusion_reason:
             continue
@@ -493,6 +564,7 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
             if meas is None or pred is None:
                 continue
             scoring_rows += 1
+            scoring_keys.append(scoring_event_key(window, row))
             if rel_tick >= candidate.lag_ticks:
                 post_lag_rows += 1
                 max_post_lag_horizon_s = max(max_post_lag_horizon_s, (rel_tick - candidate.lag_ticks) * DT_S)
@@ -511,6 +583,7 @@ def candidate_score(windows: Sequence[StepWindow], candidate: Candidate, fit_dir
         "rows_used": scoring_rows,
         "scoring_rows": scoring_rows,
         "rows_scored_common": scoring_rows,
+        "scoring_support_sha256": scoring_support_sha256_from_keys(scoring_keys),
         "post_lag_rows": post_lag_rows,
         "max_horizon_s": max_post_lag_horizon_s,
         "max_post_lag_horizon_s": max_post_lag_horizon_s,
@@ -580,27 +653,94 @@ def _losses_tied(lhs: float, rhs: float) -> bool:
     return abs(lhs - rhs) / denom <= NULL_TIE_REL_TOL
 
 
+def scoring_event_key(window: StepWindow, row: Mapping[str, object]) -> str:
+    exposure_key = str(row.get("exposure_key") or "")
+    if not exposure_key and row.get("feature_ts_ns") is not None:
+        exposure_key = f"feature_ts_ns={row['feature_ts_ns']}"
+    return f"{window.event_id}|{exposure_key}|relative_tick={row.get('relative_tick')}"
+
+
+def scoring_support_sha256_from_keys(keys: Sequence[str]) -> str:
+    payload = "\n".join(sorted(str(k) for k in keys)).encode("utf-8")
+    return sha256_bytes(payload)
+
+
+def support_ledger(windows: Sequence[StepWindow], fit_directions: set[str] | None = None) -> list[dict[str, object]]:
+    ledger: list[dict[str, object]] = []
+    for window in windows:
+        window_excluded = bool(window.exclusion_reason)
+        direction_excluded = fit_directions is not None and window.direction not in fit_directions
+        for row in window.rows:
+            response_valid = row.get("response_status") == "VALID"
+            trace_valid = bool(row.get("trace_complete"))
+            included = not window_excluded and not direction_excluded and response_valid and trace_valid
+            reason = ""
+            if window_excluded:
+                reason = window.exclusion_reason
+            elif direction_excluded:
+                reason = "OFF_SUPPORT_DIRECTION"
+            elif not response_valid:
+                reason = str(row.get("response_status", "ABSENT_RESPONSE"))
+            elif not trace_valid:
+                reason = "INCOMPLETE_TRACE"
+            ledger.append({
+                "window_id": window.event_id,
+                "event_key": scoring_event_key(window, row),
+                "feature_ts_ns": row.get("feature_ts_ns"),
+                "relative_tick": row.get("relative_tick"),
+                "response_validity_state": row.get("response_status"),
+                "trace_validity_state": "VALID" if trace_valid else "INCOMPLETE",
+                "included_in_objective": included,
+                "exclusion_reason": reason,
+            })
+    return ledger
+
+
+def support_keys_from_ledger(ledger: Sequence[Mapping[str, object]]) -> list[str]:
+    return [str(row["event_key"]) for row in ledger if row.get("included_in_objective")]
+
+
 def assert_rows_scored_common(score_rows: Sequence[Mapping[str, object]]) -> int:
     common_counts = {int(row["rows_scored_common"]) for row in score_rows}
     if len(common_counts) > 1:
         raise RowsScoredCommonMismatch(f"ROWS_SCORED_COMMON_MISMATCH: {sorted(common_counts)}")
+    support_hashes = {str(row["scoring_support_sha256"]) for row in score_rows}
+    if len(support_hashes) > 1:
+        raise ScoringSupportMismatch(f"SCORING_SUPPORT_SHA256_MISMATCH: {sorted(support_hashes)}")
     return next(iter(common_counts)) if common_counts else 0
 
 
 def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] | None = None) -> dict[str, object]:
     detected = sorted({w.direction for w in windows})
     usable = [w for w in windows if not w.exclusion_reason and (fit_directions is None or w.direction in fit_directions)]
+    ledger = support_ledger(windows, fit_directions)
+    ledger_support_keys = support_keys_from_ledger(ledger)
+    ledger_support_sha256 = scoring_support_sha256_from_keys(ledger_support_keys)
     score_rows = [candidate_score(usable, cand, fit_directions) for cand in candidate_grid()]
     rows_scored_common = assert_rows_scored_common(score_rows)
+    scoring_support_sha256_values = {str(row["scoring_support_sha256"]) for row in score_rows}
+    scoring_support_sha256 = next(iter(scoring_support_sha256_values)) if scoring_support_sha256_values else scoring_support_sha256_from_keys([])
+    if scoring_support_sha256 != ledger_support_sha256:
+        raise ScoringSupportMismatch(f"SCORING_SUPPORT_SHA256_MISMATCH_LEDGER: score={scoring_support_sha256} ledger={ledger_support_sha256}")
     eligible = [row for row in score_rows if row["eligible"]]
-    null_scores = [row for row in score_rows if row["eligible"] and float(row["g"]) == 0.0]
+    null_scores = [row for row in score_rows if float(row["g"]) == 0.0]
     null_best = min(null_scores, key=lambda r: float(r["sse"])) if null_scores else None
     positive = [row for row in eligible if float(row["g"]) > 0.0]
     positive_best = min(positive, key=lambda r: float(r["sse"])) if positive else None
-    global_best = min(eligible, key=lambda r: float(r["sse"])) if eligible else None
-    global_minimizers = [row for row in eligible if global_best is not None and _losses_tied(float(row["sse"]), float(global_best["sse"]))]
-    positive_global_minimizers = [row for row in global_minimizers if float(row["g"]) > 0.0]
+    compared_losses = [float(row["sse"]) for row in positive]
+    if null_best is not None:
+        compared_losses.append(float(null_best["sse"]))
+    global_loss = min(compared_losses) if compared_losses else None
+    null_global_minimizer = null_best is not None and global_loss is not None and _losses_tied(float(null_best["sse"]), global_loss)
+    positive_global_minimizers = [row for row in positive if global_loss is not None and _losses_tied(float(row["sse"]), global_loss)]
     distinct_positive_global_minimizers = sorted({_score_key(row) for row in positive_global_minimizers})
+    global_minimizer_coordinates: list[dict[str, object]] = []
+    if null_global_minimizer:
+        global_minimizer_coordinates.append({"g": 0.0, "tau_s": None, "L_ticks": None, "class": "NULL_MANIFOLD"})
+    global_minimizer_coordinates.extend(
+        {"g": g, "tau_s": tau, "L_ticks": lag, "class": "POSITIVE_G"}
+        for g, tau, lag in distinct_positive_global_minimizers
+    )
     prediction_equivalence_status = (
         "SINGLE_MINIMIZER"
         if len(distinct_positive_global_minimizers) <= 1
@@ -644,12 +784,10 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         "null_tie_rel_tol": NULL_TIE_REL_TOL,
         "null_strictly_better_than_positive": null_strictly_better,
         "null_tied_positive": null_tied_positive,
-        "global_minimizer_count": len(global_minimizers),
-        "global_minimizer_coordinates": [
-            {"g": g, "tau_s": tau, "L_ticks": lag}
-            for g, tau, lag in sorted({_score_key(row) for row in global_minimizers})
-        ],
+        "global_minimizer_count": len(global_minimizer_coordinates),
+        "global_minimizer_coordinates": global_minimizer_coordinates,
         "positive_global_minimizer_count": len(distinct_positive_global_minimizers),
+        "null_manifold_collapsed": True,
         "prediction_equivalence_status": prediction_equivalence_status,
         "local_open_face": open_face,
         "local_open_face_checks": open_face_checks,
@@ -657,6 +795,8 @@ def fit_response_model(windows: Sequence[StepWindow], fit_directions: set[str] |
         "fit_directions": sorted(fit_directions) if fit_directions else detected,
         "candidate_count": len(score_rows),
         "rows_scored_common": rows_scored_common,
+        "scoring_support_sha256": scoring_support_sha256,
+        "support_ledger": ledger,
         "eligible_count": len(eligible),
         "score_rows": score_rows,
         "window_count": len(windows),
@@ -689,12 +829,78 @@ def read_sentinel_keys(path: Path) -> list[str]:
     rows = read_csv_rows(path)
     keys: list[str] = []
     for row in rows:
-        key = row.get("row_key")
+        key = row.get("event_key") or row.get("row_key")
         if not key and row.get("flight_id") and row.get("frame_id") and row.get("feature_ts_ns"):
-            key = f"{row['flight_id']}|frame={row['frame_id']}|feature_ts_ns={row['feature_ts_ns']}"
+            key = format_exposure_key((str(row["flight_id"]), str(row["frame_id"]), int(str(row["feature_ts_ns"]))))
         if key:
             keys.append(str(key))
     return keys
+
+
+def _repo_relative_path(repo: Path, path: Path) -> str:
+    try:
+        return path.resolve().relative_to(repo.resolve()).as_posix()
+    except ValueError as exc:
+        raise CalibrationSourceError("SENTINEL_PATH_OUTSIDE_REPO") from exc
+
+
+def verify_sentinel_binding(
+    repo: Path,
+    *,
+    artifact_path: Path,
+    artifact_sha256: str,
+    criterion_commit: str,
+    evidence_commit: str,
+    reviewed_tip: str,
+    key_schema: str,
+    expected_key_count: int | None,
+) -> dict[str, object]:
+    if not all([str(artifact_path), artifact_sha256, criterion_commit, evidence_commit, reviewed_tip, key_schema]):
+        raise CalibrationSourceError("SENTINEL_BINDING_MISSING")
+    execution_tip = git(repo, ["rev-parse", "HEAD"])
+    rel_path = _repo_relative_path(repo, artifact_path)
+    for label, commit in {
+        "sentinel_criterion_commit": criterion_commit,
+        "sentinel_evidence_commit": evidence_commit,
+        "sentinel_reviewed_tip": reviewed_tip,
+    }.items():
+        try:
+            git(repo, ["cat-file", "-e", f"{commit}^{{commit}}"])
+        except subprocess.CalledProcessError as exc:
+            raise CalibrationSourceError(f"SENTINEL_UNRESOLVABLE_{label}") from exc
+    if not is_ancestor(repo, criterion_commit, evidence_commit) or not is_ancestor(repo, evidence_commit, execution_tip):
+        raise CalibrationSourceError("SENTINEL_ANCESTRY_MISMATCH")
+    try:
+        evidence_digest = committed_byte_digest(repo, evidence_commit, rel_path)
+        tip_digest = committed_byte_digest(repo, execution_tip, rel_path)
+    except subprocess.CalledProcessError as exc:
+        raise CalibrationSourceError("SENTINEL_ARTIFACT_UNRESOLVABLE") from exc
+    if evidence_digest != artifact_sha256:
+        raise CalibrationSourceError("SENTINEL_EVIDENCE_DIGEST_MISMATCH")
+    if tip_digest != artifact_sha256:
+        raise CalibrationSourceError("SENTINEL_TIP_DIGEST_MISMATCH")
+    working_digest = sha256_file(artifact_path)
+    if working_digest != artifact_sha256:
+        raise CalibrationSourceError("SENTINEL_WORKTREE_DIGEST_MISMATCH")
+    keys = read_sentinel_keys(artifact_path)
+    if expected_key_count is not None and len(keys) != expected_key_count:
+        raise CalibrationSourceError("SENTINEL_KEY_COUNT_MISMATCH")
+    return {
+        "sentinel_artifact_path": rel_path,
+        "sentinel_artifact_sha256": artifact_sha256,
+        "sentinel_criterion_commit": criterion_commit,
+        "sentinel_evidence_commit": evidence_commit,
+        "sentinel_reviewed_tip": reviewed_tip,
+        "sentinel_key_schema": key_schema,
+        "sentinel_key_count": len(keys),
+        "sentinel_keys": sorted(keys),
+        "sentinel_verification": {
+            "ancestry": "PASS",
+            "digest_at_evidence": "PASS",
+            "digest_at_tip": "PASS",
+            "worktree_digest": "PASS",
+        },
+    }
 
 
 def input_digest_rows(paths: Sequence[str]) -> list[dict[str, str]]:
@@ -714,11 +920,11 @@ def source_bytes_commit(repo: Path) -> str:
 
 def provenance_packet(repo: Path, input_paths: Sequence[str], exact_command: str, *, artifact_commit: str | None = None) -> dict[str, object]:
     execution_tip = git(repo, ["rev-parse", "HEAD"])
-    if not is_ancestor(repo, REG1_COMMIT, execution_tip):
-        raise CalibrationSourceError(f"REG-1 commit {REG1_COMMIT} is not an ancestor of {execution_tip}")
+    if not is_ancestor(repo, GOVERNING_REG1_COMMIT, execution_tip):
+        raise CalibrationSourceError(f"GOVERNING_REG1_COMMIT {GOVERNING_REG1_COMMIT} is not an ancestor of {execution_tip}")
     source_commit = source_bytes_commit(repo)
-    if not is_ancestor(repo, REG1_COMMIT, source_commit):
-        raise CalibrationSourceError(f"REG-1 commit {REG1_COMMIT} is not an ancestor of source commit {source_commit}")
+    if not is_ancestor(repo, GOVERNING_REG1_COMMIT, source_commit):
+        raise CalibrationSourceError(f"GOVERNING_REG1_COMMIT {GOVERNING_REG1_COMMIT} is not an ancestor of source commit {source_commit}")
     if not is_ancestor(repo, source_commit, execution_tip):
         raise CalibrationSourceError(f"source commit {source_commit} is not an ancestor of execution tip {execution_tip}")
     return {
@@ -726,9 +932,30 @@ def provenance_packet(repo: Path, input_paths: Sequence[str], exact_command: str
         "source_generator_commit": source_commit,
         "execution_tip": execution_tip,
         "artifact_commit": artifact_commit,
-        "reg1_commit": REG1_COMMIT,
+        "governing_reg1_commit": GOVERNING_REG1_COMMIT,
+        "reg1_commit": GOVERNING_REG1_COMMIT,
         "input_digests": input_digest_rows(input_paths),
         "exact_command": exact_command,
+        "prior_viewed_output": {
+            "commit": "044153b",
+            "source_run": "b421039",
+            "disposition": "VOID_PRE_V2.3",
+            "result_viewed": True,
+            "calibration_status": "NULL_CALIBRATED",
+            "g": 0.0,
+            "tau_s": 0.02,
+            "L_ticks": 0,
+            "rms": 0.0,
+            "scoring_rows": 51,
+            "fit_directions": ["down", "up"],
+            "effect_on_current_status": "none",
+            "void_reasons": [
+                "generator predates v2.3",
+                "UP direction included",
+                "real-run contracts incomplete",
+                "provenance rules incomplete"
+            ],
+        },
         "attestation_policy": "artifact_manifest digests must be computed from committed bytes in a child attestation commit",
     }
 
@@ -754,6 +981,8 @@ def synthetic_rows() -> list[dict[str, object]]:
         ts = tick * DT_S
         rows.append({
             "row_key": f"syn_{tick:04d}",
+            "flight_id": "synthetic",
+            "frame_id": f"syn_frame_{tick:04d}",
             "tick": tick,
             "ts_s": ts,
             "feature_ts_ns": int(round(ts * 1_000_000_000)),
@@ -781,9 +1010,9 @@ def synthetic_dry_run(repo: Path) -> dict[str, object]:
     rows = synthetic_rows()
     windows = detect_step_windows(rows)
     fit = fit_response_model(windows)
-    packet = provenance_packet(repo, ["synthetic://reg1v23-detector-dry-run"], "python tuning/reg1v2_calibration_source_generator.py --synthetic-dry-run")
+    packet = provenance_packet(repo, ["synthetic://reg1v24-detector-dry-run"], "python tuning/reg1v2_calibration_source_generator.py --synthetic-dry-run")
     return {
-        "artifact": "REG1V23_CALIBRATION_SOURCE_SYNTHETIC_DRY_RUN",
+        "artifact": "REG1V24_CALIBRATION_SOURCE_SYNTHETIC_DRY_RUN",
         "diagnostic_token": "DIAGNOSTIC",
         "packet_scope": "SYNTHETIC_DIAGNOSTIC",
         "detector": [window_to_dict(w) for w in windows],
@@ -793,7 +1022,12 @@ def synthetic_dry_run(repo: Path) -> dict[str, object]:
     }
 
 
-def write_packet(out_dir: Path, packet: Mapping[str, object], score_rows: Sequence[Mapping[str, object]] | None = None) -> None:
+def write_packet(
+    out_dir: Path,
+    packet: Mapping[str, object],
+    score_rows: Sequence[Mapping[str, object]] | None = None,
+    ledger_rows: Sequence[Mapping[str, object]] | None = None,
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=False)
     (out_dir / "summary.json").write_text(json.dumps(packet, indent=2, sort_keys=True), encoding="utf-8")
     if score_rows is not None:
@@ -801,16 +1035,26 @@ def write_packet(out_dir: Path, packet: Mapping[str, object], score_rows: Sequen
             writer = csv.DictWriter(f, fieldnames=list(score_rows[0].keys()) if score_rows else ["empty"])
             writer.writeheader()
             writer.writerows(score_rows)
+    if ledger_rows is not None:
+        with (out_dir / "support_ledger.csv").open("w", newline="", encoding="utf-8") as f:
+            fieldnames = list(ledger_rows[0].keys()) if ledger_rows else ["empty"]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(ledger_rows)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="REG-1v2.3 calibration source generator")
+    parser = argparse.ArgumentParser(description="REG-1v2.4 calibration source generator")
     parser.add_argument("--repo", default=".")
     parser.add_argument("--synthetic-dry-run", action="store_true")
     parser.add_argument("--input-csv")
-    parser.add_argument("--sentinel-keys-csv")
-    parser.add_argument("--sentinel-keys-digest")
-    parser.add_argument("--sentinel-keys-commit")
+    parser.add_argument("--sentinel-artifact-path", "--sentinel-keys-csv", dest="sentinel_artifact_path")
+    parser.add_argument("--sentinel-artifact-sha256", "--sentinel-keys-digest", dest="sentinel_artifact_sha256")
+    parser.add_argument("--sentinel-criterion-commit")
+    parser.add_argument("--sentinel-evidence-commit", "--sentinel-keys-commit", dest="sentinel_evidence_commit")
+    parser.add_argument("--sentinel-reviewed-tip")
+    parser.add_argument("--sentinel-key-schema")
+    parser.add_argument("--sentinel-key-count", type=int)
     parser.add_argument("--out-dir")
     parser.add_argument("--direction", choices=["up", "down"])
     args = parser.parse_args(argv)
@@ -822,20 +1066,33 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("--input-csv and --out-dir are required outside --synthetic-dry-run")
     if args.direction != PRIMARY_FIT_DIRECTION:
         raise CalibrationSourceError(f"DIRECTION_REFUSED: explicit --direction {PRIMARY_FIT_DIRECTION} is required")
-    if not args.sentinel_keys_csv or not args.sentinel_keys_digest or not args.sentinel_keys_commit:
-        raise CalibrationSourceError("SENTINEL_BINDING_MISSING: --sentinel-keys-csv, --sentinel-keys-digest, and --sentinel-keys-commit are required")
+    if not all([
+        args.sentinel_artifact_path,
+        args.sentinel_artifact_sha256,
+        args.sentinel_criterion_commit,
+        args.sentinel_evidence_commit,
+        args.sentinel_reviewed_tip,
+        args.sentinel_key_schema,
+    ]):
+        raise CalibrationSourceError("SENTINEL_BINDING_MISSING")
     input_path = Path(args.input_csv).resolve()
     rows = read_csv_rows(input_path)
     input_paths = [str(input_path)]
-    sentinel_path = Path(args.sentinel_keys_csv).resolve()
-    actual_sentinel_digest = sha256_file(sentinel_path)
-    if actual_sentinel_digest != args.sentinel_keys_digest:
-        raise CalibrationSourceError("SENTINEL_DIGEST_MISMATCH")
-    git(repo, ["cat-file", "-e", f"{args.sentinel_keys_commit}^{{commit}}"])
-    sentinel_keys = read_sentinel_keys(sentinel_path)
+    sentinel_path = Path(args.sentinel_artifact_path).resolve()
+    sentinel_binding = verify_sentinel_binding(
+        repo,
+        artifact_path=sentinel_path,
+        artifact_sha256=str(args.sentinel_artifact_sha256),
+        criterion_commit=str(args.sentinel_criterion_commit),
+        evidence_commit=str(args.sentinel_evidence_commit),
+        reviewed_tip=str(args.sentinel_reviewed_tip),
+        key_schema=str(args.sentinel_key_schema),
+        expected_key_count=args.sentinel_key_count,
+    )
+    sentinel_keys = list(sentinel_binding["sentinel_keys"])
     input_paths.append(str(sentinel_path))
     windows = detect_step_windows(rows, sentinel_keys=sentinel_keys)
-    calibration_keys = sorted({str(row["row_key"]) for window in windows for row in window.rows})
+    calibration_keys = sorted({scoring_event_key(window, row) for window in windows for row in window.rows})
     sentinel_key_set = sorted({str(key) for key in sentinel_keys})
     sentinel_intersection = sorted(set(calibration_keys).intersection(sentinel_key_set))
     if sentinel_intersection:
@@ -843,21 +1100,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     fit_dirs = {args.direction}
     fit = fit_response_model(windows, fit_dirs)
     packet = {
-        "artifact": "REG1V23_CALIBRATION_PACKET",
+        "artifact": "REG1V24_CALIBRATION_PACKET",
         "diagnostic_token": "DIAGNOSTIC",
         "packet_scope": "REG2_CALIBRATION_CANDIDATE",
-        "fit_summary": {k: v for k, v in fit.items() if k not in {"score_rows"}},
+        "fit_summary": {k: v for k, v in fit.items() if k not in {"score_rows", "support_ledger"}},
         "calibration_key_set": calibration_keys,
-        "sentinel_key_count": len(sentinel_keys),
+        "calibration_key_count": len(calibration_keys),
+        "intersection_count": len(sentinel_intersection),
+        "intersection_keys": sentinel_intersection,
+        **{k: v for k, v in sentinel_binding.items() if k != "sentinel_keys"},
         "sentinel_key_set": sentinel_key_set,
-        "sentinel_key_intersection": sentinel_intersection,
-        "sentinel_keys_digest": actual_sentinel_digest,
-        "sentinel_keys_commit": args.sentinel_keys_commit,
         "direction": args.direction,
         "primary_fit_direction": PRIMARY_FIT_DIRECTION,
         "provenance": provenance_packet(repo, input_paths, " ".join(sys.argv if argv is None else [sys.argv[0], *argv])),
     }
-    write_packet(Path(args.out_dir), packet, fit["score_rows"])
+    write_packet(Path(args.out_dir), packet, fit["score_rows"], fit["support_ledger"])
     return 0
 
 
