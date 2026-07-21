@@ -1,0 +1,17 @@
+{
+  "criterion_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "criterion_minimum_ancestor": true,
+  "decision": "NO_GO_PENDING_REG2",
+  "diagnostic_only": true,
+  "generator_fix_status": "HARD_GATE_INSTALLED_BEFORE_RESIDUAL_FIELDS",
+  "machine_decision_branch": "INVALID_INPUT",
+  "minimum_tip": "4d4827c",
+  "post_intervention_residual_admissible_input": "",
+  "post_intervention_residual_field": "",
+  "reason": "docs/criteria/legacy_response_model_registration.md still contains PENDING_CALIBRATION/PENDING values; Contract-B judge cannot emit residual/verdict fields",
+  "reg2_numeric_block_complete": false,
+  "repo_head": "3d0f3770b42cad60f559cdbf2008fbf229a814b1",
+  "residual_admissibility": "INADMISSIBLE",
+  "response_model_registration_commit": "9a85c7365994e87941636ccd567a87f42c417a21",
+  "response_model_registration_path": "docs/criteria/legacy_response_model_registration.md"
+}

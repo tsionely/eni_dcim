@@ -1,0 +1,6 @@
+step,status,detail,admissible_residual_field_emitted
+D,GENERATOR_HARD_GATE_INSTALLED,"REG-2 validity is checked before Contract-B residual/verdict fields are generated; missing input remains typed INVALID_INPUT/OFF_SUPPORT, never zero-filled.",NO
+E,NOT_RUN_NO_REG2,Estimability remains registered but no fresh slopes are fitted because Contract-B input validity failed before residual generation.,NO
+F,INVALID_INPUT_NO_REG2,Contract-B response model registration is numerically incomplete; first-order response intervention judge not run.,NO
+G,NOT_RUN_NO_REG2,A/B/C/D decomposition depends on admissible Contract-B residuals and is not generated from an invalid input state.,NO
+H,MANIFEST_THIS_NO_GO_PACKET,This packet supersedes attempted valid-stream execution until REG-2 exists as an ancestor of the generator commit.,NO

@@ -1,0 +1,7 @@
+check,status,detail
+truthiness_zero_merge,FIXED_FOR_ACTIVE_VALID_STREAM_GENERATOR,The generator now uses explicit None handling for numeric fallbacks and hard-gates missing REG-2 before residual fields.
+failed_input_gate_residual_field,FIXED,NO_GO_PENDING_REG2 emits no post-intervention residual field and no admissible residual input.
+term_owned_support,GATED_IN_GENERATOR_PATH,TERM-owned support is treated as structural no-op; legacy setpoint is not applied as mechanism-2 correction.
+mixed_owner_fit_split,FIXED_IN_VALID_RUN_PATH,The valid-run path rewrites fit cut IDs with an ownership segment before per-cut grouping; no fit is run in this NO-GO packet.
+slope_estimator,FIXED_IN_VALID_RUN_PATH,The valid-run path now uses Theil-Sen as the primary within-cut slope and publishes OLS as a descriptor.
+machine_decision_table,FIXED_IN_VALID_RUN_PATH,"The valid-run path computes S_B, S_A, R, S, N, M, Q and selects a single top-down branch."
