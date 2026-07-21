@@ -170,7 +170,23 @@ measured AFTER the lag, channel-2 Blocker 1.2):
 - If the argmin over eligible candidates lies on an OPEN face of
   the eligible domain (any face whose beyond-side is excluded by
   eligibility or by the domain edge), calibration_status =
-  NOT_IDENTIFIED.
+  NOT_IDENTIFIED. **LOCAL-FACE RULE (v2.3, channel-2 on R69-73
+  §7.9): openness is decided at the WINNING CELL by inspecting
+  its six outward neighbors with the other coordinates held fixed
+  — (g +/- step, tau, L), (g, tau +/- step, L), (g, tau, L +/- 1)
+  — a face is OPEN when that specific neighbor is outside the
+  domain or ineligible. Global eligibility sets may not stand in:
+  a larger tau eligible at some unrelated lag does not close the
+  winner's own tau face.**
+- **POSITIVE-G MULTIPLE-MINIMIZER RULE (v2.3, §7.10 — first-wins
+  is reproducibility, never identification):** the artifact
+  publishes global_minimizer_count, every global-minimizer
+  coordinate (ties within NULL_TIE_REL_TOL), and a
+  prediction-equivalence status. Distinct positive-g minimizers
+  => NOT_IDENTIFIED, unless a PRE-REGISTERED equivalence-class
+  rule proves their intervention contribution identical on every
+  applicable support. (The positive-g counterpart of the null-tie
+  rule.)
 - **NULL_CALIBRATED (v2.2 — never from one first-winning cell,
   channel-2 Blocker 2; at g = 0 tau and L are nuisance parameters
   and the prediction is identically zero, so on the common
@@ -202,14 +218,78 @@ measured AFTER the lag, channel-2 Blocker 1.2):
   g > 0 candidate equal to the null within tolerance ->
   NOT_IDENTIFIED, never NULL_CALIBRATED.
 
-## 2d. Command-direction applicability (v2)
+## 2d. Command-direction applicability (v2.3 — primary direction FROZEN)
 
-Calibration fitted on one direction registers the model for THAT
-direction. Intervention rows whose reference dynamics are
-dominated by the unvalidated direction are typed
-OFF_SUPPORT_DIRECTION unless a same-procedure validation window in
-that direction passes. Both directions' windows are always
+**PRIMARY FIT DIRECTION = DOWN** (v2.3, channel-2 on R69-73 §7.8:
+an evidence-sensitive CLI default is not a registration). Frozen
+here, pre-evidence, with pre-existing provenance: the calibration
+source has been registered as "the A091 DOWN-STEP episode" since
+the first Contract B registration. The real-run generator REFUSES
+to run without an explicit direction argument equal to the
+registered primary; a permissive default is a startup-contract
+violation. Calibration fitted on one direction registers the
+model for THAT direction. Intervention rows whose reference
+dynamics are dominated by the unvalidated direction are typed
+OFF_SUPPORT_DIRECTION unless a same-procedure validation window
+in that direction passes. Both directions' windows are always
 DETECTED and listed, whether or not fitted.
+
+## 2f. Real-run input and identity contracts (v2.3 — channel-2 on R69-73 §7, registered so the source repairs are ancestry-enforceable)
+
+1. **CANONICAL FEATURE-TIME ALIGNMENT (§7.4):** feature_ts_ns is
+   canonical for certified exposures; a missing exposure time is
+   ABSENT (typed) and may NEVER be synthesized from control time
+   or tick index. Nearest-tick mapping, max one-tick mismatch,
+   with a mismatch LEDGER published.
+2. **STRICT CERTIFICATION PARSING (§7.3):** CSV values are text.
+   Accepted TRUE set: {"True", "true", "1"}; accepted FALSE set:
+   {"False", "false", "0"}; missing/blank/unknown ->
+   ABSENT_CERTIFICATION, fail closed, never default-True.
+   Truthiness on a nonempty string is the outlawed pattern.
+3. **CANONICAL FIRST-EXPOSURE DEDUP (§7.5):** ONE normalization
+   step deduplicates by the immutable exposure key BEFORE the
+   detector and the response reconstruction; first row wins in
+   EVERY path; every discarded rebroadcast listed. A dict keyed
+   by tick that keeps the last row is the outlawed pattern.
+4. **SENTINEL-KEY BINDING (§7.2):** the real-run CLI REQUIRES the
+   sentinel-key artifact path + digest + its criterion/evidence
+   commit; fail if missing; fail on any overlap; publish both key
+   sets and their intersection (must be empty).
+5. **TYPED TRACE VALIDATION (§7.6):** transport completeness is
+   about VALUES, not keys — every trace field non-empty and from
+   its registered value set; a present key with a blank or
+   untyped value is an INCOMPLETE row.
+6. **ZERO/NONE IN METADATA (§7.7):** absent references serialize
+   as None/empty plus a typed reason, NEVER as 0.0 — including in
+   EXCLUDED-window metadata; false provenance is still falsity.
+7. **PACKET SCOPE ENUM (§7.11):** the ambiguous diagnostic_only
+   boolean is replaced by a typed scope: SYNTHETIC_DIAGNOSTIC /
+   REG2_CALIBRATION_CANDIDATE / VOID. A calibration candidate
+   moves no board by itself, but it is not a synthetic dry run.
+8. **IDENTITY CHAIN (§7.1):** the packet proves
+   criterion (ee0bb6a or later) <= source_generator_commit <=
+   execution_tip <= artifact_commit, where source_generator_commit
+   is the ACTUAL last commit supplying the executed source bytes —
+   never HEAD copied into both fields. REG1_COMMIT binds the
+   GOVERNING criterion generation, updated with it.
+9. **REQUIRED SOURCE FIXTURES (consolidated roster; the prior
+   green suites remain valid history and do NOT satisfy this):**
+   (iv) 3 unique timestamps -> both legs ABSENT, never 0.0;
+   (v) 4 unique timestamps spanning < 0.15 s -> equal VALUES;
+   (s1) post-lag horizon < tau -> UNIDENTIFIABLE/HORIZON_LT_TAU;
+   (s2) candidate-censoring picks wrong lag, common support picks
+   right; (s3) positive-g null tie -> NOT_IDENTIFIED;
+   (s4) certified_full = "False"/"0"/blank/invalid -> none enters
+   history; (s5) poisoned duplicate -> first wins in every path;
+   (s6) exposure/control tick separation -> registered alignment
+   + mismatch ledger; (s7) trace keys present, one value blank ->
+   incomplete; (s8) sentinel overlap through the ACTUAL CLI ->
+   window rejected; (s9) missing/mismatched direction argument ->
+   startup refusal; (s10) locally-open face hidden by global
+   eligibility -> NOT_IDENTIFIED; (s11) multiple distinct
+   positive-g global minimizers -> NOT_IDENTIFIED; (s12)
+   source_generator_commit != execution_tip -> both identities
+   reported correctly.
 
 ## 2e. Provenance bindings (v2 — the generator-identity gap closed)
 
