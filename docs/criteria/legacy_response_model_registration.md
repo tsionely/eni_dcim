@@ -1,313 +1,247 @@
-# MODEL REGISTRATION — Contract B closed-loop response model (the DYNAMIC TRANSFORM)
+# MODEL REGISTRATION v2 — Contract B closed-loop response model (RESTARTED under channel-2 on RESPONSE-66)
 
-Registered BEFORE the post-criterion generator exists (channel-2 on
-R60-63 §5: the counterfactual transform cannot first appear inside
-the result-producing artifact). This document is REG-1: the model
-FORM and calibration PROCEDURE. It is numerically INCOMPLETE until
-REG-2 — a follow-up commit that fills the NUMERIC BLOCK below from
-the A091 calibration artifact and binds that artifact's path and
-SHA-256. The generator commit must carry REG-2 as an ancestor; a
-generator descending from REG-1 alone fails ancestry.
+This registration RESTARTED: REG-2(v1) is
+**VOID_INVALID_CALIBRATION_INPUT** (see VOID HISTORY below). The
+restart is the lawful route both channels named — channel-1's
+pre-committed contingency and channel-2's explicit order converge
+on it. The restart rationale is independent of the 23 archive
+approaches: it arises entirely from the v1 calibration's own
+support and objective (all-zero response target, excluded null
+model, double open boundary, contaminated window, erased
+transient). REG-2(v2) may fill numerics only from a calibration
+that is IDENTIFIED under the rules below.
 
-**AMENDED PRE-CALIBRATION (channel-2 on R64 §4 — this amendment
-precedes any calibration artifact, so no methodological choice
-moves from criterion into evidence): the first edition claimed
-"every declared choice" while leaving grid increments, tie-break,
-interval selection, the measured-response field, the corrected-
-residual equation, and TERM-to-legacy transport open. Those are
-frozen below. REG-2 fills NUMERICS ONLY, never methodology.**
-
-## 1. Model equation (form, fixed here)
-
-Discrete first-order lag tracking of the commanded velocity
-reference, in world-up after the Contract B frame transform,
-tick dt = 0.02 s:
+## 1. Model equation (form, unchanged — accepted by both channels)
 
     v_hat[k+1] = v_hat[k] + (dt / tau) * (g * v_ref[k - L] - v_hat[k])
 
-    v_ref  = world-up commanded velocity reference
-             (setpoint.v_body[2] through
-              v_up = -v_bz * cos(level_pitch) * cos(level_roll))
-    v_hat  = model-predicted causal legacy contribution
-             (the INTERVENTION QUANTITY of the Contract B chain)
-    g      = steady-state tracking gain          [NUMERIC BLOCK]
-    tau    = closed-loop time constant, seconds  [NUMERIC BLOCK]
-    L      = transport lag, integer ticks        [NUMERIC BLOCK]
+dt = 0.02 s. Parameters g (gain), tau (s), L (integer ticks). No
+additional terms; inadequacy is published as calibration residual,
+never absorbed by post-hoc structure.
 
-No additional terms (no feed-through, no derivative branch, no
-deadband) — the form is the simplest declared model; inadequacy is
-published as calibration residual, never absorbed by post-hoc
-structure.
+**PARAMETER DOMAIN v2 (restart-registered; rationale = the v1
+non-identification, cited, not the 23):**
 
-## 2. Calibration source and method (fixed here)
+    g   : 0.00, 0.05, ..., 1.50   (step 0.05, 31 values — the NULL
+                                   RESPONSE g = 0 is now INSIDE the
+                                   domain; its score is published in
+                                   every calibration)
+    tau : 0.02, 0.04, ..., 1.20 s (step 0.02, 60 values — extension
+                                   past v1's 0.60 cap cites v1's
+                                   tau-at-boundary symptom)
+    L   : 0, 1, ..., 25 ticks
 
-- **Source**: the A091 physical TERM episode (20260719T201851)
-  DOWN-STEP intervals ONLY — the one episode with both a logged
-  command and a densely measured physical response. The
-  CALIBRATION interval is selected by the DETERMINISTIC DETECTOR
-  below (never by the artifact generator's judgment) and is
-  DISJOINT from the A091 SENTINEL interval (criterion, row-level
-  proof clause): no rows wear two hats.
-- **DOWN-STEP DETECTOR (deterministic, fit-blind — it never reads
-  fit quality; channel-2 on R64 §4.2):** operating on the world-up
-  reference stream at the dt = 0.02 s tick grid:
-  1. STEP EVENT at tick k if v_ref[k] - v_ref[k-1] <= -0.30 m/s
-     (minimum step magnitude = the registered admission-corridor
-     constant). Consecutive qualifying ticks merge into ONE event
-     anchored at the first qualifying tick.
-  2. PRE-WINDOW: the 10 ticks before k must exist with
-     |v_ref[i] - v_ref[k-1]| < 0.05 m/s (the registered near-zero
-     constant) — the reference is stable before the step.
-  3. POST-WINDOW: 25 ticks after k (0.5 s, the registered interim
-     validated-age ceiling), truncated at the next step event
-     minus one tick (gap/overlap rule).
-  4. EXCLUSIONS (typed, listed, never silent): any window row with
-     absent reference or absent measured response -> the window is
-     excluded ABSENT_INPUT; window overlapping the sentinel
-     interval -> SENTINEL_DISJOINT; window with fewer than 8 valid
-     rows -> INSUFFICIENT_ROWS.
-  5. NO QUALIFYING WINDOW -> the calibration returns UNCALIBRATABLE
-     (typed) and the criterion's Contract B item-5 fallback applies
-     (registered prior-tick semantics with a published zero-lag
-     sensitivity band, both shown). UNCALIBRATABLE is a result,
-     not a license to loosen the detector.
-- **MEASURED RESPONSE (exact field, frozen here):** the
-  oracle-measured world-up vertical velocity — checkpoint column
-  `v_full_raw_mps` (the raw, unattenuated FULL-quad measurement;
-  runtime twin `rate_anchor_v_raw`), at `feature_ts_ns`
-  timestamps. Frame/sign: already world-up positive-up by the
-  adapter's derivation, restated in writing in the artifact.
-  Timestamp alignment: reference exposure-aligned per the
-  registered prior-tick semantics; response mapped to the tick
-  grid by nearest tick with maximum mismatch one tick, mismatches
-  listed. Duplicate broadcasts of one frame (same flight_id +
-  frame_id) deduplicate to the FIRST by feature_ts_ns. Missing
-  response rows are excluded and listed (ABSENT_INPUT), never
-  zero-filled; measured 0.0 is a value and enters the objective.
-- **OBJECTIVE AND WEIGHTING (frozen):** sum of squared
-  (v_meas[k] - v_hat[k]) over all valid rows of all qualifying
-  windows, EQUAL WEIGHT PER ROW (windows are not reweighted;
-  window count and per-window row counts are published).
-- **GRID (exact ordered candidate lists — the optimum is a
-  lookup, not a choice):**
-      g   : 0.50, 0.55, ..., 1.50   (step 0.05, 21 values, ascending)
-      tau : 0.02, 0.04, ..., 0.60 s (step 0.02, 30 values, ascending)
-      L   : 0, 1, ..., 25 ticks     (26 values, ascending)
-  ITERATION ORDER: L outer, tau middle, g inner (lexicographic,
-  all ascending). COMPARISON: IEEE-754 float64, strict less-than,
-  no epsilon. TIE-BREAK: the FIRST candidate in iteration order
-  attaining the minimum wins (a later equal objective never
-  replaces it). All candidate scores are published, not only the
-  winner.
-- **Uncertainty**: the calibration artifact publishes the residual
-  RMS at the optimum and the parameter box in which fit RMS is
-  within 10% of optimum (profile box). The intervention republishes
-  its headline quantities at the box corners as a SENSITIVITY BAND
-  — published always, adjudicative never.
-- **Prohibition (channel-2, binding)**: the 23 archive approaches
-  may not select g, tau, L, clipping, or sign — not directly, not
-  by "which parameters make the table land on a favorable branch".
-  Only A091's calibration interval selects numerics.
+Iteration order L-outer/tau/g-inner ascending; IEEE-754 float64
+strict less-than; FIRST-wins tie-break; all candidate scores
+published. Candidates are ELIGIBILITY-GATED per Section 2c —
+UNIDENTIFIABLE candidates never enter the argmin.
 
-## 3. Declared handling rules (fixed here)
+## 2. Calibration source and detector (v2)
 
-- **Initial state**: v_hat starts at the first valid reference
-  sample under a steady-state assumption, v_hat[0] = g * v_ref[-L];
-  a burn-in of max(3 * tau, L * dt) is excluded from intervention
-  support (typed BURN_IN, listed, never zero-filled).
-- **Saturation**: v_hat is clipped to the era's registered vertical
-  command cap; every clipping event is listed in the artifact. A
-  cut whose support is majority-clipped is FLAGGED and excluded
-  from threshold counting (listed, like the estimability
-  exclusions).
-- **Missing input**: None/absent reference rows produce OFF_SUPPORT
-  rows — typed, counted, listed; NEVER zero-filled; 0.0 is an
-  observed reference value and propagates through the model
-  normally (zero/None law).
-- **Era transport**: parameters are calibrated on A091's era.
-  Transport to any other era requires a published per-era
-  applicability row in the era/funnel ledger. An era that cannot
-  affirm applicability has its rows typed OFF_SUPPORT for the
-  intervention — reducing coverage honestly, never silently.
-  **TERM-TO-LEGACY TRANSPORT PROOF (channel-2 on R64 §4.5 — the
-  calibration source is a TERM episode; the mechanism concerns
-  legacy-commanded approaches; "same backend" must be TYPED, not
-  affirmed):** before REG-2 transports the A091 triplet anywhere,
-  the era/applicability ledger must fill, per era:
-      TERM reference producer and consumer (module/field);
-      legacy reference producer and consumer (module/field);
-      the shared downstream velocity-tracking controller path;
-      configuration/gain equivalence (same values or named deltas);
-      limiter/saturation equivalence (same caps or named deltas);
-      known era-specific differences, each named;
-      the era's vertical command cap VALUE with its config source
-      file and commit.
-  A material difference in any row bars transport by labeling: the
-  era is OFF_SUPPORT until the difference is either priced into
-  the sensitivity band or resolved by its own calibration.
-- **Sign/frame**: the frame transform is the adapter's own
-  equation, derived in writing in the artifact; the sign/frame
-  inversion fixture (criterion, negative controls) must fail
-  loudly when either factor is flipped.
+- **Source**: the A091 physical episode (20260719T201851),
+  command-step intervals selected by the deterministic detector.
+  Calibration intervals DISJOINT from the A091 sentinel interval.
+- **MEASURED RESPONSE (v2 — registered IN ADVANCE, replacing the
+  v1 checkpoint-column reference that was ABSENT on calibration
+  support):** the registered source is the EXACT reconstruction
+  procedure, identical to the runtime FULL_RATE_ANCHOR
+  computation: for each certified-FULL exposure at feature_ts_ns,
+  v_full_raw = -Theil-Sen slope of e_meas over the certified-FULL
+  samples in the prior 0.50 s, subject to the runtime minimums
+  (>= 4 samples, >= 0.15 s span); rows failing the minimums are
+  ABSENT_RESPONSE (typed), never zero-filled. VALIDATION, both
+  legs mandatory: (a) fixture (m) — one synthetic series through
+  the runtime code path and the reconstruction, exact equality
+  asserted by execution; (b) SAME-ROW validation on every row
+  where the checkpoint column and the reconstruction both exist
+  anywhere in the archive — equality within 1e-9 published;
+  disagreement is a STOP, not a footnote.
+- **STEP DETECTOR v2** (deterministic, fit-blind; the v1 floor's
+  units error is corrected):
+  1. STEP EVENT at tick k if |v_ref[k] - v_ref[k-1]| >= 0.35 m/s —
+     the registered COMMAND-DOMAIN constant
+     planner.commit.vz_cap_mps (config, m/s — correct units; the
+     v1 floor borrowed the 0.30 m admission corridor, a LENGTH).
+     Down-steps and up-steps are both DETECTED; calibration FIT
+     uses the registered direction(s) per Section 2d. Consecutive
+     qualifying ticks merge to the first.
+  2. PRE-WINDOW: 10 ticks before k with |v_ref[i] - v_ref[k-1]| <
+     0.05 m/s (the registered near-zero RATE constant — correct
+     units).
+  3. POST-WINDOW: from k to the FIRST material reference
+     transition IN ANY DIRECTION (|v_ref[i] - v_ref_post_level| >=
+     0.05 m/s), capped at 50 ticks (1.0 s; horizon extension cites
+     v1's horizon-shorter-than-candidates defect). The v1 defect —
+     truncating only at the next DOWN-step, letting an up-command
+     contaminate the window — is closed by the any-direction rule.
+  4. EXCLUSIONS (typed, listed): ABSENT_INPUT, SENTINEL_DISJOINT,
+     INSUFFICIENT_ROWS (< 8 valid rows).
+  5. PRE-EVENT INITIAL STATE (v1 defect closed — the v1 rule
+     initialized at the post-step zero and ERASED the transient):
+     v_hat at event entry = g * (mean v_ref over the 10-tick
+     pre-window), propagated through the event across the window.
+     No burn-in inside calibration windows — the transient IS the
+     signal. (The intervention's burn-in rule, Section 3, is
+     unchanged.)
+- **OBJECTIVE**: sum of squared (v_meas[k] - v_hat[k]) over valid
+  rows of qualifying windows, equal weight per row; window count
+  and per-window rows published. Alignment/dedup rules unchanged
+  from v1 (accepted): feature_ts_ns to tick grid, nearest tick,
+  max one-tick mismatch listed; duplicate frame broadcasts dedup
+  to first.
+- **NULL-MODEL SCORE**: the g = 0 row is in the domain; every
+  calibration publishes it explicitly beside the winner.
 
-## 3b. Corrected-residual equation (channel-2 on R64 §4.4 — the sign is registered, never inferred from whichever direction reduces slopes)
+## 2c. Identifiability gating (v2 — a lookup minimum is not an identified model)
 
-The archive evaluation's registered residual convention
-(checkpoint column `residual_sign_convention`):
+Per candidate, per qualifying-window set:
 
-    r_v[k] = v_ref_oracle[k] - (v_latch_true[k] + feed_forward[k])
+- L is ELIGIBLE only if valid rows beyond L * dt number >= 8.
+- tau is ELIGIBLE only if the observed excited post-step horizon
+  >= tau (at least one time constant observed).
+- Ineligible candidates are typed UNIDENTIFIABLE, listed, and
+  EXCLUDED from the argmin — a tie-break may never select them.
+- If the argmin over eligible candidates lies on an OPEN face of
+  the eligible domain (any face whose beyond-side is excluded by
+  eligibility or by the domain edge, except g = 0 which is now
+  interior-includable), calibration_status = NOT_IDENTIFIED.
+- An argmin AT g = 0 exactly is a RESULT: NULL_CALIBRATED — the
+  identified legacy contribution is zero; it feeds the mechanism
+  table honestly (a mechanism whose modeled contribution is null
+  predicts no resolution — the table's R = 0 branch will say so).
+- calibration_status in {UNCALIBRATABLE, NOT_IDENTIFIED} =>
+  NO ADJUDICATIVE REG-2. The prior-tick/zero-lag fallback remains
+  DIAGNOSTIC ONLY and can never fill REG-2 or support the judge.
 
-The mechanism-2 counterfactual ADDS the model-predicted legacy
-contribution to the MODELED side, on legacy-owned support only:
+## 2d. Command-direction applicability (v2)
 
-    r_v_corrected[k] = v_ref_oracle[k]
-                       - (v_latch_true[k] + feed_forward[k]
-                          + v_hat[k])
+Calibration fitted on one direction registers the model for THAT
+direction. Intervention rows whose reference dynamics are
+dominated by the unvalidated direction are typed
+OFF_SUPPORT_DIRECTION unless a same-procedure validation window in
+that direction passes. Both directions' windows are always
+DETECTED and listed, whether or not fitted.
 
-    correction_term[k] = v_hat[k]   on legacy-owned support
-    correction_term[k] = 0.0        on TERM-owned support
-                                    (the structural no-op —
-                                     EXACTLY zero, not small)
+## 2e. Provenance bindings (v2 — the generator-identity gap closed)
 
-SIGN: v_hat carries the world-up positive-up sign of the
-transformed reference — a legacy down-command (negative world-up)
-makes v_hat negative and moves the corrected residual UP relative
-to r_v. TIMESTAMP: v_hat enters at the same exposure-aligned
-prior-tick timestamp the feed-forward term uses — no future
-leakage. Mixed-owner intervals are split BEFORE this equation is
-applied (criterion, ownership gating). No generator may flip this
-sign, and a generator observing that the opposite sign "works
-better" has found evidence AGAINST the mechanism, not a knob.
+The calibration generator SOURCE FILE is committed AFTER this
+registration and BEFORE the evidence it creates. The packet binds:
+source_generator_path, source_generator_commit, execution_tip,
+artifact_commit, REG-1 commit, input paths + digests, exact
+command line. The packet's own artifact_manifest digests are
+computed on COMMITTED bytes at the pushed tip (publish-then-attest
+child), closing the v1 stale-self-manifest defect. Row-level
+owner/actuation trace REQUIRED per fitted row: planner phase, TERM
+owner state, arbiter-selected vertical source, adapter input,
+post-limit command, clip status — transport is proven per ROW,
+never by one event-tick label.
 
-## 4. NUMERIC BLOCK (REG-2 — filled from the pushed calibration artifact at d3aa16e, verified row-by-row before binding)
+## 3. Declared handling rules (unchanged from v1 — accepted)
 
-    g    = 0.50
-    tau  = 0.60 s
-    L    = 0 ticks
-    calibration_artifact_path =
-        tuning/a091-response-model-calibration-0b60e91-20260721T061627Z/
-    calibration_artifact_sha256 (per file):
-        summary.json
-          5b75963dfe127b90625bd942638a12d28c5bc74bb52e805abd049a095e0aecd5
-        grid_candidate_scores.csv       (16,380 rows, full grid)
-          aa5f38745271e9e165e7c90f3b891ed68c3f96c27beff7781cae37cad4ffd106
-        calibration_interval_keys.csv   (13 rows)
-          1a3526bfed17a7b116c68d340c5807fb454a38633376b432388099baab198c59
-        sentinel_interval_keys.csv      (31 rows)
-          f59c7e0b827864c9ecb9fc4e6be338223a0cc6ec667935ad99e560f9950740ed
-        candidate_windows.csv           (12 events, 1 QUALIFY)
-          ac66b934c61dc9a933bb5115ad5085e47a4d66752773d95cd9c7eb44f7a78392
-    calibration_interval_keys = the 13 row keys in
-        calibration_interval_keys.csv (event A091_DOWNSTEP_01,
-        ticks 238..263, phase 'recover'); overlap with the 31
-        sentinel keys = 0 (verified independently at binding)
-    residual_rms_at_optimum = 0.0102753797 m/s
-        (sse 0.001372584553156863, n = 13; unique minimum, no ties)
-    profile_box (fit RMS within 10% of optimum) =
-        g in [0.50, 0.55], tau in [0.56, 0.60] s, L in {0}
+Initial state for the INTERVENTION stream (not calibration
+windows): steady-state start with burn-in max(3 * tau, L * dt)
+excluded as BURN_IN. Saturation clipped to the era cap, events
+listed, majority-clipped cuts flagged and excluded from counts.
+None/absent -> OFF_SUPPORT typed rows; 0.0 is a value. Era
+transport per the ledger with typed per-era rows; eras without
+rows OFF_SUPPORT. Sign/frame fixture must fail loudly on either
+factor flipped.
 
-**REG-2 TYPED FLAGS (bound with the numerics, adjudication-visible):**
+## 3b. Corrected-residual equation (unchanged from v1 — accepted)
 
-1. **BOUNDARY_OPTIMUM** — the optimum sits ON the declared grid
-   boundary in TWO parameters: g at grid-min (0.50), tau at
-   grid-max (0.60). The profile box hugs that corner and is
-   TRUNCATED on both faces; the unconstrained optimum may lie
-   outside (lower g, higher tau). Registered consequences: the
-   intervention publishes its sensitivity band at the box corners
-   AND labels the two truncated faces OPEN — the band understates
-   uncertainty in exactly those directions and must say so. The
-   grid may NOT be widened now that results are visible; a wider
-   grid is a Section-2 change and voids/restarts the registration
-   per the clause below. Physical reading, recorded not asserted:
-   the measured response reached about half the commanded step and
-   decayed slower than any registered tau — the legacy contribution
-   is SMALLER and SLOWER than raw-reference injection would claim,
-   consistent with the first (void) intervention's both-sign
-   explosion.
-2. **MEASURED_RESPONSE_PROVENANCE** — the frozen checkpoint column
-   `v_full_raw_mps` has NO rows on the calibration support (the
-   qualifying window lies outside the withheld windows the
-   checkpoint covers). The artifact computed the SAME registered
-   quantity by its defining formula — -Theil-Sen(d e_meas/dt) over
-   the prior 0.50 s certified-FULL history, the runtime-twin
-   `rate_anchor_v_raw` semantic named in the same REG-1 sentence —
-   and published `v_full_raw_reconstruction_check.csv` as
-   DISCLOSURE ONLY (all 127 rows used_for_calibration_fit = false;
-   deltas vs the FORCED-WITHHOLD variant are a different semantic
-   by construction). Channel ratification of this reading is
-   requested in RESPONSE-66; if refused, REG-2 voids and restarts.
-3. **TRANSPORT INVERSION (era binding, phase5c)** — the qualifying
-   window is in planner phase 'recover', where the LEGACY
-   (race-planner) path commands vertical (TERM ownership exists
-   only inside the terminal channel's owner arbiter; rider R3).
-   The calibrated triplet is therefore a measurement of the LEGACY
-   ACTUATING PATH ITSELF — no TERM-to-legacy transport is needed
-   for A091's era. Producer: race_planner Setpoint.v_body[2];
-   consumer: the sim velocity-tracking backend via the adapter;
-   frame transform: the adapter equation with A091's level_pitch
-   -0.3106987661062333 / level_roll 0.00025650874109527094
-   (cos_tilt 0.952120141444416). Command-cap sources (binding for
-   the era ledger): the per-phase clips in
-   src/aigp/planning/race_planner.py at d3aa16e
-   (planner.commit.vz_cap_mps = 0.35; align_climb_cap; the
-   in-commit 0.8 hold cap) — no clipping event occurred inside the
-   calibration window (reference peak 0.952 world-up). Eras other
-   than phase5c remain PENDING_TRANSPORT_PROOF -> OFF_SUPPORT for
-   the intervention until their ledger rows are filled.
+    r_v[k]           = v_ref_oracle[k] - (v_latch_true[k] + feed_forward[k])
+    r_v_corrected[k] = v_ref_oracle[k] - (v_latch_true[k] + feed_forward[k] + v_hat[k])
 
-REG-2 is complete: every REG-1 pending field is filled from the
-pushed calibration artifact; the generator's ancestry check names
-THIS commit. Any change to Section 1-3b after REG-2 voids the
-registration and restarts it.
+    correction_term[k] = v_hat[k] on legacy-owned support
+    correction_term[k] = 0.0     on TERM-owned support (EXACTLY)
 
-## 5. GENERATOR STARTUP CONTRACT (channel-2 on R64 §5 — executable, in this order)
+Sign registered (world-up positive-up); v_hat enters at the
+exposure-aligned prior tick; mixed-owner intervals split first; a
+generator finding the opposite sign "works better" has found
+evidence AGAINST the mechanism, not a knob.
 
-    1. Resolve the exact required REG-2 commit.
-    2. Prove REG-2 is an ancestor of the generator commit.
-    3. Parse the NUMERIC BLOCK.
-    4. FAIL if any field is pending.
-    5. Verify the calibration artifact digest and row-key binding.
-    6. Only then read or transform the 23-approach checkpoint.
-    7. Only then create result directories or residual fields.
+## 4. NUMERIC BLOCK (REG-2 v2 — EMPTY by construction)
 
-A fail-fast NO-GO packet may be generated before step 6. A
-partially run intervention, driver decomposition, or result-shaped
-directory may NOT exist pre-REG-2 — pre-REG-2 numeric output is
-VOID / diagnostic history only (the fb1584f-round lesson: the
-sequencing rule must be enforced at PROCESS ENTRY, not by later
-cleanup).
+    g    = PENDING_CALIBRATION
+    tau  = PENDING_CALIBRATION
+    L    = PENDING_CALIBRATION
+    calibration_status          = PENDING (must be CALIBRATED or
+                                  NULL_CALIBRATED; UNCALIBRATABLE /
+                                  NOT_IDENTIFIED cannot fill this
+                                  block)
+    calibration_artifact_path   = PENDING
+    calibration_artifact_sha256 = PENDING (committed bytes)
+    calibration_interval_keys   = PENDING (disjoint from sentinel)
+    residual_rms_at_optimum     = PENDING
+    null_model_rms              = PENDING (always published)
+    profile_box                 = PENDING (closed on every face, or
+                                  the status is NOT_IDENTIFIED)
+    row_level_owner_trace       = PENDING (per fitted row)
+    source_generator_commit     = PENDING
 
-## ANNEX A — channel dispositions on the REG-2 flags (ANNOTATIONS IN PLACE; Sections 1-3b are not edited, per the ruling's own form requirement)
+Any change to Sections 1-3b after REG-2(v2) voids and restarts
+again.
 
-**Channel-1 on RESPONSE-66 (received after REG-2 was pushed at
-9393f94):**
+## 5. GENERATOR STARTUP CONTRACT (v2 — step 3a added)
 
-- **Flag 1 (BOUNDARY_OPTIMUM) — proceed under labels, with a
-  PRE-COMMITTED contingency**: a truncated model under-subtracts
-  and can blur or manufacture the non-confirmation cells. Any
-  mechanism-adjudicating outcome other than
-  CONFIRMED_SUFFICIENT_FOR_EVALUATOR, produced while the flag
-  rides, is INTERIM: the one-time lawful restart (grid extension
-  via the Section-2 void clause; rationale independent of the 23 =
-  the calibration's own truncated faces) executes before any
-  verdict is final. CONFIRMED stands a fortiori. Full clause
-  committed in the criterion (decision-table section), where the
-  verdict machinery lives; the artifact carries verdict_finality
-  as a typed column.
-- **Flag 2 (MEASURED_RESPONSE_PROVENANCE) — RATIFIED**: REG-1
-  registered a QUANTITY with a named runtime twin, not a storage
-  location. Conditions: (a) equivalence is proven CONSTRUCTIVELY —
-  the runtime-twin fixture (criterion fixture (m)): one synthetic
-  series through both code paths, equality asserted by execution
-  (no overlapping archive support exists for an observational
-  proof); (b) this ruling is recorded as THIS ANNEX — an
-  annotation alongside the registration, never a semantic edit to
-  a criterion whose evidence exists. The Section-4 void clause is
-  honored by the ratification being explicit.
-- **Transport inversion — approved.** A091 wears three hats with
-  two walls: legacy-path calibrator, TERM no-op sentinel, and the
-  physical episode — all intervals disjoint by construction.
+    1.  Resolve the exact required REG-2 commit.
+    2.  Prove REG-2 is an ancestor of the generator commit.
+    3.  Parse the NUMERIC BLOCK.
+    3a. Parse calibration_status: refuse VOID / UNCALIBRATABLE /
+        NOT_IDENTIFIED / PENDING — fail closed.
+    4.  FAIL if any field is pending.
+    5.  Verify the calibration artifact digest and row-key binding.
+    6.  Only then read or transform the 23-approach checkpoint.
+    7.  Only then create result directories or residual fields.
 
-**Channel-2 on RESPONSE-66: PENDING.** Step F (the intervention
-run) remains NO-GO until channel-2's disposition on the two flags
-is received and annexed here.
+Fail-fast NO-GO packets only before step 6; pre-REG-2 numeric
+output is VOID / diagnostic history (the fb1584f lesson stands).
+
+## VOID HISTORY — REG-2(v1), superseded IN TYPE
+
+    status  = VOID_INVALID_CALIBRATION_INPUT (channel-2 on R66)
+    reasons = REGISTERED_RESPONSE_FIELD_ABSENT;
+              POST_HOC_RESPONSE_RECONSTRUCTION;
+              ZERO_RESPONSE_UNIDENTIFIED_MODEL (13/13 fitted
+              response rows exactly 0.0; SSE == sum(v_hat^2); the
+              excluded null model scores 0);
+              DOUBLE_OPEN_BOUNDARY (g-min/tau-max corner: nearest
+              allowed point to the excluded null model);
+              CONTAMINATED_SINGLE_EVENT_WINDOW (up-commands +0.746
+              / +0.868 inside the down-step window; pre-step state
+              erased by the v1 initialization).
+    v1 numerics (g=0.50, tau=0.60, L=0, RMS 0.0102753797,
+    artifact 0b60e91/edff619 round) are HISTORY, non-adjudicative
+    forever; the files remain immutable in git history; the
+    packet's stale self-manifest is superseded by this record and
+    the artifact round that replaces it.
+    mechanism verdict from v1: NONE. admissible residual: NONE.
+
+## ANNEX A — channel dispositions (annotations in place)
+
+**Channel-1 on RESPONSE-66:** proceed-under-labels with a
+pre-committed one-time restart contingency for non-CONFIRM
+verdicts; provenance RATIFIED conditional on the runtime-twin
+fixture and annotation form; transport inversion approved.
+
+**Channel-2 on RESPONSE-66:** provenance ratification REFUSED
+(the registered field was a storage-bound source; its absence on
+support makes the substitution post-hoc); BOUNDARY_OPTIMUM
+DISQUALIFYING (the open direction contains the null-contribution
+model); calibration UNIDENTIFIED on an all-zero response target;
+transport inversion event-local only, row-level proof owed;
+REG-2 VOID; ordered restart A-G.
+
+**CONFLICT RESOLUTION (standing law — the conservative option
+governs):** the refusal governs over the ratification; the
+immediate void supersedes the proceed-with-contingency route. The
+two rulings CONVERGE on the restart itself: channel-1
+pre-authorized exactly the lawful restart that channel-2 orders,
+and channel-1's a-fortiori-CONFIRM logic is preserved in spirit by
+2c: only an IDENTIFIED (closed-box) or NULL_CALIBRATED model can
+ever reach the judge, so no verdict of any kind can ride an open
+boundary again — the contingency's trigger condition is now
+unreachable by construction. Channel-1's two ratification
+conditions (fixture (m), annotation form) are RETAINED in v2 as
+mandatory validation legs — stricter, not looser, than either
+ruling alone.

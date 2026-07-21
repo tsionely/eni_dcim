@@ -84,14 +84,34 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
       C_A(j) = estimable after-intervention cuts of j
       C_P(j) = cuts of j with valid PAIRED before-and-after support
 
+  **EXACT EVENT INTERSECTION (channel-2 on R66 §9.2 — "paired"
+  is defined on immutable row identities, not narrated):** the
+  EVENT KEY is (approach_id, cut_id, flight_id, frame_id,
+  feature_ts_ns). Per cut c of approach j:
+
+      E_B(j,c) = before-intervention event keys with valid rows
+      E_A(j,c) = after-intervention event keys with valid rows
+      E_P(j,c) = E_B(j,c) intersect E_A(j,c)
+
+  BOTH adjudicative slopes — before AND after — are fitted on
+  E_P(j,c), and E_P(j,c) must itself satisfy the estimability
+  rules. The before-only fits over E_B remain published as
+  descriptors. A cut is PAIRED-ESTIMABLE iff E_P passes
+  estimability.
+
       M_RESOLUTION = count of baseline-large CUTS (each cut whose
-            |b1| > 0.35 made its approach large) lacking a valid
-            paired after-estimate — an approach may leave S_A ONLY
-            through paired evidence on the cuts that put it there
-      M_HARM = count of before-evaluable approaches (large or
-            small) lacking enough paired after-support to
-            determine newly-large status — absence of after-data
-            is never proof of no new harm
+            paired-before |b1| > 0.35 made its approach large)
+            that are not PAIRED-ESTIMABLE — an approach may leave
+            S_A ONLY through paired evidence on the cuts that put
+            it there
+      M_HARM = count of before-evaluable approaches j for which
+            C_P(j) does not contain EVERY cut of C_B(j) — the
+            equation the earlier "enough paired after-support"
+            lacked: any before-estimable cut that lost paired
+            support is precisely where a newly large slope could
+            hide, so newly-large status is DETERMINABLE only when
+            C_B(j) is a subset of C_P(j); absence of after-data is
+            never proof of no new harm
 
   Zero-valued command references are evaluable and NEVER enter
   either count; only absence/invalidity does. EVERY support loss
@@ -108,27 +128,31 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
       K   = 2
 
       1. input validity fails -> INVALID_INPUT
-      2. B = 0                -> NO_REGISTERED_REMAINDER_TO_EXPLAIN
-                                 (NOT_APPLICABLE; never confirmation)
-      3. M_RESOLUTION > 0
+      2. M_RESOLUTION > 0
          or M_HARM > 0        -> HOLD_INCOMPLETE_INTERVENTION_SUPPORT
-      4. N > 0                -> REFUTED_OR_HARMFUL_INTERVENTION
+      3. N > 0                -> REFUTED_OR_HARMFUL_INTERVENTION
+      4. B = 0                -> NO_REGISTERED_REMAINDER_TO_EXPLAIN
+                                 (NOT_APPLICABLE; never confirmation)
       5. Q >= K               -> REFUTED
       6. 0 < Q < K            -> HOLD_INCONCLUSIVE_QUIET_BREACH
       7. R >= ceil(B/2)       -> CONFIRMED_SUFFICIENT_FOR_EVALUATOR
       8. 0 < R < ceil(B/2)    -> CONTRIBUTORY_NOT_SUFFICIENT
       9. R = 0                -> REFUTED_AS_REGISTERED_REMAINDER_EXPLANATION
 
-  (Branches 3-4 clear M_RESOLUTION = M_HARM = 0 and N = 0 before
-  any counting branch, so by branch 7 the net difference equals R
-  and cannot hide a transition — and every resolution is PAIRED
-  evidence on the cuts that made the approach large. B = 0
-  short-circuits at branch 2 — with no registered remainder to
-  explain there is no target, hence NOT_APPLICABLE, never
-  CONFIRMED. The last label rejects mechanism-2 as the registered
-  remainder explanation without claiming the physical effect is
-  nonexistent in every regime. S and N are published per approach
-  ID, not only as counts.)
+  (ORDER CORRECTED per channel-2 on R66 §9.2: the support and
+  harm gates fire BEFORE B = 0, so a zero-baseline run can no
+  longer mask missing after-support or a newly introduced large
+  approach — the earlier order made that defect executable, not
+  editorial. Branches 2-3 clear M_RESOLUTION = M_HARM = 0 and
+  N = 0 before any counting branch, so by branch 7 the net
+  difference equals R and cannot hide a transition — and every
+  resolution is PAIRED evidence on the cuts that made the
+  approach large. B = 0 at branch 4 means: with support complete
+  and no new harm, no registered remainder to explain — hence
+  NOT_APPLICABLE, never CONFIRMED. The last label rejects
+  mechanism-2 as the registered remainder explanation without
+  claiming the physical effect is nonexistent in every regime. S
+  and N are published per approach ID, not only as counts.)
   **MACHINE FIXTURE REQUIREMENTS (binding — the exhaustiveness
   claim is HELD until these are committed and green; a table is
   machine-exhaustive when its edge cases have been RUN):** the
@@ -136,7 +160,9 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   baseline-large cut with another surviving small cut in the same
   approach -> HOLD, never resolved; (b) missing after-support on a
   baseline-SMALL approach -> HOLD via M_HARM; (c) a newly large
-  approach -> branch 4; (d) B = 0 -> branch 2; (e) one quiet
+  approach -> branch 3; (d) B = 0 with complete support -> branch
+  4, AND B = 0 with M_HARM > 0 or N > 0 -> branches 2/3 fire
+  first (the corrected order is FIXTURED, not narrated); (e) one quiet
   breach and (f) two quiet breaches -> branches 6 and 5; (g)
   explicit-zero input vs absent input distinguished; (h) A091
   byte-identical no-op; (i) mixed-owner split; (j) every
@@ -152,7 +178,13 @@ two cuts at 0.23/0.47 with v_latch ~ -3 m/s).
   path and the calibration reconstruction — equality asserted by
   execution, because no overlapping archive support exists to
   prove the equivalence observationally.**
-  **BOUNDARY-OPTIMUM VERDICT CONTINGENCY (channel-1 on R66,
+  **BOUNDARY-OPTIMUM VERDICT CONTINGENCY (channel-1 on R66) —
+  [SUPERSEDE ANNOTATION, channel-2 on R66 + REG-1v2: this clause
+  is now UNREACHABLE by construction — REG-1v2 Section 2c refuses
+  adjudicative REG-2 for any open-boundary (NOT_IDENTIFIED)
+  calibration, so no verdict of any kind can ride the flag this
+  clause was written for. Retained as history; the a-fortiori
+  logic is preserved inside 2c itself.] (original clause,
   pre-committed BEFORE the intervention runs, so the restart
   cannot be chosen after seeing which verdict appeared): a
   truncated response model under-subtracts, which blurs both
