@@ -2,7 +2,7 @@
   "criterion_commit": "c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead",
   "diagnostic_only": true,
   "driver_decomposition_status": "NOT_RUN_INVALID_INPUT_PRECHECK",
-  "input_manifest_path": "tuning/valid-plant-intervention-DIAGNOSTIC-c29db8d-20260721T031229Z/checkpoint_input_manifest.json",
+  "input_manifest_path": "tuning/valid-plant-intervention-DIAGNOSTIC-a651630-20260721T032236Z/checkpoint_input_manifest.json",
   "input_manifest_sha256": "9ef2b4dbdf86f53fe9b5993fac16e1819759c3b52902c4a51dace99e5ef28f3f",
   "invalid_input_scopes": [
     {
@@ -33,7 +33,7 @@
   "n_unique_exposures": 334,
   "plant_formula": "v_up = -v_bz * cos(level_pitch) * cos(level_roll)",
   "plant_signal": "flight.jsonl setpoint.<v_body|vel_body|velocity_body>[2] converted to world-up",
-  "repo_head": "c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead",
+  "repo_head": "a65163091614d093828e16f607faa0c53ac43908",
   "response58_commit": "c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead",
   "stop_rule": "non-positive per-era oracle-reference correlation => INVALID-INPUT before judge",
   "validity_precheck_passed": false

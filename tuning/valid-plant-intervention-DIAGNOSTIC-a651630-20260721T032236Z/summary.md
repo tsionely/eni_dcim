@@ -1,9 +1,9 @@
 # Valid-Plant Intervention Rerun
 
 Scope: DIAGNOSTIC, CSV/log replay only; no FlightSim/DCGame launch.
-Repo HEAD: `c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead`.
+Repo HEAD: `a65163091614d093828e16f607faa0c53ac43908`.
 Criterion commit: `c29db8d51b5f8eb4a3053f2f67d0dfd98c2e2ead`.
-Input manifest: `tuning/valid-plant-intervention-DIAGNOSTIC-c29db8d-20260721T031229Z/checkpoint_input_manifest.json`.
+Input manifest: `tuning/valid-plant-intervention-DIAGNOSTIC-a651630-20260721T032236Z/checkpoint_input_manifest.json`.
 Input manifest sha256: `9ef2b4dbdf86f53fe9b5993fac16e1819759c3b52902c4a51dace99e5ef28f3f`.
 
 ## Plant Stream
