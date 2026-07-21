@@ -1,0 +1,40 @@
+{
+  "artifact": "REG1V23_SOURCE_GENERATOR_ATTESTATION",
+  "diagnostic_token": "DIAGNOSTIC",
+  "packet_scope": "SYNTHETIC_DIAGNOSTIC",
+  "reg1_commit": "e73ca90",
+  "source_generator_commit": "a1993c5d0c49ea0c05c3e237e0225d8915bebc03",
+  "created_utc": "2026-07-21T15:19:05Z",
+  "no_a091": true,
+  "no_checkpoint": true,
+  "no_flightsim_dcgame": true,
+  "committed_byte_digests": [
+    {
+      "path": "tuning/reg1v2_calibration_source_generator.py",
+      "reviewed_tip": "a1993c5d0c49ea0c05c3e237e0225d8915bebc03",
+      "sha256_committed_bytes": "aab099aef1de75f1c9ab357ed5ce87c51aee493e7f71face9615e93972b03bd1"
+    },
+    {
+      "path": "tuning/run_reg1v2_calibration_source_fixtures.py",
+      "reviewed_tip": "a1993c5d0c49ea0c05c3e237e0225d8915bebc03",
+      "sha256_committed_bytes": "767f11165bd3a4700587a0196afe180d085f7028d9e1f6a19cc5c6710a95077f"
+    }
+  ],
+  "fixture_roster_mapping": [
+    {"roster": "(iv)", "fixture": "iv_v_response_reconstruction_v21_runtime_rules"},
+    {"roster": "(v)", "fixture": "iv_v_response_reconstruction_v21_runtime_rules"},
+    {"roster": "s1", "fixture": "s1_post_lag_identifiability_gating"},
+    {"roster": "s2", "fixture": "s2_common_support_objective_bites"},
+    {"roster": "s3", "fixture": "s3_null_tie_not_null_calibrated"},
+    {"roster": "s4", "fixture": "s4_strict_certified_full_parsing"},
+    {"roster": "s5", "fixture": "s5_poisoned_duplicate_first_wins"},
+    {"roster": "s6", "fixture": "s6_feature_time_alignment_and_mismatch_ledger"},
+    {"roster": "s7", "fixture": "s7_blank_trace_value_incomplete"},
+    {"roster": "s8", "fixture": "s8_sentinel_overlap_actual_cli"},
+    {"roster": "s9", "fixture": "s9_direction_argument_refusal"},
+    {"roster": "s10", "fixture": "s10_local_open_face_hidden_by_global_eligibility"},
+    {"roster": "s11", "fixture": "s11_multiple_positive_minimizers_not_identified"},
+    {"roster": "s12", "fixture": "s12_source_identity_split"},
+    {"roster": "rows_scored_common_corruption", "fixture": "rows_scored_common_corruption_micro_fixture"}
+  ]
+}
