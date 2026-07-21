@@ -1,0 +1,11 @@
+{
+    "exact_head_flown":  "9d314913bcfc74a6969d6d198749e1df4fddb548",
+    "track":  "R2-TRAINING",
+    "terminal_enable":  true,
+    "build_anchor":  "935e9739b962c96402fbf5c099907e702feedad5",
+    "run":  5,
+    "r2_verified":  true,
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.terminal.enable=true",
+    "config":  "A",
+    "code_tree_identical_to_anchor":  true
+}
