@@ -351,9 +351,10 @@ def write_calibration_artifact(repo: Path, out_dir: Path, input_csv: Path, senti
         })
     _write_csv(out_dir / "v_full_raw_reconstruction_check.csv", reconstruction_rows)
 
+    head_short = git(repo, ["rev-parse", "--short", "HEAD"])
     for src, name in (
-        (Path("C:/Temp/eni_post_reg2_fixtures_4a57abb.txt"), "preflight_post_reg2_fixture_transcript.txt"),
-        (Path("C:/Temp/eni_reg1v22_source_fixtures_4a57abb.txt"), "preflight_reg1v22_source_fixture_transcript.txt"),
+        (Path(f"C:/Temp/eni_post_reg2_fixtures_{head_short}.txt"), "preflight_post_reg2_fixture_transcript.txt"),
+        (Path(f"C:/Temp/eni_reg1v22_source_fixtures_{head_short}.txt"), "preflight_reg1v22_source_fixture_transcript.txt"),
     ):
         if src.exists():
             shutil.copyfile(src, out_dir / name)
