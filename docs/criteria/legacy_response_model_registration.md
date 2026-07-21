@@ -379,6 +379,19 @@ that its effect on current status is none. The next A091 read is
 a repaired-instrument read, never an untouched confirmation, and
 no description may claim otherwise.
 
+**OUTCOME-SYMMETRY CHECK (channel-1 on R76, standing rule of the
+program):** every POST-OBSERVATIONAL amendment must be justified
+WITHOUT reference to the status it benefits, and both-channel
+walks include this check explicitly. This 2g disclosure is what
+makes the check auditable: the walker knows what was seen, so the
+walker can ask whether each repair would have been equally
+ordered had the opposite status been seen. The honest-repair
+signature, recorded: post-viewing repairs should tend to RAISE
+the bar for exactly the observed status — as this round's do
+(the observed NULL must now beat every positive gain beyond
+tolerance on identical support; the direction freeze restores a
+registered intent whose breach produced the UP rows).
+
 ## 2e. Provenance bindings (v2 — the generator-identity gap closed)
 
 The calibration generator SOURCE FILE is committed AFTER this
