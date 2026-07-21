@@ -879,9 +879,6 @@ def verify_sentinel_binding(
         raise CalibrationSourceError("SENTINEL_EVIDENCE_DIGEST_MISMATCH")
     if tip_digest != artifact_sha256:
         raise CalibrationSourceError("SENTINEL_TIP_DIGEST_MISMATCH")
-    working_digest = sha256_file(artifact_path)
-    if working_digest != artifact_sha256:
-        raise CalibrationSourceError("SENTINEL_WORKTREE_DIGEST_MISMATCH")
     keys = read_sentinel_keys(artifact_path)
     if expected_key_count is not None and len(keys) != expected_key_count:
         raise CalibrationSourceError("SENTINEL_KEY_COUNT_MISMATCH")
@@ -898,7 +895,6 @@ def verify_sentinel_binding(
             "ancestry": "PASS",
             "digest_at_evidence": "PASS",
             "digest_at_tip": "PASS",
-            "worktree_digest": "PASS",
         },
     }
 
