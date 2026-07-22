@@ -1,0 +1,10 @@
+{
+    "gates":  0,
+    "env_hits":  12,
+    "phase":  "recover",
+    "clips":  11,
+    "wall_time":  8.75200550002046,
+    "flight_id":  "20260722T123236-f20a8d28",
+    "run":  3,
+    "abort":  "gate clip budget exceeded (11)"
+}
