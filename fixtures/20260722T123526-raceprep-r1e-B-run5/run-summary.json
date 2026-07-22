@@ -1,0 +1,10 @@
+{
+    "gates":  0,
+    "env_hits":  1,
+    "phase":  "search",
+    "clips":  0,
+    "wall_time":  15.552004099998157,
+    "flight_id":  "20260722T123501-f20a8d28",
+    "run":  5,
+    "abort":  "environment collision (impulse=1.0)"
+}
