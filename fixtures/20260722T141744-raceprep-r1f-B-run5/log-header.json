@@ -1,0 +1,10 @@
+{
+    "terminal_enable":  true,
+    "exact_head_flown":  "cf021443f4c884c51797bb123002b7f9a2afbb3d",
+    "cohort_start_head":  "f7da386e99f7b1b46da4e758ee8645096c6a1e0c",
+    "speed_mps":  1.8,
+    "vision_blend":  "default 0.6 (no patch)",
+    "vz_cap_mps":  1.2,
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=true",
+    "config":  "A"
+}
