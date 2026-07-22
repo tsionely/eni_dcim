@@ -125,6 +125,36 @@ results are unchanged, the wall is upstream (align handover / the
 vertical estimate) and the triage moves there. Config patch only —
 no code change, freeze intact. Runs sequence AFTER R1c.
 
+### R1c RESULT + the two-layer vertical truth (recorded 2026-07-22)
+
+R1c (old build 46e9a64 at 1.8, logs d15a032..30dc261): **1/6 gate
+passes** (A-run5). The registered prediction fired (>=1 pass ->
+window implicated) but the honest strength note is recorded with it:
+1/6 vs the new build's 0/10 is statistically weak, and the old build
+ALSO arrives low (ty at closest -0.18..-1.34) with the same 0.7-4.3m
+commit-entry deficits. B-run4 anomaly: 120s flight timeout with
+18,551 env hits (sustained grinding) — logged as its own failure
+class. The low-arrival pattern is NOT new-build-specific.
+
+Estimate-vs-measurement audit (state.gate_rel vs detection rel_pose,
+paired within 0.3s, medians over align/commit ticks): in some runs
+the fused vertical estimate is OPTIMISTICALLY biased 1-2m (deep-fail
+R1b-B-run4: believed -0.36m low during commit while measuring -2.58m;
+R1b-B-run2: -1.10 vs -2.02); in others the bias is ~0 (R1b-A-run5
++0.01; old-build pass R1c-A-run5 +0.06). BOTH builds show instances.
+Two stacked defects, now named:
+  (1) VERTICAL ESTIMATE sometimes lies optimistically during
+      align/commit (both builds — the deeper, older wall; likely why
+      the historical rate never beat ~28%);
+  (2) the new 0.35 commit vz cap blocks closure even when the
+      estimate is honest (new build only — R1d's target).
+
+R1d CODICIL (registered before R1d results): R1d (cap 1.2) is
+predicted to recover closure in honest-estimate runs only. Partial
+improvement with low-arrival residuals = defect (1) is the remaining
+wall, and the next lever is estimate-side (e.g. vision_blend), config
+first, code only if unavoidable (crash-class justification required).
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
