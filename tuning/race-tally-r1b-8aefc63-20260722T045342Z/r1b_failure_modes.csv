@@ -1,0 +1,9 @@
+packet,config,failed_gate,abort_phase,abort_class,count,runs
+R1b,A,1,align,collision,1,3
+R1b,A,1,commit,collision,1,7
+R1b,A,1,recover,clip_budget,1,5
+R1b,A,1,recover,collision,1,1
+R1b,A,1,retreat,collision,1,9
+R1b,B,1,approach,collision,2,"4,10"
+R1b,B,1,recover,collision,2,"2,6"
+R1b,B,1,search,collision,1,8

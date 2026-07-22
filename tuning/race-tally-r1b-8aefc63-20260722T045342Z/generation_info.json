@@ -1,0 +1,12 @@
+{
+  "analysis_head": "8aefc63",
+  "created_utc": "20260722T045342Z",
+  "definition_approach_phase_duration": "sum of mono_ns intervals where latest setpoint phase is approach; final interval extends to final logged mono_ns",
+  "definition_closest_gate_approach": "minimum Euclidean norm of detection.data.rel_pose.t",
+  "expected_speed_mps": 1.8,
+  "manual_postprocess": "Added ALL row to closest_approach_vs_r1_alt.csv and summary.md using all_runs_for_comparison.csv.",
+  "r1_alt_count": 10,
+  "r1_alt_pattern": "fixtures/*raceprep-r1-alt-*",
+  "r1b_count": 10,
+  "r1b_pattern": "fixtures/*raceprep-r1b-*"
+}
