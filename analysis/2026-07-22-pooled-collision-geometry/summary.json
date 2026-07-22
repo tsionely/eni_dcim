@@ -1,0 +1,161 @@
+{
+  "n_fixtures": 56,
+  "series": [
+    "r1",
+    "r1-alt",
+    "r1b",
+    "r1c",
+    "r1d",
+    "r1e",
+    "r1f"
+  ],
+  "n_collision_rows_logged": 961,
+  "n_abort_collisions": 54,
+  "n_grinding_flights": 2,
+  "grinding": [
+    {
+      "label": "r1c-B-run4",
+      "grinding": true,
+      "n_collisions": 18551,
+      "env_hits": 18551,
+      "abort_reason": "flight timeout",
+      "duration_s": 120.00025729998015,
+      "unique_collision_ids": [
+        1002
+      ],
+      "threat_levels": {
+        "1": 18551
+      },
+      "impulse_p50": 0.09536376595497131,
+      "impulse_p95": 0.12106698751449585,
+      "impulse_max": 0.856329619884491
+    },
+    {
+      "label": "r1f-B-run8",
+      "grinding": true,
+      "n_collisions": 18661,
+      "env_hits": 18661,
+      "abort_reason": "flight timeout",
+      "duration_s": 120.00399050000124,
+      "unique_collision_ids": [
+        1002
+      ],
+      "threat_levels": {
+        "1": 18661
+      },
+      "impulse_p50": 0.09427504986524582,
+      "impulse_p95": 0.12132567912340164,
+      "impulse_max": 0.708536684513092
+    }
+  ],
+  "hit_class_all_non_grinding_samples": {
+    "gate_BOTTOM_bar": 28,
+    "gate_OPENING_or_UNSPECIFIED": 59,
+    "env_NO_GATE_IN_VIEW": 271,
+    "gate_TOP_bar": 29,
+    "env_NEAR_STRUCTURE_unspecified": 244,
+    "env_NEAR_gate_LOW_likely_floor_or_bottom": 148,
+    "env_NEAR_gate_HIGH_likely_banner_or_top_environs": 18,
+    "env_NEAR_gate_LATERAL_likely_pillar_or_side_struct": 5,
+    "env_FAR_STRUCTURE_or_hangar": 35,
+    "env_MID_STRUCTURE_intergate": 69,
+    "gate_TOP_or_BANNER": 3,
+    "gate_SIDE_bar": 7
+  },
+  "hit_class_abort_collisions": {
+    "gate_OPENING_or_UNSPECIFIED": 4,
+    "env_NO_GATE_IN_VIEW": 17,
+    "gate_TOP_bar": 3,
+    "env_NEAR_STRUCTURE_unspecified": 10,
+    "env_NEAR_gate_HIGH_likely_banner_or_top_environs": 2,
+    "env_NEAR_gate_LATERAL_likely_pillar_or_side_struct": 2,
+    "env_FAR_STRUCTURE_or_hangar": 6,
+    "env_MID_STRUCTURE_intergate": 3,
+    "env_NEAR_gate_LOW_likely_floor_or_bottom": 6,
+    "gate_BOTTOM_bar": 1
+  },
+  "hit_class_gate_clips": {
+    "gate_BOTTOM_bar": 28,
+    "gate_OPENING_or_UNSPECIFIED": 59,
+    "gate_TOP_bar": 29,
+    "gate_TOP_or_BANNER": 3,
+    "gate_SIDE_bar": 7
+  },
+  "hit_class_env": {
+    "env_NO_GATE_IN_VIEW": 271,
+    "env_NEAR_STRUCTURE_unspecified": 244,
+    "env_NEAR_gate_LOW_likely_floor_or_bottom": 148,
+    "env_NEAR_gate_HIGH_likely_banner_or_top_environs": 18,
+    "env_NEAR_gate_LATERAL_likely_pillar_or_side_struct": 5,
+    "env_FAR_STRUCTURE_or_hangar": 35,
+    "env_MID_STRUCTURE_intergate": 69
+  },
+  "by_series": {
+    "r1": {
+      "gate_BOTTOM_bar": 5,
+      "gate_OPENING_or_UNSPECIFIED": 11,
+      "env_NO_GATE_IN_VIEW": 143,
+      "gate_TOP_bar": 11,
+      "env_NEAR_STRUCTURE_unspecified": 61,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 90
+    },
+    "r1-alt": {
+      "env_NEAR_gate_HIGH_likely_banner_or_top_environs": 18,
+      "env_NEAR_gate_LATERAL_likely_pillar_or_side_struct": 2,
+      "env_NO_GATE_IN_VIEW": 44,
+      "env_FAR_STRUCTURE_or_hangar": 17,
+      "env_NEAR_STRUCTURE_unspecified": 37,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 28,
+      "env_MID_STRUCTURE_intergate": 65,
+      "gate_OPENING_or_UNSPECIFIED": 3
+    },
+    "r1b": {
+      "env_NO_GATE_IN_VIEW": 35,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 11,
+      "env_FAR_STRUCTURE_or_hangar": 12,
+      "gate_OPENING_or_UNSPECIFIED": 14,
+      "gate_TOP_bar": 2,
+      "gate_TOP_or_BANNER": 2,
+      "env_NEAR_STRUCTURE_unspecified": 2
+    },
+    "r1c": {
+      "gate_BOTTOM_bar": 1,
+      "gate_SIDE_bar": 6,
+      "gate_OPENING_or_UNSPECIFIED": 1,
+      "gate_TOP_bar": 4,
+      "env_MID_STRUCTURE_intergate": 2,
+      "env_NO_GATE_IN_VIEW": 32,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 2,
+      "env_FAR_STRUCTURE_or_hangar": 1,
+      "env_NEAR_STRUCTURE_unspecified": 6
+    },
+    "r1d": {
+      "gate_BOTTOM_bar": 4,
+      "env_NEAR_STRUCTURE_unspecified": 131,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 2,
+      "gate_OPENING_or_UNSPECIFIED": 3,
+      "gate_TOP_bar": 12,
+      "env_NO_GATE_IN_VIEW": 8
+    },
+    "r1e": {
+      "env_NEAR_STRUCTURE_unspecified": 5,
+      "env_NO_GATE_IN_VIEW": 5,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 12,
+      "gate_BOTTOM_bar": 12,
+      "env_FAR_STRUCTURE_or_hangar": 2
+    },
+    "r1f": {
+      "gate_BOTTOM_bar": 6,
+      "gate_OPENING_or_UNSPECIFIED": 27,
+      "env_NEAR_gate_LOW_likely_floor_or_bottom": 3,
+      "env_FAR_STRUCTURE_or_hangar": 3,
+      "env_NO_GATE_IN_VIEW": 4,
+      "env_NEAR_gate_LATERAL_likely_pillar_or_side_struct": 3,
+      "gate_SIDE_bar": 1,
+      "gate_TOP_or_BANNER": 1,
+      "env_NEAR_STRUCTURE_unspecified": 2,
+      "env_MID_STRUCTURE_intergate": 2
+    }
+  },
+  "fixture_root": "C:\\Users\\tsion\\Projects\\eni_dcim\\fixtures"
+}
