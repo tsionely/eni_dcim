@@ -1,0 +1,2 @@
+comparison,a_spread_true_world_dz_m,b_spread_true_world_dz_m,a_median_true_world_dz_m,b_median_true_world_dz_m,a_pass_rate,b_pass_rate,registered_prediction,verdict
+R1f A vs B true-world dz spread,0.895810,2.147156,0.101524,0.436895,0.000000,0.000000,A spread tighter than B,A_TIGHTER

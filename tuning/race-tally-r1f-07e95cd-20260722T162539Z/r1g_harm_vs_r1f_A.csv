@@ -1,0 +1,2 @@
+status,config,r1g_runs,r1g_clip_budget_aborts,r1f_A_clip_budget_aborts,harm_delta_clip_budget_aborts_vs_r1f_A,harm_verdict
+MISSING_AT_HEAD,R1g,0,,2,,UNJUDGED_NO_R1G_FIXTURES

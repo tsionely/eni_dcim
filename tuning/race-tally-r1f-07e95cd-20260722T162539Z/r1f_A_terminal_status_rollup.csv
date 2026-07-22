@@ -1,0 +1,6 @@
+series,config,run,fixture_dir,flight_id,owner_term_tick_count,term_command_applied_count,admission_score_count,admission_score_min,admission_score_median,admission_score_min_minus_corridor_0p30,admission_score_median_minus_corridor_0p30,admission_score_le_0p30_count,owner_term_admission_score_min,owner_term_admission_score_median
+R1f,A,1,20260722T141240-raceprep-r1f-A-run1,20260722T141216-b1a8389a,0,0,51,0.628908,0.651421,0.328908,0.351421,0,,
+R1f,A,3,20260722T141508-raceprep-r1f-A-run3,20260722T141447-b1a8389a,0,0,39,0.624711,0.635680,0.324711,0.335680,0,,
+R1f,A,5,20260722T141744-raceprep-r1f-A-run5,20260722T141720-b1a8389a,0,0,18,0.651421,0.651421,0.351421,0.351421,0,,
+R1f,A,7,20260722T142016-raceprep-r1f-A-run7,20260722T141955-b1a8389a,0,0,77,0.338233,1.592619,0.038233,1.292619,0,,
+R1f,A,9,20260722T142437-raceprep-r1f-A-run9,20260722T142420-b1a8389a,18,18,18,0.262341,0.262341,-0.037659,-0.037659,18,0.262341,0.262341

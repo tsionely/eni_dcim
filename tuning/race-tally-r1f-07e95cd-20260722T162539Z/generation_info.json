@@ -1,0 +1,23 @@
+{
+  "corridor_reference": 0.3,
+  "effective_pythonpath": "src via sys.path.insert(0, ROOT/src)",
+  "generated_at_utc": "2026-07-22T16:25:39.830623+00:00",
+  "latest_state_pairing": "each detection paired with latest preceding state row carrying q_att/level_roll/level_pitch",
+  "python_executable": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+  "r1f_fixture_dirs": [
+    "20260722T141240-raceprep-r1f-A-run1",
+    "20260722T141353-raceprep-r1f-B-run2",
+    "20260722T141508-raceprep-r1f-A-run3",
+    "20260722T141626-raceprep-r1f-B-run4",
+    "20260722T141744-raceprep-r1f-A-run5",
+    "20260722T141901-raceprep-r1f-B-run6",
+    "20260722T142016-raceprep-r1f-A-run7",
+    "20260722T142323-raceprep-r1f-B-run8",
+    "20260722T142437-raceprep-r1f-A-run9",
+    "20260722T142555-raceprep-r1f-B-run10"
+  ],
+  "r1g_fixture_dirs": [],
+  "repo_head": "07e95cd17b1d264ed3a7da75ad92a3ee6c5ae2d6",
+  "required_min_head": "07e95cd",
+  "true_world_dz_import": "aigp.planning.approach.true_world_dz"
+}
