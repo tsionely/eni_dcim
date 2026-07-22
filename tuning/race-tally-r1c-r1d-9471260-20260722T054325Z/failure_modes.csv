@@ -1,0 +1,9 @@
+group,failed_gate,abort_phase,abort_class,count,runs
+R1b-B-new-cap0.35,1,approach,collision,2,"4,10"
+R1b-B-new-cap0.35,1,recover,collision,2,"2,6"
+R1b-B-new-cap0.35,1,search,collision,1,8
+R1c-old-no-vz-cap,1,hover,collision,1,2
+R1c-old-no-vz-cap,1,hover,timeout,1,4
+R1c-old-no-vz-cap,1,recover,clip_budget,1,1
+R1c-old-no-vz-cap,1,recover,collision,2,"3,6"
+R1c-old-no-vz-cap,2,search,collision,1,5

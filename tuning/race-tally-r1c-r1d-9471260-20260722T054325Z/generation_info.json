@@ -1,0 +1,42 @@
+{
+  "analysis_head": "9471260",
+  "created_utc": "20260722T054325Z",
+  "definition_camera_frame_ty": "detection.data.rel_pose.t[1]",
+  "definition_commit_entry_ty": "latest detection at or before transition into setpoint phase commit",
+  "groups": [
+    {
+      "build_class": "old build 46e9a64, no commit.vz_cap_mps key",
+      "expected_count": 6,
+      "expected_speed_mps": 1.8,
+      "expected_terminal": "per_config",
+      "expected_vz_cap_mps": null,
+      "expected_vz_cap_status": "ABSENT",
+      "group": "R1c-old-no-vz-cap",
+      "packet": "R1c",
+      "pattern": "fixtures/*raceprep-r1c-*"
+    },
+    {
+      "build_class": "new build e8f46a9 family, commit.vz_cap_mps=0.35",
+      "expected_count": 5,
+      "expected_speed_mps": 1.8,
+      "expected_terminal": false,
+      "expected_vz_cap_mps": 0.35,
+      "expected_vz_cap_status": "PRESENT",
+      "group": "R1b-B-new-cap0.35",
+      "packet": "R1b-B",
+      "pattern": "fixtures/*raceprep-r1b-B-*"
+    },
+    {
+      "build_class": "new build, commit.vz_cap_mps=1.2",
+      "expected_count": 5,
+      "expected_speed_mps": 1.8,
+      "expected_terminal": false,
+      "expected_vz_cap_mps": 1.2,
+      "expected_vz_cap_status": "PRESENT",
+      "group": "R1d-new-cap1.2",
+      "packet": "R1d",
+      "pattern": "fixtures/*raceprep-r1d-*"
+    }
+  ],
+  "r1d_fixture_count": 0
+}

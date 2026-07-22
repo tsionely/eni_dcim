@@ -1,0 +1,4 @@
+group,packet,status,runs,expected_count,pass_runs,total_gates,pass_rate,collision_aborts,clip_budget_aborts,timeout_aborts,median_wall_time_s,median_closest_camera_ty_m,median_abs_closest_camera_ty_m,median_closest_range_m,median_first_commit_entry_ty_m,median_last_commit_entry_ty_m,median_all_commit_entry_ty_m,median_abs_all_commit_entry_ty_m,commit_entry_count,median_approach_phase_duration_s,param_ok_runs,expected_vz_cap_mps,build_class
+R1c-old-no-vz-cap,R1c,OK,6,6,1,1,1/6,4,1,1,14.374013,-0.407512,0.407512,0.918809,-2.582284,-1.479728,-2.020903,2.020903,13,0.379854,6,ABSENT,"old build 46e9a64, no commit.vz_cap_mps key"
+R1b-B-new-cap0.35,R1b-B,OK,5,5,0,0,0/5,5,0,0,14.343992,-0.531752,0.531752,1.211627,-2.221708,-2.049884,-2.177057,2.177057,10,0.642313,5,0.350000,"new build e8f46a9 family, commit.vz_cap_mps=0.35"
+R1d-new-cap1.2,R1d,MISSING_AT_HEAD,0,5,,,,,,,,,,,,,,,0,,,1.200000,"new build, commit.vz_cap_mps=1.2"

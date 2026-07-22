@@ -1,0 +1,2 @@
+group,packet,pattern,expected_count,status,analysis_head
+R1d-new-cap1.2,R1d,fixtures/*raceprep-r1d-*,5,MISSING_AT_HEAD,9471260
