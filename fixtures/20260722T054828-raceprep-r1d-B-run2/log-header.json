@@ -1,0 +1,9 @@
+{
+    "config":  "B-climb-authority",
+    "exact_head_flown":  "a9e5d1cf9d3f8fba4350fdfeaf7143aa3b66ffaa",
+    "speed_mps":  1.8,
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=false --patch planner.commit.vz_cap_mps=1.2",
+    "terminal_enable":  false,
+    "vz_cap_mps":  1.2,
+    "cohort_start_head":  "fc093a792d93f4d6d1e06e4ef044ab954f4f4fa6"
+}
