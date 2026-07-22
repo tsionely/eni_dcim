@@ -155,6 +155,35 @@ improvement with low-arrival residuals = defect (1) is the remaining
 wall, and the next lever is estimate-side (e.g. vision_blend), config
 first, code only if unavoidable (crash-class justification required).
 
+### R1d RESULT (recorded 2026-07-22, logs after fc093a7)
+
+Flown correctly (cap 1.2, speed 1.8, config B; params verified).
+**1/5 gate passes** (run 4) vs control R1b-B 0/5. The registered
+codicil's "partial improvement" branch FIRED: climb authority
+restored closure where the estimate is honest (run 4's successive
+commit entries -2.48 -> -0.70 show deficits being closed between
+attempts), but median closest-approach ty did NOT shrink (-0.600 vs
+control -0.532) — in lying-estimate runs the drone still doesn't
+know to climb. Per the codicil: the remaining wall is defect (1),
+the estimate; the next lever is estimate-side, config only.
+
+## Phase R1e — vision-blend estimate fix (registered before results)
+
+Mechanism: estimation.vision_blend (default 0.6) is the per-detection
+position-fix blend (state_estimator.py _apply_position_fix: fused =
+0.6*measured + 0.4*transported-old). The optimistic 1-2m bias lives
+in the transported term; 0.9 snaps the estimate to the measurement.
+Sakana: 5 runs, config B, speed 1.8, cap 1.2, PLUS
+`--patch estimation.vision_blend=0.9`. Control = R1d (blend 0.6).
+PREDICTIONS registered now: (a) the paired est-vs-meas vertical bias
+(state.gate_rel ty minus detection ty) collapses toward 0 in all
+runs; (b) median closest-approach ty improves toward -0.3 or better;
+(c) pass rate >= 2/5. Branch reads: (a) fires but not (b)/(c) ->
+residual is control/aim side; (a) does not fire -> the bias is
+transport-side (next levers: vision_vel_blend, vel_leak). Known
+accepted risk: less jitter smoothing at high blend — the commit
+damper absorbs it at 1.8.
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
