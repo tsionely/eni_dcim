@@ -1,0 +1,12 @@
+{
+    "gate_clips":  0,
+    "flight_id":  "20260722T035525-49b2dfca",
+    "env_hits":  1,
+    "config":  "A",
+    "run":  3,
+    "phase":  "align",
+    "gates_passed":  0,
+    "wall_time_s":  7.704001900041476,
+    "total_gates":  "not exposed",
+    "abort":  "environment collision (impulse=5.1)"
+}
