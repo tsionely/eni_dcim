@@ -1,0 +1,11 @@
+{
+    "gate_clips":  0,
+    "flight_id":  "20260722T050128-d3d00a31",
+    "env_hits":  29,
+    "config":  "B",
+    "run":  2,
+    "phase":  "hover",
+    "gates_passed":  0,
+    "wall_time_s":  17.520018899987917,
+    "abort":  "environment collision (impulse=6.3)"
+}
