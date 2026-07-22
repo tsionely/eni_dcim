@@ -1,0 +1,48 @@
+{
+  "analysis_head": "e36bb9d",
+  "created_utc": "20260722T121137Z",
+  "definition_bias": "median(state.gate_rel.t[1] - detection.rel_pose.t[1]) over state ticks in align/commit paired to nearest detection within 0.3s",
+  "groups": [
+    {
+      "expected": {
+        "estimation.vision_blend": 0.6,
+        "planner.commit.speed_mps": 1.8,
+        "planner.commit.vz_cap_mps": 0.35,
+        "planner.terminal.enable": false
+      },
+      "expected_count": 5,
+      "group": "R1b-B-new-cap0.35-blend0.6",
+      "packet": "R1b-B",
+      "pattern": "fixtures/*raceprep-r1b-B-*",
+      "role": "control: new build, cap 0.35, blend 0.6"
+    },
+    {
+      "expected": {
+        "estimation.vision_blend": 0.6,
+        "planner.commit.speed_mps": 1.8,
+        "planner.commit.vz_cap_mps": 1.2,
+        "planner.terminal.enable": false
+      },
+      "expected_count": 5,
+      "group": "R1d-new-cap1.2-blend0.6",
+      "packet": "R1d",
+      "pattern": "fixtures/*raceprep-r1d-*",
+      "role": "climb-authority treatment: cap 1.2, blend 0.6"
+    },
+    {
+      "expected": {
+        "estimation.vision_blend": 0.9,
+        "planner.commit.speed_mps": 1.8,
+        "planner.commit.vz_cap_mps": 1.2,
+        "planner.terminal.enable": false
+      },
+      "expected_count": 5,
+      "group": "R1e-new-cap1.2-blend0.9",
+      "packet": "R1e",
+      "pattern": "fixtures/*raceprep-r1e-*",
+      "role": "estimate-bias treatment: cap 1.2, blend 0.9"
+    }
+  ],
+  "pair_window_s": 0.3,
+  "r1e_fixture_count": 0
+}
