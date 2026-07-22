@@ -1,0 +1,12 @@
+{
+    "gate_clips":  11,
+    "flight_id":  "20260722T035756-49b2dfca",
+    "env_hits":  0,
+    "config":  "A",
+    "run":  5,
+    "phase":  "recover",
+    "gates_passed":  0,
+    "wall_time_s":  7.66398820001632,
+    "total_gates":  "not exposed",
+    "abort":  "gate clip budget exceeded (11)"
+}
