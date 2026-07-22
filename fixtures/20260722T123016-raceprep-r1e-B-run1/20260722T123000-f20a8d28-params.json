@@ -1,0 +1,157 @@
+{
+  "control": {
+    "att_rate": {
+      "hover_thrust": 0.5,
+      "rate_d": 0.05,
+      "rate_i": 0.0,
+      "rate_p": 8.0,
+      "rate_sign_pitch": 1.0,
+      "rate_sign_roll": 1.0,
+      "rate_sign_yaw": 1.0,
+      "tilt_max_rad": 0.35,
+      "vel_d": 0.0,
+      "vel_i": 0.05,
+      "vel_p": 0.3,
+      "vz_i": 0.4,
+      "vz_p": 0.8
+    },
+    "backend": "att_rate",
+    "throttle_down_s": 3.0,
+    "velocity": {
+      "frame": "ned",
+      "max_climb_mps": 2.0,
+      "max_speed_mps": 4.0,
+      "slew_mps2": 6.0,
+      "world_yaw_offset_rad": 0.0,
+      "yaw_rate_max_rps": 1.5
+    }
+  },
+  "estimation": {
+    "gate_rel_max_age_s": 1.5,
+    "gyro_bias_calib_s": 1.0,
+    "gyro_sign": -1.0,
+    "mahony_kp": 0.0,
+    "vel_leak": 0.05,
+    "vision_blend": 0.9,
+    "vision_vel_blend": 0.18
+  },
+  "learning": {
+    "score": {
+      "abort_penalty": 200.0,
+      "collision_penalty": 20.0,
+      "gate_weight": 100.0
+    }
+  },
+  "perception": {
+    "camera": {
+      "fov_deg": 90.0,
+      "mount_pitch_deg": 29.0
+    },
+    "close_tracker": {
+      "enabled": true,
+      "max_range_m": 7.0,
+      "max_solo_s": 1.0,
+      "max_step_m": 0.6,
+      "min_support": 10,
+      "samples_per_edge": 12,
+      "search_px": 20
+    },
+    "detector": {
+      "approx_eps_frac": 0.04,
+      "box_fallback": true,
+      "box_min_area_frac": 0.025,
+      "box_min_fill": 0.2,
+      "max_area_frac": 0.7,
+      "min_area_frac": 0.0008,
+      "min_confidence": 0.3,
+      "mode": "red_hsv",
+      "prior_boost": 4.0,
+      "prior_boost_max_range": 6.0,
+      "red_hue_high_min": 168,
+      "red_hue_low_max": 12,
+      "red_sat_min": 60,
+      "red_val_min": 50,
+      "scale_gate": true,
+      "scale_max": 1.5,
+      "scale_min": 0.65,
+      "threshold": 180,
+      "ty_max_m": 6.0,
+      "washed_hue_min": 135,
+      "washed_red": true,
+      "washed_rg_min": 20,
+      "washed_sat_min": 20,
+      "washed_val_min": 150
+    },
+    "gate": {
+      "height_m": 1.6,
+      "width_m": 1.6
+    }
+  },
+  "planner": {
+    "align": {
+      "climb_cap_mps": 1.2,
+      "climb_gain": 1.0,
+      "forward_mps": 0.4,
+      "max_dz_m": 0.5,
+      "max_s": 4.0,
+      "sane_max_m": 2.0
+    },
+    "approach": {
+      "aim_up_floor_m": 0.0,
+      "aim_up_m": 0.3,
+      "center_gain": 0.6,
+      "near_distance_m": 4.0,
+      "reacquire_max_m": 9.0,
+      "reacquire_window_s": 6.0,
+      "speed_far_mps": 3.0,
+      "speed_near_mps": 1.5,
+      "yaw_center_gain": 1.5
+    },
+    "commit": {
+      "abort_min_dist_m": 0.8,
+      "brake_decel_mps2": 2.6,
+      "brake_react_s": 0.0,
+      "distance_m": 6.5,
+      "duration_s": 2.5,
+      "entry_max_age_s": 0.6,
+      "relock_jump_m": 2.0,
+      "speed_mps": 1.8,
+      "vz_cap_mps": 1.2,
+      "vz_deadband_m": 0.15,
+      "vz_slew_mps2": 1.5,
+      "yaw_track_gain": 1.2
+    },
+    "recover": {
+      "brake_s": 0.8
+    },
+    "search": {
+      "climb_mps": 0.0,
+      "yaw_rate_rps": 0.6
+    },
+    "takeoff": {
+      "climb_mps": 1.0,
+      "duration_s": 1.5
+    },
+    "terminal": {
+      "cmd_clamp_m": 0.1,
+      "corridor_interim_m": 0.3,
+      "coverage_tail_p95_s": 0.5,
+      "d_star_m": 0.8,
+      "e_z_clamp_m": 0.45,
+      "enable": false,
+      "engage_range_m": 2.5,
+      "margin_m": 0.55,
+      "pitch_cal_rad": -0.33,
+      "validated_max_age_s": 0.5,
+      "vz_max_mps": 0.6
+    }
+  },
+  "safety": {
+    "env_collision_abort_threat": 2,
+    "flight_timeout_s": 120.0,
+    "frame_stale_s": 0.5,
+    "imu_stale_s": 0.05,
+    "loop_overrun_abort_frac": 0.2,
+    "max_gate_clips": 10
+  }
+}
