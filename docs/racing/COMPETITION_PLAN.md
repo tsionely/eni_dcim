@@ -97,6 +97,34 @@ environment/sim-drift triage. Either way the race build question
 reopens: the frozen build may move to the last gate-passing lineage.
 Crash-class triage under the plan's own rules; no criterion machinery.
 
+### THE VERTICAL FINDING (recorded 2026-07-22, computed from raw logs)
+
+Measured across all 20 race-week runs (R1-ALT + R1b): the drone
+arrives at the gate BELOW center in 20/20 runs (camera-frame ty at
+closest approach: -0.07..-1.50 m; lateral tx small, mixed sign — the
+lateral axis is healthy). All three gate passes were the runs with
+the smallest vertical deficit (0.19-0.55 m). At COMMIT ENTRY the
+deficit is 0.8-4.7 m (every run, every entry). The legacy commit
+vertical damper (`planner.commit.vz_cap_mps=0.35`, new in the
+21-commit window, active in BOTH configs — race_planner.py
+`_damp_commit_vz`) allows closing at most ~0.9 m during a full
+commit. Arithmetic: a centered arrival is impossible unless align
+hands over nearly-closed; align phases observed at 0.3-1.5 s exit
+with the deficit still open. Codex's approach-time collapse and the
+build-identity check (R1-ALT and R1b flew IDENTICAL src/config —
+verified by tree diff) are consistent with this.
+
+## Phase R1d — commit climb-authority A/B (registered before results)
+
+On CURRENT main, config B only (terminal off, pure legacy path),
+speed 1.8: 5 runs with `--patch planner.commit.vz_cap_mps=1.2`.
+Control = the five R1b-B runs (cap 0.35) already flown. PREDICTIONS
+registered now: if the cap is the binding wall, the vertical deficit
+at closest approach shrinks and >=1 gate pass appears in 5; if
+results are unchanged, the wall is upstream (align handover / the
+vertical estimate) and the triage moves there. Config patch only —
+no code change, freeze intact. Runs sequence AFTER R1c.
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
