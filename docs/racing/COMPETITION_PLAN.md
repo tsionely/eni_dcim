@@ -231,6 +231,39 @@ job, A shows smaller |true-world dz| scatter at closest approach and
 a higher pass rate than B. Codex tally adds a true-world dz column
 (the align/commit bias metric is retired with the correction).
 
+### R1f RESULT + THE ENGAGEMENT FAMINE (recorded 2026-07-22)
+
+R1f: **0/10, both configs** (A: 2 clip-budget + 3 collision; B: 4
+collision + 1 grinding timeout, 18,661 env hits — second instance of
+that class). Decision rule: tie at zero again. But the validity
+check found the real story: **config A was never meaningfully A.**
+term_status audit across R1f-A: the terminal channel ENGAGES
+logically (38-106 ticks/run) but `term_command_applied` was zero in
+4 of 5 runs. Application follows OWNERSHIP; ownership follows the
+admission door (vertical_owner.py: certified + ready + FULL_QUAD,
+then |e_x| + 2*sigma + 0.06 <= corridor_interim 0.30). Measured
+admission scores: clustered at ~0.65 (= the 0.45 e_z clamp + margin
+— the believed crossing error saturates its clamp), vs corridor
+0.30; pass fraction 0.00 in 4 runs; run 9 dipped to 0.262 -> 18
+owner=term ticks, command applied. The door is working as designed —
+and the design (ratified conservatively in the advisory era) admits
+only crossings that are already nearly good. The rescue channel
+declines exactly the flights that need rescuing. The entire week's
+A/B was therefore A≈B, explaining every tie.
+
+## Phase R1g — corridor experiment (registered before results)
+
+Config A + `--patch planner.terminal.corridor_interim_m=0.7` (admits
+the measured ~0.65 typical scores), with speed 1.8 + cap 1.2.
+5 runs, A-only; control = R1f-A (corridor 0.30, 0/5, 2 clip-aborts).
+PREDICTIONS registered: owner=term ticks appear in >=4/5 runs; the
+harm channel to watch is clip-budget aborts rising (TERM misacting
+near the frame); success = >=1 pass or median |true-world dz| at
+closest approach shrinking vs R1f-A. Registered scope note: this is
+a race-ops config patch under owner authority; the shadow repair
+stays unshipped; no release statistics are minted; the criterion
+campaign's HOLD is untouched.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
