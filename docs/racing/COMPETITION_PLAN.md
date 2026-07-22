@@ -67,6 +67,36 @@ with fewer collision aborts, is the working baseline for triage — the
 week continues on engineering, not on ladder steps. Run-summaries
 must include the flown code_commit.
 
+### R1b RESULT (recorded 2026-07-22, logs ea7af54..f7d9089)
+
+Flown CORRECTLY (headers confirm both patches, 1.8 + A/B). Result:
+**0/10 gates — zero passes, both configs** (A: 4 collision aborts + 1
+clip-budget; B: 5 collision aborts). Worse than the disqualified 2.5
+series (3/10 passed gate 1). Decision-rule output: tie at zero — the
+A/B question is SUSPENDED; the signal is build-level, not config-level.
+
+Root-cause hypothesis (registered): every historical gate pass flew
+build 46e9a64 (Jul 20 morning). Since then 21 flight-code commits
+(~950 lines: race_planner +155, vertical_owner +574, perception
+pipeline +81, app.py, close_tracker, certificate) landed and NONE flew
+until R1b. Config B's collapse implicates shared-path changes, not the
+terminal channel alone. Competing hypothesis: day-to-day sim drift.
+
+## Phase R1c — bisect anchor flight (registered before results)
+
+One experiment decides between the hypotheses: fly the LAST
+GATE-PASSING BUILD, today, at the same setting.
+
+Sakana: checkout 46e9a644ef4e24a5229a74a49b0ba33b73c1bb80 (pushed
+ancestor — "unpushed flights do not exist" is satisfied), 6 runs at
+`planner.commit.speed_mps=1.8`, alternating terminal.enable
+true/false as before. PREDICTIONS registered now: if >=1 gate pass in
+6 -> regression is inside the 21-commit window -> bisect it (each step
+~5 runs; ~4 steps bound it). If 0/6 -> the build is not the cause ->
+environment/sim-drift triage. Either way the race build question
+reopens: the frozen build may move to the last gate-passing lineage.
+Crash-class triage under the plan's own rules; no criterion machinery.
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
