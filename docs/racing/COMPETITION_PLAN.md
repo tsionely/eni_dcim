@@ -184,6 +184,53 @@ transport-side (next levers: vision_vel_blend, vel_leak). Known
 accepted risk: less jitter smoothing at high blend — the commit
 damper absorbs it at 1.8.
 
+### R1e RESULT + RECORD CORRECTION (recorded 2026-07-22)
+
+R1e (blend 0.9): **0/5**; all three registered predictions FAILED
+(bias medians per run +0.73/+0.79/+1.93 in three runs — WORSE, not
+collapsed; closest ty -0.733 — worse; 0/5). Codex's independent
+tally (97932b8) agrees. Registered branch read applied: the high
+blend passes detector jitter straight into the estimate. **blend
+reverts to 0.6; R1e's lever is dead.**
+
+RECORD CORRECTION, entered by name: the "vertical finding" and all
+camera-frame ty numbers in the R1b/R1c/R1d records above are
+FRAME-CONTAMINATED. rel_pose is mount-corrected but still attitude-
+and rest-tilt-rotated; the codebase's own fossils (approach.py
+true_world_dz docstring; phase3h: 49 of 88 "LOW" labels were truly
+HIGH) warn about exactly this phantom, and I walked into it anyway.
+Recomputed at closest approach with the flight code's own
+true_world_dz (state-paired q_att/level_*):
+
+  R1-ALT 2.5:   median +0.10m HIGH, per-run spread -1.49..+1.36
+  R1b 1.8:      median  0.18m low,  spread -1.29..+0.96
+  R1c old:      median  0.18m low,  spread -1.04..+0.50
+  R1d cap1.2:   median  0.14m low,  spread -0.81..+0.33
+  R1e blend0.9: median +0.26m HIGH, spread -0.56..+2.99
+
+THE REAL PICTURE: there is NO large systematic vertical bias. The
+enemy is VARIANCE — ±1-1.5m run-to-run vertical scatter against a
+0.8m half-height ring. Passes are the runs where scatter lands
+inside. The align "descend while low" observation dissolves in the
+same correction (align acts on true_world_dz — its frame was right;
+my metric's was wrong). R1d's 1/5-vs-0/5 outcome and its
+commit-entry closure stand as outcome data; the cap-1.2 patch is
+kept (weak positive, no observed harm).
+
+## Phase R1f — the terminal A/B at the tuned regime (registered before results)
+
+Final-meter scatter is precisely what the GateCloseTracker + the
+terminal vertical channel were BUILT to null — and the terminal A/B
+is the plan's original R1 question, now askable at the tuned regime.
+Sakana: 10 runs alternating A,B,A,B,... ALL at speed 1.8 + cap 1.2 +
+blend 0.6 (default); A adds terminal.enable=true, B =false. B doubles
+as R1d replication. DECISION: the original R1 rule (more gate passes
+wins; collision-aborts tiebreak against; clip-budget aborts do not
+disqualify). PREDICTION registered: if the terminal channel does its
+job, A shows smaller |true-world dz| scatter at closest approach and
+a higher pass rate than B. Codex tally adds a true-world dz column
+(the align/commit bias metric is retired with the correction).
+
 ## Phase R2 — speed ladder (days 2-3)
 
 On the winning config, raise speed in registered steps, 3 runs
