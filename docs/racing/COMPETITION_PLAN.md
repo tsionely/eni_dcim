@@ -231,7 +231,19 @@ job, A shows smaller |true-world dz| scatter at closest approach and
 a higher pass rate than B. Codex tally adds a true-world dz column
 (the align/commit bias metric is retired with the correction).
 
-## Phase R2 — speed ladder (days 2-3)
+## RELIABILITY GATE (owner question, 2026-07-22, binding)
+
+The owner asked the right question: no speed work while gate 1 is
+unreliable. REGISTERED AS A HARD GATE: the speed ladder (R2 below)
+is LOCKED until BOTH hold in a 10-run block at the frozen config:
+  (a) gate-1 passage in >= 7/10 runs;
+  (b) at least one run passes gate 2.
+Until then the week's work is reliability only, in this order:
+gate-1 scatter (R1f), then the post-gate-1 collision (no run in
+program history has ever seen gate 2). Slow-and-through beats
+fast-and-crashed: scoring is gates first, time second.
+
+## Phase R2 — speed ladder (days 2-3) [LOCKED behind the reliability gate]
 
 On the winning config, raise speed in registered steps, 3 runs
 per step: step 1 approach/dash +15%; step 2 +30%; step 3 commit
