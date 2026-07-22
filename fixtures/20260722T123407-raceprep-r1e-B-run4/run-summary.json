@@ -1,0 +1,10 @@
+{
+    "gates":  0,
+    "env_hits":  2,
+    "phase":  "recover",
+    "clips":  0,
+    "wall_time":  7.4840018000104465,
+    "flight_id":  "20260722T123350-f20a8d28",
+    "run":  4,
+    "abort":  "environment collision (impulse=1.6)"
+}
