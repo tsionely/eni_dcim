@@ -1,0 +1,10 @@
+{
+    "terminal_enable":  true,
+    "exact_head_flown":  "0435c7a99fbfb4d03eb13b98c46ad066f70826af",
+    "cohort_start_head":  "7c4e5e0443894598428bb094c330514be1359f55",
+    "speed_mps":  1.8,
+    "vz_cap_mps":  1.2,
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=true --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.corridor_interim_m=0.7",
+    "config":  "A-corridor",
+    "corridor_interim_m":  0.7
+}
