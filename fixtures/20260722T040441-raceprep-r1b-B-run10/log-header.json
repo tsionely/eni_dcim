@@ -1,0 +1,11 @@
+{
+    "exact_head_flown":  "17802d6d58a5dea69fb6b6c3d2e2400821622dda",
+    "r2_verified":  true,
+    "terminal_enable":  false,
+    "config":  "B",
+    "run":  10,
+    "speed_mps":  1.8,
+    "anchor":  "e8f46a9",
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=false",
+    "cohort_build":  "8f260b087e2c3329ba95c22d0c72bf3904ea6799"
+}
