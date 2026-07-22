@@ -1,0 +1,12 @@
+{
+  "analysis_head": "0c6e8f4",
+  "created_utc": "20260722T124745Z",
+  "fixture_count": 0,
+  "fixture_pattern": "fixtures/*raceprep-r1f-*",
+  "retired_columns": [
+    "camera_frame_ty",
+    "align_commit_bias_state_minus_detection"
+  ],
+  "status": "MISSING_AT_HEAD",
+  "vertical_metric": "aigp.planning.approach.true_world_dz at closest detection, paired with latest state q_att/level_roll/level_pitch"
+}

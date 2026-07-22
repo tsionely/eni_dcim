@@ -1,0 +1,3 @@
+config,status,fixture_pattern,runs,pass_rate,total_gates,collision_aborts,clip_budget_aborts,median_true_world_dz_m,min_true_world_dz_m,max_true_world_dz_m,spread_true_world_dz_m,prediction_A_tighter_verdict
+A,MISSING_AT_HEAD,fixtures/*raceprep-r1f-*,0,,,,,,,,,UNJUDGED_NO_R1F_FIXTURES
+B,MISSING_AT_HEAD,fixtures/*raceprep-r1f-*,0,,,,,,,,,UNJUDGED_NO_R1F_FIXTURES
