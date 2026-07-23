@@ -1,0 +1,61 @@
+{
+  "run": 5,
+  "flight_id": "20260723T220511-82efa9c1",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "stale channels: imu(0.252s)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 0,
+  "duration_s": 39.18400639999891,
+  "loop_overrun_frac": 0.007349938750510413,
+  "loop_stats": {
+    "ticks": 9796,
+    "overruns": 72,
+    "overrun_frac": 0.007349938750510413,
+    "max_late_us": 10161
+  },
+  "log_dir": "logs\\20260723T220511-82efa9c1",
+  "imu_records": 4286,
+  "search_ticks": 1007,
+  "collision_records": 0,
+  "race_start_observed": true,
+  "race_start_boot_time_ms": 912770,
+  "reached_takeoff": true,
+  "reached_racing": true,
+  "imu_stale_s": 0.25,
+  "blind_vz_zero": true,
+  "fsm_transitions": [
+    {
+      "src": "IDLE",
+      "dst": "ARMING",
+      "reason": "flight start"
+    },
+    {
+      "src": "ARMING",
+      "dst": "THROTTLE_DOWN",
+      "reason": "armed"
+    },
+    {
+      "src": "THROTTLE_DOWN",
+      "dst": "TAKEOFF",
+      "reason": "race GO"
+    },
+    {
+      "src": "TAKEOFF",
+      "dst": "RACING",
+      "reason": "takeoff complete"
+    },
+    {
+      "src": "RACING",
+      "dst": "ABORTED",
+      "reason": "stale channels: imu(0.252s)"
+    },
+    {
+      "src": "ABORTED",
+      "dst": "DONE",
+      "reason": "flight over"
+    }
+  ]
+}
