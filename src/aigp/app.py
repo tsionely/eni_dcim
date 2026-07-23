@@ -344,6 +344,25 @@ class App:
                 _, frame_seq = fresh
                 supervisor.watchdog.feed("frame")
 
+            if loop.ticks % 250 == 0:
+                # T2c forensics: the watchdog gap tracks whatever threshold
+                # is configured (0.252 under 0.25; 0.500 under 0.5) while
+                # the bus tap logs continuous streams — meaning the
+                # CONSUMER stops seeing fresh values at some event and the
+                # trip lands exactly threshold seconds later. This ledger
+                # catches the divergence: consumer seq vs cell seq, per
+                # channel, once a second.
+                bus.publish_latest("consumer_diag", {
+                    "ts_ns": now_ns,
+                    "tick": loop.ticks,
+                    "imu_consumer_seq": imu_seq,
+                    "imu_cell_seq": imu_cell.get()[1],
+                    "frame_consumer_seq": frame_seq,
+                    "frame_cell_seq": frame_cell.get()[1],
+                    "imu_gap_s": supervisor.watchdog.gap_s("imu"),
+                    "frame_gap_s": supervisor.watchdog.gap_s("frame"),
+                })
+
             fresh = det_cell.get_if_newer(det_seq)
             if fresh is not None:
                 detection, det_seq = fresh
