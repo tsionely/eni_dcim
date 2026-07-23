@@ -1,0 +1,12 @@
+{
+    "vz_cap_mps":  1.2,
+    "exact_head_flown":  "6e1d8cbfc0f8611aadd51ea13073a2f746e8d37e",
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=false --patch planner.commit.vz_cap_mps=1.2 --patch planner.approach.speed_far_mps=1.5 --patch planner.approach.speed_near_mps=1.0 --patch planner.retreat.speed_mps=0.8",
+    "terminal_enable":  false,
+    "config":  "B-slow-blind",
+    "speed_far_mps":  1.5,
+    "retreat_speed_mps":  0.8,
+    "cohort_start_head":  "34c1a77987de2c40252890446f22cd0180ad22c6",
+    "speed_near_mps":  1,
+    "commit_speed_mps":  1.8
+}
