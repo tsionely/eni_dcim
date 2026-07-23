@@ -431,6 +431,16 @@ it is examined and installed:
 4. If the update ships patch notes, they are read FIRST — physics,
    track, and interface changes reprioritize everything above.
 
+IDENTIFIED (2026-07-23): the update is "AI-GP Simulator
+v1.0.3390.zip" (2.0 GB, Drive). Installed base is v1.0.3385 (the
+version the velocity_backend frame probe and ALL 100+ archived runs
+were measured on). INSTALL ORDER: extract to a NEW directory
+alongside 3385 — never overwrite; 3385 is the race-day rollback if
+3390 proves broken and the organizers permit. INVENTORY before any
+flight: version strings, changed-file diff vs 3385 (names, sizes,
+hashes), any README/CHANGELOG/notes inside the zip — pushed to the
+repo before the first 3390 flight.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
