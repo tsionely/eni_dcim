@@ -33,20 +33,31 @@ file is your complete state; trust it over any memory.
   trio. The governing plan: docs/racing/COMPETITION_PLAN.md
   (read the SIM-UPDATE PROTOCOL and R1j sections).
 
-## CURRENT TASK (do this now, in order)
+## CURRENT TASK — FLIGHTS RELEASED (updated 2026-07-23)
 
-1. Extract both pilot-example archives (tiny):
-   - PyAIPilotExample-v2.zip (from the 3385 bundle)
-   - PyAIPilotExample-v4.zip (from the 3390 bundle)
-2. Commit BOTH full source trees (every file, .py included) to:
-   docs/racing/sim_v3390_inventory/pilot_example_v2/
-   docs/racing/sim_v3390_inventory/pilot_example_v4/
-3. Push, verify HEAD == origin/main, STOP. NO simulator launch,
-   NO flights. The lead diffs the interface and releases (or
-   amends) the validation trio next.
+The interface diff verdict is in (legacy path, no code change; see
+the plan). The amended R1j validation trio is RELEASED on sim
+v1.0.3390. Launch procedure, hardened by the diag evidence:
 
-## Next tasks after release (do NOT start until tasked)
-
-- Amended R1j validation trio ON 3390 (definitions in the plan:
-  harm-clean vs mechanism-exercising; 6-run cap; any harm = stop).
-- Then the 10-run block on config B (1.8 + cap 1.2).
+1. SIM LOCK, then launch FlightSim.exe from the 3390 root.
+2. FOREGROUND GUARD: dismiss Start/Explorer; SetForegroundWindow on
+   the game window BY PROCESS OWNERSHIP; verify foreground HWND.
+3. LOGIN GATE: if the login dialog shows, assert BOTH fields are
+   PREFILLED (email region matches tsionely@gmail.com >= 0.80 AND
+   password shows non-empty masked dots) -> click SUBMIT once, wait
+   up to 20s. If EITHER field is empty, or login reappears after a
+   submit -> screenshot + STOP + cleanup: credential ENTRY is the
+   owner's step, never yours.
+4. BANNER ASSERTION: "AI GP 1.0.3390" region >= 0.80 before any
+   event-selection click. Fail -> screenshot + STOP.
+5. Event selection to the R2-TRAINING qualifier; verify race GO
+   (race_start_boot_time_ms != -1, live IMU).
+6. VALIDATION TRIO: config B,
+   --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2
+   label raceprep-r1j3390-val-runN. Rules in the plan's R1j
+   VALIDATION AMENDMENT: harm-clean vs mechanism-exercising, trio
+   completes on 3 harm-clean incl >=1 exercising, 6-run cap, any
+   harm = hard stop. Push per-run with log-header (sim path +
+   "1.0.3390" + exact_head_flown).
+7. Trio complete -> 10-run block, same config, raceprep-r1j3390-B-runN.
+8. On ANY stop: release the SIM LOCK, kill holder, report.
