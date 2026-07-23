@@ -1,0 +1,11 @@
+{
+  "abort_bucket_rule": "grinding timeout first; clip budget/gate clips second; env_NO_GATE_IN_VIEW; env_FAR_STRUCTURE_or_hangar; env_NEAR/env_MID as near_structure; other",
+  "closest_dz_rule": "true_world_dz reported only when Euclidean closest_range_m <= 2.5; closest_range_m always reported",
+  "commit_attempt_rule": "count transitions into setpoint.phase == commit",
+  "generated_at_utc": "2026-07-23T05:56:31.518966+00:00",
+  "python_executable": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+  "r1h_fixture_count": 10,
+  "repo_head": "c599a0b8b4f2fd33929b9d31f5b52e47ef047c8d",
+  "scope": "replay/CSV only; no simulator launch",
+  "true_world_dz_import": "aigp.planning.approach.true_world_dz"
+}

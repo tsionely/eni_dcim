@@ -1,0 +1,6 @@
+prediction,r1h_value,control_value,verdict
+blind_structure_total shrinks vs R1f-B-control,7,1,FAIL
+median_survival_time_s rises vs R1f-B-control,14.534040,12.628331,PASS
+blind_structure_total shrinks vs R1d-control,7,0,FAIL
+median_survival_time_s rises vs R1d-control,14.534040,9.969068,PASS
+passes >= 2/10,1,2,FAIL
