@@ -1,0 +1,11 @@
+{
+    "vz_cap_mps":  1.2,
+    "exact_head_flown":  "dee04716a5e31410e86c9f8993c04a7531b9927c",
+    "approach_speeds":  "defaults",
+    "terminal_enable":  false,
+    "config":  "B-estimator-amnesia",
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.terminal.enable=false --patch planner.commit.vz_cap_mps=1.2 --patch estimation.vel_leak=0.01",
+    "speed_mps":  1.8,
+    "cohort_start_head":  "d95bbc2d24741767ffa2be919f72b3db048129f5",
+    "vel_leak":  0.01
+}
