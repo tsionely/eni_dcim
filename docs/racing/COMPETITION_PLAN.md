@@ -485,6 +485,37 @@ option: flying a version the organizers withdrew is a
 disqualification risk taken blind. All tuning, validation, and the
 freeze target 3390 from here on.
 
+### R1j-3390 TRIO VERDICT + THE GATED CONSEQUENCE (2026-07-23)
+
+The 3390 launch chain works end-to-end (val-run2: PID-based window
+discovery, event templates 1.000, RACE click, race GO, live IMU,
+RACING). Val-run1: harm-clean, non-exercising (the missing RACE
+click — orchestrator defect, fixed at 07695a7). Val-run2: mechanism
+exercised in real flight (125 blind_hold search ticks) AND the first
+collision occurred inside a blind_hold stretch — **NOT harm-clean by
+the registered letter. Sakana's hard stop honored: THE TRIO FAILED;
+the fix does not enter the default config.** No post-hoc amendment.
+
+CONSEQUENCE EXECUTED literally: blind_hold is now CONFIG-GATED,
+default OFF (`planner.search.blind_hold_enable`, params_default
+false; race_planner gates all three flag sites; planner tests updated
+— default-off asserted, enabled-path asserted; suite 230 green).
+The default build behaves pre-fix; the mechanism remains available
+under an explicit patch for outcome-judged evaluation.
+
+## Phase R1k — 3390 baseline A/B on the blind-hold flag (registered before results)
+
+The race-config decision on the race sim, judged by OUTCOMES (the
+per-tick harm letter served its purpose in validation and is not the
+race criterion). 10 runs, config B core (1.8 + cap 1.2), alternating:
+  odd runs  FLAG OFF (default — pre-fix behavior)
+  even runs FLAG ON  (--patch planner.search.blind_hold_enable=true)
+DECISION RULE (registered now): more gate passes wins; tie -> fewer
+collision aborts; tie -> longer median survival; clip-budget aborts
+do not disqualify. The winner is the RACE CONFIG for the freeze path
+(reliability gate still governs any speed work). This block doubles
+as the 3390 baseline for the reliability-gate assessment.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is

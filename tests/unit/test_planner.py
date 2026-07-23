@@ -588,18 +588,31 @@ def test_track_applied_vz_makes_handback_bumpless():
     assert sp.v_body[2] >= 0.5 - 0.16               # one slew step at most
 
 
-def test_search_setpoints_carry_blind_hold():
-    # Gate-is-None search must flag blind_hold: the horizontal velocity
-    # estimate has no vision anchor there (R1h phantom-hover measurement).
+def planner_bh():
+    return RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.search.blind_hold_enable": True}))
+
+
+def test_search_blind_hold_default_off():
+    # The r1j3390 trio failed its harm-clean letter, so the fix does not
+    # enter the default config: gate-is-None search carries blind_hold
+    # False unless explicitly enabled.
     sp = planner().plan(0, "race", make_state(), None)
+    assert sp.phase == "search"
+    assert sp.blind_hold is False
+
+
+def test_search_setpoints_carry_blind_hold_when_enabled():
+    sp = planner_bh().plan(0, "race", make_state(), None)
     assert sp.phase == "search"
     assert sp.blind_hold is True
 
 
 def test_retrace_search_is_not_blind_hold():
     # The retrace variant commands real motion along the known-clear
-    # inbound tangent — the velocity loop must track it.
-    p = planner()
+    # inbound tangent — the velocity loop must track it (even when the
+    # blind-hold flag is enabled).
+    p = planner_bh()
     p._blind_hold_ns = 0
     p._last_seen_side = 1.0
     t_after = int((p.blind_hold_s + 0.5) * 1e9)

@@ -31,6 +31,13 @@ class RacePlanner:
         self.takeoff_climb = float(p.get("planner.takeoff.climb_mps"))
         self.search_yaw_rate = float(p.get("planner.search.yaw_rate_rps"))
         self.search_climb = float(p.get("planner.search.climb_mps"))
+        # Blind-hold is CONFIG-GATED, default OFF: the r1j3390 validation
+        # trio failed its registered harm-clean letter (val-run2: first
+        # collision inside a blind_hold stretch), so per that protocol the
+        # fix does not enter the default config. The mechanism stays
+        # available for outcome-judged A/B under an explicit patch.
+        self.search_blind_hold = bool(p.get(
+            "planner.search.blind_hold_enable", default=False))
         self.speed_far = float(p.get("planner.approach.speed_far_mps"))
         self.speed_near = float(p.get("planner.approach.speed_near_mps"))
         self.near_distance = float(p.get("planner.approach.near_distance_m"))
@@ -384,7 +391,7 @@ class RacePlanner:
                         return self._retreat_setpoint(state)
                     return Setpoint(phase="search",
                                     v_body=np.zeros(3),
-                                    blind_hold=True,
+                                    blind_hold=self.search_blind_hold,
                                     yaw_rate=self.search_yaw_rate
                                     * self._last_seen_side)
                 if gate is not None:
@@ -559,12 +566,12 @@ class RacePlanner:
                 # loop must track; only the zero-horizontal hold is blind.
                 hold = bool(abs(float(v[0])) < 1e-9 and abs(float(v[1])) < 1e-9)
                 return Setpoint(phase="search", v_body=v, yaw_rate=float(rate),
-                                blind_hold=hold)
+                                blind_hold=hold and self.search_blind_hold)
             return Setpoint(
                 phase="search",
                 v_body=np.array([0.0, 0.0, -self.search_climb]),
                 yaw_rate=self.search_yaw_rate * self._last_seen_side,
-                blind_hold=True,
+                blind_hold=self.search_blind_hold,
             )
 
         # -- approach
