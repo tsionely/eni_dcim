@@ -181,7 +181,12 @@ class RaceManager:
                           FlightState.THROTTLE_DOWN):
             stale = self.watchdog.stale_channels(now)
             if stale:
-                self._abort(f"stale channels: {', '.join(stale)}")
+                # Carry the measured gap in the reason: T2a's six stale-imu
+                # aborts sat over logs with a CONTINUOUS imu stream — the
+                # number the watchdog saw is the discriminating evidence.
+                detail = ", ".join(
+                    f"{n}({self.watchdog.gap_s(n, now):.3f}s)" for n in stale)
+                self._abort(f"stale channels: {detail}")
             elif now - self._t_flight_start > self.flight_timeout_s:
                 self._abort("flight timeout")
 

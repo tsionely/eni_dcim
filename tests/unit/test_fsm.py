@@ -146,3 +146,14 @@ def test_arming_retries_then_times_out(manager):
     time.sleep(1.05)
     manager.tick(hb(False), None, [])
     assert manager.io.arm_calls == 2   # initial + one retry
+
+
+def test_watchdog_gap_reported_in_stale_abort_reason():
+    # T2a forensics: the abort reason must carry the measured gap.
+    from aigp.supervisor.watchdog import Watchdog
+    w = Watchdog()
+    w.register("imu", 0.25)
+    w.feed("imu", now=100.0)
+    assert w.gap_s("imu", now=100.4) == pytest.approx(0.4)
+    assert w.stale_channels(now=100.4) == ["imu"]
+    assert w.stale_channels(now=100.2) == []

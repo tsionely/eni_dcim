@@ -32,6 +32,15 @@ class Watchdog:
         for name in self._thresholds:
             self._last_feed.setdefault(name, now)
 
+    def gap_s(self, name: str, now: float | None = None) -> float | None:
+        """Observed staleness gap for a channel (diagnostic; T2a forensics:
+        six stale-imu aborts whose logs show a continuous stream — the
+        abort message must carry the gap the watchdog actually saw)."""
+        if now is None:
+            now = time.monotonic()
+        last = self._last_feed.get(name)
+        return None if last is None else now - last
+
     def stale_channels(self, now: float | None = None) -> list[str]:
         if now is None:
             now = time.monotonic()
