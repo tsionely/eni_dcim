@@ -1,0 +1,13 @@
+{
+  "label": "raceprep-r1k-off-run3",
+  "stage": "r1k",
+  "run": 3,
+  "variant": "off",
+  "event": "r2training",
+  "config": "B speed1.8 vz1.2 terminal-off blind-hold-off",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "cf9a0175bf68a359b634a396cfc5fc5296f1dee3",
+  "flight_id": "20260723T191638-c789aedf",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-r1k-off-run3 -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false"
+}
