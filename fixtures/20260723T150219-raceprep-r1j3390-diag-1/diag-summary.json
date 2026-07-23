@@ -1,0 +1,57 @@
+{
+    "flight_id":  "20260723T150217-1d8b4339",
+    "result":  {
+                   "finished":  false,
+                   "aborted":  true,
+                   "abort_reason":  "stale channels: imu",
+                   "gates_passed":  0,
+                   "lap_time_s":  null,
+                   "gate_clips":  0,
+                   "env_hits":  0,
+                   "duration_s":  0.0880582999670878,
+                   "loop_overrun_frac":  0.0,
+                   "loop_stats":  {
+                                      "ticks":  22,
+                                      "overruns":  0,
+                                      "overrun_frac":  0.0,
+                                      "max_late_us":  0
+                                  },
+                   "flight_id":  "20260723T150217-1d8b4339",
+                   "log_dir":  "logs\\20260723T150217-1d8b4339"
+               },
+    "heartbeat_count":  11,
+    "heartbeat_armed_true":  1,
+    "imu_msg_count":  0,
+    "race_records":  5,
+    "race_start_ms_distinct":  [
+                                   -1
+                               ],
+    "race_ever_armed":  false,
+    "reached_ARMING":  true,
+    "reached_THROTTLE_DOWN":  true,
+    "reached_TAKEOFF":  false,
+    "reached_RACING":  false,
+    "last_setpoint_phase":  "hover",
+    "fsm_transitions":  [
+                            [
+                                "IDLE",
+                                "ARMING",
+                                "flight start"
+                            ],
+                            [
+                                "ARMING",
+                                "THROTTLE_DOWN",
+                                "armed"
+                            ],
+                            [
+                                "THROTTLE_DOWN",
+                                "ABORTED",
+                                "stale channels: imu"
+                            ],
+                            [
+                                "ABORTED",
+                                "DONE",
+                                "flight over"
+                            ]
+                        ]
+}

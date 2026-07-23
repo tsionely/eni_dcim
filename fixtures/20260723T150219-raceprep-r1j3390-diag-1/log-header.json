@@ -1,0 +1,9 @@
+{
+    "event":  "r2training",
+    "config":  "B speed1.8 vz1.2 defaults",
+    "exact_head_flown":  "ce3a774be4e6a001758857da8490b8f69efc231a",
+    "sim_exe":  "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+    "stage":  "diag",
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2",
+    "sim_version":  "1.0.3390"
+}

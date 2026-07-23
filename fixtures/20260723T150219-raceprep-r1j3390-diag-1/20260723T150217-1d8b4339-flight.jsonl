@@ -1,0 +1,31 @@
+{"mono_ns": 495610219896000, "topic": "heartbeat", "data": {"ts_ns": 1784818937659723600, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610223726600, "topic": "race", "data": {"ts_ns": 1784818937663560200, "sim_boot_time_ms": 48133, "race_start_boot_time_ms": -1, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 495610320923200, "topic": "heartbeat", "data": {"ts_ns": 1784818937760826820, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610422495200, "topic": "heartbeat", "data": {"ts_ns": 1784818937862466250, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610474912800, "topic": "race", "data": {"ts_ns": 1784818937914817420, "sim_boot_time_ms": 48384, "race_start_boot_time_ms": -1, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 495610523505800, "topic": "heartbeat", "data": {"ts_ns": 1784818937963410320, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610624162600, "topic": "heartbeat", "data": {"ts_ns": 1784818938064002400, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610724826100, "topic": "heartbeat", "data": {"ts_ns": 1784818938164585448, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610726035600, "topic": "race", "data": {"ts_ns": 1784818938165784848, "sim_boot_time_ms": 48635, "race_start_boot_time_ms": -1, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 495610825849700, "topic": "heartbeat", "data": {"ts_ns": 1784818938265576150, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610926681500, "topic": "heartbeat", "data": {"ts_ns": 1784818938366400588, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495610976755700, "topic": "race", "data": {"ts_ns": 1784818938416481550, "sim_boot_time_ms": 48886, "race_start_boot_time_ms": -1, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 495611027660900, "topic": "heartbeat", "data": {"ts_ns": 1784818938467386650, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495611128594200, "topic": "heartbeat", "data": {"ts_ns": 1784818938568313788, "armed": false, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495611148444500, "topic": "fsm", "data": {"ts_ns": 1784818938588153750, "src": "IDLE", "dst": "ARMING", "reason": "flight start"}}
+{"mono_ns": 495611152508200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 495611152518800, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false}}
+{"mono_ns": 495611168549200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 495611168563900, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false}}
+{"mono_ns": 495611188521100, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 495611188533300, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false}}
+{"mono_ns": 495611208514800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 495611208527100, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false}}
+{"mono_ns": 495611227609600, "topic": "race", "data": {"ts_ns": 1784818938667324450, "sim_boot_time_ms": 49137, "race_start_boot_time_ms": -1, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 495611228476500, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 495611228487400, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false}}
+{"mono_ns": 495611228649500, "topic": "heartbeat", "data": {"ts_ns": 1784818938668367450, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 495611232473400, "topic": "fsm", "data": {"ts_ns": 1784818938672183350, "src": "ARMING", "dst": "THROTTLE_DOWN", "reason": "armed"}}
+{"mono_ns": 495611236476300, "topic": "fsm", "data": {"ts_ns": 1784818938676188150, "src": "THROTTLE_DOWN", "dst": "ABORTED", "reason": "stale channels: imu"}}
+{"mono_ns": 495611236488100, "topic": "fsm", "data": {"ts_ns": 1784818938676209250, "src": "ABORTED", "dst": "DONE", "reason": "flight over"}}
+{"mono_ns": 495611236512500, "topic": "loop_stats", "data": {"ts_ns": 1784818938676227350, "ticks": 22, "overruns": 0, "max_late_us": 0}}
