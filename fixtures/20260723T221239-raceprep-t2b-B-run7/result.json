@@ -1,0 +1,19 @@
+{
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "stale channels: imu(0.252s)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 2,
+  "env_hits": 0,
+  "duration_s": 49.91201450000517,
+  "loop_overrun_frac": 0.006731848052572527,
+  "loop_stats": {
+    "ticks": 12478,
+    "overruns": 84,
+    "overrun_frac": 0.006731848052572527,
+    "max_late_us": 17024
+  },
+  "flight_id": "20260723T221125-82efa9c1",
+  "log_dir": "logs\\20260723T221125-82efa9c1"
+}
