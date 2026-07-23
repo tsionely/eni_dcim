@@ -1,0 +1,109 @@
+{
+  "run": 1,
+  "variant": "off",
+  "flight_id": "20260723T182031-c789aedf",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=2.8)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 5,
+  "duration_s": 29.92407219996676,
+  "loop_overrun_frac": 0.008287662077262397,
+  "loop_stats": {
+    "ticks": 7481,
+    "overruns": 62,
+    "overrun_frac": 0.008287662077262397,
+    "max_late_us": 7135
+  },
+  "log_dir": "logs\\20260723T182031-c789aedf",
+  "imu_records": 3289,
+  "search_ticks": 366,
+  "blind_hold_true_search_ticks": 0,
+  "collision_records": 5,
+  "blind_hold_collision_records": 0,
+  "search_environment_collision_records": 2,
+  "race_start_observed": true,
+  "race_start_boot_time_ms": 3864271,
+  "reached_arming": true,
+  "reached_throttle_down": true,
+  "reached_takeoff": true,
+  "reached_racing": true,
+  "harm_clean": false,
+  "mechanism_exercising": false,
+  "fsm_transitions": [
+    {
+      "src": "IDLE",
+      "dst": "ARMING",
+      "reason": "flight start"
+    },
+    {
+      "src": "ARMING",
+      "dst": "THROTTLE_DOWN",
+      "reason": "armed"
+    },
+    {
+      "src": "THROTTLE_DOWN",
+      "dst": "TAKEOFF",
+      "reason": "race GO"
+    },
+    {
+      "src": "TAKEOFF",
+      "dst": "RACING",
+      "reason": "takeoff complete"
+    },
+    {
+      "src": "RACING",
+      "dst": "ABORTED",
+      "reason": "environment collision (impulse=2.8)"
+    },
+    {
+      "src": "ABORTED",
+      "dst": "DONE",
+      "reason": "flight over"
+    }
+  ],
+  "collisions": [
+    {
+      "mono_ns": 507530213060400,
+      "collision_id": 1002,
+      "impulse": 0.17543788254261017,
+      "threat": 1,
+      "phase": "search",
+      "blind_hold": false
+    },
+    {
+      "mono_ns": 507530213108800,
+      "collision_id": 1002,
+      "impulse": 0.2642335593700409,
+      "threat": 1,
+      "phase": "search",
+      "blind_hold": false
+    },
+    {
+      "mono_ns": 507530222444800,
+      "collision_id": 1002,
+      "impulse": 0.4325394630432129,
+      "threat": 1,
+      "phase": "recover",
+      "blind_hold": false
+    },
+    {
+      "mono_ns": 507530229574600,
+      "collision_id": 1002,
+      "impulse": 0.6602240800857544,
+      "threat": 1,
+      "phase": "recover",
+      "blind_hold": false
+    },
+    {
+      "mono_ns": 507534703471800,
+      "collision_id": 1002,
+      "impulse": 2.792689085006714,
+      "threat": 2,
+      "phase": "commit",
+      "blind_hold": false
+    }
+  ]
+}
