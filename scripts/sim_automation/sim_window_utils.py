@@ -26,15 +26,77 @@ def win(title):
     return m[0] if m else None
 
 
+def _game_pids():
+    """PIDs of the real sim processes (FlightSim / DCGame).
+
+    Title-based discovery also matches a File Explorer window open on a
+    folder named "AI-GP Simulator v..." — the val-run1 event-fail capture
+    shows exactly that trap. Process ownership cannot be spoofed by a
+    folder name.
+    """
+    out = subprocess.run(["tasklist", "/FO", "CSV", "/NH"],
+                         capture_output=True, text=True).stdout
+    pids = []
+    for line in out.splitlines():
+        parts = [p.strip('"') for p in line.split('","')]
+        if parts and parts[0].lower() in ("flightsim.exe",
+                                          "dcgame-win64-shipping.exe"):
+            try:
+                pids.append(int(parts[1]))
+            except (IndexError, ValueError):
+                pass
+    return pids
+
+
+def _hwnds_for_pids(pids):
+    """Visible top-level windows owned by the given PIDs."""
+    import ctypes
+    from ctypes import wintypes
+    user32 = ctypes.windll.user32
+    found = []
+
+    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    def _cb(hwnd, _lparam):
+        if user32.IsWindowVisible(hwnd):
+            pid = wintypes.DWORD()
+            user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+            if pid.value in pids:
+                found.append(hwnd)
+        return True
+
+    user32.EnumWindows(_cb, 0)
+    return found
+
+
 def sim_window(ensure_visible: bool = False):
-    """Find the AI-GP sim window (title changed in v1.0.3379 from bare 'AI-GP')."""
+    """Find the AI-GP sim window BY PROCESS OWNERSHIP; title is fallback.
+
+    Fails fast with SIM_NOT_RUNNING when no FlightSim/DCGame process
+    exists — clicking blind at a captured desktop was the val-run1
+    failure mode.
+    """
     import re
 
-    candidates = [
-        w for w in gw.getAllWindows()
-        if w.title.strip() == "AI-GP"
-        or w.title.strip().startswith("AI-GP Simulator")
-    ]
+    pids = _game_pids()
+    if not pids:
+        print("SIM_NOT_RUNNING: no FlightSim/DCGame process found — "
+              "launch the sim (and log in) first", flush=True)
+        return None
+    owned = []
+    for h in _hwnds_for_pids(pids):
+        try:
+            owned.append(gw.Win32Window(h))
+        except Exception:
+            pass
+    candidates = [w for w in owned if w.width > 200 and w.height > 200] or owned
+    if not candidates:
+        # Process exists but no sizable window surfaced (startup/minimized
+        # edge) — fall back to the legacy title match.
+        candidates = [
+            w for w in gw.getAllWindows()
+            if w.title.strip() == "AI-GP"
+            or w.title.strip().startswith("AI-GP Simulator")
+        ]
     if not candidates:
         return None
 
