@@ -62,6 +62,38 @@ pass band (+-0.12m). FAILURE READ: if vision-to-the-plane remains
 the separator and passes stay rare, the next lever is perception
 continuity in the last meter (close-tracker band), not control.
 
+### T2a + T2b RESULTS + THE 0.252 FORENSICS (recorded 2026-07-23)
+
+T2a (imu 0.25): **2/6 gates** (first multi-pass block ever), 0 env
+collisions, median survival 44.3s — and 6/6 stale-imu deaths.
+T2b (adds blind_vz_zero): **2/8 gates**, no gain over control — the
+blind-vz-zero lever earned nothing at this n and STAYS default OFF
+(prediction ">=2/8" met by the letter at exactly 2/8; the control
+comparison is the honest verdict). Codex tally 5a3b96f verified.
+
+THE FORENSICS, four layers deep, all pushed evidence: the IMU
+stream is CONTINUOUS to the abort (max inter-arrival gap 0.05s),
+timestamps advance to the last sample, the loop never stalled
+(max_late 32ms), the bus cell is seq-correct — and the instrumented
+watchdog reports the gap as EXACTLY imu(0.252s), six times
+identical. And the codebase already knows this disease:
+main.py:118 — Windows mock flights "die 10-30% on stale channels:
+imu" without a widened threshold; the 0.25 floor was installed for
+the mock long ago. VERDICT: a Windows-side delivery artifact in
+the 0.25-0.3 band, not a dead sensor — the stream is log-proven
+alive at the kill moment.
+
+## Phase T2c — the decisive threshold step (registered before results)
+
+R1, 8 runs, config B core (1.8 + cap 1.2) + `safety.imu_stale_s=0.6`
+(blind_vz_zero dropped — no gain measured). THE DISCRIMINATOR: if
+stale-imu deaths VANISH -> bounded delivery artifact, runway bought,
+the reliability gate is attacked on gates alone; if they RECUR at
+imu(0.602s) -> an accumulating starvation exists and the hunt moves
+into code with feed-side counters. Risk note: 0.6s on a truly dead
+sensor is a training-sim risk only; the race-day threshold is
+re-decided at freeze with the artifact's measured band in hand.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
