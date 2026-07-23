@@ -388,6 +388,30 @@ FAILURE READ: if blind deaths shrink but passes do not rise, the
 remaining wall is arrival scatter and the freeze decision is made
 on the best measured config as-is.
 
+### R1j VALIDATION AMENDMENT (2026-07-23, spec repair, registered
+before any further validation flight)
+
+Validation run 1 (be1c5a0) stopped the trio CORRECTLY under the
+letter of the protocol and exposed a defect in the protocol's own
+clean-definition: it demanded blind_hold ticks in search from a
+flight that aborted (known class, gate-clip budget, 7.76s) before
+any search stretch existed — a vacuous condition, not a mechanism
+failure. Field verification: blind_hold serializes in all 389
+setpoint records (false, correctly — no search occurred); no new
+abort class; no harm. AMENDED DEFINITION, registered now:
+- A validation run is HARM-CLEAN if: no new abort class, no
+  collision during a blind_hold stretch, no ground contact in
+  search. (A run with no search stretch can be harm-clean.)
+- A validation run is MECHANISM-EXERCISING if it contains a search
+  stretch with blind_hold=true ticks.
+- The trio COMPLETES when 3 harm-clean runs exist of which >=1 is
+  mechanism-exercising. Any harm -> hard stop, fix does not enter.
+- Cap: 6 validation runs total; if the cap is hit harm-free but
+  search never occurred, stop and report (that itself is data).
+Run 1 counts as harm-clean #1. This is a spec repair, not a
+retry-for-outcome: no run is discarded, and the harm bar is
+unchanged.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
