@@ -460,6 +460,22 @@ numpy). ORDERED: both example source trees committed and diffed
 before any flight; the trio releases only after the interface diff
 reads clean (or after adaptation if it does not).
 
+INTERFACE DIFF VERDICT (2026-07-23, trees at 2c23a95): the pilot
+example v2->v4 diff contains ONE semantic change — sim revision 3390
+adds an OPT-IN extension bit (SET_ATTITUDE_TARGET.type_mask bit 16,
+"DCL_BODY_RATES_RADS"): set -> body rates interpreted as true
+physical rad/s; unset -> legacy behaviour preserved. All other
+example files identical. Our io layer sends only
+ATTITUDE_TARGET_TYPEMASK_ATTITUDE_IGNORE (bit 7) — bit 16 unset —
+so the build gets LEGACY behaviour on 3390 automatically.
+DECISION: the race flies LEGACY (no opt-in) — every tuned sign and
+gain in the att_rate cascade was calibrated against legacy; opting
+in days before the race is a retune the freeze forbids. The opt-in
+(a saner physical interface that officially confirms our phase2a
+inverted-pitch measurement was a SIM defect) is filed as the first
+POST-RACE improvement. No code change required.
+**FLIGHTS RELEASED: the amended R1j validation trio flies on 3390.**
+
 ROLLBACK STATUS AMENDED (owner report, 2026-07-23): 3385 is no
 longer downloadable from the competition site and no
 allowed/forbidden statement exists. REGISTERED ASSUMPTION: the race
