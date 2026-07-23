@@ -307,6 +307,40 @@ read: if passes do not rise despite longer survival, the arrival
 scatter itself is the residual wall and the next step is a
 perception/consistency lever, not speed.
 
+### R1h RESULT + THE PHANTOM-HOVER MEASUREMENT (recorded 2026-07-23)
+
+R1h: **1/10** (prediction >=2/10 FAILED); blind-structure deaths
+GREW to 7/10 (vs 1 in R1f-B); survival rose (14.5s median); arrivals
+when they happened were nearly centered (true-world dz median
+-0.086m within 2.5m). Codex tally e492f0b verified. The slow-blind
+lever INVERTED: drift accumulates with TIME, and slowing doubles
+blind time. Approach speeds revert to defaults (far 3.0 / near 1.5).
+
+THE DECISIVE MEASUREMENT: in the final 2s before the killing
+collision, commanded horizontal speed = 0.00 in 9/10 runs — search
+phase, gate age stale/infinite, the planner commanding hover — and
+the vehicle translates into steel anyway. Mechanism named: when
+vision velocity disappears, estimation.vel_leak (0.05) decays the
+velocity estimate to zero; the controller believes it is stopped
+while the real velocity carried from the last maneuver glides on
+unopposed. PHANTOM HOVER. This, not gate geometry, is the
+program's dominant killer (7/10 here; 23/54 pooled).
+
+## Phase R1i — estimator amnesia test (registered before results)
+
+Config B at the best-measured regime (R1d: approach defaults,
+commit 1.8, cap 1.2) + `--patch estimation.vel_leak=0.01` (5x less
+amnesia — the controller keeps believing its IMU-integrated
+velocity when blind, and therefore actually brakes it). 10 runs.
+PREDICTIONS registered: blind-structure death class shrinks vs
+R1h's 7/10 AND vs R1d-era rates; pass rate >= 2/10. FAILURE READ
+registered: if blind deaths persist with commanded-zero mechanics
+intact, the drift source is attitude-bias not velocity amnesia, and
+the next candidate is the CODE-CLASS brake (counter-velocity pulse
+on search entry from last-known vision velocity) under the plan's
+crash-class rule: it targets the measured dominant crash mechanism,
+with 3 clean validation runs before entering any config.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
