@@ -1,0 +1,30 @@
+{
+  "ok": false,
+  "reason": "eventlist_not_reached",
+  "scores": {
+    "r1": 0.31683892011642456,
+    "r2submission": 0.3137655258178711,
+    "r2training": 0.3097080588340759
+  },
+  "boxes": {
+    "r1": [
+      47,
+      734,
+      639,
+      54
+    ],
+    "r2submission": [
+      45,
+      227,
+      639,
+      54
+    ],
+    "r2training": [
+      45,
+      227,
+      639,
+      54
+    ]
+  },
+  "eventlist": "C:\\Users\\tsion\\AppData\\Local\\Temp\\phase5b_r2_shots\\raceprep-r1j3390-val-run1\\raceprep-r1j3390-val-run1_eventlist.png"
+}
