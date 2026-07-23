@@ -627,3 +627,38 @@ def test_active_phases_never_blind_hold():
                                               center_px=(320, 180)), None)
     assert sp.phase == "approach"
     assert sp.blind_hold is False
+
+
+def test_blind_commit_vz_freezes_to_zero_when_enabled():
+    # T2b: with blind_vz_zero on, a stale-evidence commit tick must drive
+    # the vertical toward ZERO (slew-decayed) instead of chasing the
+    # fossil dead-reckoned dz (the measured +0.47m blind climb).
+    p = RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.commit.blind_vz_zero": True}))
+    # Enter commit on a fresh, vertically-offset gate (drone believes low).
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.4, 1.5],
+                                 center_px=(320, 300)), None)
+    # Stale tick inside the blind window (age > blind_age_s 0.3,
+    # < entry_max_age_s 0.6): vertical must decay toward 0.
+    sps = []
+    for i in range(1, 30):
+        sps.append(p.plan(int(i * 0.02e9), "race",
+                          make_state(gate_t=[0.0, 0.4, 1.5],
+                                     center_px=(320, 300), age_s=0.4), None))
+    assert sps[-1].phase == "commit"
+    assert abs(sps[-1].v_body[2]) < 0.05
+
+
+def test_blind_commit_vz_chases_dz_when_disabled():
+    # Default behavior preserved: the same stale ticks keep a nonzero
+    # vertical command (the hold chasing the dead-reckoned offset).
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.4, 1.5],
+                                 center_px=(320, 300)), None)
+    sps = []
+    for i in range(1, 30):
+        sps.append(p.plan(int(i * 0.02e9), "race",
+                          make_state(gate_t=[0.0, 0.4, 1.5],
+                                     center_px=(320, 300), age_s=0.4), None))
+    assert sps[-1].phase == "commit"
+    assert abs(sps[-1].v_body[2]) > 0.05

@@ -109,6 +109,7 @@
     },
     "commit": {
       "abort_min_dist_m": 0.8,
+      "blind_vz_zero": false,
       "brake_decel_mps2": 2.6,
       "brake_react_s": 0.0,
       "distance_m": 6.5,

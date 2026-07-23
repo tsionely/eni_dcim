@@ -59,6 +59,12 @@ class RacePlanner:
         self.blind_climb_bias = float(p.get("planner.commit.blind_climb_bias_mps",
                                             default=0.1))
         self.blind_age_s = float(p.get("planner.commit.blind_age_s", default=0.3))
+        # T2b lever, config-gated default OFF: level blind crossing —
+        # zero the vertical target when commit evidence is stale instead
+        # of chasing the fossil dead-reckoned dz (the measured +0.47m
+        # blind climb in the t2r1-B-run2 stall vs near-level passes).
+        self.blind_vz_zero = bool(p.get("planner.commit.blind_vz_zero",
+                                        default=False))
         self.retreat_climb_bias = float(p.get("planner.retreat.climb_bias_mps",
                                               default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
@@ -480,30 +486,45 @@ class RacePlanner:
                         return self._retreat_setpoint(state)
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
-                    extra[2] += ap.altitude_hold_velocity(
-                        gate, state.q_att, au, self.alt_gain,
-                        level_roll=state.level_roll,
-                        level_pitch=state.level_pitch)
-                    # No-arm rule: the sink insurance is decided ONCE, at
-                    # gap entry, by the state the last fixes left behind —
-                    # if the altitude hold is already commanding a climb
-                    # there, insurance is VETOED (F1's +1m overfly was
-                    # exactly hold-climb + insurance-climb stacking blind).
-                    if state.gate_rel_age_s <= self.blind_age_s:
-                        self._gap_bias = None            # seeing: disarmed
-                    elif self._gap_bias is None:
-                        # TOP-UP, not binary veto (phase5c: the binary
-                        # veto killed insurance whenever the hold climbed
-                        # at all, and all three flights arrived LOW):
-                        # insurance only fills the gap between the hold's
-                        # climb at entry and the insured sink rate. F1's
-                        # overfly case still gets zero (hold -0.72 >> 0.1).
-                        climb = max(0.0, -float(extra[2]))   # NED: -z up
-                        self._gap_bias = max(0.0, self.blind_climb_bias - climb)
-                    v_next = direction * self.commit_speed + extra
-                    v_next[2] = self._damp_commit_vz(
-                        float(v_next[2]), tdz - au, now_ns,
-                        insurance=self._gap_bias or 0.0)
+                    blind_now = state.gate_rel_age_s > self.blind_age_s
+                    if self.blind_vz_zero and blind_now:
+                        # T2b (ADVISORY-36 change #1, vertical member +
+                        # the crossing autopsy 7cbce47): in the blind
+                        # final traverse the dead-reckoned dz is FOSSIL —
+                        # the hold chased it +0.47m upward in the t2r1
+                        # stall's last blind 0.5s and clipped the frame,
+                        # while every completed pass arrived near-level.
+                        # Cross LEVEL on momentum: vertical target zero
+                        # (slew decays residual trim), insurance disarmed.
+                        self._gap_bias = None
+                        v_next = direction * self.commit_speed + extra
+                        v_next[2] = self._damp_commit_vz(0.0, 0.0, now_ns)
+                    else:
+                        extra[2] += ap.altitude_hold_velocity(
+                            gate, state.q_att, au, self.alt_gain,
+                            level_roll=state.level_roll,
+                            level_pitch=state.level_pitch)
+                        # No-arm rule: the sink insurance is decided ONCE, at
+                        # gap entry, by the state the last fixes left behind —
+                        # if the altitude hold is already commanding a climb
+                        # there, insurance is VETOED (F1's +1m overfly was
+                        # exactly hold-climb + insurance-climb stacking blind).
+                        if not blind_now:
+                            self._gap_bias = None        # seeing: disarmed
+                        elif self._gap_bias is None:
+                            # TOP-UP, not binary veto (phase5c: the binary
+                            # veto killed insurance whenever the hold climbed
+                            # at all, and all three flights arrived LOW):
+                            # insurance only fills the gap between the hold's
+                            # climb at entry and the insured sink rate. F1's
+                            # overfly case still gets zero (hold -0.72 >> 0.1).
+                            climb = max(0.0, -float(extra[2]))   # NED: -z up
+                            self._gap_bias = max(0.0,
+                                                 self.blind_climb_bias - climb)
+                        v_next = direction * self.commit_speed + extra
+                        v_next[2] = self._damp_commit_vz(
+                            float(v_next[2]), tdz - au, now_ns,
+                            insurance=self._gap_bias or 0.0)
                     self._commit_v_body = v_next
                 yaw = 0.0
                 if gate is not None and gate.t[2] > 0.3:
