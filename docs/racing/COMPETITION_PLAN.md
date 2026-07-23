@@ -29,6 +29,15 @@ R1k (3390 blind-hold A/B) is PAUSED, not canceled — it re-enters at
 T3 if the flag question is still open. All prior plan sections below
 remain the record; the reliability gate transfers to T2.
 
+R1K PARTIAL RECORD (5 of 10 flown, stopped by Sakana honoring the
+pause mid-block — correct precedence, plan over chat): OFF runs
+1,3,5 -> gates 0,1,0 (run 3: THE FIRST GATE PASS ON 3390, impulse
+14.8 abort after); ON runs 2,4 -> gates 0,0. All environment
+collisions. Note for T1: survival times on 3390 (21-30s) run longer
+than the 3385-era band (8-17s) — worth a truth-referenced look at
+what changed. No A/B conclusion from n=5; the flag question moves
+to T3 as registered.
+
 MISSION: win the race. The acceptance test for every decision this
 week is SIM RUNS ON R2-TRAINING — gates passed, then time. No
 criterion machinery on race decisions; engineering triage only.
