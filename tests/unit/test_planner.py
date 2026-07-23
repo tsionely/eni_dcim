@@ -586,3 +586,31 @@ def test_track_applied_vz_makes_handback_bumpless():
                 None)
     assert sp.phase == "commit"
     assert sp.v_body[2] >= 0.5 - 0.16               # one slew step at most
+
+
+def test_search_setpoints_carry_blind_hold():
+    # Gate-is-None search must flag blind_hold: the horizontal velocity
+    # estimate has no vision anchor there (R1h phantom-hover measurement).
+    sp = planner().plan(0, "race", make_state(), None)
+    assert sp.phase == "search"
+    assert sp.blind_hold is True
+
+
+def test_retrace_search_is_not_blind_hold():
+    # The retrace variant commands real motion along the known-clear
+    # inbound tangent — the velocity loop must track it.
+    p = planner()
+    p._blind_hold_ns = 0
+    p._last_seen_side = 1.0
+    t_after = int((p.blind_hold_s + 0.5) * 1e9)
+    sp = p.plan(t_after, "race", make_state(), None)
+    assert sp.phase == "search"
+    assert np.linalg.norm(sp.v_body[:2]) > 0.0
+    assert sp.blind_hold is False
+
+
+def test_active_phases_never_blind_hold():
+    sp = planner().plan(0, "race", make_state(gate_t=[0.0, 0.0, 8.0],
+                                              center_px=(320, 180)), None)
+    assert sp.phase == "approach"
+    assert sp.blind_hold is False

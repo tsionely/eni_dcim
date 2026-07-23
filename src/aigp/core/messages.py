@@ -162,6 +162,11 @@ class Setpoint:
     phase: str                 # "idle" | "takeoff" | "search" | "approach" | "align" | "commit" | "retreat" | "recover" | "hover"
     v_body: np.ndarray         # desired velocity, body frame [m/s], shape (3,)
     yaw_rate: float            # desired yaw rate [rad/s]
+    # Blind-search hold: no vision anchor exists for the velocity estimate,
+    # so tracking a zero-velocity command steers real motion (the measured
+    # phantom-hover glide at vel_leak 0.05 / runaway chase at 0.01). The
+    # attitude backend holds LEVEL on this flag instead of chasing velocity.
+    blind_hold: bool = False
 
 
 # ---------------------------------------------------------------------------

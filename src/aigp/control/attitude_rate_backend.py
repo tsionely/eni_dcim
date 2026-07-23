@@ -59,8 +59,21 @@ class AttitudeRateBackend(ControlBackend):
         # Desired tilt: pitch forward for +x error, roll right for +y error.
         ref_pitch = state.level_pitch if self.use_level_ref else 0.0
         ref_roll = state.level_roll if self.use_level_ref else 0.0
-        pitch_des = ref_pitch - self.pid_vx.update(float(err[0]), dt)
-        roll_des = ref_roll + self.pid_vy.update(float(err[1]), dt)
+        if getattr(sp, "blind_hold", False):
+            # Blind hover: the horizontal velocity estimate has no vision
+            # anchor here — tracking it steers real motion (leak 0.05
+            # glides on forgotten velocity, leak 0.01 fights hallucinated
+            # velocity; both measured fatal). Hold LEVEL and let drag stop
+            # the vehicle. The vertical loop below keeps running: its
+            # estimate is leak-bounded and losing altitude blind is the
+            # ground-collision path.
+            self.pid_vx.reset()
+            self.pid_vy.reset()
+            pitch_des = ref_pitch
+            roll_des = ref_roll
+        else:
+            pitch_des = ref_pitch - self.pid_vx.update(float(err[0]), dt)
+            roll_des = ref_roll + self.pid_vy.update(float(err[1]), dt)
 
         # Current attitude (small-angle roll/pitch from quaternion).
         q = state.q_att

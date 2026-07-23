@@ -384,6 +384,7 @@ class RacePlanner:
                         return self._retreat_setpoint(state)
                     return Setpoint(phase="search",
                                     v_body=np.zeros(3),
+                                    blind_hold=True,
                                     yaw_rate=self.search_yaw_rate
                                     * self._last_seen_side)
                 if gate is not None:
@@ -553,11 +554,17 @@ class RacePlanner:
                 else:
                     rate = self.search_yaw_rate * self._last_seen_side
                 self._search_prev_rate = float(rate)
-                return Setpoint(phase="search", v_body=v, yaw_rate=float(rate))
+                # The retrace variant commands real horizontal motion along
+                # the known-clear inbound tangent — that one the velocity
+                # loop must track; only the zero-horizontal hold is blind.
+                hold = bool(abs(float(v[0])) < 1e-9 and abs(float(v[1])) < 1e-9)
+                return Setpoint(phase="search", v_body=v, yaw_rate=float(rate),
+                                blind_hold=hold)
             return Setpoint(
                 phase="search",
                 v_body=np.array([0.0, 0.0, -self.search_climb]),
                 yaw_rate=self.search_yaw_rate * self._last_seen_side,
+                blind_hold=True,
             )
 
         # -- approach

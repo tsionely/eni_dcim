@@ -341,6 +341,53 @@ on search entry from last-known vision velocity) under the plan's
 crash-class rule: it targets the measured dominant crash mechanism,
 with 3 clean validation runs before entering any config.
 
+### R1i RESULT + THE ESTIMATOR'S TWO FAILURE MODES (recorded 2026-07-23)
+
+R1i (vel_leak 0.01): **0/10** — prediction failed, and the death
+profile INVERTED: believed velocity at death 0.7-6.05 m/s (run 9
+believed 6 m/s), deaths moved from blind search into ACTIVE phases
+(takeoff/align/commit), median survival DROPPED to ~9.6s. Named:
+leak 0.05 = AMNESIA (phantom-hover glide on forgotten velocity);
+leak 0.01 = HALLUCINATION (runaway IMU integration the controller
+fights). The horizontal velocity estimate has no truth anchor when
+the gate is not close; no leak value fixes both ends. vel_leak
+reverts to 0.05.
+
+## THE CRASH-CLASS FIX — blind_hold (code, 2026-07-23)
+
+Under the plan's registered rule (code changes for crash-class bugs
+only, 3 clean validation runs): the dominant measured crash
+mechanism (23/54 pooled, 7/10 R1h — blind glide into structure on a
+zero command) is severed at the actuation end. Setpoint gains a
+`blind_hold` flag; the gate-is-None search setpoints raise it (the
+retrace variant, which commands real known-clear motion, does NOT);
+the attitude backend on blind_hold stops chasing the horizontal
+velocity estimate entirely — LEVEL attitude hold, drag brakes the
+vehicle, yaw spin and the vertical loop keep their authority,
+horizontal PID integrators reset. Files:
+src/aigp/core/messages.py, src/aigp/planning/race_planner.py,
+src/aigp/control/attitude_rate_backend.py; tests
+tests/unit/test_attitude_rate_backend.py (5, incl. the
+fiction-independence assertion: identical commands whether the
+estimator believes 0 or 3 m/s) + 3 planner-side flag tests. Full
+unit suite 229 green.
+
+## Phase R1j — the blind-hold validation block (registered before results)
+
+Sakana, in order:
+1. VALIDATION TRIO: 3 runs, config B, patches ONLY commit 1.8 +
+   cap 1.2 (all-default estimator). Clean = no new abort class, no
+   ground contact in search, teleme try shows blind_hold=true ticks
+   in any search stretch. Any non-clean run -> STOP, report, the
+   fix does not enter the config.
+2. If trio clean: 10-run block, same config. PREDICTIONS registered:
+   blind NO_GATE_IN_VIEW death class < 3/10 (was 7/10 in R1h-era
+   profile and 17+6/54 pooled); grinding class 0; pass rate >= 2/10;
+   commit attempts per flight rise (retries survive the searches).
+FAILURE READ: if blind deaths shrink but passes do not rise, the
+remaining wall is arrival scatter and the freeze decision is made
+on the best measured config as-is.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
