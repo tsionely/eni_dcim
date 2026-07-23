@@ -1,0 +1,332 @@
+[
+  {
+    "case": "stall_t2r1_B_run2",
+    "cohort": "STALL",
+    "fixture": "fixtures/20260723T203357-raceprep-t2r1-B-run2",
+    "log": "fixtures\\20260723T203357-raceprep-t2r1-B-run2\\flight.jsonl",
+    "closest_t_s": 20.777,
+    "closest_source": "state",
+    "min_range_m": 0.547970179585602,
+    "min_z_m": 0.48642551440903925,
+    "lateral_at_min_m": 0.0864422861076688,
+    "true_dz_at_min_m": 0.4689446562489606,
+    "phase_at_min": "commit",
+    "vx_forward_at_min_mps": 1.5532098983935445,
+    "vz_at_min_mps": -1.0220750656031667,
+    "mean_vx_last_1s_mps": 1.4454037236852815,
+    "time_in_commit_s": 2.5,
+    "n_commit_entries": 1,
+    "n_commit_exits": 1,
+    "commit_active_at_closest": true,
+    "first_commit_exit_rel_s": 0.02,
+    "retreat_or_recover_before_min": false,
+    "detection_bin_fraction_last_1s": 0.5454545454545454,
+    "detection_bin_fraction_last_0_5s": 0.16666666666666666,
+    "range_rate_last_1s_mps": -2.1530374786781965,
+    "inside_abort_min_while_commit": true,
+    "post_closest_detection_range_increases": true,
+    "gate_pass_events": [],
+    "gate_pass_times_rel_to_closest_s": [],
+    "phase_transitions": [
+      {
+        "t_rel_s": -2.98,
+        "from": null,
+        "to": "approach"
+      },
+      {
+        "t_rel_s": -2.44,
+        "from": "approach",
+        "to": "commit"
+      },
+      {
+        "t_rel_s": 0.02,
+        "from": "commit",
+        "to": "recover"
+      }
+    ]
+  },
+  {
+    "case": "pass_r1k_off_run3",
+    "cohort": "PASS",
+    "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
+    "log": "fixtures\\20260723T191736-raceprep-r1k-off-run3\\flight.jsonl",
+    "closest_t_s": 17.718,
+    "closest_source": "state",
+    "min_range_m": 0.5530729755846436,
+    "min_z_m": 0.24683438404436975,
+    "lateral_at_min_m": 0.1683243508894604,
+    "true_dz_at_min_m": 0.11957400948063639,
+    "phase_at_min": "retreat",
+    "vx_forward_at_min_mps": -1.2,
+    "vz_at_min_mps": -0.2,
+    "mean_vx_last_1s_mps": 0.49602827910540387,
+    "time_in_commit_s": 2.6,
+    "n_commit_entries": 2,
+    "n_commit_exits": 1,
+    "commit_active_at_closest": false,
+    "first_commit_exit_rel_s": -0.38,
+    "retreat_or_recover_before_min": true,
+    "detection_bin_fraction_last_1s": 0.9090909090909091,
+    "detection_bin_fraction_last_0_5s": 0.8333333333333334,
+    "range_rate_last_1s_mps": 8.433052918582183,
+    "inside_abort_min_while_commit": false,
+    "post_closest_detection_range_increases": true,
+    "gate_pass_events": [
+      {
+        "mono": 510888613945600,
+        "topic": "race",
+        "data": {
+          "ts_ns": 1784834216053634000,
+          "sim_boot_time_ms": 926963,
+          "race_start_boot_time_ms": 922405,
+          "race_finish_time_ns": -1,
+          "active_gate_index": 1,
+          "last_gate_race_time": 4526183605
+        }
+      }
+    ],
+    "gate_pass_times_rel_to_closest_s": [
+      0.007
+    ],
+    "phase_transitions": [
+      {
+        "t_rel_s": -3.0,
+        "from": null,
+        "to": "takeoff"
+      },
+      {
+        "t_rel_s": -2.98,
+        "from": "takeoff",
+        "to": "align"
+      },
+      {
+        "t_rel_s": -2.5,
+        "from": "align",
+        "to": "commit"
+      },
+      {
+        "t_rel_s": -0.38,
+        "from": "commit",
+        "to": "retreat"
+      },
+      {
+        "t_rel_s": 0.02,
+        "from": "retreat",
+        "to": "search"
+      },
+      {
+        "t_rel_s": 0.1,
+        "from": "search",
+        "to": "commit"
+      }
+    ]
+  },
+  {
+    "case": "pass_r1_alt_B_run2",
+    "cohort": "PASS",
+    "fixture": "fixtures/20260721T193502-raceprep-r1-alt-B-run2",
+    "log": "fixtures\\20260721T193502-raceprep-r1-alt-B-run2\\20260721T193439-0308865a-flight.jsonl",
+    "closest_t_s": 8.485,
+    "closest_source": "state",
+    "min_range_m": 0.2519753714033163,
+    "min_z_m": 0.059436929088537885,
+    "lateral_at_min_m": 0.00698907634600171,
+    "true_dz_at_min_m": 0.05305620713774506,
+    "phase_at_min": "commit",
+    "vx_forward_at_min_mps": 1.9149660883797672,
+    "vz_at_min_mps": 0.0,
+    "mean_vx_last_1s_mps": 2.2426763933385225,
+    "time_in_commit_s": 2.0,
+    "n_commit_entries": 1,
+    "n_commit_exits": 1,
+    "commit_active_at_closest": true,
+    "first_commit_exit_rel_s": 0.1,
+    "retreat_or_recover_before_min": false,
+    "detection_bin_fraction_last_1s": 0.6363636363636364,
+    "detection_bin_fraction_last_0_5s": 0.5,
+    "range_rate_last_1s_mps": 4.806074723300573,
+    "inside_abort_min_while_commit": true,
+    "post_closest_detection_range_increases": true,
+    "gate_pass_events": [
+      {
+        "mono": 339158941585200,
+        "topic": "race",
+        "data": {
+          "ts_ns": 1784662487824754050,
+          "sim_boot_time_ms": 49124,
+          "race_start_boot_time_ms": 44676,
+          "race_finish_time_ns": -1,
+          "active_gate_index": 1,
+          "last_gate_race_time": 4332365036
+        }
+      }
+    ],
+    "gate_pass_times_rel_to_closest_s": [
+      0.082
+    ],
+    "phase_transitions": [
+      {
+        "t_rel_s": -3.0,
+        "from": null,
+        "to": "takeoff"
+      },
+      {
+        "t_rel_s": -2.66,
+        "from": "takeoff",
+        "to": "align"
+      },
+      {
+        "t_rel_s": -1.9,
+        "from": "align",
+        "to": "commit"
+      },
+      {
+        "t_rel_s": 0.1,
+        "from": "commit",
+        "to": "search"
+      },
+      {
+        "t_rel_s": 0.12,
+        "from": "search",
+        "to": "approach"
+      }
+    ]
+  },
+  {
+    "case": "pass_r1_alt_A_run5",
+    "cohort": "PASS",
+    "fixture": "fixtures/20260721T193902-raceprep-r1-alt-A-run5",
+    "log": "fixtures\\20260721T193902-raceprep-r1-alt-A-run5\\20260721T193836-35277268-flight.jsonl",
+    "closest_t_s": 8.285,
+    "closest_source": "state",
+    "min_range_m": 0.3286442103865258,
+    "min_z_m": 0.0031809015084541675,
+    "lateral_at_min_m": 0.0005950145012598168,
+    "true_dz_at_min_m": 0.015167318609211765,
+    "phase_at_min": "commit",
+    "vx_forward_at_min_mps": 1.5213498460513568,
+    "vz_at_min_mps": -0.35,
+    "mean_vx_last_1s_mps": 2.1193770373825096,
+    "time_in_commit_s": 1.8,
+    "n_commit_entries": 1,
+    "n_commit_exits": 1,
+    "commit_active_at_closest": true,
+    "first_commit_exit_rel_s": 0.18,
+    "retreat_or_recover_before_min": false,
+    "detection_bin_fraction_last_1s": 1.0,
+    "detection_bin_fraction_last_0_5s": 1.0,
+    "range_rate_last_1s_mps": 10.253974998765983,
+    "inside_abort_min_while_commit": true,
+    "post_closest_detection_range_increases": true,
+    "gate_pass_events": [
+      {
+        "mono": 339396236932500,
+        "topic": "race",
+        "data": {
+          "ts_ns": 1784662725120235100,
+          "sim_boot_time_ms": 49132,
+          "race_start_boot_time_ms": 44772,
+          "race_finish_time_ns": -1,
+          "active_gate_index": 1,
+          "last_gate_race_time": 4411985397
+        }
+      }
+    ],
+    "gate_pass_times_rel_to_closest_s": [
+      0.181
+    ],
+    "phase_transitions": [
+      {
+        "t_rel_s": -2.98,
+        "from": null,
+        "to": "takeoff"
+      },
+      {
+        "t_rel_s": -2.56,
+        "from": "takeoff",
+        "to": "align"
+      },
+      {
+        "t_rel_s": -1.62,
+        "from": "align",
+        "to": "commit"
+      },
+      {
+        "t_rel_s": 0.18,
+        "from": "commit",
+        "to": "retreat"
+      },
+      {
+        "t_rel_s": 0.2,
+        "from": "retreat",
+        "to": "search"
+      },
+      {
+        "t_rel_s": 0.22,
+        "from": "search",
+        "to": "approach"
+      }
+    ]
+  },
+  {
+    "case": "pass_r1_alt_B_run10",
+    "cohort": "PASS",
+    "fixture": "fixtures/20260721T194532-raceprep-r1-alt-B-run10",
+    "log": "fixtures\\20260721T194532-raceprep-r1-alt-B-run10\\20260721T194509-0308865a-flight.jsonl",
+    "closest_t_s": 9.145,
+    "closest_source": "state",
+    "min_range_m": 0.48829931906459995,
+    "min_z_m": 0.03976384277013886,
+    "lateral_at_min_m": -0.15900027663898705,
+    "true_dz_at_min_m": 0.1053741779834412,
+    "phase_at_min": "commit",
+    "vx_forward_at_min_mps": 1.1974773310063989,
+    "vz_at_min_mps": -0.17991255,
+    "mean_vx_last_1s_mps": 2.1164808961613804,
+    "time_in_commit_s": 2.3000000000000003,
+    "n_commit_entries": 1,
+    "n_commit_exits": 1,
+    "commit_active_at_closest": true,
+    "first_commit_exit_rel_s": 0.1,
+    "retreat_or_recover_before_min": false,
+    "detection_bin_fraction_last_1s": 0.8181818181818182,
+    "detection_bin_fraction_last_0_5s": 0.8333333333333334,
+    "range_rate_last_1s_mps": 2.0917413493971204,
+    "inside_abort_min_while_commit": true,
+    "post_closest_detection_range_increases": true,
+    "gate_pass_events": [
+      {
+        "mono": 339790175383400,
+        "topic": "race",
+        "data": {
+          "ts_ns": 1784663119058462850,
+          "sim_boot_time_ms": 49880,
+          "race_start_boot_time_ms": 44711,
+          "race_finish_time_ns": -1,
+          "active_gate_index": 1,
+          "last_gate_race_time": 5104908466
+        }
+      }
+    ],
+    "gate_pass_times_rel_to_closest_s": [
+      0.173
+    ],
+    "phase_transitions": [
+      {
+        "t_rel_s": -3.0,
+        "from": null,
+        "to": "align"
+      },
+      {
+        "t_rel_s": -2.2,
+        "from": "align",
+        "to": "commit"
+      },
+      {
+        "t_rel_s": 0.1,
+        "from": "commit",
+        "to": "recover"
+      }
+    ]
+  }
+]
