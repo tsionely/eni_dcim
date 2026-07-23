@@ -1,0 +1,59 @@
+{
+  "run": 2,
+  "flight_id": "20260723T203307-c789aedf",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=3.8)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 1,
+  "env_hits": 1,
+  "duration_s": 27.56398000003537,
+  "loop_overrun_frac": 0.010158177332752866,
+  "loop_stats": {
+    "ticks": 6891,
+    "overruns": 70,
+    "overrun_frac": 0.010158177332752866,
+    "max_late_us": 7832
+  },
+  "log_dir": "logs\\20260723T203307-c789aedf",
+  "imu_records": 3094,
+  "search_ticks": 200,
+  "collision_records": 2,
+  "race_start_observed": true,
+  "race_start_boot_time_ms": 129973,
+  "reached_takeoff": true,
+  "reached_racing": true,
+  "fsm_transitions": [
+    {
+      "src": "IDLE",
+      "dst": "ARMING",
+      "reason": "flight start"
+    },
+    {
+      "src": "ARMING",
+      "dst": "THROTTLE_DOWN",
+      "reason": "armed"
+    },
+    {
+      "src": "THROTTLE_DOWN",
+      "dst": "TAKEOFF",
+      "reason": "race GO"
+    },
+    {
+      "src": "TAKEOFF",
+      "dst": "RACING",
+      "reason": "takeoff complete"
+    },
+    {
+      "src": "RACING",
+      "dst": "ABORTED",
+      "reason": "environment collision (impulse=3.8)"
+    },
+    {
+      "src": "ABORTED",
+      "dst": "DONE",
+      "reason": "flight over"
+    }
+  ]
+}
