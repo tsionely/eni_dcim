@@ -1,0 +1,77 @@
+{
+  "run": 4,
+  "variant": "on",
+  "flight_id": "20260723T193254-1cea37a5",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=2.9)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 1,
+  "duration_s": 24.604006299981847,
+  "loop_overrun_frac": 0.004064379775646236,
+  "loop_stats": {
+    "ticks": 6151,
+    "overruns": 25,
+    "overrun_frac": 0.004064379775646236,
+    "max_late_us": 8454
+  },
+  "log_dir": "logs\\20260723T193254-1cea37a5",
+  "imu_records": 2739,
+  "search_ticks": 329,
+  "blind_hold_true_search_ticks": 249,
+  "collision_records": 1,
+  "blind_hold_collision_records": 1,
+  "search_environment_collision_records": 1,
+  "race_start_observed": true,
+  "race_start_boot_time_ms": 1898282,
+  "reached_arming": true,
+  "reached_throttle_down": true,
+  "reached_takeoff": true,
+  "reached_racing": true,
+  "harm_clean": false,
+  "mechanism_exercising": true,
+  "fsm_transitions": [
+    {
+      "src": "IDLE",
+      "dst": "ARMING",
+      "reason": "flight start"
+    },
+    {
+      "src": "ARMING",
+      "dst": "THROTTLE_DOWN",
+      "reason": "armed"
+    },
+    {
+      "src": "THROTTLE_DOWN",
+      "dst": "TAKEOFF",
+      "reason": "race GO"
+    },
+    {
+      "src": "TAKEOFF",
+      "dst": "RACING",
+      "reason": "takeoff complete"
+    },
+    {
+      "src": "RACING",
+      "dst": "ABORTED",
+      "reason": "environment collision (impulse=2.9)"
+    },
+    {
+      "src": "ABORTED",
+      "dst": "DONE",
+      "reason": "flight over"
+    }
+  ],
+  "collisions": [
+    {
+      "mono_ns": 511872298269400,
+      "collision_id": 1002,
+      "impulse": 2.913904905319214,
+      "threat": 2,
+      "phase": "search",
+      "blind_hold": true
+    }
+  ]
+}
