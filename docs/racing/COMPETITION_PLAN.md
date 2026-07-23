@@ -1,5 +1,34 @@
 # COMPETITION PLAN — R2 race, start of next week (owner directive, 2026-07-21)
 
+## THE VQ1 TELEMETRY PIVOT (owner directive + organizer email, 2026-07-23)
+
+The organizers re-released the LEGACY VQ1 SIMULATOR WITH FULL
+TELEMETRY (sensor outputs, downstream telemetry, state estimation);
+the VQ2 sim stays vision-only and also contains the VQ1 track under
+VQ2 (no-telemetry) rules. The owner directs: work on TECHNIQUE AND
+STABILITY, pass gates on R1 first. Adopted in full. The strategic
+read: telemetry is the CALIBRATION INSTRUMENT this program never had
+— every estimation defect of the week (velocity amnesia/hallucination,
+vertical scatter, frame phantoms) becomes directly measurable against
+truth. The race remains vision-only; telemetry grounds development,
+never the submission.
+
+Phases (registered):
+- T0 TELEMETRY PROBE: inventory every message/rate the VQ1 interface
+  exposes (scripts/telemetry_probe.py) before any design decision.
+- T1 TRUTH-REFERENCED STABILITY: hover + straight-line on VQ1;
+  measure estimator error vs truth; fix the real defects (config
+  first; code with tests where earned).
+- T2 R1 GATE TECHNIQUE: single-gate pass rate on R1 with telemetry
+  available for measurement; the RELIABILITY GATE (>=7/10 gate-1)
+  now lives HERE.
+- T3 TRANSFER TEST: same build/config, vision-only, on the VQ2 sim's
+  R1 event — measures the telemetry-to-race gap before any VQ2
+  submission decision.
+R1k (3390 blind-hold A/B) is PAUSED, not canceled — it re-enters at
+T3 if the flag question is still open. All prior plan sections below
+remain the record; the reliability gate transfers to T2.
+
 MISSION: win the race. The acceptance test for every decision this
 week is SIM RUNS ON R2-TRAINING — gates passed, then time. No
 criterion machinery on race decisions; engineering triage only.
