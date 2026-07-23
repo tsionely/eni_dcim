@@ -1,0 +1,13 @@
+Outer archive: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3390.zip
+Outer archive size: 2006551860 bytes
+Outer archive mtime UTC: 2026-07-23T12:37:29.933672+00:00
+Outer archive SHA-256: fe31111a36bc7931dfe3b335b8d5035a771f965675c5b06c796fafb1711d8bce
+
+Outer archive entries:
+  AIGP_3390.zip	2024130874 bytes	(2026, 7, 22, 20, 34, 30)
+  PyAIPilotExample-v4.zip	7695 bytes	(2026, 7, 23, 9, 15, 42)
+  README.md	3225 bytes	(2026, 6, 26, 8, 31, 28)
+
+Extracted v1.0.3390 directory: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3390
+Preserved v1.0.3385 directory: C:\Users\tsion\Downloads\AI-GP Simulator v1.0.3385
+Simulator launch performed during inventory: NO
