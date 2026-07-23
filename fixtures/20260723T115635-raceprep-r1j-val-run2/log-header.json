@@ -1,0 +1,7 @@
+{
+    "config":  "B speed1.8 vz1.2 defaults",
+    "run":  2,
+    "exact_head_flown":  "58a6768b03616e20380cd9da77de089e798e5ef9",
+    "stage":  "val",
+    "command":  "scripts\\fly_once.py --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2"
+}

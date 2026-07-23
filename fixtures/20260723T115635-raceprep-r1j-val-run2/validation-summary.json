@@ -1,0 +1,61 @@
+{
+    "flight_id":  "20260723T115605-1d8b4339",
+    "result":  {
+                   "finished":  false,
+                   "aborted":  true,
+                   "abort_reason":  "environment collision (impulse=3.0)",
+                   "gates_passed":  1,
+                   "lap_time_s":  null,
+                   "gate_clips":  3,
+                   "env_hits":  2,
+                   "duration_s":  20.868055899976753,
+                   "loop_overrun_frac":  0.020318190530956487,
+                   "loop_stats":  {
+                                      "ticks":  5217,
+                                      "overruns":  106,
+                                      "overrun_frac":  0.020318190530956487,
+                                      "max_late_us":  16212
+                                  },
+                   "flight_id":  "20260723T115605-1d8b4339",
+                   "log_dir":  "logs\\20260723T115605-1d8b4339"
+               },
+    "search_ticks":  105,
+    "blind_hold_true_search_ticks":  105,
+    "search_collision_count":  1,
+    "search_collisions":  [
+                              {
+                                  "mono_ns":  484459582527400,
+                                  "collision_id":  1002,
+                                  "impulse":  3.031503200531006,
+                                  "threat":  2,
+                                  "phase":  "search",
+                                  "blind_hold":  true
+                              }
+                          ],
+    "blind_hold_collision_count":  1,
+    "blind_hold_collisions":  [
+                                  {
+                                      "mono_ns":  484459582527400,
+                                      "collision_id":  1002,
+                                      "impulse":  3.031503200531006,
+                                      "threat":  2,
+                                      "phase":  "search",
+                                      "blind_hold":  true
+                                  }
+                              ],
+    "search_environment_collision_count":  1,
+    "search_environment_collisions":  [
+                                          {
+                                              "mono_ns":  484459582527400,
+                                              "collision_id":  1002,
+                                              "impulse":  3.031503200531006,
+                                              "threat":  2,
+                                              "phase":  "search",
+                                              "blind_hold":  true
+                                          }
+                                      ],
+    "known_abort_class":  true,
+    "clean":  false,
+    "harm_clean":  false,
+    "mechanism_exercising":  true
+}
