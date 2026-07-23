@@ -25,6 +25,34 @@ revivable only if the owner later downloads VQ1):
 - T3 TRANSFER: the tuned config back on R2-TRAINING, same sim —
   measures the R1-to-R2 gap; the blind-hold flag question re-enters
   here if still open.
+
+### T2-R1 BASELINE RESULT (recorded 2026-07-23, 6 runs to 47523d1)
+
+0/6 gates — but the failure anatomy is NEW and measured:
+- BLINDNESS HYPOTHESIS REFUTED: the red-HSV detector sees R1 gates
+  richly (500-784 detections/run; full approach->commit->retreat
+  cycles). Vision is not the R1 problem.
+- NEAR-GATE APPROACHES HAPPEN: run 2 reached 0.77m essentially
+  centered (true-world dz +0.04, tx +0.06) and still did not cross;
+  runs 1,3 reached 1.0-1.2m with small offsets. The CROSSING itself
+  is the unsolved step, not the approach.
+- THE HAIR-TRIGGER: 4/6 flights died to "stale channels: imu" that
+  is a ~100ms transport HICCUP against safety.imu_stale_s=0.05 —
+  at abort the IMU gap was only ~0.1s, streams otherwise alive.
+  R2's early collisions masked this; R1's longer flights (median
+  32s) expose it. Detections stop 8-16s before these aborts — the
+  hiccup lands during long blind searches.
+
+## Phase T2a — de-trigger the safety, re-baseline (registered before results)
+
+Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
+a sim-training tolerance — 5 missed IMU periods at ~100Hz killed
+flights, 25 is a real fault). PREDICTIONS: stale-imu abort class ->
+0/6; median survival rises; commit attempts per flight rise; >=1
+gate pass in 6. FAILURE READ: if crossings still never complete from
+sub-1m centered approaches, the next target is the final-meter
+mechanics (commit window/brake/abort corridor) with the R1 arena as
+the clean lab.
 R1k (3390 blind-hold A/B) is PAUSED, not canceled — it re-enters at
 T3 if the flag question is still open. All prior plan sections below
 remain the record; the reliability gate transfers to T2.
