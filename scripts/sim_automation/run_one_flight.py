@@ -19,6 +19,7 @@ result exists for this label — report the step and its screenshot.
 """
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]          # repo root
@@ -58,11 +59,40 @@ def main() -> int:
               flush=True)
         return 2
 
-    # STEP 2 — fly. fly_once handles arm -> race GO wait -> logging under logs/.
-    print(f"[STEP 2] fly_once {label} :: {' '.join(fly_args)}", flush=True)
-    r = subprocess.run([PY, str(FLY_ONCE), *fly_args], cwd=str(ROOT))
-    if r.returncode != 0:
-        print(f"[STOP] fly_once errored (exit {r.returncode}). Not a clean flight.",
+    # STEP 2 — start the pilot in the BACKGROUND; it arms (~4s measured) and
+    # then waits in THROTTLE_DOWN for the sim's race GO.
+    print(f"[STEP 2] fly_once (background) {label} :: {' '.join(fly_args)}",
+          flush=True)
+    proc = subprocess.Popen([PY, str(FLY_ONCE), *fly_args], cwd=str(ROOT))
+
+    # STEP 3 — click RACE after an arming margin. Without this click race GO
+    # never fires: val-run1 sat in THROTTLE_DOWN until the stale-imu abort at
+    # 24s. Coordinates (1650,866) x2 are the proven phase5b-era RACE control
+    # (race_click_capture.py).
+    time.sleep(8.0)
+    if proc.poll() is not None:
+        print(f"[STOP] fly_once exited before the RACE click "
+              f"(exit {proc.returncode}).", flush=True)
+        return 3
+    print("[STEP 3] RACE click", flush=True)
+    sys.path.insert(0, str(ROOT / "scripts" / "sim_automation"))
+    import pyautogui                      # Windows GUI deps — lazy on purpose
+    pyautogui.FAILSAFE = False
+    import sim_window_utils as R
+    ai = R.sim_window(ensure_visible=True)
+    if ai is None:
+        proc.kill()
+        print("[STOP] sim window lost before the RACE click.", flush=True)
+        return 2
+    R._sim_click(ai, 1650, 866)
+    time.sleep(0.2)
+    R._sim_click(ai, 1650, 866)
+    print("[STEP 3] RACE clicked", flush=True)
+
+    # STEP 4 — wait for the flight to complete.
+    rc = proc.wait()
+    if rc != 0:
+        print(f"[STOP] fly_once errored (exit {rc}). Not a clean flight.",
               flush=True)
         return 3
 
