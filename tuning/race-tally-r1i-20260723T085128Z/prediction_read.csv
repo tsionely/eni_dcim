@@ -1,0 +1,4 @@
+prediction,r1i_value,control_value,verdict
+blind_NO_GATE_IN_VIEW shrinks vs R1h 7/10,2,7,PASS
+blind_NO_GATE_IN_VIEW + far_structure_hangar shrinks vs R1h 7/10,4,7,PASS
+pass rate >= 2/10,0,2,FAIL

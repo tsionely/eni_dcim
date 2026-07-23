@@ -1,0 +1,13 @@
+{
+  "closest_dz_rule": "true_world_dz reported only when Euclidean closest_range_m <= 2.5; closest_range_m always reported",
+  "commit_attempt_rule": "count transitions into setpoint.phase == commit",
+  "d95bbc2_is_ancestor": true,
+  "generated_at_utc": "2026-07-23T08:51:28.744102+00:00",
+  "missing_groups": [],
+  "param_integrity_rule": "R1i must be defaults + commit.speed_mps=1.8 + vz_cap_mps=1.2 + terminal.enable=false + vel_leak=0.01; approach speeds 3.0/1.5; flag R1h leftover 1.5/1.0",
+  "python_executable": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+  "r1i_fixture_count": 10,
+  "repo_head": "0bf62b0061b4967ed13a00b0a186c59c54c12555",
+  "scope": "replay/CSV only; no simulator launch",
+  "true_world_dz_import": "aigp.planning.approach.true_world_dz"
+}
