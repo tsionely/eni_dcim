@@ -412,6 +412,25 @@ Run 1 counts as harm-clean #1. This is a spec repair, not a
 retry-for-outcome: no run is discarded, and the harm bar is
 unchanged.
 
+## SIM-UPDATE PROTOCOL (2026-07-23, owner notice: simulator update issued)
+
+The owner reports a simulator update, being uploaded to Drive. Until
+it is examined and installed:
+1. ALL FLIGHTS HOLD — including the amended R1j validation. Runs on
+   the pre-update sim no longer inform the race if the race runs on
+   the updated sim.
+2. On installation: verify sim version/build in the log headers;
+   then RE-BASELINE — the amended R1j validation trio first (same
+   harm/mechanism definitions), then a 10-run block on the
+   best-known config (B, 1.8 + cap 1.2, blind_hold build). Compare
+   the failure profile against the old-sim pooled data; carry over
+   only re-confirmed conclusions.
+3. Every pre-update measurement in this plan is marked OLD-SIM ERA
+   evidence. Decisions stand, but their evidentiary weight on the
+   new sim is zero until re-confirmed.
+4. If the update ships patch notes, they are read FIRST — physics,
+   track, and interface changes reprioritize everything above.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
