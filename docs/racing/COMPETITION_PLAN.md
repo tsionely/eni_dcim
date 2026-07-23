@@ -450,6 +450,16 @@ version strings, changed-file diff vs 3385 (names, sizes, hashes),
 any README/CHANGELOG/notes inside the zip — pushed to the repo
 before the first 3390 flight.
 
+INVENTORY READ (2026-07-23, 82d1b5e): the 3390 diff is MICRO —
+DCGame exe +2,560 bytes, the 4.5GB content pak -2,048 bytes; no
+patch notes shipped; outer README unchanged (June 26, still names
+example v2). Profile of a point fix, not a physics/track overhaul —
+unverified until flown. THE open interface question: the pilot
+example jumped v2 -> v4 (requirements unchanged: pymavlink/opencv/
+numpy). ORDERED: both example source trees committed and diffed
+before any flight; the trio releases only after the interface diff
+reads clean (or after adaptation if it does not).
+
 ROLLBACK STATUS AMENDED (owner report, 2026-07-23): 3385 is no
 longer downloadable from the competition site and no
 allowed/forbidden statement exists. REGISTERED ASSUMPTION: the race
