@@ -445,11 +445,19 @@ IDENTIFIED (2026-07-23): the update is "AI-GP Simulator
 v1.0.3390.zip" (2.0 GB, Drive). Installed base is v1.0.3385 (the
 version the velocity_backend frame probe and ALL 100+ archived runs
 were measured on). INSTALL ORDER: extract to a NEW directory
-alongside 3385 — never overwrite; 3385 is the race-day rollback if
-3390 proves broken and the organizers permit. INVENTORY before any
-flight: version strings, changed-file diff vs 3385 (names, sizes,
-hashes), any README/CHANGELOG/notes inside the zip — pushed to the
-repo before the first 3390 flight.
+alongside 3385 — never overwrite. INVENTORY before any flight:
+version strings, changed-file diff vs 3385 (names, sizes, hashes),
+any README/CHANGELOG/notes inside the zip — pushed to the repo
+before the first 3390 flight.
+
+ROLLBACK STATUS AMENDED (owner report, 2026-07-23): 3385 is no
+longer downloadable from the competition site and no
+allowed/forbidden statement exists. REGISTERED ASSUMPTION: the race
+runs on v1.0.3390. 3385 is retained as LOCAL DIAGNOSTIC ARCHIVE
+ONLY — comparison runs and regression triage — never a race-day
+option: flying a version the organizers withdrew is a
+disqualification risk taken blind. All tuning, validation, and the
+freeze target 3390 from here on.
 
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
