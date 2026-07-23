@@ -1,0 +1,12 @@
+{
+  "label": "raceprep-t2a-B-run3",
+  "stage": "t2a-r1-baseline",
+  "run": 3,
+  "event": "r1",
+  "config": "B speed1.8 vz1.2 terminal-off imu-stale-0.25",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "5dc25801b1057ced896d5f070201f4f29efb5900",
+  "flight_id": "20260723T211027-bc3db29f",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-t2a-B-run3 r1 -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.25"
+}
