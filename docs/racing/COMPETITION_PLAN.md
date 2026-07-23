@@ -431,6 +431,16 @@ it is examined and installed:
 4. If the update ships patch notes, they are read FIRST — physics,
    track, and interface changes reprioritize everything above.
 
+OLD-SIM-ERA NOTE: validation run 2 (ccc5fe8) was airborne before
+the hold reached the sim. Recorded honestly: MECHANISM EXERCISED —
+105 blind_hold=true ticks, all in search, the new code path's first
+flight — with 1 gate passed and the week's richest flight (20.9s,
+second commit attempt reached); AND one collision occurred during a
+blind_hold stretch, which fails the registered harm-clean letter.
+The definitions are NOT amended post-hoc. Entry adjudication moves
+wholesale to the v1.0.3390 re-baseline trio under the same
+unchanged definitions; run 2 is old-sim-era evidence only.
+
 IDENTIFIED (2026-07-23): the update is "AI-GP Simulator
 v1.0.3390.zip" (2.0 GB, Drive). Installed base is v1.0.3385 (the
 version the velocity_backend frame probe and ALL 100+ archived runs
