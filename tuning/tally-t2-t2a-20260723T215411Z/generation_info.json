@@ -1,0 +1,15 @@
+{
+  "closest_dz_rule": "true_world_dz reported only when Euclidean closest_range_m <= 2.5; closest_range_m always reported",
+  "commit_attempt_rule": "count transitions into setpoint.phase == commit",
+  "fixtures": {
+    "T2-baseline": 6,
+    "T2a-imu0p25": 6
+  },
+  "generated_at_utc": "2026-07-23T21:54:12.706390+00:00",
+  "missing_groups": [],
+  "param_integrity_rule": "T2/T2a require commit.speed_mps=1.8, commit.vz_cap_mps=1.2, terminal.enable=false; T2a additionally safety.imu_stale_s=0.25",
+  "python_executable": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+  "repo_head": "80c4d03d8cfd8b3da411f71e754e8ced649fdc29",
+  "scope": "replay/CSV only; no simulator launch; SIM lock ignored by instruction for read-only parsing",
+  "true_world_dz_import": "aigp.planning.approach.true_world_dz"
+}

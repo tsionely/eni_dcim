@@ -1,0 +1,3 @@
+group,series,config,status,runs,pass_rate,passes,gates_per_run,total_gates,stale_imu,environment_collision,gate_clips,grinding_timeout,other_abort,median_survival_time_s,mean_survival_time_s,median_commit_attempts,mean_commit_attempts,commit_attempts_per_run,median_closest_range_m,closest_range_min_m,closest_range_max_m,close_dz_n_le_2p5,median_true_world_dz_close_m,true_world_dz_close_min_m,true_world_dz_close_max_m,param_ok_runs
+T2-baseline,t2r1,B,OK,6,0.000000,0,0;0;0;0;0;0,0,4,2,0,0,0,32.305989,33.656000,2.000000,2.333333,2;2;2;2;4;2,1.597429,0.774810,5.653663,4,-0.489995,-0.622017,0.035819,6
+T2a-imu0p25,t2a,B,OK,6,0.333333,2,1;0;0;1;0;0,2,6,0,0,0,0,44.290615,43.316506,1.500000,1.833333,1;2;1;2;4;1,0.857515,0.662001,1.718450,6,-0.017739,-0.245962,0.167054,6

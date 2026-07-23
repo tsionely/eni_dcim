@@ -1,0 +1,5 @@
+prediction,t2a_value,control_value,verdict
+stale-imu abort class -> 0/6,6,0,FAIL
+median survival rises vs T2 baseline,44.290615,32.305989,PASS
+commit attempts per flight rise vs T2 baseline,1.500000,2.000000,FAIL
+>=1 gate pass in 6,2,1,PASS
