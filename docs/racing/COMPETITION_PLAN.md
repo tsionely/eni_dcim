@@ -264,6 +264,49 @@ a race-ops config patch under owner authority; the shadow repair
 stays unshipped; no release statistics are minted; the criterion
 campaign's HOLD is untouched.
 
+### R1g RESULT + THE A/B CLOSED + THE AUTOPSY PIVOT (recorded 2026-07-22)
+
+R1g (corridor 0.7, A-only): **0/5, all environment collisions, zero
+clips** (the registered harm channel stayed silent). Prediction
+FAILED: owner=term in only 1/5 runs (run 5: 26 owned+applied ticks,
+admission min 0.65 <= 0.70 — the corridor lever works when reached).
+In 4/5 runs there was not a single engaged+ready tick: the binding
+famine is UPSTREAM — the FULL_QUAD certified-identity + oracle-ready
+preconditions — and that is perception-side, not openable by config.
+
+**A/B DECISION (race): CONFIG B.** Not because B beat A — every
+block tied at zero — but because A cannot be made real this week:
+the terminal channel's identity famine caps ownership at ~1 run in
+5 regardless of corridor. The race flies the simpler equal
+performer. (Registered honestly as an engineering closure of the R1
+question, not a decision-rule victory.)
+
+CURSOR'S POOLED AUTOPSY (56 fixtures, analysis/
+2026-07-22-pooled-collision-geometry/): the dominant killer is
+BLIND WANDERING INTO STRUCTURE after losing the gate — 17
+NO_GATE_IN_VIEW + 6 far-hangar of 54 aborting hits, in
+search/recover; second cluster near-gate structure while locked
+(10+6, low/floor outnumbering top when in view); explicit gate-clip
+aborts only 8 (top bar 3 > bottom 1). The grinding class (2 runs)
+presses against far structure at threat level 1, which never aborts
+(threshold 2), until timeout. The gate frame is NOT the main enemy;
+losing the gate at speed is.
+
+## Phase R1h — slow-blind survivability (registered before results)
+
+The autopsy's lever: don't fly fast blind. Config B, 10 runs (the
+5-run blocks have repeatedly fooled us — n doubles):
+  planner.commit.speed_mps=1.8, planner.commit.vz_cap_mps=1.2 (kept)
+  planner.approach.speed_far_mps=1.5   (from 3.0 — the blind-fast phase)
+  planner.approach.speed_near_mps=1.0  (from 1.5)
+  planner.retreat.speed_mps=0.8        (from 1.2 — blind by design)
+PREDICTIONS registered: the blind-structure abort class (17+6/54
+pooled) shrinks as a fraction; median survival time rises; more
+commit attempts per flight survive; pass rate >= 2/10. Failure
+read: if passes do not rise despite longer survival, the arrival
+scatter itself is the residual wall and the next step is a
+perception/consistency lever, not speed.
+
 ## RELIABILITY GATE (owner question, 2026-07-22, binding)
 
 The owner asked the right question: no speed work while gate 1 is
