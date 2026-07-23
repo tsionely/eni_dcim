@@ -1,0 +1,23 @@
+{
+  "run": 1,
+  "flight_id": "20260723T164454-1d8b4339",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "stale channels: imu",
+  "duration_s": 24.452017900010105,
+  "gates_passed": 0,
+  "gate_clips": 0,
+  "env_hits": 0,
+  "loop_overrun_frac": 0.0,
+  "imu_records": 2754,
+  "search_ticks": 0,
+  "blind_hold_true_search_ticks": 0,
+  "collision_records": 0,
+  "race_start_observed": false,
+  "reached_arming": true,
+  "reached_throttle_down": true,
+  "reached_takeoff": false,
+  "reached_racing": false,
+  "harm_clean": true,
+  "mechanism_exercising": false
+}

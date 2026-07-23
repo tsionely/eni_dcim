@@ -1,0 +1,12 @@
+{
+  "label": "raceprep-r1j3390-val-run1",
+  "stage": "validation",
+  "run": 1,
+  "event": "r2training",
+  "config": "B speed1.8 vz1.2 terminal-off",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "c49028809c0899cf0256a48a7c8e8d00e65c2dcf",
+  "flight_id": "20260723T164454-1d8b4339",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-r1j3390-val-run1 -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false"
+}
