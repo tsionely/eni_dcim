@@ -13,18 +13,18 @@ vertical scatter, frame phantoms) becomes directly measurable against
 truth. The race remains vision-only; telemetry grounds development,
 never the submission.
 
-Phases (registered):
-- T0 TELEMETRY PROBE: inventory every message/rate the VQ1 interface
-  exposes (scripts/telemetry_probe.py) before any design decision.
-- T1 TRUTH-REFERENCED STABILITY: hover + straight-line on VQ1;
-  measure estimator error vs truth; fix the real defects (config
-  first; code with tests where earned).
-- T2 R1 GATE TECHNIQUE: single-gate pass rate on R1 with telemetry
-  available for measurement; the RELIABILITY GATE (>=7/10 gate-1)
-  now lives HERE.
-- T3 TRANSFER TEST: same build/config, vision-only, on the VQ2 sim's
-  R1 event — measures the telemetry-to-race gap before any VQ2
-  submission decision.
+Phases (AMENDED by owner decision 2026-07-23: no extra download —
+the R1 event inside the installed 3390 sim is the training ground,
+vision-only, race-identical rules; T0/T1 telemetry phases SKIPPED,
+revivable only if the owner later downloads VQ1):
+- T2 R1 GATE TECHNIQUE (active): single-gate pass rate on the 3390
+  sim's R1 event ("simple, high-contrast, desaturated" per the
+  organizers — detection-friendliest arena). The RELIABILITY GATE
+  (>=7/10 gate-1) lives HERE. Baseline block first, then targeted
+  technique work driven by its failure profile.
+- T3 TRANSFER: the tuned config back on R2-TRAINING, same sim —
+  measures the R1-to-R2 gap; the blind-hold flag question re-enters
+  here if still open.
 R1k (3390 blind-hold A/B) is PAUSED, not canceled — it re-enters at
 T3 if the flag question is still open. All prior plan sections below
 remain the record; the reliability gate transfers to T2.

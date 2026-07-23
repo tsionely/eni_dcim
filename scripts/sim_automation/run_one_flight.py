@@ -40,6 +40,15 @@ def main() -> int:
         print("ERROR: missing <label> before --", flush=True)
         return 64
     label = head[0]
+    # Optional second positional: the event key. Training events only —
+    # r2submission is the REAL RACE and stays blocked here regardless of
+    # any flag (the legacy launcher's --allow-submission has no analog
+    # in this orchestrator on purpose).
+    event = head[1] if len(head) > 1 else "r2training"
+    if event not in ("r1", "r2training"):
+        print(f"REFUSING: event {event!r} — only 'r1' and 'r2training' "
+              "may be flown by this orchestrator.", flush=True)
+        return 66
 
     # Guard: the venv python only. The system 'python'/'py' are broken in this
     # environment ("logon session does not exist") and would fail mid-flight.
@@ -48,10 +57,10 @@ def main() -> int:
               "Invoke with .venv\\Scripts\\python.exe.", flush=True)
         return 65
 
-    # STEP 1 — select the R2-TRAINING event (proven helper; asserts every event
-    # row template >= 0.80 before it clicks, and screenshots on failure).
-    print(f"[STEP 1] event_select r2training ({label})", flush=True)
-    r = subprocess.run([PY, str(EVENT_SELECT), "r2training", label, "dialog"],
+    # STEP 1 — select the event (proven helper; asserts every event row
+    # template >= 0.80 before it clicks, and screenshots on failure).
+    print(f"[STEP 1] event_select {event} ({label})", flush=True)
+    r = subprocess.run([PY, str(EVENT_SELECT), event, label, "dialog"],
                        cwd=str(ROOT))
     if r.returncode != 0:
         print(f"[STOP] event selection failed (exit {r.returncode}) — see the "
