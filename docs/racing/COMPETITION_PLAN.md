@@ -45,7 +45,10 @@ revivable only if the owner later downloads VQ1):
 
 ## Phase T2b — level blind crossing + the de-trigger (registered before results)
 
-Supersedes T2a's block (not yet flown) by folding it: ADVISORY-36's
+SEQUENCING CORRECTION (recorded live): T2a turned out to be mid-air
+when this registered — it COMPLETES as the single-variable imu-only
+control arm (better attribution than the fold). T2b flies after it.
+Original fold rationale kept below for the record: ADVISORY-36's
 frame (discrete veto) + the crossing autopsy (7cbce47: the stall
 drifted +0.47m upward in the final blind 0.5s chasing a fossil dz;
 passes arrive near-level with vision to the plane) convict the blind
@@ -59,7 +62,7 @@ pass band (+-0.12m). FAILURE READ: if vision-to-the-plane remains
 the separator and passes stay rare, the next lever is perception
 continuity in the last meter (close-tracker band), not control.
 
-## Phase T2a — de-trigger the safety, re-baseline (superseded by T2b before flying)
+## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
 a sim-training tolerance — 5 missed IMU periods at ~100Hz killed
