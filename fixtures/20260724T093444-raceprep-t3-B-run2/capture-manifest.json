@@ -1,0 +1,73 @@
+{
+  "label": "raceprep-t3-B-run2",
+  "started_at_utc": "2026-07-24T09:34:12.965241+00:00",
+  "runner_exit_code": 0,
+  "runner_exit_elapsed_s": 38.81252479995601,
+  "flight_id": "20260724T093348-90d47aa7",
+  "abort_reason": "gate clip budget exceeded (11)",
+  "stale_channel_abort": false,
+  "screenshots_kept": false,
+  "screenshot_interval_s": 5.0,
+  "post_abort_capture_s": 0.0,
+  "command": [
+    "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+    "scripts\\sim_automation\\run_one_flight.py",
+    "raceprep-t3-B-run2",
+    "r1",
+    "--",
+    "--max-duration",
+    "300",
+    "--patch",
+    "planner.commit.speed_mps=1.8",
+    "--patch",
+    "planner.commit.vz_cap_mps=1.2",
+    "--patch",
+    "planner.terminal.enable=false",
+    "--patch",
+    "safety.imu_stale_s=0.6",
+    "--patch",
+    "estimation.vel_clamp_mps=12"
+  ],
+  "screenshots": [
+    {
+      "index": 0,
+      "elapsed_s": 0.028658199938945472,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_000_t0000.0s.png"
+    },
+    {
+      "index": 1,
+      "elapsed_s": 5.04841899999883,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_001_t0005.0s.png"
+    },
+    {
+      "index": 2,
+      "elapsed_s": 10.04957079992164,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_002_t0010.0s.png"
+    },
+    {
+      "index": 3,
+      "elapsed_s": 15.100194799946621,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_003_t0015.1s.png"
+    },
+    {
+      "index": 4,
+      "elapsed_s": 20.02170489996206,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_004_t0020.0s.png"
+    },
+    {
+      "index": 5,
+      "elapsed_s": 25.02661519998219,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_005_t0025.0s.png"
+    },
+    {
+      "index": 6,
+      "elapsed_s": 30.025361499981955,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_006_t0030.0s.png"
+    },
+    {
+      "index": 7,
+      "elapsed_s": 35.038932999945246,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run2\\shot_007_t0035.0s.png"
+    }
+  ]
+}
