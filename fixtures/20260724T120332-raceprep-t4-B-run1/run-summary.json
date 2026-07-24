@@ -1,0 +1,22 @@
+{
+  "run": 1,
+  "flight_id": "20260724T120225-cdff1579",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=5.6)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 1,
+  "duration_s": 29.240041599958204,
+  "loop_overrun_frac": 0.004514363885088919,
+  "loop_stats": {
+    "ticks": 7310,
+    "overruns": 33,
+    "overrun_frac": 0.004514363885088919,
+    "max_late_us": 9400
+  },
+  "log_dir": "logs\\20260724T120225-cdff1579",
+  "screenshots_kept": false,
+  "screenshot_count": 0
+}
