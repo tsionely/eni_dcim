@@ -1,0 +1,3 @@
+group,glob,fixtures_at_head,status
+T4,*raceprep-t4-B-*,0,MISSING_AT_HEAD
+T3,*raceprep-t3-B-*,8,AVAILABLE

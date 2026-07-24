@@ -1,0 +1,33 @@
+{
+  "expected_t4_params": {
+    "estimation.vel_clamp_mps": 12,
+    "planner.commit.speed_mps": 1.8,
+    "planner.commit.vz_cap_mps": 1.2,
+    "planner.terminal.enable": false,
+    "safety.gate_clip_debounce_s": 0.3,
+    "safety.imu_stale_s": 0.6
+  },
+  "fixture_counts": {
+    "T3": 8,
+    "T4": 0
+  },
+  "fixture_names": {
+    "T3": [
+      "20260724T092611-raceprep-t3-B-run1",
+      "20260724T093444-raceprep-t3-B-run2",
+      "20260724T095639-raceprep-t3-B-run3",
+      "20260724T100256-raceprep-t3-B-run4",
+      "20260724T101124-raceprep-t3-B-run5",
+      "20260724T102412-raceprep-t3-B-run6",
+      "20260724T103823-raceprep-t3-B-run7",
+      "20260724T111639-raceprep-t3-B-run8"
+    ],
+    "T4": []
+  },
+  "generated_at_utc": "2026-07-24T12:01:13+00:00",
+  "missing_at_head": true,
+  "repo_head": "6975cfc8ee29d8eef2fc6e1199ac67cde29c212e",
+  "requested_head_floor": "6975cfc+",
+  "scope": "replay/CSV only; no simulator launch; FlightSim and SIM lock not touched",
+  "stop_reason": "fixtures/*raceprep-t4-B-* missing at HEAD; per instruction, full two-group tally was not run"
+}

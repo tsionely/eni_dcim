@@ -1,0 +1,5 @@
+prediction,t4_value,control_value,verdict
+gate-clip-budget aborts approximately 0 in T4,MISSING_AT_HEAD,"T3 available, not retallied because T4 missing",NOT_JUDGED_MISSING_T4
+previously-clipped flights continue past the frame,MISSING_AT_HEAD,"T3 available, not retallied because T4 missing",NOT_JUDGED_MISSING_T4
+gate passes >= 2/8,MISSING_AT_HEAD,"T3 available, not retallied because T4 missing",NOT_JUDGED_MISSING_T4
+no new abort class,MISSING_AT_HEAD,"T3 available, not retallied because T4 missing",NOT_JUDGED_MISSING_T4
