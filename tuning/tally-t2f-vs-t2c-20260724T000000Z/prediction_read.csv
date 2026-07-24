@@ -1,0 +1,5 @@
+prediction,t2f_value,control_value,verdict
+passes >=3/8 vs control 1/8,MISSING_AT_HEAD,1,NOT_JUDGED_MISSING_T2F
+class-A retreat-on-phantom ZERO in T2f,MISSING_AT_HEAD,0,NOT_JUDGED_MISSING_T2F
+untreated classes persist,MISSING_AT_HEAD,stale_frame=7; gate_clips=1; environment_collision=0,NOT_JUDGED_MISSING_T2F
+no new abort class,MISSING_AT_HEAD,classes=gate_clips;stale_frame,NOT_JUDGED_MISSING_T2F

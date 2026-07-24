@@ -1,0 +1,17 @@
+{
+  "closest_dz_rule": "true_world_dz reported only when Euclidean closest_range_m <= 2.5; closest_range_m always reported",
+  "commit_attempt_rule": "count transitions into setpoint.phase == commit",
+  "fixtures": {
+    "T2c-control": 8,
+    "T2f-geom-term": 0
+  },
+  "generated_at_utc": "2026-07-24T06:10:03.650087+00:00",
+  "missing_groups": [
+    "T2f-geom-term"
+  ],
+  "param_integrity_rule": "T2c requires speed=1.8, vz_cap=1.2, terminal=false, imu_stale=0.6; T2f additionally requires geom_term_z_m=-0.9 and geom_term_fresh_s=0.3",
+  "python_executable": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+  "repo_head": "5e349386fbd1f249e4fd021f5bef4340782a697e",
+  "scope": "replay/CSV only; no simulator launch; SIM lock ignored by instruction for read-only parsing",
+  "true_world_dz_import": "aigp.planning.approach.true_world_dz"
+}
