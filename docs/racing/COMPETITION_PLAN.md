@@ -112,6 +112,48 @@ since last gate progress). The trigger is condition-dependent
 NEXT PROBE: eyes on the sim screen at the stop moment — what the
 HUD displays names the rule.
 
+### THE FINAL-METER LEDGER VERDICTS (598bbe3) + T2e HUD (recorded 2026-07-24)
+
+The analyst's ledger (channel-2's §4-5 spec) classified the named
+attempts, and the picture reorganizes:
+- **The scored r1k pass happened at BELIEVED s=+0.247m** — the race
+  counter fired while the estimator still placed the drone a quarter
+  meter IN FRONT of the plane (believed s never went <=0 in-window).
+  The believed plane distance carries a FORWARD BIAS (~0.25-0.5m):
+  physical crossings precede believed ones.
+- **r1j3390-val-run2 stall = CLASS A (command withdrawal):** a
+  dead-reckoned phantom cross to believed s=-0.315 fired the
+  geometric-termination clause (threshold -0.4, freshness bar 0.6s
+  allows stale DR) and retreat yanked the vehicle at what the bias
+  says was physically AT or short of the plane. The withdrawal is
+  OURS, on a biased believed.
+- **t2r1-B-run2 stall = INCONCLUSIVE from logged signals** (command
+  holds +1.54, tracking ratio 1.36, no withdrawal, never crossed) —
+  consistent with the prior +0.47m vertical-drift conviction; needs
+  the UNLOGGED exit/predicate instrumentation.
+- Tracking ratio >1.3 EVERYWHERE: the plant over-delivers vs
+  command — the velocity estimate under-reports. Filed.
+- Cursor's provenance flag honored: channel-2's race-risk memo was
+  chat-relayed, not on disk (the on-disk 36 is channel-1's).
+UNLOGGED backlog adopted: predicate vector, cap source, exit_cause
+enum, plane convention, opening dims.
+
+T2e HUD (one observed flight, died on clips not stream-stop): after
+OUR abort the sim session STAYS LIVE — race timer advances, no
+banner/results/off-course/crash text. The stream-stop observation is
+still owed (repeat until caught, 3-run cap).
+
+## NEXT REGISTERED STEP — T2f: the class-A remedy (before results)
+
+Per channel-2's conditional: class A is now DEMONSTRATED for one
+stall. The narrow remedy composes existing pieces: the
+geometric-termination clause gets (a) a believed-bias-aware deeper
+threshold (-0.4 -> -0.9) and (b) a genuinely-fresh evidence bar
+(blind_age_s 0.3, not entry_max_age_s 0.6 — a half-second-old DR
+phantom may not end a crossing). Config-gated, tests first, then an
+8-run R1 block against T2c as control. Implementation next session
+action; registered now.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
