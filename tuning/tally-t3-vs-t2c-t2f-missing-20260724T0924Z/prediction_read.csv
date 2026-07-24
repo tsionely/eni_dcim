@@ -1,0 +1,5 @@
+prediction,t3_value,verdict
+peak |v_world| <= 12 m/s in all T3 runs,MISSING_AT_HEAD,NOT_JUDGED_MISSING_T3
+catastrophic vz-divergence class -> 0 in T3,MISSING_AT_HEAD,NOT_JUDGED_MISSING_T3
+median survival rises vs control,MISSING_AT_HEAD,NOT_JUDGED_MISSING_T3
+gate passes >= 3/8,MISSING_AT_HEAD,NOT_JUDGED_MISSING_T3

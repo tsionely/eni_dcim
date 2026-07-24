@@ -1,0 +1,36 @@
+{
+  "fixture_counts": {
+    "T2c": 8,
+    "T2f": 8,
+    "T3": 0
+  },
+  "fixture_names": {
+    "T2c": [
+      "20260723T222640-raceprep-t2c-B-run1",
+      "20260723T222928-raceprep-t2c-B-run2",
+      "20260723T223250-raceprep-t2c-B-run3",
+      "20260723T223525-raceprep-t2c-B-run4",
+      "20260723T223805-raceprep-t2c-B-run5",
+      "20260723T224010-raceprep-t2c-B-run6",
+      "20260723T224241-raceprep-t2c-B-run7",
+      "20260723T224429-raceprep-t2c-B-run8"
+    ],
+    "T2f": [
+      "20260724T060941-raceprep-t2f-B-run1",
+      "20260724T062350-raceprep-t2f-B-run2",
+      "20260724T062820-raceprep-t2f-B-run3",
+      "20260724T063311-raceprep-t2f-B-run4",
+      "20260724T064058-raceprep-t2f-B-run5",
+      "20260724T064805-raceprep-t2f-B-run6",
+      "20260724T065049-raceprep-t2f-B-run7",
+      "20260724T065357-raceprep-t2f-B-run8"
+    ],
+    "T3": []
+  },
+  "generated_at_utc": "2026-07-24T09:24:28+00:00",
+  "missing_at_head": true,
+  "repo_head": "ff82e1f448719c1bb22053af235b183082399bd3",
+  "requested_head_floor": "ff82e1f+",
+  "scope": "replay/CSV only; no simulator launch; FlightSim and SIM lock not touched",
+  "stop_reason": "fixtures/*raceprep-t3-B-* missing at HEAD; per instruction, full three-group tally was not run"
+}
