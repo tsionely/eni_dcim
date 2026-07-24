@@ -115,6 +115,8 @@
       "distance_m": 6.5,
       "duration_s": 2.5,
       "entry_max_age_s": 0.6,
+      "geom_term_fresh_s": 0.6,
+      "geom_term_z_m": -0.4,
       "relock_jump_m": 2.0,
       "speed_mps": 2.5,
       "vz_cap_mps": 0.35,

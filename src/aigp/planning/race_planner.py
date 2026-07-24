@@ -65,6 +65,17 @@ class RacePlanner:
         # blind climb in the t2r1-B-run2 stall vs near-level passes).
         self.blind_vz_zero = bool(p.get("planner.commit.blind_vz_zero",
                                         default=False))
+        # T2f (final-meter ledger, 598bbe3): the scored pass fired at
+        # BELIEVED s=+0.247m — the believed plane runs ~0.25-0.5m ahead
+        # of the physical one — and the r1j class-A stall was OUR retreat
+        # on a half-second-old dead-reckoned "cross" to believed -0.315.
+        # Config-gated: defaults preserve today's behavior; the T2f block
+        # patches z to -0.9 (bias-aware) and freshness to 0.3 (a stale DR
+        # phantom may not end a crossing).
+        self.geom_term_z_m = float(p.get("planner.commit.geom_term_z_m",
+                                         default=-0.4))
+        self.geom_term_fresh_s = float(p.get(
+            "planner.commit.geom_term_fresh_s", default=0.6))
         self.retreat_climb_bias = float(p.get("planner.retreat.climb_bias_mps",
                                               default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
@@ -419,8 +430,8 @@ class RacePlanner:
                 # a FRESH crossing — genuinely decided, retreat for the
                 # next pass. The freshness condition stays as the
                 # documented law even though the budget subsumes it.
-                if gate is not None and gate.t[2] < -0.4 \
-                        and state.gate_rel_age_s <= self.entry_max_age_s:
+                if gate is not None and gate.t[2] < self.geom_term_z_m \
+                        and state.gate_rel_age_s <= self.geom_term_fresh_s:
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None

@@ -662,3 +662,48 @@ def test_blind_commit_vz_chases_dz_when_disabled():
                                      center_px=(320, 300), age_s=0.4), None))
     assert sps[-1].phase == "commit"
     assert abs(sps[-1].v_body[2]) > 0.05
+
+
+def _enter_commit(p):
+    sp = p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5],
+                                      center_px=(320, 180)), None)
+    assert sp.phase == "commit"
+
+
+def test_geometric_termination_default_behavior():
+    # Defaults preserve today's clause: fresh believed-behind at -0.5
+    # ends the attempt (retreat).
+    p = planner()
+    _enter_commit(p)
+    sp = p.plan(int(0.1e9), "race",
+                make_state(gate_t=[0.0, 0.0, -0.5], age_s=0.1), None)
+    assert sp.phase == "retreat"
+
+
+def test_geometric_termination_bias_aware_patch():
+    # T2f patch: believed -0.5 is within the forward-bias band — the
+    # crossing continues; a genuinely-behind -1.0 still terminates.
+    def make(pf=None):
+        return RacePlanner(ParamSet.load("config/params_default.json").patch(
+            {"planner.commit.geom_term_z_m": -0.9,
+             "planner.commit.geom_term_fresh_s": 0.3}))
+    p = make()
+    _enter_commit(p)
+    sp = p.plan(int(0.1e9), "race",
+                make_state(gate_t=[0.0, 0.0, -0.5], age_s=0.1), None)
+    assert sp.phase == "commit"
+    sp = p.plan(int(0.2e9), "race",
+                make_state(gate_t=[0.0, 0.0, -1.0], age_s=0.1), None)
+    assert sp.phase == "retreat"
+
+
+def test_geometric_termination_requires_fresh_evidence():
+    # T2f patch: a 0.45s-old dead-reckoned "cross" may NOT end the
+    # attempt (the r1j class-A stall was exactly this phantom).
+    p = RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.commit.geom_term_z_m": -0.9,
+         "planner.commit.geom_term_fresh_s": 0.3}))
+    _enter_commit(p)
+    sp = p.plan(int(0.1e9), "race",
+                make_state(gate_t=[0.0, 0.0, -1.0], age_s=0.45), None)
+    assert sp.phase == "commit"
