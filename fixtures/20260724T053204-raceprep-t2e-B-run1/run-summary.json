@@ -1,0 +1,18 @@
+{
+  "run": 1,
+  "flight_id": "20260724T052750-01330cb1",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "gate clip budget exceeded (11)",
+  "duration_s": 19.7760297000641,
+  "gates_passed": 0,
+  "gate_clips": 11,
+  "env_hits": 0,
+  "loop_overrun_frac": 0.020428802588996764,
+  "screenshot_count": 10,
+  "screenshot_interval_s": 5.0,
+  "runner_exit_elapsed_s": 38.070679499884136,
+  "post_exit_capture_s": 10.0,
+  "hud_observation": "No attempt-over banner, results screen, off-course warning, or crash text appeared. The track camera remained visible at 0 km/h and the HUD race timer continued advancing after the pilot exited.",
+  "stream_stop_observed": false
+}
