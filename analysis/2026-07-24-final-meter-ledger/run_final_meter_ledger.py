@@ -570,9 +570,20 @@ def classify(case_cohort, ledger, met):
             f"estimator still in front — scoring/estimate order, not a stall."
         )
     if crossed and not pass_counter:
-        return "POST_PASS_OR_PHANTOM_CROSS", (
-            f"plane went non-positive (s_min_signed={s_signed:.3f} m) without a "
-            f"race-counter event in-window — post-pass DR or phantom cross."
+        if case_cohort == "PASS":
+            return "POST_PASS_OR_PHANTOM_CROSS", (
+                f"plane went non-positive (s_min_signed={s_signed:.3f} m) without a "
+                f"race-counter event in-window — post-pass DR or phantom cross."
+            )
+        # Stall cohort: believed behind the plane but sim never scored a pass.
+        if closing["cmd_withdrew_before_closest"] and (rho is None or rho >= 0.5):
+            return "A command-withdrawal", (
+                f"phantom/estimate cross (s_min_signed={s_signed:.3f} m) then "
+                f"command/phase withdrawal without race score; rho={rho}."
+            )
+        return "D scoring-order", (
+            f"estimate crossed plane (s_min_signed={s_signed:.3f} m) without race "
+            f"score — estimator/scoring order disagreement; rho={rho}."
         )
 
     if closing["cmd_withdrew_before_closest"] and (rho is None or rho >= 0.5):

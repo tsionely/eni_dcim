@@ -323,8 +323,8 @@
       "fixture": "fixtures/20260723T171931-raceprep-r1j3390-val-run2",
       "t0_mono_ns": 503641701758800,
       "ticks": 52,
-      "classification": "POST_PASS_OR_PHANTOM_CROSS",
-      "classification_rationale": "plane went non-positive (s_min_signed=-0.315 m) without a race-counter event in-window \u2014 post-pass DR or phantom cross.",
+      "classification": "A command-withdrawal",
+      "classification_rationale": "phantom/estimate cross (s_min_signed=-0.315 m) then command/phase withdrawal without race score; rho=1.426517269942629.",
       "metrics": {
         "s_min_ahead_m": 0.017873909994872705,
         "s_min_signed_m": -0.3147675852076194,
