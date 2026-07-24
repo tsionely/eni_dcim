@@ -154,6 +154,17 @@ phantom may not end a crossing). Config-gated, tests first, then an
 8-run R1 block against T2c as control. Implementation next session
 action; registered now.
 
+T2f IMPLEMENTED (bd84e79): planner.commit.geom_term_z_m (-0.4
+default / -0.9 block) + geom_term_fresh_s (0.6 default / 0.3
+block); three tests incl. the phantom-may-not-terminate case;
+suite 236 green. BLOCK PREDICTIONS (registered before results):
+class-A withdrawal stalls vanish (no retreat on believed in
+[-0.9,-0.4] and none on stale DR); gate passes >= 3/8 (T2c control:
+1/8); clip-budget and sim-stream-stop deaths persist (untreated
+here); no new abort class. The block folds the HUD observation:
+screenshots every 5s, kept for any stale-channel-abort run — the
+sim's attempt-end rule is still unnamed.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
