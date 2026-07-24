@@ -1,0 +1,13 @@
+{
+  "run": 2,
+  "flown": false,
+  "flight_id": null,
+  "abort_reason": "event selection failed: EVENTLIST_NOT_REACHED",
+  "event_scores": {
+    "r1": 0.3,
+    "r2submission": 0.256,
+    "r2training": 0.25
+  },
+  "screenshots_kept": false,
+  "retry": false
+}

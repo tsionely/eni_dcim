@@ -1,0 +1,69 @@
+{
+  "label": "raceprep-t4-B-run2",
+  "flight_id": null,
+  "abort_reason": "",
+  "runner_exit_code": 2,
+  "runner_exit_elapsed_s": 35.942878299974836,
+  "stale_channel_abort": false,
+  "screenshots_kept": false,
+  "screenshot_interval_s": 5.0,
+  "post_abort_capture_s": 0.0,
+  "command": [
+    "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+    "scripts\\sim_automation\\run_one_flight.py",
+    "raceprep-t4-B-run2",
+    "r1",
+    "--",
+    "--max-duration",
+    "300",
+    "--patch",
+    "planner.commit.speed_mps=1.8",
+    "--patch",
+    "planner.commit.vz_cap_mps=1.2",
+    "--patch",
+    "planner.terminal.enable=false",
+    "--patch",
+    "safety.imu_stale_s=0.6",
+    "--patch",
+    "estimation.vel_clamp_mps=12",
+    "--patch",
+    "safety.gate_clip_debounce_s=0.3"
+  ],
+  "screenshots": [
+    {
+      "index": 0,
+      "elapsed_s": 0.027958299964666367,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_000_t0000.0s.png"
+    },
+    {
+      "index": 1,
+      "elapsed_s": 5.085257300059311,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_001_t0005.1s.png"
+    },
+    {
+      "index": 2,
+      "elapsed_s": 10.074986100080423,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_002_t0010.1s.png"
+    },
+    {
+      "index": 3,
+      "elapsed_s": 15.029912600060925,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_003_t0015.0s.png"
+    },
+    {
+      "index": 4,
+      "elapsed_s": 20.098196399980225,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_004_t0020.1s.png"
+    },
+    {
+      "index": 5,
+      "elapsed_s": 25.00442730006762,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_005_t0025.0s.png"
+    },
+    {
+      "index": 6,
+      "elapsed_s": 30.048402599990368,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t4_hud\\raceprep-t4-B-run2\\shot_006_t0030.0s.png"
+    }
+  ]
+}
