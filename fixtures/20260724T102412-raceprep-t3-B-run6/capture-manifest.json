@@ -1,0 +1,83 @@
+{
+  "label": "raceprep-t3-B-run6",
+  "started_at_utc": "2026-07-24T10:23:33.898387+00:00",
+  "runner_exit_code": 0,
+  "runner_exit_elapsed_s": 50.076326700043865,
+  "flight_id": "20260724T102257-90d47aa7",
+  "abort_reason": "environment collision (impulse=5.0)",
+  "stale_channel_abort": false,
+  "screenshots_kept": false,
+  "screenshot_interval_s": 5.0,
+  "post_abort_capture_s": 0.0,
+  "command": [
+    "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+    "scripts\\sim_automation\\run_one_flight.py",
+    "raceprep-t3-B-run6",
+    "r1",
+    "--",
+    "--max-duration",
+    "300",
+    "--patch",
+    "planner.commit.speed_mps=1.8",
+    "--patch",
+    "planner.commit.vz_cap_mps=1.2",
+    "--patch",
+    "planner.terminal.enable=false",
+    "--patch",
+    "safety.imu_stale_s=0.6",
+    "--patch",
+    "estimation.vel_clamp_mps=12"
+  ],
+  "screenshots": [
+    {
+      "index": 0,
+      "elapsed_s": 0.03329890000168234,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_000_t0000.0s.png"
+    },
+    {
+      "index": 1,
+      "elapsed_s": 5.001559299998917,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_001_t0005.0s.png"
+    },
+    {
+      "index": 2,
+      "elapsed_s": 10.02286989998538,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_002_t0010.0s.png"
+    },
+    {
+      "index": 3,
+      "elapsed_s": 15.076359100057743,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_003_t0015.1s.png"
+    },
+    {
+      "index": 4,
+      "elapsed_s": 20.012793299974874,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_004_t0020.0s.png"
+    },
+    {
+      "index": 5,
+      "elapsed_s": 25.080507799983025,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_005_t0025.1s.png"
+    },
+    {
+      "index": 6,
+      "elapsed_s": 30.041124899988063,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_006_t0030.0s.png"
+    },
+    {
+      "index": 7,
+      "elapsed_s": 35.07463439996354,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_007_t0035.1s.png"
+    },
+    {
+      "index": 8,
+      "elapsed_s": 40.03050750005059,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_008_t0040.0s.png"
+    },
+    {
+      "index": 9,
+      "elapsed_s": 45.05366600002162,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t3_hud\\raceprep-t3-B-run6\\shot_009_t0045.1s.png"
+    }
+  ]
+}
