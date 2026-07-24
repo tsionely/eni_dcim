@@ -1,0 +1,11 @@
+{
+  "label": "raceprep-t2f-B-run2",
+  "stage": "t2f-r1-baseline",
+  "run": 2,
+  "event": "r1",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "9653371f6b34508fcf837e9b80c3c233478a4134",
+  "flight_id": "20260724T062241-62d08171",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-t2f-B-run2 r1 -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.6 --patch planner.commit.geom_term_z_m=-0.9 --patch planner.commit.geom_term_fresh_s=0.3"
+}
