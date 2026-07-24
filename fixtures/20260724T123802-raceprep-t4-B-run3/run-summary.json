@@ -1,0 +1,8 @@
+{
+  "run": 3,
+  "flown": false,
+  "flight_id": null,
+  "abort_reason": "SIM_NOT_RUNNING: no FlightSim/DCGame process found",
+  "screenshots_kept": false,
+  "retry": false
+}
