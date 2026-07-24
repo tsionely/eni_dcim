@@ -155,6 +155,7 @@
     "env_collision_abort_threat": 2,
     "flight_timeout_s": 120.0,
     "frame_stale_s": 0.5,
+    "gate_clip_debounce_s": 0.0,
     "imu_stale_s": 0.05,
     "loop_overrun_abort_frac": 0.2,
     "max_gate_clips": 10

@@ -239,6 +239,38 @@ vector + exit_cause enum). Include the 5s HUD capture on any
 stream-stop run — the sim's exact attempt-end rule is still unnamed
 (out-of-bounds strongly implied).
 
+### T3 VERDICT + THE CLIP-BUDGET ARTIFACT (2026-07-24)
+
+T3 (vel_clamp 12): **0/8**, BUT the master fix landed — peak |v_world|
+= 12.0 in EVERY run (divergence gone), vz bounded ~+1.8, flight stable
+to the gate. Failure moved to the final 0.4m: 3/8 gate-clip-budget at
+~20s. THE CLIP FORENSIC: all 11 clips fall in a 0.1-0.2s BURST —
+one physical frame brush the physics engine emits as 11 contact
+events, tripping the 10-budget on a SINGLE impact (active_gate_index
+never advances; the pooled autopsy's "don't merge contact ticks into
+independent failures", now proven on our side). run1's burst was at
+believed-centered 0.42m — the drone reaches the gate and one brush
+ends it.
+
+FIX (this commit): safety.gate_clip_debounce_s — contacts within the
+window of the last counted clip fold into it (0=legacy). 4 tests
+(burst=1 clip, separate impacts still counted, real grinding still
+aborts), suite 241 green. This converts single-brush instant-aborts
+into survivable clips — the drone keeps flying after touching the
+frame, as a real racer does.
+
+## Phase T4 — clamp + clip-debounce (registered before results)
+
+R1, 8 runs, config B core (1.8 + cap 1.2, imu_stale 0.6) +
+vel_clamp_mps=12 + `safety.gate_clip_debounce_s=0.3`. Control = T3.
+PREDICTIONS: gate-clip-budget aborts (single-brush) -> ~0; the
+flights that were clip-aborted now continue past the frame; gate
+passes >= 2/8; no new abort class. FAILURE READ: if debounced
+flights still don't pass, the drone is physically hitting the bar
+(off-center at the plane, run7's low-left signature) and the next
+lever is final-meter centering, with exit_cause instrumentation to
+read it. HUD capture on any stream-stop run.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
