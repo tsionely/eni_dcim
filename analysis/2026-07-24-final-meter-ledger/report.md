@@ -2,62 +2,52 @@
 
 ## Provenance and scope
 
-This analysis implements the user-requested +1.0 m-aligned control-tick
-ledger and the extraction list in `C:/Users/tsion/Downloads/ADVISORY_36.md`
-§4.  The literal memo titled **“RACE-RISK ADVISORY 1”**, including the
-requested A–D labels, was not present on disk; A–D are therefore applied
-from the user task, not attributed to a nonexistent local document.
+Implements the user-requested +1.0 m-aligned control-tick ledger and
+the extractables from channel-2 `ADVISORY_36.md` §4 (Downloads). The
+literal memo titled **“RACE-RISK ADVISORY 1”** with the A–D stall labels
+was not present on disk; A–D are applied from the analyst task wording,
+with ADVISORY_36 as the extraction parent.
 
-Every ledger is sampled at setpoint ticks, using a state or detection
-forward-fill only when it is no older than 20 ms.  Plane distance uses a
-unit-ish PnP normal when available, reoriented so camera-forward is positive
-(the recorded normals point camera-ward); otherwise it uses `t[2]`.
-`true_world_dz` reproduces the crossing-autopsy quaternion/rest-tilt
-calculation.  Lateral and vertical margins use the documented 0.8 m
-half-opening proxy.
+Method (corrected after first-pass frame bugs):
+- **Signed plane** = camera-forward depth `gate_rel.t[2]` (planner
+  convention). `signed_plane_dot_n` is logged as a secondary column.
+- **Along-plane cmd/est** = body-x (controller forward) — not a camera
+  normal dotted into body velocity.
+- Ledger **continues through retreat/recover** until geometric behind
+  (`s < -0.5`), race pass, collision, or 4 s post-alignment.
+- Sampling: setpoint ticks, state/detection fill ≤40 ms.
 
 ## Verdicts
 
 | Fixture / approach | Class | Deciding values |
 | --- | --- | --- |
-| `stall_t2r1_B_run2` / 1 | A, proxy / inconclusive | `s_min=+0.488 m`; closest lateral `+0.086 m`, true-world dz `+0.469 m` (margins `+0.714`, `+0.331 m`). No eligible rho ticks because the along-plane command was not positive above 0.3 m/s. It remained in `commit`, did not record a withdrawal, and no logged exit enum exists. This cannot discriminate the requested A/B/C mechanisms; the required forced non-pass label is retained explicitly as a proxy. |
-| `pass_r1k_off_run3` / 1 | **D scoring-order** | Race counter incremented at `510888613945600 ns`, after the ledger had entered `retreat`; the last ledger plane value before it was `+0.730 m` (>0.2 m). Closest margins were lateral `+0.698 m`, vertical `+0.186 m`; one rho sample was `-7.985` and command withdrew. This is not a geometrically verified PASS under the stated rule (`s <= 0` at counter increment). |
-| `pass_r1k_off_run3` / 2 | A command-withdrawal | `rho=1.417` mean (`0.200` below 0.5), command withdrew before closest, and phase entered `retreat`; `s_min=+0.665 m`. Closest margins: lateral `+0.307 m`, vertical `-0.293 m`. |
-| `pass_r1k_off_run3` / 3 | A command-withdrawal | Phase entered `recover` at `s_min=+0.633 m`; command at closest was `0.000 m/s`. Rho is unobservable (zero eligible ticks). Closest margins: lateral `+0.125 m`, vertical `+0.639 m`. |
-| `pass_r1k_off_run3` / 4 | A, proxy / inconclusive | `s_min=+0.431 m`, no eligible rho ticks, no withdrawal, final phase `commit`, and no logged exit enum. Closest margins: lateral `-0.194 m`, vertical `-0.180 m`. |
-| `stall_r1j3390_val_run2` / 1 | A, proxy / runner-up B | Final `recover` and withdrawal occurred at `s_min=+0.650 m`; mean `rho=0.036`, median `0.120`, and all five eligible ticks were below 0.5. The B condition is not asserted because ≥0.8 m/s command did not persist through most of the full interval. Closest margins: lateral `+0.457 m`, vertical `-0.167 m`. |
-
-The `r1j3390` exit census is one aligned approach: `RECOVER=1`.  There were
-no additional contiguous segments satisfying the near/approach definition
-that crossed downward through +1.0 m.
+| `stall_t2r1_B_run2` / 1 | **INCONCLUSIVE (needs UNLOGGED exit/predicate)** | s_ahead_min=0.486 m; s_signed_min=0.48642551440903925; ρ=1.3608512624336826 (n=14); cmd@closest=1.5443155920867573; withdraw=False; pass_counter=False; crossed=False. final phase=recover, withdraw=False, rho=1.3608512624336826, closest_ahead=0.486 m, s_min_signed=0.48642551440903925. |
+| `pass_r1k_off_run3` / 1 | **D scoring-order** | s_ahead_min=0.247 m; s_signed_min=0.24683438404436975; ρ=1.5894295921417314 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=True; crossed=False. gate index incremented while estimated plane stayed positive (last_s_before=0.24683438404436975, s_min_signed=0.24683438404436975). |
+| `pass_r1k_off_run3` / 2 | **PASS** | s_ahead_min=0.027 m; s_signed_min=-0.5061385850895675; ρ=1.5679484484391113 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.506 m). |
+| `pass_r1k_off_run3` / 3 | **PASS** | s_ahead_min=0.013 m; s_signed_min=-0.5401143031371063; ρ=7.139224180554812 (n=12); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.540 m). |
+| `stall_r1j3390_val_run2` / 1 | **A command-withdrawal** | s_ahead_min=0.018 m; s_signed_min=-0.3147675852076194; ρ=1.426517269942629 (n=6); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. withdraw_cmd=True, withdraw_phase=True; rho=1.426517269942629; closest_ahead=0.018 m; cmd@closest=0.0. |
 
 ## Discriminating observations
 
-The pass-named fixture does contain the observed gate count increment, but it
-does **not** satisfy the requested geometric PASS criterion.  Its recorded
-state transitions to retreat at a still-positive plane estimate; the race
-counter follows while the most recent ledger sample is +0.730 m in front of
-the plane.  That makes scoring-order / state-order the cleanest classification
-for its first approach, not a proof that the raw estimated plane coordinate is
-accurate.
-
-The two mechanism-rich stalls closest to a useful tracking measurement are
-not alike.  `r1j3390` has a very low measured-vs-commanded along-plane ratio
-(`rho=0.036`), but loses the sustained ≥0.8 m/s command condition needed to
-call B without qualification.  The T2R1 stall lacks a valid positive-command
-rho interval altogether, so the log cannot establish plant non-tracking.
+- **stall_t2r1_B_run2 a1** → INCONCLUSIVE (needs UNLOGGED exit/predicate): closest_ahead=0.486 m / true_dz=0.4689446562489606; ρ_mean=1.3608512624336826; Δs(last 0.5s)=None.
+- **pass_r1k_off_run3 a1** → D scoring-order: closest_ahead=0.247 m / true_dz=0.11957400948063639; ρ_mean=1.5894295921417314; Δs(last 0.5s)=14.613281228482984.
+- **pass_r1k_off_run3 a2** → PASS: closest_ahead=0.027 m / true_dz=0.1276226605433009; ρ_mean=1.5679484484391113; Δs(last 0.5s)=-0.7558771733395774.
+- **pass_r1k_off_run3 a3** → PASS: closest_ahead=0.013 m / true_dz=0.042295852828002856; ρ_mean=7.139224180554812; Δs(last 0.5s)=-1.5379712482474148.
+- **stall_r1j3390_val_run2 a1** → A command-withdrawal: closest_ahead=0.018 m / true_dz=0.17073388793259114; ρ_mean=1.426517269942629; Δs(last 0.5s)=None.
 
 ## UNLOGGED instrumentation backlog
 
-1. Per-tick commit-predicate vector and sustain counter — the primary
-   ADVISORY_36 discriminator for a flickering predicate.
-2. Active speed cap and the rule/band that bound it.
-3. Planner exit-cause enum, including commit-window expiry and corridor/min-
-   distance causes.
-4. Explicit approach-axis / plane-normal convention.
-5. Opening dimensions and active aim-up target.  Current offsets and margins
-   are proxies, not a logged collision-aperture clearance.
+1. commit_predicate_vector (per-conjunct booleans and sustain counter)
+2. speed_cap_mps and binding-rule source
+3. planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)
+4. logged approach-axis / gate-plane orientation convention
+5. logged opening dimensions and aim-up target
 
-The generated `summary.json`, tick ledgers, and paired traces retain these as
-literal `UNLOGGED` fields rather than fabricating them from unrecorded planner
-state.
+Literal `UNLOGGED` cells are retained in the CSV ledgers.
+
+## Artifacts
+
+- `ledger_*.csv` — §4 identity/geometry/command/exit tick tables
+- `paired_traces_*.csv` — §5 cmd vs est along/lat/vert
+- `summary.json` — metrics + classifications
+- `run_final_meter_ledger.py` — reproducible extractor
