@@ -165,6 +165,45 @@ here); no new abort class. The block folds the HUD observation:
 screenshots every 5s, kept for any stale-channel-abort run — the
 sim's attempt-end rule is still unnamed.
 
+### T2f VERDICT + THE MASTER FINDING: VELOCITY-ESTIMATE DIVERGENCE (2026-07-24)
+
+T2f: **1/8** (prediction >=3/8 FAILED — same as T2c control). The
+class-A fix HELD (Cursor: no phantom-withdrawal stalls) but pass rate
+did not move — a bigger killer dominates, now NAMED by the HUD.
+
+THE HUD (t2f-run6 screenshot at the stream stop): black screen,
+**114 km/h**, ACRO — the drone had left the course. The log confirms
+and reframes everything: the believed velocity diverges to
+**+344 m/s (1237 km/h), almost entirely VERTICAL (vz)**, by t~8s in
+the long flights. THE DISCRIMINATOR IS ABSOLUTE across T2c+T2f: every
+gate pass had vz bounded (~+4 m/s); every catastrophic run had vz
+diverged to +50..+376. Mechanism: a gravity/attitude residual
+integrates into v_world (predict(): a_world*dt, leak-only bound); the
+attitude-rate controller's velocity FEEDBACK then acts on the garbage
+and slams the vehicle off-course / out of the arena — which is what
+STOPS the sim's telemetry stream (the "stale channel" deaths were the
+drone leaving the world, never a transport artifact). This subsumes
+the whole T2a-T2e staleness hunt.
+
+FIX (bd-next): estimation.vel_clamp_mps — a physical ceiling on the
+velocity estimate (0=off default; the airframe truly moves <15 m/s so
+a 12 m/s clamp never touches healthy flight and severs divergence from
+the controller). Config-gated, test reproduces divergence + proves the
+cap, suite 237 green.
+
+## Phase T3 — the velocity-clamp block (registered before results)
+
+R1, 8 runs, config B core (1.8 + cap 1.2, imu_stale 0.6) +
+`estimation.vel_clamp_mps=12`. Control = T2c/T2f (no clamp).
+PREDICTIONS: peak |v_world| <= 12 all runs; vz-divergence
+catastrophic class (out-of-arena stream-stops + the 120s grind)
+-> 0; median survival rises; gate passes >= 3/8. FAILURE READ: if
+passes do not rise despite bounded velocity, the residual blocker is
+the crossing itself (back to the instrumentation backlog: predicate
+vector + exit_cause enum). Include the 5s HUD capture on any
+stream-stop run — the sim's exact attempt-end rule is still unnamed
+(out-of-bounds strongly implied).
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

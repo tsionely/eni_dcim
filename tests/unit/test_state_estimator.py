@@ -239,3 +239,32 @@ def test_rest_gravity_level_flat_unchanged():
     est.set_level_reference(0.0, 0.0)
     feed_stationary(est, np.zeros(3), seconds=3.0)
     assert float(np.linalg.norm(est.v_world)) < 0.05
+
+
+def test_velocity_clamp_bounds_divergence():
+    # T3: a persistent accel residual drives v_world unbounded; the clamp
+    # (config-gated) must cap |v_world| to the physical ceiling while
+    # never touching healthy sub-ceiling flight.
+    import numpy as np
+    from aigp.core.params import ParamSet
+    from aigp.estimation.state_estimator import StateEstimator
+    from aigp.core.messages import ImuSample
+
+    def build(clamp):
+        p = ParamSet.load("config/params_default.json")
+        if clamp:
+            p = p.patch({"estimation.vel_clamp_mps": clamp})
+        return StateEstimator(p)
+
+    # A large constant specific force integrates velocity upward every tick.
+    def diverge(est, n=400):
+        for i in range(n):
+            est.predict(ImuSample(ts_ns=int(i * 0.004e9),
+                                  accel=np.array([30.0, 0.0, -9.81]),
+                                  gyro=np.zeros(3)))
+        return float(np.linalg.norm(est.v_world))
+
+    unclamped = diverge(build(0.0))
+    clamped = diverge(build(12.0))
+    assert unclamped > 20.0            # divergence reproduced
+    assert clamped <= 12.0 + 1e-6      # clamp holds the ceiling

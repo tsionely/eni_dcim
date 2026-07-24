@@ -31,6 +31,7 @@
     "gyro_bias_calib_s": 1.0,
     "gyro_sign": -1.0,
     "mahony_kp": 0.0,
+    "vel_clamp_mps": 0.0,
     "vel_leak": 0.05,
     "vision_blend": 0.6,
     "vision_vel_blend": 0.18

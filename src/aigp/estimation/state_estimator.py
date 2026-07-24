@@ -46,6 +46,9 @@ class StateEstimator:
             float(params.get("estimation.gyro_scale_yaw", default=1.0)),
         ])
         self.vel_leak = float(params.get("estimation.vel_leak"))
+        # Physical velocity-estimate ceiling (m/s); 0 disables. See predict().
+        self.vel_clamp = float(params.get("estimation.vel_clamp_mps",
+                                          default=0.0))
         self.vision_blend = float(params.get("estimation.vision_blend"))
         self.vision_vel_blend = float(params.get("estimation.vision_vel_blend", default=0.35))
         # Vision-yaw: the real sim's gyro z-axis is pinned (R10), so the
@@ -250,6 +253,19 @@ class StateEstimator:
         self.v_world = self.v_world + a_world * dt
         # Leak toward zero: bounds unavoidable accelerometer-integration drift.
         self.v_world *= max(0.0, 1.0 - self.vel_leak * dt)
+        # PHYSICAL CLAMP (T3 finding, HUD run6): during blind flight a
+        # gravity/attitude residual drives the integrated velocity to
+        # +50..+376 m/s (1237 km/h on the HUD) while the airframe truly
+        # moves <15 m/s; the attitude-rate controller's velocity feedback
+        # then acts on that garbage and slams the vehicle off-course /
+        # out of the arena (every catastrophic run had vz diverged; every
+        # gate pass had vz bounded ~4). Clamping the estimate to a
+        # physical ceiling never touches healthy flight and severs the
+        # divergence from the controller. Config-gated, default off.
+        if self.vel_clamp > 0.0:
+            speed = float(np.linalg.norm(self.v_world))
+            if speed > self.vel_clamp:
+                self.v_world *= self.vel_clamp / speed
 
         # Dead-reckon gate_rel between vision fixes. The gate is static, so
         # in camera coordinates:  dt/dt = -(omega x t) - v,  dn/dt = -(omega x n).
