@@ -1,0 +1,23 @@
+{
+  "run": 7,
+  "flight_id": "20260724T064952-62d08171",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "gate clip budget exceeded (11)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 11,
+  "env_hits": 0,
+  "duration_s": 21.379994399962015,
+  "loop_overrun_frac": 0.01403180542563143,
+  "loop_stats": {
+    "ticks": 5345,
+    "overruns": 75,
+    "overrun_frac": 0.01403180542563143,
+    "max_late_us": 13556
+  },
+  "log_dir": "logs\\20260724T064952-62d08171",
+  "screenshots_kept": false,
+  "screenshot_count": 0,
+  "post_abort_capture_s": 0.0
+}
