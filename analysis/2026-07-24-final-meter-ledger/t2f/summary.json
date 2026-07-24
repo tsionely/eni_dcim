@@ -1,0 +1,124 @@
+{
+  "status": "PARTIAL",
+  "n_fixtures_expected_block": 8,
+  "head": "9653371",
+  "n_fixtures": 1,
+  "n_stall_flights": 1,
+  "n_stall_approaches": 1,
+  "impossible_withdrawals_total": 0,
+  "prediction_held": true,
+  "impossibility_checks": {
+    "s_band": [
+      -0.9,
+      -0.4
+    ],
+    "stale_age_s": 0.3
+  },
+  "flights": [
+    {
+      "case": "t2f-B-run1",
+      "fixture": "fixtures/20260724T060941-raceprep-t2f-B-run1",
+      "gates_passed": 0,
+      "cohort": "STALL",
+      "geom_params": {
+        "geom_term_z_m": -0.9,
+        "geom_term_fresh_s": 0.3,
+        "patches_look_like_t2f": true
+      },
+      "approaches": [
+        {
+          "case": "t2f-B-run1",
+          "fixture": "fixtures/20260724T060941-raceprep-t2f-B-run1",
+          "approach": 1,
+          "cohort": "STALL",
+          "gates_passed_flight": 0,
+          "ticks": 23,
+          "classification": "INCONCLUSIVE (needs UNLOGGED exit/predicate)",
+          "classification_rationale": "final phase=recover, withdraw=False, rho=1.5815344349415676, closest_ahead=0.324 m, s_min_signed=0.32426432237058145.",
+          "metrics": {
+            "s_min_ahead_m": 0.32426432237058145,
+            "s_min_signed_m": 0.32426432237058145,
+            "closest_phase": "commit",
+            "margins": {
+              "s_plus_1_0": {
+                "signed_plane_m": 0.9843121171767483,
+                "lateral_m": 0.07254324592713653,
+                "true_world_dz_m": 0.7626674203265176,
+                "opening_off_m": 0.7661097287968285,
+                "margin_lateral_m": 0.7274567540728635,
+                "margin_vertical_m": 0.03733257967348247
+              },
+              "s_plus_0_5": {
+                "signed_plane_m": 0.5058656532220855,
+                "lateral_m": 0.08680530912875249,
+                "true_world_dz_m": 0.4182748842624752,
+                "opening_off_m": 0.4271873599461076,
+                "margin_lateral_m": 0.7131946908712475,
+                "margin_vertical_m": 0.3817251157375248
+              },
+              "closest": {
+                "signed_plane_m": 0.32426432237058145,
+                "lateral_m": 0.013067730721528207,
+                "true_world_dz_m": 0.32731367180013354,
+                "opening_off_m": 0.3275744271665539,
+                "margin_lateral_m": 0.7869322692784718,
+                "margin_vertical_m": 0.4726863281998665
+              },
+              "last_certified_detection": {
+                "signed_plane_m": 2.981475280652389,
+                "lateral_m": -2.722938202469801,
+                "true_world_dz_m": 3.6802490661294907,
+                "opening_off_m": 4.57805915680613,
+                "margin_lateral_m": -1.922938202469801,
+                "margin_vertical_m": -2.8802490661294904
+              }
+            },
+            "tracking_ratio": {
+              "mean_rho": 1.5815344349415676,
+              "median_rho": 1.5346107536025277,
+              "fraction_rho_lt_0_5": 0.0,
+              "n_ticks": 22
+            },
+            "closing": {
+              "delta_s_final_0_5s_m": 1.9971631634756406,
+              "cmd_along_at_closest_mps": 1.0168270119574507,
+              "cmd_withdrew_before_closest": false,
+              "withdrew_by_cmd_drop": false,
+              "withdrew_by_phase": false
+            },
+            "vector_rotation": {
+              "angle_deg_at_s_1m": 5.994473337013997,
+              "angle_deg_at_closest": 2.7486891250359453,
+              "growth_deg": -3.245784211978052
+            },
+            "scoring_order_check": {
+              "active_gate_increment_while_s_gt_0_2": false,
+              "counter_increment_mono_ns": null,
+              "last_signed_plane_before_increment_m": null,
+              "plane_went_nonpositive": false
+            }
+          },
+          "proxy_exit_cause": "COLLISION/HARD_SAFETY",
+          "withdrawals": [
+            {
+              "t_rel_s": 0.4398,
+              "from_phase": "commit",
+              "to_phase": "recover",
+              "signed_plane_m": 2.981475280652389,
+              "gate_rel_age_s": 0.0753686,
+              "impossible_s_band": false,
+              "impossible_stale_gt_0_3": false,
+              "impossible": false
+            }
+          ],
+          "n_impossible_withdrawals": 0,
+          "n_impossible_s_band": 0,
+          "n_impossible_stale": 0
+        }
+      ]
+    }
+  ],
+  "residual_stall_classes": {
+    "t2f-B-run1/a1": "INCONCLUSIVE (needs UNLOGGED exit/predicate)"
+  }
+}
