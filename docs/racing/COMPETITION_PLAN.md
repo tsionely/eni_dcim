@@ -1,5 +1,40 @@
 # COMPETITION PLAN — R2 race, start of next week (owner directive, 2026-07-21)
 
+## THE DEADLINE + SUBMISSION FACTS (organizer email, 2026-07-24)
+
+- HARD DEADLINE: Monday 2026-08-03, 15:00 CEST / 06:00 PST. No runs
+  after. ~10 days of runway from today (2026-07-24) — real time, not
+  "a few days"; every phase below is scoped to fit inside it.
+- ONLY SUBMISSION FLIGHT MODE (r2submission) is scored on the VQ2
+  leaderboard. Training flights (r1, r2training) do NOT count. Our
+  entire program has run on training events; we MUST validate the
+  submission pipeline and submit our best build before the deadline.
+- Top 10 on the final VQ2 leaderboard advance to the Physical
+  Qualifier (Costa Mesa, Sep 15-22). Leaderboards take the BEST run —
+  so submitting MANY runs banks our best; partial progress (gates +
+  time) is what ranks, a full-track finish is not required to place.
+- STANDING BLOCK CHANGE: the orchestrator hard-blocks r2submission by
+  design. It stays blocked for routine training. Submission is a
+  DELIBERATE, owner-authorized act on the frozen best build only,
+  done in the final days — never a casual run.
+
+### ENDGAME PLAN (registered 2026-07-24)
+
+1. T3 velocity-clamp block finishes (the master fix; catastrophic
+   divergence already gone in runs 1-2, flight now stable to the gate).
+2. THE CROSSING SPRINT: with flight stable, the last wall is the
+   frame-clip / crossing. Instrument exit_cause, read the real cause,
+   fix it. This is where gate-1 (then gate-2) reliability is won.
+3. SUBMISSION DRY-RUN: one owner-authorized r2submission flight of the
+   frozen build to prove the pipeline scores — mid-window, not at the
+   buzzer.
+4. FREEZE + SUBMIT: lock the best build 24h out; submit repeatedly in
+   submission mode to bank the best scored run.
+Honest read: we do not yet pass a gate reliably. But today's clamp
+finding changed the failure from "leaves the arena" to "reaches the
+gate and clips it" — a far shorter distance to a pass. 10 days on the
+crossing problem, with flight now stable, is a real shot.
+
 ## THE VQ1 TELEMETRY PIVOT (owner directive + organizer email, 2026-07-23)
 
 The organizers re-released the LEGACY VQ1 SIMULATOR WITH FULL
