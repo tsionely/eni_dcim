@@ -89,7 +89,7 @@
       "t0_mono_ns": 510888208651000,
       "ticks": 22,
       "classification": "D scoring-order",
-      "classification_rationale": "gate index incremented while estimated plane stayed positive (last_s_before=0.24683438404436975, s_min_signed=0.24683438404436975).",
+      "classification_rationale": "gate index incremented while estimated plane stayed positive (last_s_before=0.24683438404436975, s_min_signed=0.24683438404436975). If result.json gates_passed>0 this is a scored pass with estimator still in front \u2014 scoring/estimate order, not a stall.",
       "metrics": {
         "s_min_ahead_m": 0.24683438404436975,
         "s_min_signed_m": 0.24683438404436975,
@@ -169,8 +169,8 @@
       "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
       "t0_mono_ns": 510891926745100,
       "ticks": 46,
-      "classification": "PASS",
-      "classification_rationale": "plane went non-positive (s_min_signed=-0.506 m).",
+      "classification": "POST_PASS_OR_PHANTOM_CROSS",
+      "classification_rationale": "plane went non-positive (s_min_signed=-0.506 m) without a race-counter event in-window \u2014 post-pass DR or phantom cross.",
       "metrics": {
         "s_min_ahead_m": 0.02745043882966341,
         "s_min_signed_m": -0.5061385850895675,
@@ -250,8 +250,8 @@
       "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
       "t0_mono_ns": 510894706918700,
       "ticks": 26,
-      "classification": "PASS",
-      "classification_rationale": "plane went non-positive (s_min_signed=-0.540 m).",
+      "classification": "POST_PASS_OR_PHANTOM_CROSS",
+      "classification_rationale": "plane went non-positive (s_min_signed=-0.540 m) without a race-counter event in-window \u2014 post-pass DR or phantom cross.",
       "metrics": {
         "s_min_ahead_m": 0.012818004166056853,
         "s_min_signed_m": -0.5401143031371063,
@@ -323,8 +323,8 @@
       "fixture": "fixtures/20260723T171931-raceprep-r1j3390-val-run2",
       "t0_mono_ns": 503641701758800,
       "ticks": 52,
-      "classification": "A command-withdrawal",
-      "classification_rationale": "withdraw_cmd=True, withdraw_phase=True; rho=1.426517269942629; closest_ahead=0.018 m; cmd@closest=0.0.",
+      "classification": "POST_PASS_OR_PHANTOM_CROSS",
+      "classification_rationale": "plane went non-positive (s_min_signed=-0.315 m) without a race-counter event in-window \u2014 post-pass DR or phantom cross.",
       "metrics": {
         "s_min_ahead_m": 0.017873909994872705,
         "s_min_signed_m": -0.3147675852076194,

@@ -22,18 +22,18 @@ Method (corrected after first-pass frame bugs):
 | Fixture / approach | Class | Deciding values |
 | --- | --- | --- |
 | `stall_t2r1_B_run2` / 1 | **INCONCLUSIVE (needs UNLOGGED exit/predicate)** | s_ahead_min=0.486 m; s_signed_min=0.48642551440903925; ρ=1.3608512624336826 (n=14); cmd@closest=1.5443155920867573; withdraw=False; pass_counter=False; crossed=False. final phase=recover, withdraw=False, rho=1.3608512624336826, closest_ahead=0.486 m, s_min_signed=0.48642551440903925. |
-| `pass_r1k_off_run3` / 1 | **D scoring-order** | s_ahead_min=0.247 m; s_signed_min=0.24683438404436975; ρ=1.5894295921417314 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=True; crossed=False. gate index incremented while estimated plane stayed positive (last_s_before=0.24683438404436975, s_min_signed=0.24683438404436975). |
-| `pass_r1k_off_run3` / 2 | **PASS** | s_ahead_min=0.027 m; s_signed_min=-0.5061385850895675; ρ=1.5679484484391113 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.506 m). |
-| `pass_r1k_off_run3` / 3 | **PASS** | s_ahead_min=0.013 m; s_signed_min=-0.5401143031371063; ρ=7.139224180554812 (n=12); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.540 m). |
-| `stall_r1j3390_val_run2` / 1 | **A command-withdrawal** | s_ahead_min=0.018 m; s_signed_min=-0.3147675852076194; ρ=1.426517269942629 (n=6); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. withdraw_cmd=True, withdraw_phase=True; rho=1.426517269942629; closest_ahead=0.018 m; cmd@closest=0.0. |
+| `pass_r1k_off_run3` / 1 | **D scoring-order** | s_ahead_min=0.247 m; s_signed_min=0.24683438404436975; ρ=1.5894295921417314 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=True; crossed=False. gate index incremented while estimated plane stayed positive (last_s_before=0.24683438404436975, s_min_signed=0.24683438404436975). If result.json gates_passed>0 this is a scored pass with estimator still in front — scoring/estimate order, not a stall. |
+| `pass_r1k_off_run3` / 2 | **POST_PASS_OR_PHANTOM_CROSS** | s_ahead_min=0.027 m; s_signed_min=-0.5061385850895675; ρ=1.5679484484391113 (n=1); cmd@closest=-1.2; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.506 m) without a race-counter event in-window — post-pass DR or phantom cross. |
+| `pass_r1k_off_run3` / 3 | **POST_PASS_OR_PHANTOM_CROSS** | s_ahead_min=0.013 m; s_signed_min=-0.5401143031371063; ρ=7.139224180554812 (n=12); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.540 m) without a race-counter event in-window — post-pass DR or phantom cross. |
+| `stall_r1j3390_val_run2` / 1 | **POST_PASS_OR_PHANTOM_CROSS** | s_ahead_min=0.018 m; s_signed_min=-0.3147675852076194; ρ=1.426517269942629 (n=6); cmd@closest=0.0; withdraw=True; pass_counter=False; crossed=True. plane went non-positive (s_min_signed=-0.315 m) without a race-counter event in-window — post-pass DR or phantom cross. |
 
 ## Discriminating observations
 
 - **stall_t2r1_B_run2 a1** → INCONCLUSIVE (needs UNLOGGED exit/predicate): closest_ahead=0.486 m / true_dz=0.4689446562489606; ρ_mean=1.3608512624336826; Δs(last 0.5s)=None.
 - **pass_r1k_off_run3 a1** → D scoring-order: closest_ahead=0.247 m / true_dz=0.11957400948063639; ρ_mean=1.5894295921417314; Δs(last 0.5s)=14.613281228482984.
-- **pass_r1k_off_run3 a2** → PASS: closest_ahead=0.027 m / true_dz=0.1276226605433009; ρ_mean=1.5679484484391113; Δs(last 0.5s)=-0.7558771733395774.
-- **pass_r1k_off_run3 a3** → PASS: closest_ahead=0.013 m / true_dz=0.042295852828002856; ρ_mean=7.139224180554812; Δs(last 0.5s)=-1.5379712482474148.
-- **stall_r1j3390_val_run2 a1** → A command-withdrawal: closest_ahead=0.018 m / true_dz=0.17073388793259114; ρ_mean=1.426517269942629; Δs(last 0.5s)=None.
+- **pass_r1k_off_run3 a2** → POST_PASS_OR_PHANTOM_CROSS: closest_ahead=0.027 m / true_dz=0.1276226605433009; ρ_mean=1.5679484484391113; Δs(last 0.5s)=-0.7558771733395774.
+- **pass_r1k_off_run3 a3** → POST_PASS_OR_PHANTOM_CROSS: closest_ahead=0.013 m / true_dz=0.042295852828002856; ρ_mean=7.139224180554812; Δs(last 0.5s)=-1.5379712482474148.
+- **stall_r1j3390_val_run2 a1** → POST_PASS_OR_PHANTOM_CROSS: closest_ahead=0.018 m / true_dz=0.17073388793259114; ρ_mean=1.426517269942629; Δs(last 0.5s)=None.
 
 ## UNLOGGED instrumentation backlog
 

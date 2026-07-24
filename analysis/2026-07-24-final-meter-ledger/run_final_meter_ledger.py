@@ -552,21 +552,28 @@ def classify(case_cohort, ledger, met):
     pass_counter = met["scoring_order_check"]["counter_increment_mono_ns"] is not None
     crossed = met["scoring_order_check"]["plane_went_nonpositive"]
 
+    # PASS requires the sim race counter in this window. A later dead-reckoned
+    # plane crossing without a new counter is post-pass coast, not a new PASS.
     if pass_counter and crossed:
         return "PASS", (
             f"race counter incremented with plane going non-positive "
             f"(s_min_signed={s_signed:.3f} m, closest_ahead={smin:.3f} m)."
         )
-    if pass_counter and not crossed and met["scoring_order_check"]["active_gate_increment_while_s_gt_0_2"]:
+    if pass_counter and not crossed:
+        # Physical pass can score while believed t[2] is still slightly positive
+        # (r1k-off-run3: counter at s≈+0.25). That is D under the ledger rule.
         return "D scoring-order", (
             f"gate index incremented while estimated plane stayed positive "
             f"(last_s_before={met['scoring_order_check']['last_signed_plane_before_increment_m']}, "
-            f"s_min_signed={s_signed})."
+            f"s_min_signed={s_signed}). "
+            f"If result.json gates_passed>0 this is a scored pass with "
+            f"estimator still in front — scoring/estimate order, not a stall."
         )
-    # True PASS without counter in window shouldn't happen; if crossed without
-    # counter still report geometric cross.
-    if crossed and case_cohort == "PASS":
-        return "PASS", f"plane went non-positive (s_min_signed={s_signed:.3f} m)."
+    if crossed and not pass_counter:
+        return "POST_PASS_OR_PHANTOM_CROSS", (
+            f"plane went non-positive (s_min_signed={s_signed:.3f} m) without a "
+            f"race-counter event in-window — post-pass DR or phantom cross."
+        )
 
     if closing["cmd_withdrew_before_closest"] and (rho is None or rho >= 0.5):
         return "A command-withdrawal", (
