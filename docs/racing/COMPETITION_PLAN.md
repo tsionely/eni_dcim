@@ -94,6 +94,24 @@ into code with feed-side counters. Risk note: 0.6s on a truly dead
 sensor is a training-sim risk only; the race-day threshold is
 re-decided at freeze with the artifact's measured band in hand.
 
+### T2c + T2d RESULTS — THE STALE MYSTERY SOLVED IN KIND (2026-07-24)
+
+T2c (imu 0.6): stale-imu 0/8 — and the SAME event moved to the next
+tightest threshold: frame(0.500/0.504) in 7/8. T2d's consumer_diag
+ledger then caught the moment (run 2): at the death, consumer seqs
+EQUAL cell seqs while both channels' live gaps jump together —
+and the terminal measurement closes it: last imu record 0.489s and
+last frame 0.503s before the abort, while loop-published state runs
+to 0.012s. **THE SIM STOPS ITS TELEMETRY OUTPUT TERMINALLY** (both
+streams at once, never resuming), ~28-53s into R1 flights; our
+watchdog then honestly reports a dead feed threshold-seconds later.
+Not our bug; not an artifact — the sim ENDS THE ATTEMPT.
+Tested and REFUTED: a fixed no-progress timeout (spread 11-43s
+since last gate progress). The trigger is condition-dependent
+(off-course/arena-bounds/event rule — undetermined from logs).
+NEXT PROBE: eyes on the sim screen at the stop moment — what the
+HUD displays names the rule.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
