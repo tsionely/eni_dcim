@@ -1,0 +1,463 @@
+{
+  "method": {
+    "alignment": "first forward-positive signed-plane crossing through +1.0 m per contiguous near/approach segment",
+    "plane_sign": "unit PnP normal, reoriented to camera-forward positive; t[2] fallback",
+    "sampling": "setpoint/control ticks with state/detection forward-fill no older than 20 ms",
+    "margin_proxy": "0.8 m half-opening, lateral=t[0], vertical=true_world_dz; aim-up is unlogged"
+  },
+  "approaches": [
+    {
+      "case": "stall_t2r1_B_run2",
+      "cohort": "STALL",
+      "approach": 1,
+      "fixture": "fixtures/20260723T203357-raceprep-t2r1-B-run2",
+      "t0_mono_ns": 515480487216500,
+      "ticks": 22,
+      "classification": "A command-withdrawal (proxy)",
+      "classification_rationale": "no logged exit enum/predicate vector; final phase=commit, withdraw=False, rho=None, s_min=0.488 m.",
+      "metrics": {
+        "s_min_m": 0.4883969937103087,
+        "closest_phase": "commit",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9880514263184267,
+            "lateral_m": -0.048674628653818296,
+            "true_world_dz_m": 1.307984031179604,
+            "opening_off_m": 1.308889393835642,
+            "margin_lateral_m": 0.7513253713461817,
+            "margin_vertical_m": -0.507984031179604
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.4883969937103087,
+            "lateral_m": 0.0864422861076688,
+            "true_world_dz_m": 0.4689446562489606,
+            "opening_off_m": 0.47684521540220565,
+            "margin_lateral_m": 0.7135577138923312,
+            "margin_vertical_m": 0.33105534375103945
+          },
+          "closest": {
+            "signed_plane_m": 0.4883969937103087,
+            "lateral_m": 0.0864422861076688,
+            "true_world_dz_m": 0.4689446562489606,
+            "opening_off_m": 0.47684521540220565,
+            "margin_lateral_m": 0.7135577138923312,
+            "margin_vertical_m": 0.33105534375103945
+          },
+          "last_certified_detection": {
+            "signed_plane_m": 0.9828830087055926,
+            "lateral_m": -0.11864202679603564,
+            "true_world_dz_m": 1.3448066440500317,
+            "opening_off_m": 1.350029940558127,
+            "margin_lateral_m": 0.6813579732039644,
+            "margin_vertical_m": -0.5448066440500317
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": null,
+          "median_rho": null,
+          "fraction_rho_lt_0_5": null,
+          "n_ticks": 0
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.49448601499528394,
+          "cmd_along_at_closest_mps": -0.34856984450060785,
+          "cmd_withdrew_before_closest": false
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 13.40354160729157,
+          "angle_deg_at_closest": 15.222890141989252,
+          "growth_deg": 1.8193485346976814
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": false,
+          "counter_increment_mono_ns": null,
+          "last_signed_plane_before_increment_m": null
+        }
+      },
+      "proxy_exit_cause": "NONE",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    },
+    {
+      "case": "pass_r1k_off_run3",
+      "cohort": "PASS",
+      "approach": 1,
+      "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
+      "t0_mono_ns": 510888149007200,
+      "ticks": 5,
+      "classification": "D scoring-order",
+      "classification_rationale": "gate index incremented before crossing (s_min=0.730 m).",
+      "metrics": {
+        "s_min_m": 0.7297498308097417,
+        "closest_phase": "retreat",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9184150241598182,
+            "lateral_m": 0.09093522169830959,
+            "true_world_dz_m": 0.6929292303509862,
+            "opening_off_m": 0.6988706123597778,
+            "margin_lateral_m": 0.7090647783016905,
+            "margin_vertical_m": 0.10707076964901385
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.7297498308097417,
+            "lateral_m": 0.10246351673080818,
+            "true_world_dz_m": 0.6135731341684393,
+            "opening_off_m": 0.6220697414551895,
+            "margin_lateral_m": 0.6975364832691918,
+            "margin_vertical_m": 0.18642686583156076
+          },
+          "closest": {
+            "signed_plane_m": 0.7297498308097417,
+            "lateral_m": 0.10246351673080818,
+            "true_world_dz_m": 0.6135731341684393,
+            "opening_off_m": 0.6220697414551895,
+            "margin_lateral_m": 0.6975364832691918,
+            "margin_vertical_m": 0.18642686583156076
+          },
+          "last_certified_detection": {
+            "signed_plane_m": 0.7797692057559138,
+            "lateral_m": 0.07972615859706635,
+            "true_world_dz_m": 0.6324468213596557,
+            "opening_off_m": 0.6374521489591017,
+            "margin_lateral_m": 0.7202738414029337,
+            "margin_vertical_m": 0.16755317864034436
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": -7.985378176368151,
+          "median_rho": -7.985378176368151,
+          "fraction_rho_lt_0_5": 1.0,
+          "n_ticks": 1
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.1886651933500766,
+          "cmd_along_at_closest_mps": 0.3758874270089914,
+          "cmd_withdrew_before_closest": true
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 156.85339841257763,
+          "angle_deg_at_closest": 26.00598728916724,
+          "growth_deg": -130.84741112341038
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": true,
+          "counter_increment_mono_ns": 510888613945600,
+          "last_signed_plane_before_increment_m": 0.7297498308097417
+        }
+      },
+      "proxy_exit_cause": "RETREAT",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    },
+    {
+      "case": "pass_r1k_off_run3",
+      "cohort": "PASS",
+      "approach": 2,
+      "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
+      "t0_mono_ns": 510891746855700,
+      "ticks": 11,
+      "classification": "A command-withdrawal",
+      "classification_rationale": "withdraw=True; rho=1.4166721450581676; phase tail=retreat; s_min=0.665 m.",
+      "metrics": {
+        "s_min_m": 0.664596155684572,
+        "closest_phase": "retreat",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9704385324561967,
+            "lateral_m": -0.6383038525946221,
+            "true_world_dz_m": 1.4801845319009421,
+            "opening_off_m": 1.6119485279362826,
+            "margin_lateral_m": 0.16169614740537797,
+            "margin_vertical_m": -0.6801845319009421
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.664596155684572,
+            "lateral_m": -0.49318963538922134,
+            "true_world_dz_m": 1.0932404117601298,
+            "opening_off_m": 1.199337573146448,
+            "margin_lateral_m": 0.3068103646107787,
+            "margin_vertical_m": -0.2932404117601297
+          },
+          "closest": {
+            "signed_plane_m": 0.664596155684572,
+            "lateral_m": -0.49318963538922134,
+            "true_world_dz_m": 1.0932404117601298,
+            "opening_off_m": 1.199337573146448,
+            "margin_lateral_m": 0.3068103646107787,
+            "margin_vertical_m": -0.2932404117601297
+          },
+          "last_certified_detection": {
+            "signed_plane_m": 0.7239577625678985,
+            "lateral_m": -0.5429916392041558,
+            "true_world_dz_m": 1.1619334808575528,
+            "opening_off_m": 1.28254798513871,
+            "margin_lateral_m": 0.2570083607958442,
+            "margin_vertical_m": -0.3619334808575527
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": 1.4166721450581676,
+          "median_rho": 1.1917720665907163,
+          "fraction_rho_lt_0_5": 0.2,
+          "n_ticks": 10
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.30584237677162474,
+          "cmd_along_at_closest_mps": -0.5435789779581602,
+          "cmd_withdrew_before_closest": true
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 19.528345754995474,
+          "angle_deg_at_closest": 164.2895587692658,
+          "growth_deg": 144.7612130142703
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": false,
+          "counter_increment_mono_ns": null,
+          "last_signed_plane_before_increment_m": null
+        }
+      },
+      "proxy_exit_cause": "RETREAT",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    },
+    {
+      "case": "pass_r1k_off_run3",
+      "cohort": "PASS",
+      "approach": 3,
+      "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
+      "t0_mono_ns": 510894826828500,
+      "ticks": 7,
+      "classification": "A command-withdrawal",
+      "classification_rationale": "withdraw=False; rho=None; phase tail=recover; s_min=0.633 m.",
+      "metrics": {
+        "s_min_m": 0.6326349662370174,
+        "closest_phase": "recover",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9803793819887087,
+            "lateral_m": 1.0231202420206853,
+            "true_world_dz_m": 0.7295053279608464,
+            "opening_off_m": 1.25656398689272,
+            "margin_lateral_m": -0.22312024202068526,
+            "margin_vertical_m": 0.0704946720391536
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.6326349662370174,
+            "lateral_m": 0.6747560278864303,
+            "true_world_dz_m": 0.16105569653115553,
+            "opening_off_m": 0.6937107715425852,
+            "margin_lateral_m": 0.12524397211356975,
+            "margin_vertical_m": 0.6389443034688445
+          },
+          "closest": {
+            "signed_plane_m": 0.6326349662370174,
+            "lateral_m": 0.6747560278864303,
+            "true_world_dz_m": 0.16105569653115553,
+            "opening_off_m": 0.6937107715425852,
+            "margin_lateral_m": 0.12524397211356975,
+            "margin_vertical_m": 0.6389443034688445
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": null,
+          "median_rho": null,
+          "fraction_rho_lt_0_5": null,
+          "n_ticks": 0
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.34774441575169124,
+          "cmd_along_at_closest_mps": 0.0,
+          "cmd_withdrew_before_closest": false
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 165.68366118620992,
+          "angle_deg_at_closest": null,
+          "growth_deg": null
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": false,
+          "counter_increment_mono_ns": null,
+          "last_signed_plane_before_increment_m": null
+        }
+      },
+      "proxy_exit_cause": "RECOVER",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    },
+    {
+      "case": "pass_r1k_off_run3",
+      "cohort": "PASS",
+      "approach": 4,
+      "fixture": "fixtures/20260723T191736-raceprep-r1k-off-run3",
+      "t0_mono_ns": 510896546897300,
+      "ticks": 12,
+      "classification": "A command-withdrawal (proxy)",
+      "classification_rationale": "no logged exit enum/predicate vector; final phase=commit, withdraw=False, rho=None, s_min=0.431 m.",
+      "metrics": {
+        "s_min_m": 0.4312566123595465,
+        "closest_phase": "commit",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9783434261843358,
+            "lateral_m": 0.7013507832713208,
+            "true_world_dz_m": 1.4882788428360927,
+            "opening_off_m": 1.6452558570717304,
+            "margin_lateral_m": 0.09864921672867921,
+            "margin_vertical_m": -0.6882788428360926
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.49040616022754013,
+            "lateral_m": 0.9202855982225822,
+            "true_world_dz_m": 1.386864961776997,
+            "opening_off_m": 1.6644278309679297,
+            "margin_lateral_m": -0.12028559822258211,
+            "margin_vertical_m": -0.586864961776997
+          },
+          "closest": {
+            "signed_plane_m": 0.4312566123595465,
+            "lateral_m": 0.9937187430219576,
+            "true_world_dz_m": 0.9795219848576774,
+            "opening_off_m": 1.3953280112764395,
+            "margin_lateral_m": -0.19371874302195757,
+            "margin_vertical_m": -0.17952198485767734
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": null,
+          "median_rho": null,
+          "fraction_rho_lt_0_5": null,
+          "n_ticks": 0
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.5470868138247893,
+          "cmd_along_at_closest_mps": -1.3671500897281597,
+          "cmd_withdrew_before_closest": false
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 107.00233831816828,
+          "angle_deg_at_closest": 119.16436218316574,
+          "growth_deg": 12.162023864997451
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": false,
+          "counter_increment_mono_ns": null,
+          "last_signed_plane_before_increment_m": null
+        }
+      },
+      "proxy_exit_cause": "NONE",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    },
+    {
+      "case": "stall_r1j3390_val_run2",
+      "cohort": "STALL",
+      "approach": 1,
+      "fixture": "fixtures/20260723T171931-raceprep-r1j3390-val-run2",
+      "t0_mono_ns": 503641521525900,
+      "ticks": 16,
+      "classification": "A command-withdrawal (proxy)",
+      "classification_rationale": "no logged exit enum/predicate vector; final phase=recover, withdraw=True, rho=0.036262393104142296, s_min=0.650 m.",
+      "metrics": {
+        "s_min_m": 0.6500065727906152,
+        "closest_phase": "recover",
+        "margins": {
+          "s_plus_1_0": {
+            "signed_plane_m": 0.9912568190037538,
+            "lateral_m": -0.7640285436142976,
+            "true_world_dz_m": 1.3953776860363643,
+            "opening_off_m": 1.5908546451972232,
+            "margin_lateral_m": 0.03597145638570243,
+            "margin_vertical_m": -0.5953776860363642
+          },
+          "s_plus_0_5": {
+            "signed_plane_m": 0.6500065727906152,
+            "lateral_m": -0.34345483415858524,
+            "true_world_dz_m": 0.9674619258057209,
+            "opening_off_m": 1.0266176508275198,
+            "margin_lateral_m": 0.4565451658414148,
+            "margin_vertical_m": -0.16746192580572083
+          },
+          "closest": {
+            "signed_plane_m": 0.6500065727906152,
+            "lateral_m": -0.34345483415858524,
+            "true_world_dz_m": 0.9674619258057209,
+            "opening_off_m": 1.0266176508275198,
+            "margin_lateral_m": 0.4565451658414148,
+            "margin_vertical_m": -0.16746192580572083
+          },
+          "last_certified_detection": {
+            "signed_plane_m": 0.86800488080615,
+            "lateral_m": -0.7008022332817279,
+            "true_world_dz_m": 1.296563238370245,
+            "opening_off_m": 1.4738385261845321,
+            "margin_lateral_m": 0.09919776671827218,
+            "margin_vertical_m": -0.49656323837024496
+          }
+        },
+        "tracking_ratio": {
+          "mean_rho": 0.036262393104142296,
+          "median_rho": 0.1199513541602854,
+          "fraction_rho_lt_0_5": 1.0,
+          "n_ticks": 5
+        },
+        "closing": {
+          "delta_s_final_0_5s_m": -0.3412502462131386,
+          "cmd_along_at_closest_mps": 0.0,
+          "cmd_withdrew_before_closest": true
+        },
+        "vector_rotation": {
+          "angle_deg_at_s_1m": 1.5069383689943214,
+          "angle_deg_at_closest": null,
+          "growth_deg": null
+        },
+        "scoring_order_check": {
+          "active_gate_increment_while_s_gt_0_2": false,
+          "counter_increment_mono_ns": null,
+          "last_signed_plane_before_increment_m": null
+        }
+      },
+      "proxy_exit_cause": "RECOVER",
+      "unlogged_backlog": [
+        "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+        "speed_cap_mps and binding-rule source",
+        "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+        "logged approach-axis / gate-plane orientation convention",
+        "logged opening dimensions and aim-up target"
+      ]
+    }
+  ],
+  "unlogged_backlog": [
+    "commit_predicate_vector (per-conjunct booleans and sustain counter)",
+    "speed_cap_mps and binding-rule source",
+    "planner exit_cause enum (EXPIRED/DETECTION_LOST/CORRIDOR/MIN_DIST/etc.)",
+    "logged approach-axis / gate-plane orientation convention",
+    "logged opening dimensions and aim-up target"
+  ]
+}
