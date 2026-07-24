@@ -1,0 +1,113 @@
+{
+  "label": "raceprep-t2f-B-run3",
+  "started_at_utc": "2026-07-24T06:27:51.106471+00:00",
+  "runner_exit_code": 0,
+  "runner_exit_elapsed_s": 63.74652389995754,
+  "flight_id": "20260724T062701-62d08171",
+  "abort_reason": "environment collision (impulse=3.8)",
+  "stale_channel_abort": false,
+  "screenshots_kept": false,
+  "screenshot_interval_s": 5.0,
+  "post_abort_capture_s": 0.0,
+  "command": [
+    "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe",
+    "scripts\\sim_automation\\run_one_flight.py",
+    "raceprep-t2f-B-run3",
+    "r1",
+    "--",
+    "--max-duration",
+    "300",
+    "--patch",
+    "planner.commit.speed_mps=1.8",
+    "--patch",
+    "planner.commit.vz_cap_mps=1.2",
+    "--patch",
+    "planner.terminal.enable=false",
+    "--patch",
+    "safety.imu_stale_s=0.6",
+    "--patch",
+    "planner.commit.geom_term_z_m=-0.9",
+    "--patch",
+    "planner.commit.geom_term_fresh_s=0.3"
+  ],
+  "screenshots": [
+    {
+      "index": 0,
+      "elapsed_s": 0.030700399889610708,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_000_t0000.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 1,
+      "elapsed_s": 5.099074599915184,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_001_t0005.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 2,
+      "elapsed_s": 10.03688459994737,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_002_t0010.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 3,
+      "elapsed_s": 15.03734749997966,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_003_t0015.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 4,
+      "elapsed_s": 20.06339379993733,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_004_t0020.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 5,
+      "elapsed_s": 25.07778369996231,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_005_t0025.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 6,
+      "elapsed_s": 30.00439449993428,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_006_t0030.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 7,
+      "elapsed_s": 35.02560839999933,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_007_t0035.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 8,
+      "elapsed_s": 40.050080699962564,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_008_t0040.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 9,
+      "elapsed_s": 45.070151199935935,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_009_t0045.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 10,
+      "elapsed_s": 50.04726069991011,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_010_t0050.0s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 11,
+      "elapsed_s": 55.07183349994011,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_011_t0055.1s.png",
+      "title": "AI-GP  "
+    },
+    {
+      "index": 12,
+      "elapsed_s": 60.04139819997363,
+      "path": "C:\\Users\\tsion\\AppData\\Local\\Temp\\t2f_hud\\raceprep-t2f-B-run3\\shot_012_t0060.0s.png",
+      "title": "AI-GP  "
+    }
+  ]
+}
