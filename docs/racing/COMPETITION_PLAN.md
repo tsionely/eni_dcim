@@ -271,6 +271,36 @@ flights still don't pass, the drone is physically hitting the bar
 lever is final-meter centering, with exit_cause instrumentation to
 read it. HUD capture on any stream-stop run.
 
+### T4 VERDICT + THE PIVOT TO INSTRUMENTATION (2026-07-25)
+
+T4 (clamp + debounce, 8 fresh + run1): **1/9**. Predictions: clip-budget
+aborts ~0 PASS (clips 0-2, none tripped); clipped flights continue PASS
+(survival 37-66s vs 20s); passes >=2/8 FAIL (1/9); no new class held.
+The debounce + clamp WORK — flight is stable, single brushes survive —
+but pass rate held at ~1/8. The drone reaches the gate, brushes, and
+BOUNCES INTO A LONG SEARCH that ends off-course (frame-stale, 7/8).
+
+HONEST TURN: seven blocks of scalar/config levers (speed, cap, blend,
+leak, clamp, debounce, geom-term) each fixed a real layer, NONE moved
+gate completion past ~1/8. Both advisory channels said it three times:
+READ the exit cause, stop guessing. DONE (this commit): planner
+commit_exit_reason set at all 6 exit branches + pass; app.py emits a
+commit_exit log record with the gate geometry at exit. 4 exit branches
++ pass unit-tested, suite 241 green. No behavior change — pure
+instrumentation.
+
+## Phase T5 — read the crossing, then fix (registered before results)
+
+R1, 6 runs, the T4 config (clamp 12 + debounce 0.3 + imu_stale 0.6).
+The flights now emit commit_exit. Cursor extracts the exit-reason
+census across all commit attempts + the gate geometry at each exit:
+which branch ends the reached-gate attempts, and the true-vs-believed
+offset at that instant. THE FIX IS CHOSEN FROM THAT CENSUS, not before
+it — this phase produces the READ; the remedy is the next registered
+phase. Predicted top suspects (to confirm/refute): timer_expired on a
+biased-believed short, or corridor/geometric on a fresh phantom. HUD
+capture on stream-stops continues.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

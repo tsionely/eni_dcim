@@ -76,6 +76,12 @@ class RacePlanner:
                                          default=-0.4))
         self.geom_term_fresh_s = float(p.get(
             "planner.commit.geom_term_fresh_s", default=0.6))
+        # Commit exit reason (instrumentation for the crossing autopsy —
+        # both channels' top ask): set at every commit-exit branch, read
+        # and cleared by app.py into a commit_exit log record. Closed set:
+        # stale_budget / relock_jump / geometric_behind / term_abort /
+        # corridor_abort / timer_expired / pass.
+        self.commit_exit_reason = None
         self.retreat_climb_bias = float(p.get("planner.retreat.climb_bias_mps",
                                               default=0.2))
         self.commit_distance = float(p.get("planner.commit.distance_m"))
@@ -243,6 +249,8 @@ class RacePlanner:
     # -- external events ------------------------------------------------------
 
     def on_gate_passed(self) -> None:
+        if self._commit_until_ns is not None:
+            self.commit_exit_reason = "pass"
         self._commit_until_ns = None
         self._commit_v_body = None
         self._commit_prev_z = None
@@ -378,6 +386,7 @@ class RacePlanner:
                 # the wash runs ~0.5s and the pass event clears commit
                 # before this budget expires.
                 if state.gate_rel_age_s > self.entry_max_age_s:
+                    self.commit_exit_reason = "stale_budget"
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
@@ -399,6 +408,7 @@ class RacePlanner:
                 if (gate is not None and self._commit_prev_z is not None
                         and float(gate.t[2]) > self._commit_prev_z
                         + self.relock_jump_m):
+                    self.commit_exit_reason = "relock_jump"
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
@@ -432,6 +442,7 @@ class RacePlanner:
                 # documented law even though the budget subsumes it.
                 if gate is not None and gate.t[2] < self.geom_term_z_m \
                         and state.gate_rel_age_s <= self.geom_term_fresh_s:
+                    self.commit_exit_reason = "geometric_behind"
                     self._commit_until_ns = None
                     self._commit_v_body = None
                     self._commit_prev_z = None
@@ -456,6 +467,7 @@ class RacePlanner:
                         if (self.retreat_enabled
                                 and dist > self.abort_min_dist_m
                                 and state.gate_rel_age_s <= self.blind_age_s):
+                            self.commit_exit_reason = "term_abort"
                             self._commit_until_ns = None
                             self._commit_v_body = None
                             self._commit_prev_z = None
@@ -489,6 +501,7 @@ class RacePlanner:
                         self._abort_breach = 0
                     if self._abort_breach >= 4 and self.retreat_enabled:
                         self._abort_breach = 0
+                        self.commit_exit_reason = "corridor_abort"
                         self._commit_until_ns = None
                         self._commit_v_body = None
                         self._commit_prev_z = None
@@ -549,6 +562,7 @@ class RacePlanner:
             # believed we know where the structure is and can back away
             # from it. With stale evidence, brake instead (cohort-2 F1
             # backed blind into the gate it had just blind-overflown).
+            self.commit_exit_reason = "timer_expired"
             self._commit_until_ns = None
             self._commit_v_body = None
             self._commit_prev_z = None

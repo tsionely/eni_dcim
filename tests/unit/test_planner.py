@@ -707,3 +707,20 @@ def test_geometric_termination_requires_fresh_evidence():
     sp = p.plan(int(0.1e9), "race",
                 make_state(gate_t=[0.0, 0.0, -1.0], age_s=0.45), None)
     assert sp.phase == "commit"
+
+
+def test_commit_exit_reason_timer_expired():
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5], center_px=(320, 180)),
+           None)
+    assert p.commit_exit_reason is None
+    p.plan(int(6e9), "race",
+           make_state(gate_t=[0.0, 0.0, 1.2], age_s=0.1), None)
+    assert p.commit_exit_reason == "timer_expired"
+
+
+def test_commit_exit_reason_pass():
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    p.on_gate_passed()
+    assert p.commit_exit_reason == "pass"

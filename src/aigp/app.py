@@ -311,6 +311,18 @@ class App:
             if supervisor.gate_passed_flag:
                 estimator.on_gate_passed()
                 planner.on_gate_passed()
+            # Commit exit-reason instrumentation (crossing autopsy): emit
+            # the branch that ended each commit, paired with the geometry
+            # at that instant, so the near-miss cause is READ not guessed.
+            if planner.commit_exit_reason is not None:
+                gr = state.gate_rel
+                bus.publish_latest("commit_exit", {
+                    "ts_ns": now_ns,
+                    "reason": planner.commit_exit_reason,
+                    "gate_rel_t": (list(gr.t) if gr is not None else None),
+                    "gate_rel_age_s": state.gate_rel_age_s,
+                })
+                planner.commit_exit_reason = None
             if supervisor.collision_flag:
                 planner.on_collision(now_ns)
                 estimator.on_collision()
