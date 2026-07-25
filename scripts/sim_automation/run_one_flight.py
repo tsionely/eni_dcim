@@ -100,13 +100,39 @@ def main() -> int:
 
     # STEP 4 — wait for the flight to complete.
     rc = proc.wait()
+
+    # STEP 5 — ALWAYS return the sim to the main menu, whatever the flight
+    # outcome (owner must not be responsible for closing a flight by hand).
+    # After abort/finish the sim sits on a results/pause/live screen; ESC
+    # opens the in-race pause menu (BACK TO MAIN MENU 472,800) and a clean
+    # finish shows the result screen (MAIN MENU ~1360,840) — click both,
+    # whichever is up lands and the other is inert (legacy-proven coords).
+    # Best-effort: never fail the run on cleanup.
+    try:
+        ai = R.sim_window(ensure_visible=True)
+        if ai is not None:
+            for _ in range(2):
+                ai = R._sim_focus(ai)
+                pyautogui.press("esc")
+                time.sleep(1.0)
+                R._sim_click(ai, 472, 800)
+                time.sleep(1.2)
+                R._sim_click(ai, 1360, 840)
+                time.sleep(1.2)
+            print("[STEP 5] returned to main menu", flush=True)
+        else:
+            print("[STEP 5] sim window not found for menu return", flush=True)
+    except Exception as e:
+        print(f"[STEP 5] menu-return best-effort failed: {e}", flush=True)
+
     if rc != 0:
         print(f"[STOP] fly_once errored (exit {rc}). Not a clean flight.",
               flush=True)
         return 3
 
-    print(f"[DONE] {label}: flight complete — collect logs/<flight_id>/, write "
-          "the run dir + log-header, commit, push.", flush=True)
+    print(f"[DONE] {label}: flight complete, sim at main menu — collect "
+          "logs/<flight_id>/, write the run dir + log-header, commit, push.",
+          flush=True)
     return 0
 
 
