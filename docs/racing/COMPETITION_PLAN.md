@@ -411,6 +411,24 @@ This is the build to submit. Two fronts now run in parallel:
   FRONT B (improvement): final-meter alignment precision (close-tracker /
     gate-relative estimate in the last meter) — the true pass-rate lever.
 
+### FRONT B ACTIVE — final-meter alignment precision (owner decision 2026-07-25: precision before submission)
+
+Owner chose: improve precision first, submit the best build. The
+ceiling is vertical: the drone arrives laterally centered (right
++0.03) but ~0.5m LOW, and vertical is the weak axis (no altimeter).
+DISCIPLINE UNCHANGED — read, then fix. THE READ (phase B1, Cursor):
+in the final meter (closest 1.5m) of PASS vs FAIL attempts on the
+frozen baseline, characterize the vertical:
+  - the gate_rel `down` trajectory and whether it JUMPS at the
+    full-quad -> close-tracker handoff (detection source per tick);
+  - is the low arrival ESTIMATE-driven (believed down != where a
+    smooth track would put it) or CONTROL-driven (believed down is
+    fine, commanded vz can't close it) — the deciding split;
+  - pass vs fail: what is different in the final-meter vertical.
+The fix is chosen FROM B1. Sakana flies a 10-run frozen-baseline
+block (raceprep-b1-B-runN, the 8-patch baseline above) to bank
+pass/fail examples for the read. No config change until B1 reads.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
