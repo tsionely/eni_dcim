@@ -1,0 +1,390 @@
+{
+  "status": "COMPLETE",
+  "head": "baabce7",
+  "n_fixtures_expected": 8,
+  "questions": {
+    "corridor_abort_dropped_sharply": "**YES \u2014 corridor_abort eliminated**: T5 3/3 \u2192 T6 5/6 \u2192 T7 0/5.",
+    "gate_clips_rose": "**YES \u2014 gate clips rose**: T6 clips_sum=4 (clip-budget aborts=0) \u2192 T7 clips_sum=6 (clip-budget aborts=0/8). 0.7 may be past the physical envelope (clip instead of abort).",
+    "clip_rise_bool": true
+  },
+  "t5": {
+    "label": "T5",
+    "n_fixtures": 6,
+    "gates_passed_sum": 3,
+    "n_reached": 3,
+    "n_corridor_abort_reached": 3,
+    "corridor_frac": 1.0,
+    "down_median": -0.7682920162396658,
+    "gate_clips_sum": 3,
+    "n_clip_budget_aborts": 0,
+    "histogram_reached": {
+      "corridor_abort": 3
+    }
+  },
+  "t6": {
+    "label": "T6",
+    "n_fixtures": 8,
+    "gates_passed_sum": 2,
+    "n_reached": 6,
+    "n_corridor_abort_reached": 5,
+    "corridor_frac": 0.8333333333333334,
+    "down_median": -0.5207768779704185,
+    "gate_clips_sum": 4,
+    "n_clip_budget_aborts": 0,
+    "histogram_reached": {
+      "corridor_abort": 5,
+      "pass": 1
+    }
+  },
+  "t7": {
+    "n_fixtures": 8,
+    "n_exits": 12,
+    "n_reached": 5,
+    "n_near_miss": 5,
+    "histogram_reached": {
+      "stale_budget": 3,
+      "timer_expired": 2
+    },
+    "histogram_all": {
+      "stale_budget": 9,
+      "timer_expired": 3
+    },
+    "n_corridor_abort_reached": 0,
+    "corridor_frac": 0.0,
+    "down_median": -0.6621888293867448,
+    "down_median_corridor": null,
+    "right_median": -0.18710060273855517,
+    "gates_passed_sum": 2,
+    "gate_clips_sum": 6,
+    "gate_clips_per_run": [
+      {
+        "fixture": "20260725T224000-raceprep-t7-B-run1",
+        "gate_clips": 0,
+        "abort_reason": "stale channels: frame(0.500s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T224331-raceprep-t7-B-run2",
+        "gate_clips": 1,
+        "abort_reason": "stale channels: frame(0.500s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T224518-raceprep-t7-B-run3",
+        "gate_clips": 1,
+        "abort_reason": "stale channels: frame(0.504s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T224701-raceprep-t7-B-run4",
+        "gate_clips": 2,
+        "abort_reason": "stale channels: frame(0.504s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T224836-raceprep-t7-B-run5",
+        "gate_clips": 0,
+        "abort_reason": "stale channels: frame(0.500s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T225011-raceprep-t7-B-run6",
+        "gate_clips": 0,
+        "abort_reason": "stale channels: frame(0.504s)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T225148-raceprep-t7-B-run7",
+        "gate_clips": 1,
+        "abort_reason": "environment collision (impulse=12.9)",
+        "clip_budget_abort": false
+      },
+      {
+        "fixture": "20260725T225415-raceprep-t7-B-run8",
+        "gate_clips": 1,
+        "abort_reason": "stale channels: frame(0.500s)",
+        "clip_budget_abort": false
+      }
+    ],
+    "n_clip_budget_aborts": 0,
+    "dominant_near_miss": "stale_budget",
+    "dominant_near_miss_n": 3
+  },
+  "next_lever": [
+    "**NEW DOMINANT EXIT: `stale_budget`** \u2014 3/5 near-misses (corridor_frac=0.000, gates=2/8).",
+    "Geometry at exit: down median=-0.740, right median=-0.203, fwd median=0.754, age median=0.617 s."
+  ],
+  "flights": [
+    {
+      "fixture": "20260725T224000-raceprep-t7-B-run1",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.500s)",
+      "n_commit_exits": 2,
+      "attempts": [
+        {
+          "fixture": "20260725T224000-raceprep-t7-B-run1",
+          "attempt": 1,
+          "mono_ns": 695828696685900,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.18710060273855517,
+          "gate_rel_t_down": -0.8687265787714691,
+          "gate_rel_t_fwd": 1.563654169335593,
+          "gate_rel_age_s": 0.616760072,
+          "exit_range_m": 1.7985290838598345,
+          "closest_range_m": 1.7985290838598345,
+          "closest_fwd_m": 1.563654169335593,
+          "reached_gate": true,
+          "commit_start_mono_ns": 695826473052500,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T224000-raceprep-t7-B-run1",
+          "attempt": 2,
+          "mono_ns": 695830116691200,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.2032904031806709,
+          "gate_rel_t_down": -0.6486853310421598,
+          "gate_rel_t_fwd": -0.13898738070991312,
+          "gate_rel_age_s": 0.609588536,
+          "exit_range_m": 0.6938567134007124,
+          "closest_range_m": 0.6938567134007124,
+          "closest_fwd_m": -0.13898738070991312,
+          "reached_gate": true,
+          "commit_start_mono_ns": 695830012865000,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T224331-raceprep-t7-B-run2",
+      "gates_passed": 0,
+      "gate_clips": 1,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.500s)",
+      "n_commit_exits": 2,
+      "attempts": [
+        {
+          "fixture": "20260725T224331-raceprep-t7-B-run2",
+          "attempt": 1,
+          "mono_ns": 696002602607200,
+          "reason": "timer_expired",
+          "gate_rel_t_right": -0.16996520543502444,
+          "gate_rel_t_down": -0.6621888293867448,
+          "gate_rel_t_fwd": 1.1940015289587034,
+          "gate_rel_age_s": 0.0,
+          "exit_range_m": 1.3758713122886455,
+          "closest_range_m": 1.1024331458213052,
+          "closest_fwd_m": 1.0198232418983413,
+          "reached_gate": true,
+          "commit_start_mono_ns": 695998338927800,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T224331-raceprep-t7-B-run2",
+          "attempt": 2,
+          "mono_ns": 696006003036800,
+          "reason": "timer_expired",
+          "gate_rel_t_right": 0.03182929181610508,
+          "gate_rel_t_down": -0.343149979203584,
+          "gate_rel_t_fwd": 0.9650131777362139,
+          "gate_rel_age_s": 0.0,
+          "exit_range_m": 1.0247026130782924,
+          "closest_range_m": 1.0247026130782924,
+          "closest_fwd_m": 0.9650131777362139,
+          "reached_gate": true,
+          "commit_start_mono_ns": 696003498909100,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T224518-raceprep-t7-B-run3",
+      "gates_passed": 0,
+      "gate_clips": 1,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.504s)",
+      "n_commit_exits": 0,
+      "attempts": []
+    },
+    {
+      "fixture": "20260725T224701-raceprep-t7-B-run4",
+      "gates_passed": 1,
+      "gate_clips": 2,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.504s)",
+      "n_commit_exits": 2,
+      "attempts": [
+        {
+          "fixture": "20260725T224701-raceprep-t7-B-run4",
+          "attempt": 1,
+          "mono_ns": 696279353051100,
+          "reason": "timer_expired",
+          "gate_rel_t_right": 0.13093669253620724,
+          "gate_rel_t_down": -3.198001114869214,
+          "gate_rel_t_fwd": 7.644743023266035,
+          "gate_rel_age_s": 0.015707744,
+          "exit_range_m": 8.287728967571983,
+          "closest_range_m": 5.786237763163342,
+          "closest_fwd_m": 3.924404253967494,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696275069605500,
+          "gates_passed_flight": 1
+        },
+        {
+          "fixture": "20260725T224701-raceprep-t7-B-run4",
+          "attempt": 2,
+          "mono_ns": 696285712926700,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.020464721704483206,
+          "gate_rel_t_down": -0.25348655262754194,
+          "gate_rel_t_fwd": 5.100085774763556,
+          "gate_rel_age_s": 0.60482852,
+          "exit_range_m": 5.106422343201062,
+          "closest_range_m": 5.106422343201062,
+          "closest_fwd_m": 5.100085774763556,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696285069197500,
+          "gates_passed_flight": 1
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T224836-raceprep-t7-B-run5",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.500s)",
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T224836-raceprep-t7-B-run5",
+          "attempt": 1,
+          "mono_ns": 696369363994800,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.005153533946308157,
+          "gate_rel_t_down": -2.746170122571117,
+          "gate_rel_t_fwd": 4.2981624112012025,
+          "gate_rel_age_s": 0.619768376,
+          "exit_range_m": 5.10055653964127,
+          "closest_range_m": 5.10055653964127,
+          "closest_fwd_m": 4.2981624112012025,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696369260258100,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T225011-raceprep-t7-B-run6",
+      "gates_passed": 0,
+      "gate_clips": 0,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.504s)",
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T225011-raceprep-t7-B-run6",
+          "attempt": 1,
+          "mono_ns": 696463667539500,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.2815914670012237,
+          "gate_rel_t_down": -0.28015512241125945,
+          "gate_rel_t_fwd": 2.0363478853607275,
+          "gate_rel_age_s": 0.612514104,
+          "exit_range_m": 2.0747272970475605,
+          "closest_range_m": 2.0747272970475605,
+          "closest_fwd_m": 2.0363478853607275,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696462543710600,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T225148-raceprep-t7-B-run7",
+      "gates_passed": 1,
+      "gate_clips": 1,
+      "clip_budget_abort": false,
+      "abort_reason": "environment collision (impulse=12.9)",
+      "n_commit_exits": 3,
+      "attempts": [
+        {
+          "fixture": "20260725T225148-raceprep-t7-B-run7",
+          "attempt": 1,
+          "mono_ns": 696560350446100,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.9792225966886233,
+          "gate_rel_t_down": -0.7396478252282083,
+          "gate_rel_t_fwd": 0.7541733139285398,
+          "gate_rel_age_s": 0.618662176,
+          "exit_range_m": 1.440393413853446,
+          "closest_range_m": 1.440393413853446,
+          "closest_fwd_m": 0.7541733139285398,
+          "reached_gate": true,
+          "commit_start_mono_ns": 696560146974100,
+          "gates_passed_flight": 1
+        },
+        {
+          "fixture": "20260725T225148-raceprep-t7-B-run7",
+          "attempt": 2,
+          "mono_ns": 696565170429200,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.33453220377653964,
+          "gate_rel_t_down": -0.13462142173544234,
+          "gate_rel_t_fwd": 2.5138452530766346,
+          "gate_rel_age_s": 0.611952168,
+          "exit_range_m": 2.539577263831441,
+          "closest_range_m": 2.539577263831441,
+          "closest_fwd_m": 2.5138452530766346,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696563886697800,
+          "gates_passed_flight": 1
+        },
+        {
+          "fixture": "20260725T225148-raceprep-t7-B-run7",
+          "attempt": 3,
+          "mono_ns": 696567870427900,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.2972418653486991,
+          "gate_rel_t_down": 0.4170483452882928,
+          "gate_rel_t_fwd": 5.980976618953049,
+          "gate_rel_age_s": 0.600801608,
+          "exit_range_m": 6.002862930742857,
+          "closest_range_m": 6.002862930742857,
+          "closest_fwd_m": 5.980976618953049,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696567606942900,
+          "gates_passed_flight": 1
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T225415-raceprep-t7-B-run8",
+      "gates_passed": 0,
+      "gate_clips": 1,
+      "clip_budget_abort": false,
+      "abort_reason": "stale channels: frame(0.500s)",
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T225415-raceprep-t7-B-run8",
+          "attempt": 1,
+          "mono_ns": 696659560328600,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -2.6093897415029845,
+          "gate_rel_t_down": 0.14997622192049193,
+          "gate_rel_t_fwd": 2.991285330187775,
+          "gate_rel_age_s": 0.603107512,
+          "exit_range_m": 3.972303565539666,
+          "closest_range_m": 3.9347475380752375,
+          "closest_fwd_m": 2.7843856072643725,
+          "reached_gate": false,
+          "commit_start_mono_ns": 696659036462000,
+          "gates_passed_flight": 0
+        }
+      ]
+    }
+  ]
+}
