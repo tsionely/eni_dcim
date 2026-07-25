@@ -1,0 +1,56 @@
+{
+  "run": 7,
+  "flight_id": "20260725T225105-d74bd32a",
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=12.9)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 1,
+  "env_hits": 1,
+  "duration_s": 36.22489470010623,
+  "loop_overrun_frac": 0.0259639818804552,
+  "loop_stats": {
+    "ticks": 9051,
+    "overruns": 235,
+    "overrun_frac": 0.0259639818804552,
+    "max_late_us": 20857
+  },
+  "log_dir": "logs\\20260725T225105-d74bd32a",
+  "commit_exit_count": 3,
+  "commit_exit_reason_counts": {
+    "stale_budget": 3
+  },
+  "commit_exits": [
+    {
+      "ts_ns": 1785019887789642000,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        -0.9792225966886233,
+        -0.7396478252282083,
+        0.7541733139285398
+      ],
+      "gate_rel_age_s": 0.618662176
+    },
+    {
+      "ts_ns": 1785019892609603650,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        0.33453220377653964,
+        -0.13462142173544234,
+        2.5138452530766346
+      ],
+      "gate_rel_age_s": 0.611952168
+    },
+    {
+      "ts_ns": 1785019895309468600,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        0.2972418653486991,
+        0.4170483452882928,
+        5.980976618953049
+      ],
+      "gate_rel_age_s": 0.600801608
+    }
+  ]
+}
