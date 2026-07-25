@@ -1,10 +1,10 @@
 {
-  "status": "PARTIAL",
-  "head": "f2dfdd5",
+  "status": "COMPLETE",
+  "head": "cecfa39",
   "n_fixtures_expected": 8,
   "questions": {
-    "corridor_abort_dropped": "**YES \u2014 corridor_abort dropped**: T5 3/3 (100%) \u2192 T6 2/3 (67%).",
-    "down_moved_toward_zero": "**YES \u2014 down moved toward 0**: T5 median down=-0.768 m \u2192 T6 median down=-0.653 m (\u0394=+0.115 m; corridor_abort exits)."
+    "corridor_abort_dropped": "**YES \u2014 corridor_abort dropped**: T5 3/3 (100%) \u2192 T6 5/6 (83%).",
+    "down_moved_toward_zero": "**YES \u2014 down moved toward 0**: T5 median down=-0.768 m \u2192 T6 median down=-0.602 m (\u0394=+0.166 m; corridor_abort exits)."
   },
   "t5": {
     "n_fixtures": 6,
@@ -24,34 +24,39 @@
     }
   },
   "t6": {
-    "n_fixtures": 4,
-    "n_exits": 5,
-    "n_reached": 3,
-    "n_near_miss": 2,
+    "n_fixtures": 8,
+    "n_exits": 11,
+    "n_reached": 6,
+    "n_near_miss": 5,
     "histogram_reached": {
-      "corridor_abort": 2,
+      "corridor_abort": 5,
       "pass": 1
     },
     "histogram_all": {
-      "corridor_abort": 2,
-      "stale_budget": 2,
-      "pass": 1
+      "corridor_abort": 5,
+      "stale_budget": 3,
+      "pass": 1,
+      "timer_expired": 1,
+      "geometric_behind": 1
     },
-    "n_corridor_abort_reached": 2,
-    "corridor_abort_frac_reached": 0.6666666666666666,
-    "corridor_down_median": -0.6534088133567104,
+    "n_corridor_abort_reached": 5,
+    "corridor_abort_frac_reached": 0.8333333333333334,
+    "corridor_down_median": -0.6021332387995387,
     "corridor_down_values": [
       -0.7046843879138821,
-      -0.6021332387995387
+      -0.6021332387995387,
+      -0.4394205171412983,
+      -0.4038913803444792,
+      -0.8825530988330323
     ],
-    "corridor_right_median": -0.4810608265523804,
-    "corridor_fwd_median": 1.1431646106056237,
-    "reached_down_median": -0.6021332387995387,
-    "reached_right_median": -0.26735283025064727
+    "corridor_right_median": -0.26485278172079463,
+    "corridor_fwd_median": 1.016619976041402,
+    "reached_down_median": -0.5207768779704185,
+    "reached_right_median": -0.13531548921985545
   },
   "comparison": {
-    "corridor_abort_frac_delta": 0.33333333333333337,
-    "down_median_delta": 0.1148832028829554
+    "corridor_abort_frac_delta": 0.16666666666666663,
+    "down_median_delta": 0.16615877744012708
   },
   "flights": [
     {
@@ -156,6 +161,130 @@
           "closest_fwd_m": 1.047634132026026,
           "reached_gate": true,
           "commit_start_mono_ns": 694486748671400,
+          "gates_passed_flight": 1
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T222057-raceprep-t6-B-run5",
+      "gates_passed": 0,
+      "n_commit_exits": 2,
+      "attempts": [
+        {
+          "fixture": "20260725T222057-raceprep-t6-B-run5",
+          "attempt": 1,
+          "mono_ns": 694686739826900,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.10324708360091404,
+          "gate_rel_t_down": -0.7007059013903847,
+          "gate_rel_t_fwd": 3.0906187545519765,
+          "gate_rel_age_s": 0.60973312,
+          "exit_range_m": 3.1707369816028286,
+          "closest_range_m": 3.1707369816028286,
+          "closest_fwd_m": 3.0906187545519765,
+          "reached_gate": false,
+          "commit_start_mono_ns": 694686136206200,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T222057-raceprep-t6-B-run5",
+          "attempt": 2,
+          "mono_ns": 694690899825700,
+          "reason": "timer_expired",
+          "gate_rel_t_right": -0.4582610527958834,
+          "gate_rel_t_down": -1.9090418966678047,
+          "gate_rel_t_fwd": 3.751081254559114,
+          "gate_rel_age_s": 0.017809528,
+          "exit_range_m": 4.233799089948338,
+          "closest_range_m": 2.5438332229183698,
+          "closest_fwd_m": 2.344687247376478,
+          "reached_gate": false,
+          "commit_start_mono_ns": 694687536245300,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T222348-raceprep-t6-B-run6",
+      "gates_passed": 0,
+      "n_commit_exits": 2,
+      "attempts": [
+        {
+          "fixture": "20260725T222348-raceprep-t6-B-run6",
+          "attempt": 1,
+          "mono_ns": 694860959134000,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": -0.26485278172079463,
+          "gate_rel_t_down": -0.4394205171412983,
+          "gate_rel_t_fwd": 0.9413479399113907,
+          "gate_rel_age_s": 0.035717952,
+          "exit_range_m": 1.0720883036603785,
+          "closest_range_m": 1.0720883036603785,
+          "closest_fwd_m": 0.9413479399113907,
+          "reached_gate": true,
+          "commit_start_mono_ns": 694858595711100,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T222348-raceprep-t6-B-run6",
+          "attempt": 2,
+          "mono_ns": 694869058536000,
+          "reason": "geometric_behind",
+          "gate_rel_t_right": -2.078439529205012,
+          "gate_rel_t_down": -9.214382121656737,
+          "gate_rel_t_fwd": -0.4296536385842984,
+          "gate_rel_age_s": 0.0,
+          "exit_range_m": 9.455651802473374,
+          "closest_range_m": 4.979277721674066,
+          "closest_fwd_m": 3.4260360778787655,
+          "reached_gate": false,
+          "commit_start_mono_ns": 694868155126900,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T222642-raceprep-t6-B-run7",
+      "gates_passed": 0,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T222642-raceprep-t6-B-run7",
+          "attempt": 1,
+          "mono_ns": 695032917516400,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": 0.24339864165100555,
+          "gate_rel_t_down": -0.4038913803444792,
+          "gate_rel_t_fwd": 0.9329122401034259,
+          "gate_rel_age_s": 0.012564888,
+          "exit_range_m": 1.045321191600417,
+          "closest_range_m": 1.045321191600417,
+          "closest_fwd_m": 0.9329122401034259,
+          "reached_gate": true,
+          "commit_start_mono_ns": 695030409304000,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T222937-raceprep-t6-B-run8",
+      "gates_passed": 1,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T222937-raceprep-t6-B-run8",
+          "attempt": 1,
+          "mono_ns": 695199300886500,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": 0.08838353327499572,
+          "gate_rel_t_down": -0.8825530988330323,
+          "gate_rel_t_fwd": 1.016619976041402,
+          "gate_rel_age_s": 0.015164088,
+          "exit_range_m": 1.3491581808299504,
+          "closest_range_m": 1.3491581808299504,
+          "closest_fwd_m": 1.016619976041402,
+          "reached_gate": true,
+          "commit_start_mono_ns": 695197817171800,
           "gates_passed_flight": 1
         }
       ]
