@@ -1,0 +1,172 @@
+{
+  "status": "COMPLETE",
+  "head": "c8337f0",
+  "n_fixtures": 6,
+  "n_exits": 7,
+  "n_reached": 3,
+  "n_near_miss": 3,
+  "histogram_reached": {
+    "corridor_abort": 3
+  },
+  "histogram_all": {
+    "stale_budget": 4,
+    "corridor_abort": 3
+  },
+  "dominant_near_miss_reason": "corridor_abort",
+  "dominant_near_miss_count": 3,
+  "flights": [
+    {
+      "fixture": "20260725T214011-raceprep-t5-B-run1",
+      "gates_passed": 1,
+      "n_commit_exits": 0,
+      "attempts": []
+    },
+    {
+      "fixture": "20260725T214257-raceprep-t5-B-run2",
+      "gates_passed": 1,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T214257-raceprep-t5-B-run2",
+          "attempt": 1,
+          "mono_ns": 692407622112500,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.005554540016937743,
+          "gate_rel_t_down": -1.2075448398469815,
+          "gate_rel_t_fwd": 4.656439061947477,
+          "gate_rel_age_s": 0.604016128,
+          "exit_range_m": 4.810469845117644,
+          "closest_range_m": 4.810469845117644,
+          "closest_fwd_m": 4.656439061947477,
+          "reached_gate": false,
+          "commit_start_mono_ns": 692407538267400,
+          "gates_passed_flight": 1
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T214624-raceprep-t5-B-run3",
+      "gates_passed": 0,
+      "n_commit_exits": 3,
+      "attempts": [
+        {
+          "fixture": "20260725T214624-raceprep-t5-B-run3",
+          "attempt": 1,
+          "mono_ns": 692613375583200,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.5142202187754149,
+          "gate_rel_t_down": -0.7430049146520628,
+          "gate_rel_t_fwd": 2.801037137517856,
+          "gate_rel_age_s": 0.61303112,
+          "exit_range_m": 2.943176478288174,
+          "closest_range_m": 2.943176478288174,
+          "closest_fwd_m": 2.801037137517856,
+          "reached_gate": false,
+          "commit_start_mono_ns": 692612692102500,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T214624-raceprep-t5-B-run3",
+          "attempt": 2,
+          "mono_ns": 692615295579700,
+          "reason": "stale_budget",
+          "gate_rel_t_right": -0.3226172870370542,
+          "gate_rel_t_down": -0.3963568419338014,
+          "gate_rel_t_fwd": 2.2977854264219477,
+          "gate_rel_age_s": 0.600986576,
+          "exit_range_m": 2.353932566136927,
+          "closest_range_m": 2.353932566136927,
+          "closest_fwd_m": 2.2977854264219477,
+          "reached_gate": false,
+          "commit_start_mono_ns": 692614172194700,
+          "gates_passed_flight": 0
+        },
+        {
+          "fixture": "20260725T214624-raceprep-t5-B-run3",
+          "attempt": 3,
+          "mono_ns": 692617095602800,
+          "reason": "stale_budget",
+          "gate_rel_t_right": 0.727102331756203,
+          "gate_rel_t_down": -2.9416667194419204,
+          "gate_rel_t_fwd": 3.794607423737819,
+          "gate_rel_age_s": 0.6081926,
+          "exit_range_m": 4.856040196436153,
+          "closest_range_m": 4.856040196436153,
+          "closest_fwd_m": 3.794607423737819,
+          "reached_gate": false,
+          "commit_start_mono_ns": 692616471928900,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T214934-raceprep-t5-B-run4",
+      "gates_passed": 1,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T214934-raceprep-t5-B-run4",
+          "attempt": 1,
+          "mono_ns": 692780998883800,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": 0.02903474300879929,
+          "gate_rel_t_down": -0.7682920162396658,
+          "gate_rel_t_fwd": 0.9824118938968869,
+          "gate_rel_age_s": 0.001361368,
+          "exit_range_m": 1.2474970011143378,
+          "closest_range_m": 1.2474970011143378,
+          "closest_fwd_m": 0.9824118938968869,
+          "reached_gate": true,
+          "commit_start_mono_ns": 692779134402400,
+          "gates_passed_flight": 1
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T215259-raceprep-t5-B-run5",
+      "gates_passed": 0,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T215259-raceprep-t5-B-run5",
+          "attempt": 1,
+          "mono_ns": 693009076555700,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": 0.026001366921973593,
+          "gate_rel_t_down": -0.8846672860487971,
+          "gate_rel_t_fwd": 0.985515379724602,
+          "gate_rel_age_s": 0.02419656,
+          "exit_range_m": 1.3245953501958556,
+          "closest_range_m": 1.3245953501958556,
+          "closest_fwd_m": 0.985515379724602,
+          "reached_gate": true,
+          "commit_start_mono_ns": 693007272433100,
+          "gates_passed_flight": 0
+        }
+      ]
+    },
+    {
+      "fixture": "20260725T215552-raceprep-t5-B-run6",
+      "gates_passed": 0,
+      "n_commit_exits": 1,
+      "attempts": [
+        {
+          "fixture": "20260725T215552-raceprep-t5-B-run6",
+          "attempt": 1,
+          "mono_ns": 693183037648700,
+          "reason": "corridor_abort",
+          "gate_rel_t_right": 0.5942385154301223,
+          "gate_rel_t_down": -0.5333420848107455,
+          "gate_rel_t_fwd": 1.066220985984358,
+          "gate_rel_age_s": 0.00168744,
+          "exit_range_m": 1.3320662084162052,
+          "closest_range_m": 1.3320662084162052,
+          "closest_fwd_m": 1.066220985984358,
+          "reached_gate": true,
+          "commit_start_mono_ns": 693180213946100,
+          "gates_passed_flight": 0
+        }
+      ]
+    }
+  ]
+}
