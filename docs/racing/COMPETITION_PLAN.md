@@ -382,6 +382,35 @@ risk the shorter budget guarded, so watch it). FAILURE READ: if
 timer_expired then dominates, the window (duration_s) is the next lever
 (re-base on distance per channel-2 change #3). commit_exit census re-run.
 
+### T8 VERDICT + THE PLATEAU (2026-07-25)
+
+T8 (blind_budget 1.5): 1/8. stale_budget exits 3->0 (fix worked, damage
+channel clean: 0 env collisions) — but pass rate did NOT rise. The
+T5-T8 record: 3/6, 2/8, 2/8, 1/8 — all consistent with a true gate-1
+rate of ~20-25% at high variance. HONEST CONCLUSION: five blocks killed
+every commit-exit cause in turn, and NONE moved the pass rate. The exit
+cause is only HOW the drone fails when unaligned; fixing it doesn't
+improve the ALIGNMENT. The true ceiling is final-meter alignment
+precision — a perception problem (the close-tracker), not a config lever.
+
+### THE FROZEN BEST BUILD (T-series consolidation)
+
+The T-series produced a materially more stable build than a week ago,
+even at ~20-25%. The RACE BASELINE config (patches, all validated):
+  planner.commit.speed_mps=1.8
+  planner.commit.vz_cap_mps=1.2
+  safety.imu_stale_s=0.6
+  estimation.vel_clamp_mps=12          (kills velocity divergence — strictly protective)
+  safety.gate_clip_debounce_s=0.3      (survive single frame brushes — strictly protective)
+  planner.approach.aim_up_floor_m=0.3  (arrive centered, -0.77->-0.52 confirmed)
+  planner.commit.abort_offset_m=0.7    (killed corridor_abort, no clip rise)
+  planner.commit.blind_budget_s=1.5    (killed stale_budget, damage-clean)
+This is the build to submit. Two fronts now run in parallel:
+  FRONT A (deadline-critical): validate the r2submission pipeline and
+    bank scored runs of this baseline — we have NEVER run the scored event.
+  FRONT B (improvement): final-meter alignment precision (close-tracker /
+    gate-relative estimate in the last meter) — the true pass-rate lever.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
