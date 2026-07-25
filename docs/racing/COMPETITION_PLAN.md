@@ -301,6 +301,33 @@ phase. Predicted top suspects (to confirm/refute): timer_expired on a
 biased-believed short, or corridor/geometric on a fresh phantom. HUD
 capture on stream-stops continues.
 
+### T5 EXIT-CENSUS — THE NEAR-MISS CAUSE, READ (2026-07-25)
+
+3/6 gates (same config as T4's 1/9 — variance, not improvement; the
+census is the prize). The instrumentation paid off in ONE block: EVERY
+reached-gate exit (closest <2m) is `corridor_abort` — 3 of 3, no other
+cause. Geometry at exit: laterally CENTERED (right +0.03) but
+**0.53-0.88m LOW** (down -0.53..-0.88), ~1.0m out, age ~0 (FRESH). The
+drone arrives centered-but-low, off exceeds abort_offset_m (0.45), the
+corridor abort breaches and RETREATS instead of crossing. Root: the
+aim_up tapers to ~0 at the gate (approach._aim_up: aim_up_m *
+clip(dist/4)), so the final meter has no vertical aim and the drone
+sags low. Chosen FROM the census, not guessed.
+
+## Phase T6 — keep vertical aim through the crossing (registered before results)
+
+Config-only A/B (no code): `planner.approach.aim_up_floor_m=0.3` holds
+0.3m up-aim through the final meter (vs T5's 0.0 taper-to-zero), so the
+drone arrives ~0.3m higher — nearer center, off below the 0.45 corridor
+threshold. R1, 8 runs, T5 config + the floor patch. Control = T5/T4
+(floor 0.0). PREDICTIONS: reached-gate corridor_abort exits drop; the
+commit_exit `down` at exit rises toward 0 (centered); gate passes >=
+4/8. FAILURE READ: if the floor over-corrects to TOP clips (the pre-clamp
++0.47m-HIGH era returning), back off to 0.15 — but that era's high
+arrivals were driven by the divergent vz feedback the clamp now bounds,
+so a clean vertical response is expected. commit_exit census re-run
+each block until the near-miss cause is gone.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
