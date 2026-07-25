@@ -124,6 +124,13 @@ class RacePlanner:
         # an aggressive act; it requires a recent view of the target.
         self.entry_max_age_s = float(p.get("planner.commit.entry_max_age_s",
                                            default=0.6))
+        # In-commit blind tolerance, separate from the entry gate above.
+        # Defaults to entry_max_age_s so unpatched flights are unchanged;
+        # the T8 block raises it to let the final-meter blind traverse
+        # complete on dead-reckoning (T7 census: stale_budget cut crossings
+        # short as the gate left the FOV).
+        self.commit_blind_budget_s = float(p.get(
+            "planner.commit.blind_budget_s", default=self.entry_max_age_s))
         # Miss-recovery (phase3g): per-attempt pass probability is finally
         # meaningful, so multiply attempts instead of demanding a perfect
         # first arrow. If the opening escapes the corridor mid-commit,
@@ -385,7 +392,16 @@ class RacePlanner:
                 # never a blind reverse. A good crossing is unaffected:
                 # the wash runs ~0.5s and the pass event clears commit
                 # before this budget expires.
-                if state.gate_rel_age_s > self.entry_max_age_s:
+                # T8 (T7 exit-census: reached-gate exits are now stale_budget
+                # + timer_expired — the gate leaves FOV in the final meter,
+                # EXPECTED physics, and this budget brakes the crossing
+                # short). Separate the IN-COMMIT blind tolerance from the
+                # ENTRY freshness gate so the final blind traverse can
+                # complete on dead-reckoning without loosening how fresh a
+                # commit must be to START (channel-2 ADVISORY-36 change #1).
+                # Default equals entry_max_age_s -> unpatched behavior
+                # identical.
+                if state.gate_rel_age_s > self.commit_blind_budget_s:
                     self.commit_exit_reason = "stale_budget"
                     self._commit_until_ns = None
                     self._commit_v_body = None

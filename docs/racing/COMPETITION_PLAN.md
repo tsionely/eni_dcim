@@ -353,6 +353,35 @@ is past the physical envelope -> 0.6; if passes still don't rise with
 corridor exits gone, a different branch takes over and the census names
 it. commit_exit census re-run.
 
+### T7 VERDICT — CORRIDOR ABORT KILLED, KILLER MOVED TO THE BLIND BUDGET (2026-07-25)
+
+T7 (abort_offset 0.7): 2/8, but **corridor_abort GONE from reached-gate
+exits (T5 3/3, T6 5/6 -> T7 0)** with ZERO clip aborts — the widened
+threshold fixed the conservative abort cleanly, inside the envelope. New
+reached-gate exits: `stale_budget` (3) + `timer_expired` (2). Read: the
+drone reaches the gate, the gate leaves the FOV in the final meter
+(expected physics), and the in-commit blindness budget (0.6s) brakes the
+crossing short at ~0.66m out — 0.4s from a pass. This is channel-2
+ADVISORY-36 change #1 exactly.
+
+FIX (this commit): planner.commit.blind_budget_s — the IN-COMMIT blind
+tolerance, separated from the entry freshness gate (default = 0.6 =
+entry_max_age_s, so unpatched behavior identical). Raising it lets the
+final blind traverse complete on dead-reckoning without loosening how
+fresh a commit must be to START. 2 tests (default-brakes, raised-
+continues), suite 245 green.
+
+## Phase T8 — let the crossing complete through FOV loss (registered)
+
+Config-only, single-variable vs T7: `planner.commit.blind_budget_s=1.5`.
+R1, 8 runs, T7 config + the patch. Control = T7. PREDICTIONS: reached-
+gate stale_budget exits drop toward 0; commit_exit `pass` count rises;
+gate passes >= 4/8; NO rise in environment-collision aborts (would mean
+the blind coast overruns into structure past the gate — the historical
+risk the shorter budget guarded, so watch it). FAILURE READ: if
+timer_expired then dominates, the window (duration_s) is the next lever
+(re-base on distance per channel-2 change #3). commit_exit census re-run.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

@@ -724,3 +724,26 @@ def test_commit_exit_reason_pass():
     p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
     p.on_gate_passed()
     assert p.commit_exit_reason == "pass"
+
+
+def test_commit_blind_budget_default_matches_entry():
+    # Unpatched: the in-commit stale budget equals entry_max_age_s (0.6),
+    # so a >0.6s-stale commit tick still brakes to recover (stale_budget).
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    sp = p.plan(int(0.1e9), "race", make_state(gate_t=[0.0, 0.0, 1.2],
+                                               age_s=0.8), None)
+    assert sp.phase == "recover"
+    assert p.commit_exit_reason == "stale_budget"
+
+
+def test_commit_blind_budget_raised_lets_crossing_continue():
+    # T8 patch: a raised in-commit budget keeps commit alive through the
+    # final-meter FOV loss instead of braking.
+    p = RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.commit.blind_budget_s": 1.5}))
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    sp = p.plan(int(0.1e9), "race", make_state(gate_t=[0.0, 0.0, 1.2],
+                                               age_s=0.8), None)
+    assert sp.phase == "commit"
+    assert p.commit_exit_reason is None
