@@ -43,10 +43,24 @@ ai=R.sim_window(ensure_visible=True)
 if ai is None:
     write(ok=False,reason='sim_window_not_found'); print('NO_SIM_WINDOW',flush=True); sys.exit(3)
 ai=R._sim_focus(ai); time.sleep(0.5)
+# MENU RESET (multi-run robustness): after a prior flight the sim is
+# left on a results/pause/live screen, not the event list — T4 runs 2-3
+# failed event selection at score ~0.30 from exactly this. Clear any
+# post-flight screen back to the FLY menu before matching: ESC opens the
+# in-race pause menu (BACK TO MAIN MENU at 472,800); a clean finish shows
+# the result screen (MAIN MENU bottom-centre ~1360,840). Click both —
+# whichever is showing lands, the other is inert (coords proven in the
+# legacy launcher). Harmless from the menu itself.
+for _reset in range(2):
+    ai=R._sim_focus(ai)
+    pyautogui.press('esc'); time.sleep(1.0)
+    ai=R._sim_click(ai,472,800); time.sleep(1.2)
+    ai=R._sim_click(ai,1360,840); time.sleep(1.2)
 # Navigation prelude: pass title/login screens to reach the event list.
 # Retry until all three event rows are visible (each template matches well).
 reached=False; scores={}; boxes={}
 for attempt in range(8):
+    ai=R._sim_focus(ai)
     ai=R._sim_click(ai,1465,713); pyautogui.press('enter'); time.sleep(1.0)
     shot=pyautogui.screenshot()
     scores,boxes=match_all(shot)
