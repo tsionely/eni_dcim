@@ -328,6 +328,31 @@ arrivals were driven by the divergent vz feedback the clamp now bounds,
 so a clean vertical response is expected. commit_exit census re-run
 each block until the near-miss cause is gone.
 
+### T6 VERDICT + THE ABORT IS TOO CONSERVATIVE (2026-07-25)
+
+T6 (aim_up_floor 0.3): 2/8 (predicted >=4/8, FAILED on count) BUT the
+mechanism CONFIRMED — reached-gate down offset moved -0.77 (T5) ->
+-0.52 (T6), the drone arrives higher toward center exactly as designed.
+corridor_abort still dominant (5/6 reached exits). THE READ SHARPENS:
+at -0.52m low, laterally centered (right +0.03), the drone is WITHIN
+the gate's 0.8m half-height envelope — it would pass the opening — yet
+the corridor abort (offset threshold 0.45) RETREATS it. The abort is
+retreating from PASSABLE approaches. Not an arrival problem now; a
+too-conservative abort.
+
+## Phase T7 — widen the corridor abort to the passable envelope (registered)
+
+Config-only, single-variable vs T6: `planner.commit.abort_offset_m=0.7`
+(keep aim_up_floor 0.3). 0.7 < the 0.8m half-height, leaving margin, so
+the abort still fires on genuinely edge-clipping approaches but stops
+retreating the -0.52m within-envelope ones. R1, 8 runs, T6 config + the
+patch. Control = T6. PREDICTIONS: reached-gate corridor_abort exits
+drop sharply; gate passes >= 4/8; no rise in gate-clip aborts (would
+mean 0.7 is too loose and it clips). FAILURE READ: if clips rise, 0.7
+is past the physical envelope -> 0.6; if passes still don't rise with
+corridor exits gone, a different branch takes over and the census names
+it. commit_exit census re-run.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
