@@ -1,0 +1,13 @@
+{
+  "label": "raceprep-b2-B-run3",
+  "stage": "b2-r1-speed-ab",
+  "run": 3,
+  "arm": "control",
+  "commit_speed_mps": 1.8,
+  "event": "r1",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "64db3cb9f1485b7cbcd903eba6f4f1c7ab1401ed",
+  "flight_id": "20260726T025521-f71a7bd0",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-b2-B-run3 r1 -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.6 --patch estimation.vel_clamp_mps=12 --patch safety.gate_clip_debounce_s=0.3 --patch planner.approach.aim_up_floor_m=0.3 --patch planner.commit.abort_offset_m=0.7 --patch planner.commit.blind_budget_s=1.5"
+}
