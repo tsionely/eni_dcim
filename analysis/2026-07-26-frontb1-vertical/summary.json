@@ -1,41 +1,42 @@
 {
   "status": "PARTIAL",
-  "head": "cf937bc",
+  "head": "132e496",
   "n_fixtures_expected": 10,
-  "n_fixtures": 7,
-  "n_attempts": 10,
+  "n_fixtures": 9,
+  "n_attempts": 11,
   "n_pass": 3,
-  "n_fail": 7,
-  "handoff_jump_verdict": "**NO material jump** \u2014 2 handoff(s), |\u0394down| median=0.026 m (0 with |\u0394|>0.15 m). Handoff is not the vertical killer.",
-  "split_verdict": "**MIXED/UNCLEAR** primary on FAIL (5/7; CONTROL 2, ESTIMATE 0). Residuals stay small (median 0.001 m) \u2014 belief is smooth \u2014 while some fails climb through center (down\u21920/+) with adequate command integral. Low arrival is not an estimate jump.",
+  "n_fail": 8,
+  "handoff_jump_verdict": "**NO material jump** \u2014 3 handoff(s), |\u0394down| median=0.029 m (0 with |\u0394|>0.15 m). Handoff is not the vertical killer.",
+  "split_verdict": "**MIXED/UNCLEAR** primary on FAIL (5/8; CONTROL 2, ESTIMATE 1). Residuals stay small (median -0.004 m) \u2014 belief is smooth \u2014 while some fails climb through center (down\u21920/+) with adequate command integral. Low arrival is not an estimate jump.",
   "fail_primary_mechanism": "MIXED/UNCLEAR",
   "mechanism_counts_pass": {
     "CONTROL-driven": 3
   },
   "mechanism_counts_fail": {
     "MIXED/UNCLEAR": 5,
-    "CONTROL-driven": 2
+    "CONTROL-driven": 2,
+    "ESTIMATE-driven": 1
   },
   "pass_vs_fail": {
     "closest_range_median": {
       "PASS": 1.3495235019165976,
-      "FAIL": 0.6997163767024693
+      "FAIL": 0.7389806311834194
     },
     "down_closest_median": {
       "PASS": -0.7894931708684378,
-      "FAIL": -0.3339429396395941
+      "FAIL": -0.3475243083636196
     },
     "control_deficit_median": {
       "PASS": 0.7619887147065355,
-      "FAIL": -0.0839549241986755
+      "FAIL": -0.04902750282162341
     },
     "residual_median": {
       "PASS": 0.0010410236472361278,
-      "FAIL": 0.053709509991949525
+      "FAIL": -0.025680803181280493
     },
     "frac_close_tracker_median": {
       "PASS": 0.0,
-      "FAIL": 0.0
+      "FAIL": 0.225
     },
     "pass_lag_s_median": 0.9295873,
     "exit_reasons_pass": {
@@ -43,7 +44,7 @@
     },
     "exit_reasons_fail": {
       "stale_budget": 3,
-      "?": 3,
+      "?": 4,
       "corridor_abort": 1
     }
   },
@@ -392,6 +393,47 @@
       "exit_reasons": [],
       "exit_reason": null,
       "pass_lag_s": null
+    },
+    {
+      "fixture": "20260726T012436-raceprep-b1-B-run8",
+      "attempt": 1,
+      "label": "FAIL",
+      "n_ticks": 33,
+      "closest_range_m": 0.7980111517642571,
+      "down_entry": -0.7516237728269274,
+      "down_exit": -0.3678265298160961,
+      "down_closest": -0.36110567708764507,
+      "down_mean": -0.5980769223155586,
+      "down_median": -0.607365813552232,
+      "vz_mean": -1.1955730568181817,
+      "climb_cmd_m": 0.7657238542714987,
+      "needed_climb_m": 0.7516237728269274,
+      "control_deficit_m": -0.01410008144457131,
+      "smooth_pred_at_closest": 0.03625699818207839,
+      "residual_at_closest": -0.39736267526972346,
+      "handoff": {
+        "t_rel_s": 2.8599514,
+        "range_m": 1.211384621113623,
+        "fwd_m": 1.0741774545738985,
+        "down_before": -0.5857696469698256,
+        "down_after": -0.5565789064742906,
+        "down_jump_m": 0.02919074049553494
+      },
+      "source_counts": {
+        "full_quad_unconfirmed": 8,
+        "close_tracker": 19,
+        "full_quad": 5,
+        "no_detection": 1
+      },
+      "frac_close_tracker": 0.5757575757575758,
+      "frac_full_quad": 0.3939393939393939,
+      "mechanism": "ESTIMATE-driven",
+      "estimate_score": 1.5,
+      "control_score": 0.0,
+      "duration_s": 0.6398781,
+      "exit_reasons": [],
+      "exit_reason": null,
+      "pass_lag_s": null
     }
   ],
   "flights": [
@@ -429,6 +471,16 @@
       "fixture": "20260726T000452-raceprep-b1-B-run7",
       "gates_passed": 0,
       "n_final_meter_attempts": 1
+    },
+    {
+      "fixture": "20260726T012436-raceprep-b1-B-run8",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 1
+    },
+    {
+      "fixture": "20260726T012954-raceprep-b1-B-run9",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 0
     }
   ]
 }
