@@ -429,6 +429,15 @@ The fix is chosen FROM B1. Sakana flies a 10-run frozen-baseline
 block (raceprep-b1-B-runN, the 8-patch baseline above) to bank
 pass/fail examples for the read. No config change until B1 reads.
 
+B1 FLIGHTS DONE (1f48147): 3/9 gates (best sustained block; run9 a
+1s pre-race imu glitch). OPERATIONAL WIN: the STEP-5 auto-return to
+menu worked — 9 flights, ZERO event-selection failures (vs T4's
+collapse after run 1). Reached-gate exits: corridor_abort (4) — the
+drone passes when within the envelope and corridor-aborts when
+>0.7m off: alignment IS the ceiling, FRONT-B premise confirmed.
+PENDING: Cursor's B1 vertical read (estimate- vs control-driven) —
+the fix waits on it.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
