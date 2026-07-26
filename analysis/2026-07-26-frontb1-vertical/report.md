@@ -1,6 +1,6 @@
 # FRONT-B1 — vertical alignment read
 
-HEAD: `132e496`.
+HEAD: `debc4e8`.
 Fixtures: **9/10** (`raceprep-b1-B`). Final-1.5m commit attempts: **11** (PASS=3, FAIL=8).
 
 PASS label = race HUD gate increment associated to the prior commit window (slack ≤2s after commit end). On this baseline the score always lands *after* `corridor_abort` — never inside the commit window. Geometric `fwd≤0` is NOT used (false positives on retries).
