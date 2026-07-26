@@ -1,0 +1,434 @@
+{
+  "status": "PARTIAL",
+  "head": "cf937bc",
+  "n_fixtures_expected": 10,
+  "n_fixtures": 7,
+  "n_attempts": 10,
+  "n_pass": 3,
+  "n_fail": 7,
+  "handoff_jump_verdict": "**NO material jump** \u2014 2 handoff(s), |\u0394down| median=0.026 m (0 with |\u0394|>0.15 m). Handoff is not the vertical killer.",
+  "split_verdict": "**MIXED/UNCLEAR** primary on FAIL (5/7; CONTROL 2, ESTIMATE 0). Residuals stay small (median 0.001 m) \u2014 belief is smooth \u2014 while some fails climb through center (down\u21920/+) with adequate command integral. Low arrival is not an estimate jump.",
+  "fail_primary_mechanism": "MIXED/UNCLEAR",
+  "mechanism_counts_pass": {
+    "CONTROL-driven": 3
+  },
+  "mechanism_counts_fail": {
+    "MIXED/UNCLEAR": 5,
+    "CONTROL-driven": 2
+  },
+  "pass_vs_fail": {
+    "closest_range_median": {
+      "PASS": 1.3495235019165976,
+      "FAIL": 0.6997163767024693
+    },
+    "down_closest_median": {
+      "PASS": -0.7894931708684378,
+      "FAIL": -0.3339429396395941
+    },
+    "control_deficit_median": {
+      "PASS": 0.7619887147065355,
+      "FAIL": -0.0839549241986755
+    },
+    "residual_median": {
+      "PASS": 0.0010410236472361278,
+      "FAIL": 0.053709509991949525
+    },
+    "frac_close_tracker_median": {
+      "PASS": 0.0,
+      "FAIL": 0.0
+    },
+    "pass_lag_s_median": 0.9295873,
+    "exit_reasons_pass": {
+      "corridor_abort": 3
+    },
+    "exit_reasons_fail": {
+      "stale_budget": 3,
+      "?": 3,
+      "corridor_abort": 1
+    }
+  },
+  "attempts": [
+    {
+      "fixture": "20260725T233817-raceprep-b1-B-run1",
+      "attempt": 1,
+      "label": "FAIL",
+      "n_ticks": 30,
+      "closest_range_m": 0.1773184587817493,
+      "down_entry": -0.39944037019385836,
+      "down_exit": 0.17044189274045693,
+      "down_closest": 0.17044189274045693,
+      "down_mean": -0.11332319058776869,
+      "down_median": -0.07943825809429207,
+      "vz_mean": -1.0187406346882892,
+      "climb_cmd_m": 0.5912992541055856,
+      "needed_climb_m": 0.39944037019385836,
+      "control_deficit_m": -0.19185888391172723,
+      "smooth_pred_at_closest": 0.19612269592173742,
+      "residual_at_closest": -0.025680803181280493,
+      "handoff": null,
+      "source_counts": {
+        "full_quad_unconfirmed": 16,
+        "no_detection": 14
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 0.5333333333333333,
+      "mechanism": "MIXED/UNCLEAR",
+      "estimate_score": 0.0,
+      "control_score": 0.0,
+      "duration_s": 0.5795868,
+      "exit_reasons": [
+        "stale_budget"
+      ],
+      "exit_reason": "stale_budget",
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260725T234134-raceprep-b1-B-run2",
+      "attempt": 1,
+      "label": "PASS",
+      "n_ticks": 9,
+      "closest_range_m": 1.2298336312288227,
+      "down_entry": -0.7707560769029785,
+      "down_exit": -0.7713056228646543,
+      "down_closest": -0.7713056228646543,
+      "down_mean": -0.7619982780464711,
+      "down_median": -0.7707560769029785,
+      "vz_mean": -1.2,
+      "climb_cmd_m": 0.19211315999999998,
+      "needed_climb_m": 0.7707560769029785,
+      "control_deficit_m": 0.5786429169029785,
+      "smooth_pred_at_closest": -0.7614954266547966,
+      "residual_at_closest": -0.00981019620985768,
+      "handoff": null,
+      "source_counts": {
+        "full_quad": 9
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 1.0,
+      "mechanism": "CONTROL-driven",
+      "estimate_score": -0.5,
+      "control_score": 3.5,
+      "duration_s": 0.1600943,
+      "exit_reasons": [
+        "corridor_abort"
+      ],
+      "exit_reason": "corridor_abort",
+      "pass_lag_s": 0.5050719
+    },
+    {
+      "fixture": "20260725T234134-raceprep-b1-B-run2",
+      "attempt": 2,
+      "label": "FAIL",
+      "n_ticks": 20,
+      "closest_range_m": 0.678926933554764,
+      "down_entry": -0.3360564963914478,
+      "down_exit": -0.3339429396395941,
+      "down_closest": -0.3339429396395941,
+      "down_mean": -0.38167407822734667,
+      "down_median": -0.3775230323520574,
+      "vz_mean": -1.1166859902894364,
+      "climb_cmd_m": 0.4248352370006388,
+      "needed_climb_m": 0.3360564963914478,
+      "control_deficit_m": -0.088778740609191,
+      "smooth_pred_at_closest": -0.46704276280477364,
+      "residual_at_closest": 0.13309982316517954,
+      "handoff": {
+        "t_rel_s": 1.1594243,
+        "range_m": 1.4424752073869542,
+        "fwd_m": 1.376993732505339,
+        "down_before": -0.3360564963914478,
+        "down_after": -0.37900236467337944,
+        "down_jump_m": -0.04294586828193164
+      },
+      "source_counts": {
+        "full_quad_unconfirmed": 5,
+        "close_tracker": 9,
+        "full_quad": 3,
+        "no_detection": 3
+      },
+      "frac_close_tracker": 0.45,
+      "frac_full_quad": 0.4,
+      "mechanism": "MIXED/UNCLEAR",
+      "estimate_score": 0.0,
+      "control_score": 0.0,
+      "duration_s": 0.3796761,
+      "exit_reasons": [],
+      "exit_reason": null,
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260725T234407-raceprep-b1-B-run3",
+      "attempt": 1,
+      "label": "PASS",
+      "n_ticks": 3,
+      "closest_range_m": 1.3855326203203926,
+      "down_entry": -0.7879935793304305,
+      "down_exit": -0.7894931708684378,
+      "down_closest": -0.7894931708684378,
+      "down_mean": -0.7983229545665401,
+      "down_median": -0.7894931708684378,
+      "vz_mean": -0.782234,
+      "climb_cmd_m": 0.026004864623895,
+      "needed_climb_m": 0.7879935793304305,
+      "control_deficit_m": 0.7619887147065355,
+      "smooth_pred_at_closest": -0.7938036760549279,
+      "residual_at_closest": 0.00431050518649001,
+      "handoff": null,
+      "source_counts": {
+        "full_quad": 3
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 1.0,
+      "mechanism": "CONTROL-driven",
+      "estimate_score": -0.5,
+      "control_score": 4.5,
+      "duration_s": 0.0331822,
+      "exit_reasons": [
+        "corridor_abort"
+      ],
+      "exit_reason": "corridor_abort",
+      "pass_lag_s": 0.9295873
+    },
+    {
+      "fixture": "20260725T234407-raceprep-b1-B-run3",
+      "attempt": 2,
+      "label": "FAIL",
+      "n_ticks": 50,
+      "closest_range_m": 0.6997163767024693,
+      "down_entry": -0.7763047907658571,
+      "down_exit": 0.6358503789325879,
+      "down_closest": 0.1997603707241734,
+      "down_mean": -0.07409540845326425,
+      "down_median": -0.006936627922354475,
+      "vz_mean": -1.2,
+      "climb_cmd_m": 1.17608088,
+      "needed_climb_m": 0.7763047907658571,
+      "control_deficit_m": -0.3997760892341429,
+      "smooth_pred_at_closest": null,
+      "residual_at_closest": null,
+      "handoff": null,
+      "source_counts": {
+        "no_detection": 50
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 0.0,
+      "mechanism": "MIXED/UNCLEAR",
+      "estimate_score": 0.0,
+      "control_score": 0.0,
+      "duration_s": 0.9800674,
+      "exit_reasons": [
+        "stale_budget"
+      ],
+      "exit_reason": "stale_budget",
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260725T234642-raceprep-b1-B-run4",
+      "attempt": 2,
+      "label": "FAIL",
+      "n_ticks": 16,
+      "closest_range_m": 0.8834306062535889,
+      "down_entry": -0.5846983704246813,
+      "down_exit": -0.4175931958652794,
+      "down_closest": -0.4175931958652794,
+      "down_mean": -0.5165149287400478,
+      "down_median": -0.5282660840596836,
+      "vz_mean": -0.7345712671875,
+      "climb_cmd_m": 0.2202879173990625,
+      "needed_climb_m": 0.5846983704246813,
+      "control_deficit_m": 0.3644104530256188,
+      "smooth_pred_at_closest": null,
+      "residual_at_closest": null,
+      "handoff": null,
+      "source_counts": {
+        "no_detection": 16
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 0.0,
+      "mechanism": "CONTROL-driven",
+      "estimate_score": 0.0,
+      "control_score": 2.0,
+      "duration_s": 0.2999239,
+      "exit_reasons": [
+        "stale_budget"
+      ],
+      "exit_reason": "stale_budget",
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260725T234851-raceprep-b1-B-run5",
+      "attempt": 1,
+      "label": "PASS",
+      "n_ticks": 3,
+      "closest_range_m": 1.3495235019165976,
+      "down_entry": -0.9699861360419645,
+      "down_exit": -0.9057845827388359,
+      "down_closest": -0.9057845827388359,
+      "down_mean": -0.9393051765575487,
+      "down_median": -0.9421448108918458,
+      "vz_mean": -1.2,
+      "climb_cmd_m": 0.047585760000000005,
+      "needed_climb_m": 0.9699861360419645,
+      "control_deficit_m": 0.9224003760419645,
+      "smooth_pred_at_closest": -0.906825606386072,
+      "residual_at_closest": 0.0010410236472361278,
+      "handoff": null,
+      "source_counts": {
+        "full_quad": 3
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 1.0,
+      "mechanism": "CONTROL-driven",
+      "estimate_score": -0.5,
+      "control_score": 4.5,
+      "duration_s": 0.0396548,
+      "exit_reasons": [
+        "corridor_abort"
+      ],
+      "exit_reason": "corridor_abort",
+      "pass_lag_s": 1.4280328
+    },
+    {
+      "fixture": "20260725T234851-raceprep-b1-B-run5",
+      "attempt": 2,
+      "label": "FAIL",
+      "n_ticks": 3,
+      "closest_range_m": 1.3995660349588988,
+      "down_entry": -0.5811133160833912,
+      "down_exit": -0.5524060094562101,
+      "down_closest": -0.5524060094562101,
+      "down_mean": -0.5652808176453609,
+      "down_median": -0.5623231273964814,
+      "vz_mean": -0.05999785,
+      "climb_cmd_m": 0.00239598425745,
+      "needed_climb_m": 0.5811133160833912,
+      "control_deficit_m": 0.5787173318259412,
+      "smooth_pred_at_closest": null,
+      "residual_at_closest": null,
+      "handoff": null,
+      "source_counts": {
+        "no_detection": 3
+      },
+      "frac_close_tracker": 0.0,
+      "frac_full_quad": 0.0,
+      "mechanism": "CONTROL-driven",
+      "estimate_score": 0.0,
+      "control_score": 3.0,
+      "duration_s": 0.0400204,
+      "exit_reasons": [
+        "corridor_abort"
+      ],
+      "exit_reason": "corridor_abort",
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260725T235104-raceprep-b1-B-run6",
+      "attempt": 1,
+      "label": "FAIL",
+      "n_ticks": 26,
+      "closest_range_m": 0.3394310709093818,
+      "down_entry": -0.47793363826992313,
+      "down_exit": -0.014490028762340585,
+      "down_closest": -0.014490028762340585,
+      "down_mean": -0.2762137420124306,
+      "down_median": -0.2532232628546807,
+      "vz_mean": -1.1222706895144705,
+      "climb_cmd_m": 0.5618885624685986,
+      "needed_climb_m": 0.47793363826992313,
+      "control_deficit_m": -0.0839549241986755,
+      "smooth_pred_at_closest": null,
+      "residual_at_closest": null,
+      "handoff": null,
+      "source_counts": {
+        "close_tracker": 20,
+        "no_detection": 6
+      },
+      "frac_close_tracker": 0.7692307692307693,
+      "frac_full_quad": 0.0,
+      "mechanism": "MIXED/UNCLEAR",
+      "estimate_score": 0.0,
+      "control_score": 0.0,
+      "duration_s": 0.5000011,
+      "exit_reasons": [],
+      "exit_reason": null,
+      "pass_lag_s": null
+    },
+    {
+      "fixture": "20260726T000452-raceprep-b1-B-run7",
+      "attempt": 1,
+      "label": "FAIL",
+      "n_ticks": 11,
+      "closest_range_m": 0.7782448856643694,
+      "down_entry": -0.3824615317230068,
+      "down_exit": -0.49826516435221835,
+      "down_closest": -0.49826516435221835,
+      "down_mean": -0.4113291016608882,
+      "down_median": -0.39387539171896774,
+      "vz_mean": -0.9190235984619092,
+      "climb_cmd_m": 0.19039183276397367,
+      "needed_climb_m": 0.3824615317230068,
+      "control_deficit_m": 0.1920696989590331,
+      "smooth_pred_at_closest": null,
+      "residual_at_closest": null,
+      "handoff": {
+        "t_rel_s": 1.3799149,
+        "range_m": 1.3918461767815582,
+        "fwd_m": 1.3394725873821638,
+        "down_before": -0.3824615317230068,
+        "down_after": -0.3742482057465202,
+        "down_jump_m": 0.008213325976486607
+      },
+      "source_counts": {
+        "full_quad": 2,
+        "close_tracker": 7,
+        "no_detection": 2
+      },
+      "frac_close_tracker": 0.6363636363636364,
+      "frac_full_quad": 0.18181818181818182,
+      "mechanism": "MIXED/UNCLEAR",
+      "estimate_score": 0.0,
+      "control_score": 0.0,
+      "duration_s": 0.2081933,
+      "exit_reasons": [],
+      "exit_reason": null,
+      "pass_lag_s": null
+    }
+  ],
+  "flights": [
+    {
+      "fixture": "20260725T233817-raceprep-b1-B-run1",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 1
+    },
+    {
+      "fixture": "20260725T234134-raceprep-b1-B-run2",
+      "gates_passed": 1,
+      "n_final_meter_attempts": 2
+    },
+    {
+      "fixture": "20260725T234407-raceprep-b1-B-run3",
+      "gates_passed": 1,
+      "n_final_meter_attempts": 2
+    },
+    {
+      "fixture": "20260725T234642-raceprep-b1-B-run4",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 1
+    },
+    {
+      "fixture": "20260725T234851-raceprep-b1-B-run5",
+      "gates_passed": 1,
+      "n_final_meter_attempts": 2
+    },
+    {
+      "fixture": "20260725T235104-raceprep-b1-B-run6",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 1
+    },
+    {
+      "fixture": "20260726T000452-raceprep-b1-B-run7",
+      "gates_passed": 0,
+      "n_final_meter_attempts": 1
+    }
+  ]
+}
