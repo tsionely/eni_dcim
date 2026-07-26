@@ -438,6 +438,34 @@ drone passes when within the envelope and corridor-aborts when
 PENDING: Cursor's B1 vertical read (estimate- vs control-driven) —
 the fix waits on it.
 
+### B1 VERTICAL READ — THE ASSUMPTION INVERTED (2026-07-26, 37b2fbb)
+
+Cursor's read (11 final-meter attempts, 3 pass): TWO decisive results.
+(1) NOT estimate-driven — belief is smooth (residual 0.001m), the
+full-quad->close-tracker handoff does NOT jump (|Δdown| 0.029m). The
+perception/close-tracker fix is RULED OUT (a valuable negative). (2)
+The pass MECHANISM inverts the premise: PASSES corridor_abort at ~1.35m
+while 0.79m LOW, then the race counter ticks 0.93s later — a
+momentum COAST-THROUGH. FAILS continue CLOSER (0.74m, less low) and
+STALL — they hesitate and lose forward momentum. The ceiling is not
+vertical precision or perception; it is FINAL-METER FORWARD MOMENTUM
+through the plane: coast-through vs stall. This also explains why 7
+blocks of precision levers moved nothing — wrong axis.
+
+## Phase B2 — forward momentum through the plane (registered)
+
+Config-only A/B on the frozen baseline: commit speed 1.8 (control) vs
+2.5 (test). The pre-clamp 2.5 caused divergence/clips (R1); the stable
+build should now let a faster dash COAST through where the careful 1.8
+stalls. R1, 10 runs, alternating speed 1.8 / 2.5 (odd/even), everything
+else the frozen baseline. PREDICTIONS: the 2.5 arm shows fewer
+stall/stale_budget final-meter exits and >= the 1.8 arm's pass rate;
+watch the damage channel — clip aborts must NOT rise (a rise means 2.5
+overwhelms the final-meter control again). FAILURE READ: if 2.5 doesn't
+beat 1.8, the momentum lever is also soft and we are at a genuine
+~30-35% ceiling — pivot to submission-pipeline validation (FRONT A)
+with the frozen baseline as the submit build.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
