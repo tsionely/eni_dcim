@@ -466,6 +466,33 @@ beat 1.8, the momentum lever is also soft and we are at a genuine
 ~30-35% ceiling — pivot to submission-pipeline validation (FRONT A)
 with the frozen baseline as the submit build.
 
+### B2 VERDICT — THE CEILING IS REAL; PIVOT TO SUBMISSION (2026-07-27)
+
+B2 (commit speed A/B): 1.8 = 2/5, 2.5 = 1/5. The momentum lever
+FAILED (2.5 worse, more timer_expired). Per the pre-registered failure
+read, this is decisive: after 7 precision blocks + the perception read
++ the momentum test, gate-1 on R1 sits at a genuine ~30-40% ceiling no
+scalar lever moves. The FROZEN BASELINE at 1.8 is the best build.
+DECISION (pre-registered): PIVOT TO FRONT A — validate the submission
+pipeline. Precision work is closed at the ceiling; further blocks are
+diminishing returns with ~7 days to the deadline.
+
+### CRITICAL GAP the pivot must close first
+
+All optimization ran on the R1 event (the "simple/high-contrast"
+training arena). The SUBMISSION is r2submission (the complex R2
+course). We have NOT measured the frozen baseline on R2. FRONT A order:
+  A1. Fly the frozen baseline on r2training (real R2 course, scoreless)
+      — measure gate-1 rate THERE; R1's ~35% may not transfer.
+  A2. One owner-authorized r2submission run — validate the scoring
+      pipeline end to end (auth, event nav, what the leaderboard
+      records). r2submission is hard-blocked in the orchestrator by
+      design; lifting it is a deliberate owner act.
+  A3. Then submit the frozen baseline repeatedly to bank the best run.
+OPEN QUESTION for the owner: is the number of submission-mode runs
+limited before the deadline? If capped, A2/A3 must be rationed; if
+unlimited, submit freely. Confirm from the Team Portal before A2.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
