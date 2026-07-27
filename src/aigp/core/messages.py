@@ -159,7 +159,7 @@ class StateEstimate:
 
 @dataclass(frozen=True, slots=True)
 class Setpoint:
-    phase: str                 # "idle" | "takeoff" | "search" | "approach" | "align" | "commit" | "retreat" | "recover" | "hover"
+    phase: str                 # "idle" | "takeoff" | "search" | "approach" | "align" | "commit" | "retreat" | "recover" | "hover" | "advance"
     v_body: np.ndarray         # desired velocity, body frame [m/s], shape (3,)
     yaw_rate: float            # desired yaw rate [rad/s]
     # Blind-search hold: no vision anchor exists for the velocity estimate,

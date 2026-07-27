@@ -131,6 +131,15 @@ class RacePlanner:
         # short as the gate left the FOV).
         self.commit_blind_budget_s = float(p.get(
             "planner.commit.blind_budget_s", default=self.entry_max_age_s))
+        # GATE CHAINING (autonomous next-gate seek after a pass). Fly
+        # forward at this speed for advance_s, scanning, until a fresh gate
+        # is seen ahead of advance_min_fwd_m. Replaces the retreat/spin that
+        # threw away every gate-1 pass.
+        self.advance_s = float(p.get("planner.advance.duration_s", default=2.0))
+        self.advance_speed = float(p.get("planner.advance.speed_mps",
+                                         default=1.5))
+        self.advance_min_fwd_m = float(p.get("planner.advance.min_fwd_m",
+                                             default=1.0))
         # Miss-recovery (phase3g): per-attempt pass probability is finally
         # meaningful, so multiply attempts instead of demanding a perfect
         # first arrow. If the opening escapes the corridor mid-commit,
@@ -208,6 +217,8 @@ class RacePlanner:
         self._last_seen_side = 1.0   # search toward the last known bearing
         self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
         self._reacquire_until_ns: int | None = None   # post-miss range guard
+        self._advance_until_ns: int | None = None   # post-pass next-gate seek
+        self._advance_pending = False               # set by on_gate_passed
         self._blind_hold_ns: int | None = None  # blind-brake epoch (retrace)
         self._commit_vz_prev: float | None = None   # damper slew memory
         self._commit_vz_prev_ns: int | None = None
@@ -265,6 +276,12 @@ class RacePlanner:
         self._align_until_ns = None
         self._gap_bias = None
         self._reacquire_until_ns = None
+        # GATE CHAINING (autonomous): a successful pass must ADVANCE toward
+        # the next gate, never retreat/spin. The b1 trace showed the drone
+        # passing gate 1 while already commanding a -1.2 m/s RETREAT, then
+        # spinning blind and colliding — gate 2 never reached. Arm the
+        # forward advance-and-seek state (started with now_ns in plan()).
+        self._advance_pending = True
 
     def on_collision(self, now_ns: int) -> None:
         self._recover_until_ns = now_ns + int(self.recover_brake_s * 1e9)
@@ -273,6 +290,8 @@ class RacePlanner:
         self._commit_prev_z = None
         self._retreat_until_ns = None
         self._align_until_ns = None
+        self._advance_until_ns = None   # a crash ends the forward advance
+        self._advance_pending = False
 
     def _damp_commit_vz(self, vz: float, tdz_err: float,
                         now_ns: int, insurance: float = 0.0) -> float:
@@ -355,11 +374,39 @@ class RacePlanner:
             # stabilization: no search spin, no approach — hold still.
             return Setpoint(phase="hover", v_body=np.zeros(3), yaw_rate=0.0)
 
-        # -- recover: brake after a collision
+        # Arm the post-pass advance window (on_gate_passed has no clock).
+        if self._advance_pending:
+            self._advance_pending = False
+            self._advance_until_ns = now_ns + int(self.advance_s * 1e9)
+
+        # -- recover: brake after a collision (safety first, even mid-advance)
         if self._recover_until_ns is not None:
             if now_ns < self._recover_until_ns:
+                self._advance_until_ns = None
                 return Setpoint(phase="recover", v_body=np.zeros(3), yaw_rate=0.0)
             self._recover_until_ns = None
+
+        # -- advance: GATE CHAINING. Right after a pass, fly FORWARD toward
+        # the next gate (courses flow forward) while scanning, instead of
+        # retreating or spinning in place. Hand off to approach the instant
+        # a fresh gate is seen AHEAD; ignore the just-passed gate (behind,
+        # fwd <= 0). This is the autonomous next-gate seek — no map, vision
+        # only.
+        if self._advance_until_ns is not None:
+            gate = state.gate_rel
+            ahead = (gate is not None and gate.t is not None
+                     and float(gate.t[2]) > self.advance_min_fwd_m
+                     and state.gate_rel_age_s <= self.blind_age_s)
+            if ahead:
+                self._advance_until_ns = None        # next gate acquired
+            elif now_ns < self._advance_until_ns:
+                yaw = self.search_yaw_rate * (self._last_seen_side or 1.0)
+                return Setpoint(
+                    phase="advance",
+                    v_body=np.array([self.advance_speed, 0.0, 0.0]),
+                    yaw_rate=yaw)
+            else:
+                self._advance_until_ns = None
 
         # -- retreat: back away after a blown attempt until the gate is in
         # view again at a sane range, then re-approach (multiply attempts).

@@ -74,11 +74,39 @@ def test_commit_locks_vector():
 
 
 def test_gate_passed_clears_commit():
+    # After a pass the commit is cleared and the drone ADVANCES toward the
+    # next gate (gate chaining) instead of retreating/searching in place.
     p = planner()
     p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
     p.on_gate_passed()
     sp = p.plan(int(0.1e9), "race", make_state(), None)
-    assert sp.phase == "search"
+    assert sp.phase == "advance"
+    assert sp.v_body[0] > 0            # forward, not retreat
+    # after the advance window, falls back to normal search
+    sp2 = p.plan(int(5e9), "race", make_state(), None)
+    assert sp2.phase == "search"
+
+
+def test_gate_passed_advance_hands_off_to_next_gate():
+    # A fresh gate seen AHEAD during advance is acquired immediately.
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    p.on_gate_passed()
+    sp = p.plan(int(0.1e9), "race", make_state(), None)
+    assert sp.phase == "advance"
+    sp2 = p.plan(int(0.2e9), "race",
+                 make_state(gate_t=[0.0, 0.0, 8.0], age_s=0.1), None)
+    assert sp2.phase in ("approach", "align", "commit")
+
+
+def test_gate_passed_ignores_gate_behind_during_advance():
+    # The just-passed gate (fwd <= 0, behind) must NOT stop the advance.
+    p = planner()
+    p.plan(0, "race", make_state(gate_t=[0.0, 0.0, 1.5]), None)
+    p.on_gate_passed()
+    sp = p.plan(int(0.1e9), "race",
+                make_state(gate_t=[0.0, 0.0, -1.5], age_s=0.1), None)
+    assert sp.phase == "advance"
 
 
 def test_commit_yaws_camera_onto_offset_gate():

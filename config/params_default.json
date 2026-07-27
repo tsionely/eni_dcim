@@ -89,6 +89,11 @@
     }
   },
   "planner": {
+    "advance": {
+      "duration_s": 2.0,
+      "min_fwd_m": 1.0,
+      "speed_mps": 1.5
+    },
     "align": {
       "climb_cap_mps": 1.2,
       "climb_gain": 1.0,
