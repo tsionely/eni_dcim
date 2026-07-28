@@ -156,6 +156,26 @@
       "pitch_cal_rad": -0.33,
       "validated_max_age_s": 0.5,
       "vz_max_mps": 0.6
+    },
+    "ibvs": {
+      "enable": false,
+      "lat_gain": 1.6,
+      "vert_gain": 1.2,
+      "yaw_gain": 1.5,
+      "max_lat_mps": 1.5,
+      "max_vert_mps": 1.0,
+      "yaw_cap_rps": 0.8,
+      "aim_up_frac": 0.0,
+      "center_fresh_s": 0.3
+    },
+    "visibility": {
+      "enable": false,
+      "fresh_full_s": 0.15,
+      "stale_age_s": 0.5,
+      "min_frac": 0.35,
+      "min_speed_mps": 0.8,
+      "panic_ttc_s": 0.6,
+      "panic_scale": 0.5
     }
   },
   "safety": {

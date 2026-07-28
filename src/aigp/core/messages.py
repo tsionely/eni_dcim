@@ -147,6 +147,13 @@ class StateEstimate:
     gate_center_px: tuple[float, float] | None
     image_size: tuple[int, int] | None
     healthy: bool
+    # Age of the PIXEL center separately from the 3D fix: center-only
+    # detections (PnP degenerate — the banner/bloom final meters) keep
+    # refreshing gate_center_px without refreshing gate_rel. The IBVS
+    # fallback steers on the pixel bearing exactly when the 3D pose is
+    # stale but the blob is still tracked, so it needs the honest pixel
+    # age, not the 3D age. inf when no center exists.
+    gate_center_age_s: float = float("inf")
     # Resting attitude measured pre-arm (the sim's IMU is mount-tilted ~18
     # deg nose-down at rest): the cascade holds THIS, not IMU-zero.
     level_roll: float = 0.0

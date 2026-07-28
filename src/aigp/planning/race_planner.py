@@ -23,6 +23,8 @@ import numpy as np
 from aigp.core.messages import RaceStatus, Setpoint, StateEstimate
 from aigp.core.params import ParamSet
 from aigp.planning import approach as ap
+from aigp.planning.ibvs import (IbvsConfig, VisibilityConfig, ibvs_centering,
+                                visibility_speed)
 
 
 class RacePlanner:
@@ -215,6 +217,45 @@ class RacePlanner:
         self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
         self.recover_brake_s = float(p.get("planner.recover.brake_s"))
         self.force_hover = bool(p.get("planner.force_hover", default=False))
+        # IBVS pixel-bearing fallback (ported from the owner-supplied
+        # "aigp_stack" FunnelPassController, mount-pitch corrected — see
+        # planning/ibvs.py). Steers lateral/vertical/yaw on the PIXEL
+        # center while the 3D pose is stale but the blob is still
+        # tracked (center-only detections refresh gate_center_px without
+        # refreshing gate_rel). Config-gated, default OFF.
+        self.ibvs = IbvsConfig(
+            enable=bool(p.get("planner.ibvs.enable", default=False)),
+            lat_gain=float(p.get("planner.ibvs.lat_gain", default=1.6)),
+            vert_gain=float(p.get("planner.ibvs.vert_gain", default=1.2)),
+            yaw_gain=float(p.get("planner.ibvs.yaw_gain", default=1.5)),
+            max_lat_mps=float(p.get("planner.ibvs.max_lat_mps", default=1.5)),
+            max_vert_mps=float(p.get("planner.ibvs.max_vert_mps", default=1.0)),
+            yaw_cap_rps=float(p.get("planner.ibvs.yaw_cap_rps", default=0.8)),
+            aim_up_frac=float(p.get("planner.ibvs.aim_up_frac", default=0.0)))
+        self.ibvs_center_fresh_s = float(p.get(
+            "planner.ibvs.center_fresh_s", default=0.3))
+        # Visibility-based speed (ported from the aigp_stack
+        # VisibilitySpeedController): forward speed scales DOWN as the
+        # gate fix ages, with a time-to-contact panic brake. Applied to
+        # APPROACH only — commit has its own blind budget and a physics-
+        # sized window that a mid-dash slowdown would silently outlive.
+        # Config-gated, default OFF.
+        self.vis = VisibilityConfig(
+            enable=bool(p.get("planner.visibility.enable", default=False)),
+            fresh_full_s=float(p.get("planner.visibility.fresh_full_s",
+                                     default=0.15)),
+            stale_age_s=float(p.get("planner.visibility.stale_age_s",
+                                    default=0.5)),
+            min_frac=float(p.get("planner.visibility.min_frac", default=0.35)),
+            min_speed_mps=float(p.get("planner.visibility.min_speed_mps",
+                                      default=0.8)),
+            panic_ttc_s=float(p.get("planner.visibility.panic_ttc_s",
+                                    default=0.6)),
+            panic_scale=float(p.get("planner.visibility.panic_scale",
+                                    default=0.5)))
+        self.cam_fov_deg = float(p.get("perception.camera.fov_deg"))
+        self.cam_mount_pitch = float(p.get("perception.camera.mount_pitch_deg",
+                                           default=0.0))
 
         self._commit_until_ns: int | None = None
         self._commit_v_body: np.ndarray | None = None
@@ -527,6 +568,22 @@ class RacePlanner:
                     if self.retreat_enabled:
                         self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
                         return self._retreat_setpoint(state)
+                    # No-retreat fallback (R2C census: 3/8 deaths were the
+                    # blind BACKWARD leg into structure behind us — on the
+                    # dense course a retreat is a blind maneuver by
+                    # construction). Brake to a stop instead: momentum is
+                    # forward, the space ahead was just inspected, and
+                    # search resumes from a standstill. Without this branch
+                    # the fall-through returned Setpoint(v_body=None) — a
+                    # mid-flight crash the retreat default masked.
+                    self._recover_until_ns = now_ns + int(
+                        self.recover_brake_s * 1e9)
+                    self._blind_hold_ns = now_ns
+                    self._search_last_ns = None
+                    self._search_prev_rate = 0.0
+                    self._search_yaw_accum = 0.0
+                    return Setpoint(phase="recover", v_body=np.zeros(3),
+                                    yaw_rate=0.0)
                 elif gate is not None and gate.t[2] > 0.3:
                     d_body = ap.cam_to_body(gate.t)
                     dist = float(np.linalg.norm(d_body))
@@ -588,6 +645,44 @@ class RacePlanner:
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     blind_now = state.gate_rel_age_s > self.blind_age_s
+                    ibvs_now = (self.ibvs.enable and blind_now
+                                and state.gate_center_px is not None
+                                and state.image_size is not None
+                                and state.gate_center_age_s
+                                <= self.ibvs_center_fresh_s)
+                    if ibvs_now:
+                        # IBVS pixel-guided traverse (aigp_stack port):
+                        # the 3D pose is fossil but the blob center is
+                        # still tracked (center-only detections in the
+                        # banner/bloom final meters refresh the pixel
+                        # without refreshing gate_rel). Steer lateral +
+                        # vertical + yaw on the mount-corrected pixel
+                        # bearing instead of dead-reckoning the frozen
+                        # vector — LIVE image evidence beats a fossil.
+                        # The damper deadband is bypassed deliberately
+                        # (it guards fossil-chasing; this input is
+                        # fresh); cap and slew still bound the command.
+                        vy, vz, ibvs_yaw = ibvs_centering(
+                            state.gate_center_px, state.image_size,
+                            self.cam_fov_deg, self.cam_mount_pitch,
+                            self.ibvs)
+                        self._gap_bias = None
+                        vz = float(np.clip(vz, -self.commit_vz_cap,
+                                           self.commit_vz_cap))
+                        if (self._commit_vz_prev is not None
+                                and self._commit_vz_prev_ns is not None):
+                            step = self.commit_vz_slew * max(
+                                (now_ns - self._commit_vz_prev_ns) / 1e9, 0.0)
+                            vz = float(np.clip(
+                                vz, self._commit_vz_prev - step,
+                                self._commit_vz_prev + step))
+                        self._commit_vz_prev = vz
+                        self._commit_vz_prev_ns = now_ns
+                        self._commit_v_body = np.array(
+                            [self.commit_speed, vy, vz])
+                        return Setpoint(phase="commit",
+                                        v_body=self._commit_v_body,
+                                        yaw_rate=ibvs_yaw)
                     if self.blind_vz_zero and blind_now:
                         # T2b (ADVISORY-36 change #1, vertical member +
                         # the crossing autopsy 7cbce47): in the blind
@@ -735,13 +830,31 @@ class RacePlanner:
                     and self._commit_until_ns is None:
                 speed = ap.approach_speed(dist, self.speed_far,
                                           self.speed_near, self.near_distance)
+                if self.vis.enable:
+                    speed = visibility_speed(
+                        speed, state.gate_rel_age_s, dist,
+                        float(np.linalg.norm(state.v_world)), self.vis)
+                v = direction * speed + crosstrack
                 yaw_rate = 0.0
                 if state.gate_center_px is not None and state.image_size is not None:
-                    yaw_rate = ap.yaw_rate_to_center(
-                        state.gate_center_px, state.image_size,
-                        self.yaw_center_gain)
+                    if (self.ibvs.enable and state.gate_center_age_s
+                            <= self.ibvs_center_fresh_s):
+                        # Stale-3D approach with a live pixel track: center
+                        # on the pixel bearing (lateral + vertical + yaw)
+                        # instead of the fossil pose — this is the keep-in-
+                        # frame servo that prevents the R2C run-1 gate-2
+                        # dropout (detection collapsed as the off-axis gate
+                        # drifted out of the FOV).
+                        vy, vz, yaw_rate = ibvs_centering(
+                            state.gate_center_px, state.image_size,
+                            self.cam_fov_deg, self.cam_mount_pitch, self.ibvs)
+                        v = np.array([float(v[0]), vy, vz])
+                    else:
+                        yaw_rate = ap.yaw_rate_to_center(
+                            state.gate_center_px, state.image_size,
+                            self.yaw_center_gain)
                 return Setpoint(phase="approach",
-                                v_body=direction * speed + crosstrack,
+                                v_body=v,
                                 yaw_rate=yaw_rate)
             # Vertical pre-alignment: close the TRUE height gap first,
             # creeping forward, then dash level (the in-commit hold's
@@ -788,6 +901,15 @@ class RacePlanner:
             return Setpoint(phase="commit", v_body=v, yaw_rate=0.0)
 
         speed = ap.approach_speed(dist, self.speed_far, self.speed_near, self.near_distance)
+        if self.vis.enable:
+            # Visibility-based speed (aigp_stack port): fresh fixes fly the
+            # profile unchanged; an aging fix scales the approach down and a
+            # short time-to-contact on weak evidence panic-brakes. Slow
+            # blind meters cost seconds — fast blind meters cost the frame
+            # (R2C run-4: forward into structure during approach).
+            speed = visibility_speed(speed, state.gate_rel_age_s, dist,
+                                     float(np.linalg.norm(state.v_world)),
+                                     self.vis)
         yaw_rate = 0.0
         if state.gate_center_px is not None and state.image_size is not None:
             yaw_rate = ap.yaw_rate_to_center(

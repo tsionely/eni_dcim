@@ -535,6 +535,74 @@ PREDICTION: if slower flight threads gate 1 even once (max_gate_idx
 reads the R2C collision geometry: is the drone hitting structure
 BEHIND the gate (overshoot) or BESIDE the approach (off-axis)?
 
+R2C VERDICT (8/8 flown, fixtures raceprep-r2c-run1..8): the
+prediction's FIRST branch holds — **2/8 runs passed gate 1 on the
+real R2 course** (runs 1 and 7; A1 control was 0/8). Slowing works;
+there IS a path. Run 1 even started chaining: after the pass the
+detector locked a gate 16m ahead, approached, and entered a gate-2
+commit before detection collapsed (23-25s) and the drone drifted
+blind into structure. The A1 "obstacle-blindness is fundamental"
+conclusion is REFUTED as stated: the drone sees and threads gates
+when slow enough. All 8 deaths were environment collisions, and the
+phase-at-collision census names the real killers:
+  - 3/8 in RETREAT (runs 2,3,8): gate in FULL view (60+ det in the
+    last 2s), commit aborted, and the blind BACKWARD leg hit the
+    structure behind — on a dense course a retreat is a blind
+    maneuver by construction.
+  - 3/8 in SEARCH drift (runs 1,6,7): post-loss blind spin/drift
+    into structure (the two gate-1 passes died here, after the pass).
+  - 2/8 FORWARD while tracking (run 4 approach, run 5 commit):
+    genuine between-us-and-the-gate structure — the only residue of
+    true obstacle-blindness in the block.
+
+## The owner's stack drop (2026-07-28) + Phase R2D — ported-algorithms A/B (registered before results)
+
+The owner uploaded "aigp_stack_final" — an alternative autonomy
+stack whose 6-gate run does NOT meet the competition format (it flew
+its own ideal simulator from a KNOWN course map; its competition
+adapter is a stub). Verdict: not a replacement, but three of its
+algorithms are vision-only-legal and map ONE-TO-ONE onto the R2C
+death census, so they are ported (commit tagged r2d) config-gated
+default-OFF:
+  1. IBVS pixel-bearing servo (planning/ibvs.py, from its
+     FunnelPassController IBVS mode) — steers lateral/vertical/yaw
+     on the PIXEL center back-projected through the mount tilt
+     (their image-center convention would fly under gates with our
+     29deg up-tilted camera — corrected to a body-bearing servo).
+     Engages ONLY when the 3D pose is stale but the pixel track is
+     fresh (new gate_center_age_s plumbing; center-only detections
+     already refresh the pixel without refreshing gate_rel).
+     Targets: the stale_budget commit exits and the keep-in-frame
+     dropout that killed run 1's gate-2 attempt.
+  2. Visibility-based speed (their VisibilitySpeedController) —
+     approach speed scales down with fix age + TTC panic brake.
+     Targets: the forward-into-structure residue (runs 4-5), partial.
+  3. Brake-first no-retreat discipline (their 4-phase recovery's
+     slowdown-first principle): planner.retreat.enabled=false +
+     planner.search.blind_hold_enable=true. Targets: the 3 retreat
+     deaths + the 3 search-drift deaths. Found and fixed in the
+     port: with retreat disabled the geometric_behind commit exit
+     fell through to Setpoint(v_body=None) — a mid-flight crash the
+     retreat default had masked (now brakes to recover; unit test).
+     blind_hold_enable remains default-OFF per the trio-failure
+     precedent; R2D flies it as an explicit outcome-judged patch,
+     which the registered protocol allows.
+NOT ported (format-illegal or redundant): MPC/cascaded PID (below
+our setpoint layer), racing-line/anticipatory-yaw (require a known
+map), gate-appearance learner (our detector is already tuned on
+real frames).
+R2D BLOCK: 8 runs on r2training, R2C speeds + the three ports ON:
+  planner.retreat.enabled=false, planner.search.blind_hold_enable=true,
+  planner.ibvs.enable=true, planner.visibility.enable=true.
+Control = R2C (2/8 gate-1, 8/8 env-collision deaths).
+PREDICTIONS (registered): (a) retreat-phase deaths 3/8 -> 0;
+(b) gate-1 rate holds or rises (>=2/8); (c) if search-drift deaths
+persist >=2, the next lever is the search phase itself (bounded
+translation, not spin-in-place) — not more commit tuning; (d) any
+gate-2 PASS in the block is the chaining breakthrough and R2E
+extends this exact config. FAILURE READ: if gate-1 drops below R2C,
+one of the ports harms — bisect IBVS first (it touches the commit).
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

@@ -126,6 +126,11 @@ class StateEstimator:
         self._gate_rel: RelPose | None = None
         self._gate_rel_ts_ns: int | None = None
         self._gate_center_px: tuple[float, float] | None = None
+        # Pixel-center timestamp, SEPARATE from the 3D fix timestamp:
+        # center-only detections (PnP degenerate) refresh the pixel
+        # without refreshing gate_rel — the IBVS fallback needs the
+        # honest pixel age to know the blob is still tracked.
+        self._gate_center_ts_ns: int | None = None
         self._image_size: tuple[int, int] | None = None
         # Fix history for the vision-velocity derivative. At 224Hz the
         # frame-to-frame motion (~5cm) drowns in PnP noise (~±18cm), so the
@@ -196,6 +201,8 @@ class StateEstimator:
         # lock then rejected reality. Drop the target and re-acquire clean.
         self._gate_rel = None
         self._gate_rel_ts_ns = None
+        self._gate_center_px = None
+        self._gate_center_ts_ns = None
         self._fix_history.clear()
         self._last_lock_dist = None
         self._relock_reject_since_ns = None
@@ -208,6 +215,7 @@ class StateEstimator:
         self._gate_rel = None
         self._gate_rel_ts_ns = None
         self._gate_center_px = None
+        self._gate_center_ts_ns = None
         self._fix_history.clear()
         self._att_history.clear()
         self._vision_yaw_rate = 0.0
@@ -379,6 +387,7 @@ class StateEstimator:
             w = det.image_size[0]
             if abs(det.center_px[0] - self._gate_center_px[0]) < 0.25 * w:
                 self._gate_center_px = det.center_px
+                self._gate_center_ts_ns = self._rebase_det_ts(det.ts_ns)
             return
         if det.rel_pose is not None:
             # Vision velocity: the gate is static, so the derivative of its
@@ -398,6 +407,7 @@ class StateEstimator:
             self._last_lock_dist = float(np.linalg.norm(t_body))
             self._relock_reject_since_ns = None
             self._gate_center_px = det.center_px
+            self._gate_center_ts_ns = self._rebase_det_ts(det.ts_ns)
             q_now = self._attitude_at(self._rebase_det_ts(det.ts_ns))
             if det.confidence < 0.55:
                 # Close-tracker fix (0.5): derived FROM the dead-reckoned
@@ -478,6 +488,7 @@ class StateEstimator:
         self._gate_rel = None
         self._gate_rel_ts_ns = None
         self._gate_center_px = None
+        self._gate_center_ts_ns = None
         self._fix_history.clear()
         self._last_lock_dist = None      # next gate is legitimately farther
         self._relock_reject_since_ns = None
@@ -489,11 +500,15 @@ class StateEstimator:
         age = float("inf")
         gate_rel = None
         gate_center = None
+        center_age = float("inf")
         if self._gate_rel is not None and self._gate_rel_ts_ns is not None:
             age = max(0.0, (self._now_ns - self._gate_rel_ts_ns) / 1e9)
             if age <= self.max_age_s:
                 gate_rel = self._gate_rel
                 gate_center = self._gate_center_px
+                if self._gate_center_ts_ns is not None:
+                    center_age = max(0.0, (self._now_ns
+                                           - self._gate_center_ts_ns) / 1e9)
         return StateEstimate(
             ts_ns=self._now_ns,
             q_att=self.attitude.q,
@@ -502,6 +517,7 @@ class StateEstimator:
             gate_rel=gate_rel,
             gate_rel_age_s=age,
             gate_center_px=gate_center,
+            gate_center_age_s=center_age,
             image_size=self._image_size,
             healthy=self._last_imu_ts_ns is not None,
             level_roll=self._level_roll,
