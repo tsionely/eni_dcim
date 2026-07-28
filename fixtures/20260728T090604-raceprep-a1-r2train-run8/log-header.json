@@ -1,0 +1,12 @@
+{
+  "label": "raceprep-a1-r2train-run8",
+  "stage": "a1-r2training-frozen-baseline",
+  "run": 8,
+  "event": "r2training",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "1abe644c478b98d7a41a0334032a22f55306f985",
+  "flight_id": "20260728T090516-fcad562f",
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-a1-r2train-run8 r2training -- --max-duration 300 --patch planner.commit.speed_mps=1.8 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.6 --patch estimation.vel_clamp_mps=12 --patch safety.gate_clip_debounce_s=0.3 --patch planner.approach.aim_up_floor_m=0.3 --patch planner.commit.abort_offset_m=0.7 --patch planner.commit.blind_budget_s=1.5",
+  "patch_typo_correction": "planer.approach.aim_up_floor_m -> planner.approach.aim_up_floor_m=0.3"
+}
