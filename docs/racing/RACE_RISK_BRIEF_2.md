@@ -53,6 +53,17 @@ green, unflown.
    would you require (distance cap, obstacle-aware abort, shrink the
    window)?
 
+## Owner fact (2026-07-28): gates are visually IDENTICAL
+
+The owner reports all gates look the same from the front. IMPLICATION
+for Q2: the next-gate vs just-passed-gate decision CANNOT use
+appearance — every gate is the same blob. The geometric exclusion
+stack (back-bearing sector, size-implied range, track continuity,
+passed-set IMU anchors) is therefore REQUIRED, not optional; facing
+classification is only available if the BACK of a gate looks different
+from the FRONT (still unknown — owner check pending). Design the
+exclusion on geometry alone.
+
 Evidence: fixtures/*b1-B-run2 (pass-then-crash trace),
 fixtures/*b1-B-run3 (blind after pass), src/aigp/planning/race_planner.py
 (the ADVANCE block + on_gate_passed). Conservative-on-conflict; nothing
