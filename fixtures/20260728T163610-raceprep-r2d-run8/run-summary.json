@@ -1,0 +1,43 @@
+{
+  "run": 8,
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=1.4)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 5,
+  "duration_s": 32.66802260000259,
+  "loop_overrun_frac": 0.0012244398187829068,
+  "loop_stats": {
+    "ticks": 8167,
+    "overruns": 10,
+    "overrun_frac": 0.0012244398187829068,
+    "max_late_us": 4092
+  },
+  "flight_id": "20260728T163507-99df9106",
+  "log_dir": "logs\\20260728T163507-99df9106",
+  "event": "r2training",
+  "phase_counts": {
+    "hover": 620,
+    "takeoff": 75,
+    "align": 30,
+    "commit": 158,
+    "recover": 42,
+    "search": 657,
+    "approach": 52
+  },
+  "last_phase": "recover",
+  "commit_exit_count": 1,
+  "commit_exit_reason_counts": {
+    "stale_budget": 1
+  },
+  "commit_exits": [
+    {
+      "ts_ns": 1785256526544796950,
+      "reason": "stale_budget",
+      "gate_rel_t": null,
+      "gate_rel_age_s": 1.509919408
+    }
+  ]
+}
