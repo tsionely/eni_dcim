@@ -135,9 +135,18 @@ class RacePlanner:
         # forward at this speed for advance_s, scanning, until a fresh gate
         # is seen ahead of advance_min_fwd_m. Replaces the retreat/spin that
         # threw away every gate-1 pass.
-        self.advance_s = float(p.get("planner.advance.duration_s", default=2.0))
+        # DISTANCE-based clearance (ADVISORY-37 guard 1): a time window under
+        # variable speed manufactures blind overreach in a walled arena.
+        # Terminate on integrated forward displacement (speed*elapsed), just
+        # enough to clear gate-1's frame depth and earn room to acquire.
+        self.advance_dist_m = float(p.get("planner.advance.distance_m",
+                                          default=1.2))
+        # Blind-speed cap (ADVISORY-37 guard 2): blind meters fly slow.
         self.advance_speed = float(p.get("planner.advance.speed_mps",
-                                         default=1.5))
+                                         default=1.2))
+        # Outer time watchdog only (guard 6): if the distance isn't covered
+        # in this, the integrator lied — end into normal search.
+        self.advance_max_s = float(p.get("planner.advance.max_s", default=2.5))
         self.advance_min_fwd_m = float(p.get("planner.advance.min_fwd_m",
                                              default=1.0))
         # Miss-recovery (phase3g): per-attempt pass probability is finally
@@ -217,7 +226,7 @@ class RacePlanner:
         self._last_seen_side = 1.0   # search toward the last known bearing
         self._gap_bias: float | None = None   # frozen at gap entry (no-arm rule)
         self._reacquire_until_ns: int | None = None   # post-miss range guard
-        self._advance_until_ns: int | None = None   # post-pass next-gate seek
+        self._advance_start_ns: int | None = None   # post-pass next-gate seek
         self._advance_pending = False               # set by on_gate_passed
         self._blind_hold_ns: int | None = None  # blind-brake epoch (retrace)
         self._commit_vz_prev: float | None = None   # damper slew memory
@@ -290,7 +299,7 @@ class RacePlanner:
         self._commit_prev_z = None
         self._retreat_until_ns = None
         self._align_until_ns = None
-        self._advance_until_ns = None   # a crash ends the forward advance
+        self._advance_start_ns = None   # a crash ends the forward advance
         self._advance_pending = False
 
     def _damp_commit_vz(self, vz: float, tdz_err: float,
@@ -374,39 +383,42 @@ class RacePlanner:
             # stabilization: no search spin, no approach — hold still.
             return Setpoint(phase="hover", v_body=np.zeros(3), yaw_rate=0.0)
 
-        # Arm the post-pass advance window (on_gate_passed has no clock).
+        # Arm the post-pass advance (on_gate_passed has no clock).
         if self._advance_pending:
             self._advance_pending = False
-            self._advance_until_ns = now_ns + int(self.advance_s * 1e9)
+            self._advance_start_ns = now_ns
 
         # -- recover: brake after a collision (safety first, even mid-advance)
         if self._recover_until_ns is not None:
             if now_ns < self._recover_until_ns:
-                self._advance_until_ns = None
+                self._advance_start_ns = None
                 return Setpoint(phase="recover", v_body=np.zeros(3), yaw_rate=0.0)
             self._recover_until_ns = None
 
         # -- advance: GATE CHAINING. Right after a pass, fly FORWARD toward
-        # the next gate (courses flow forward) while scanning, instead of
-        # retreating or spinning in place. Hand off to approach the instant
-        # a fresh gate is seen AHEAD; ignore the just-passed gate (behind,
-        # fwd <= 0). This is the autonomous next-gate seek — no map, vision
-        # only.
-        if self._advance_until_ns is not None:
+        # the next gate (courses flow forward) instead of retreating/spinning.
+        # DISTANCE-capped clearance (ADVISORY-37): terminate on integrated
+        # forward displacement (speed*elapsed) once gate-1's frame depth is
+        # cleared; hand off to approach the instant a fresh gate is seen
+        # AHEAD; ignore the just-passed gate (fwd <= 0). Outer time watchdog
+        # guards a lying integrator. Vision-only, no map, autonomous.
+        if self._advance_start_ns is not None:
             gate = state.gate_rel
             ahead = (gate is not None and gate.t is not None
                      and float(gate.t[2]) > self.advance_min_fwd_m
                      and state.gate_rel_age_s <= self.blind_age_s)
+            elapsed_s = (now_ns - self._advance_start_ns) / 1e9
+            covered_m = self.advance_speed * elapsed_s
             if ahead:
-                self._advance_until_ns = None        # next gate acquired
-            elif now_ns < self._advance_until_ns:
+                self._advance_start_ns = None         # next gate acquired
+            elif covered_m < self.advance_dist_m and elapsed_s < self.advance_max_s:
                 yaw = self.search_yaw_rate * (self._last_seen_side or 1.0)
                 return Setpoint(
                     phase="advance",
                     v_body=np.array([self.advance_speed, 0.0, 0.0]),
                     yaw_rate=yaw)
             else:
-                self._advance_until_ns = None
+                self._advance_start_ns = None         # cleared / watchdog
 
         # -- retreat: back away after a blown attempt until the gate is in
         # view again at a sane range, then re-approach (multiply attempts).

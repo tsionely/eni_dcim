@@ -90,9 +90,10 @@
   },
   "planner": {
     "advance": {
-      "duration_s": 2.0,
+      "distance_m": 1.2,
+      "max_s": 2.5,
       "min_fwd_m": 1.0,
-      "speed_mps": 1.5
+      "speed_mps": 1.2
     },
     "align": {
       "climb_cap_mps": 1.2,
