@@ -603,6 +603,52 @@ gate-2 PASS in the block is the chaining breakthrough and R2E
 extends this exact config. FAILURE READ: if gate-1 drops below R2C,
 one of the ports harms — bisect IBVS first (it touches the commit).
 
+R2D VERDICT (8/8 flown, raceprep-r2d-run1..8): 1/8 gate-1 (run 6),
+all 8 deaths environment collisions, but the census REDISTRIBUTED:
+  (a) CONFIRMED — retreat deaths 3 -> 0; the retreat phase never
+      even ran. Collision impulses dropped block-wide (median ~2.2
+      vs ~4.7): the blind high-energy maneuvers are gone.
+  (b) FAILED at face value (1/8 < 2/8) — but the registered bisect
+      read (blame IBVS) is EXONERATED by mechanism: the four new
+      commit-phase deaths (runs 1,2,3,5) all died with FRESH
+      detections (det_gap 0.0-0.6s), where IBVS by construction is
+      not steering (it engages only on stale-3D). The census names
+      the true mechanism: corridor_abort fired 2x in R2C (both
+      became retreat deaths) and 0x in R2D — the abort's ONLY
+      escape was retreat, so with retreat disabled doomed commits
+      had NO exit and carried through into structure. The same
+      gating flaw as the geometric_behind crash, found by flight
+      instead of by port. FIX (this commit): corridor_abort now
+      fires regardless and brakes to recover when retreat is
+      unavailable; unit-tested.
+  (c) CONFIRMED — search-drift deaths persist (runs 4,7,8; run 8
+      wandered blind 9.4s). The search phase is now the largest
+      single killer class and the registered next lever after R2E.
+  (d) No gate-2 pass — but run 6 is the deepest chaining ever:
+      passed gate 1 at 18.1s, acquired gate 2 IMMEDIATELY (no
+      search gap), entered a gate-2 COMMIT at 18.6s, stale-braked
+      cleanly at 21.5s (recover, not blind retreat), reacquired,
+      reached align — and clipped structure during align at low
+      speed. The brake->reacquire loop the ports built WORKS; the
+      chain now dies in the last meters of gate 2, not at the
+      pass->retreat->spin of the pre-port era.
+IBVS engagement was inferable only indirectly this block (280
+stale-3D+fresh-pixel eligible ticks); Setpoint now carries an ibvs
+flag so the next census reads engagement directly.
+
+## Phase R2E — corridor-escape block (registered before results)
+
+R2D config EXACTLY (all four flags), on the code with the
+corridor_abort no-retreat brake escape + ibvs telemetry flag.
+8 runs, r2training, labels raceprep-r2e-runN. Control = R2D.
+PREDICTIONS: (a) commit-phase env deaths 4/8 -> <=1 (the corridor
+escape restores the exit run 6 proved out); (b) corridor_abort
+reappears in commit_exit_reason_counts (>0 in the block);
+(c) gate-1 recovers to >=2/8; (d) search-drift deaths ~3 persist
+(unaddressed this block — fix registered for R2F: bounded
+translation search); (e) any gate-2 pass extends this config to a
+10-run consistency block (R2G) as the submission candidate.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

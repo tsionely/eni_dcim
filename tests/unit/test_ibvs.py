@@ -213,3 +213,26 @@ def test_visibility_disabled_is_inert():
     sp_on = pl2.plan(0, "race", stale, None)
     assert float(np.linalg.norm(sp_on.v_body)) < \
         float(np.linalg.norm(sp_off.v_body))
+
+
+def test_no_retreat_corridor_abort_brakes_not_carries_through():
+    # R2D census: with retreat disabled the corridor abort was gated OFF
+    # entirely and breached commits carried through into structure
+    # (commit-phase env collisions 1/8 -> 4/8). The abort must fire
+    # regardless and brake to recover when retreat is unavailable.
+    pl = planner(**{"planner.retreat.enabled": False})
+    st = make_state(gate_t=[0.0, 0.0, 3.0], center_px=(320, 300))
+    sp = pl.plan(0, "race", st, None)
+    assert sp.phase == "commit"
+    # Four fresh in-corridor-breach ticks: dist in (abort_min, 1.5),
+    # lateral offset ~0.9m > abort_offset_m.
+    sp2 = None
+    for i in range(1, 6):
+        breach = make_state(gate_t=[0.9, 0.0, 1.0], center_px=None,
+                            age_s=0.05)
+        sp2 = pl.plan(int(0.05e9) * i, "race", breach, None)
+        if sp2.phase != "commit":
+            break
+    assert sp2.phase == "recover"
+    assert float(np.linalg.norm(sp2.v_body)) == 0.0
+    assert pl.commit_exit_reason == "corridor_abort"

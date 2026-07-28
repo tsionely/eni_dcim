@@ -633,15 +633,32 @@ class RacePlanner:
                         self._abort_breach += 1
                     else:
                         self._abort_breach = 0
-                    if self._abort_breach >= 4 and self.retreat_enabled:
+                    if self._abort_breach >= 4:
                         self._abort_breach = 0
                         self.commit_exit_reason = "corridor_abort"
                         self._commit_until_ns = None
                         self._commit_v_body = None
                         self._commit_prev_z = None
                         self._note_attempt_failed(now_ns)
-                        self._retreat_until_ns = now_ns + int(self.retreat_s * 1e9)
-                        return self._retreat_setpoint(state)
+                        if self.retreat_enabled:
+                            self._retreat_until_ns = now_ns + int(
+                                self.retreat_s * 1e9)
+                            return self._retreat_setpoint(state)
+                        # No-retreat corridor escape (R2D census): gating
+                        # the abort itself on retreat_enabled starved the
+                        # ONLY escape from a doomed commit — commit-phase
+                        # env collisions went 1/8 -> 4/8 as breached
+                        # corridors carried through into structure with
+                        # fresh detections. Brake to a stop instead;
+                        # run 6 proved the brake->reacquire loop chains.
+                        self._recover_until_ns = now_ns + int(
+                            self.recover_brake_s * 1e9)
+                        self._blind_hold_ns = now_ns
+                        self._search_last_ns = None
+                        self._search_prev_rate = 0.0
+                        self._search_yaw_accum = 0.0
+                        return Setpoint(phase="recover", v_body=np.zeros(3),
+                                        yaw_rate=0.0)
                     direction, dist = ap.gate_direction_body(gate, au)
                     extra = ap.crosstrack_velocity(gate, au, self.center_gain)
                     blind_now = state.gate_rel_age_s > self.blind_age_s
@@ -682,7 +699,7 @@ class RacePlanner:
                             [self.commit_speed, vy, vz])
                         return Setpoint(phase="commit",
                                         v_body=self._commit_v_body,
-                                        yaw_rate=ibvs_yaw)
+                                        yaw_rate=ibvs_yaw, ibvs=True)
                     if self.blind_vz_zero and blind_now:
                         # T2b (ADVISORY-36 change #1, vertical member +
                         # the crossing autopsy 7cbce47): in the blind
@@ -849,10 +866,11 @@ class RacePlanner:
                             state.gate_center_px, state.image_size,
                             self.cam_fov_deg, self.cam_mount_pitch, self.ibvs)
                         v = np.array([float(v[0]), vy, vz])
-                    else:
-                        yaw_rate = ap.yaw_rate_to_center(
-                            state.gate_center_px, state.image_size,
-                            self.yaw_center_gain)
+                        return Setpoint(phase="approach", v_body=v,
+                                        yaw_rate=yaw_rate, ibvs=True)
+                    yaw_rate = ap.yaw_rate_to_center(
+                        state.gate_center_px, state.image_size,
+                        self.yaw_center_gain)
                 return Setpoint(phase="approach",
                                 v_body=v,
                                 yaw_rate=yaw_rate)

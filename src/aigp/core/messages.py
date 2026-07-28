@@ -174,6 +174,10 @@ class Setpoint:
     # phantom-hover glide at vel_leak 0.05 / runaway chase at 0.01). The
     # attitude backend holds LEVEL on this flag instead of chasing velocity.
     blind_hold: bool = False
+    # True on ticks the IBVS pixel-bearing servo produced this command
+    # (stale-3D + fresh-pixel fallback). Logged so flight censuses read
+    # IBVS engagement directly instead of inferring it from v_body shape.
+    ibvs: bool = False
 
 
 # ---------------------------------------------------------------------------
