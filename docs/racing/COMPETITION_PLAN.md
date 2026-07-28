@@ -519,6 +519,22 @@ tight on time; (c) accept the current build, validate the submission
 pipeline, and bank whatever R2 runs achieve. The lead recommends (a)
 first as a fast probe, then (c), with (b) only if (a) shows promise.
 
+## Phase R2C — cautious R2 probe (owner decision 2026-07-28: cautious probe first)
+
+Config-only, no code. Slow everything on the real R2 course to cut
+collision energy and buy correction time — see if gate 1 is threadable
+at all. Frozen baseline + speed overrides:
+  planner.commit.speed_mps 1.8 -> 1.2
+  planner.approach.speed_far_mps 3.0 -> 2.0
+  planner.approach.speed_near_mps 1.5 -> 1.0
+r2training event, 8 runs. Control = A1 (frozen baseline on R2, 0/8).
+PREDICTION: if slower flight threads gate 1 even once (max_gate_idx
+>= 1 in any run), there is a path and we tune from there; if still
+0/8 with commit-phase env collisions, the wall is obstacle-blindness
+(option b) not speed, and the decision returns to the owner. Cursor
+reads the R2C collision geometry: is the drone hitting structure
+BEHIND the gate (overshoot) or BESIDE the approach (off-axis)?
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

@@ -255,6 +255,8 @@ class RacePlanner:
         self._recover_until_ns = None
         self._retreat_until_ns = None
         self._align_until_ns = None
+        self._advance_start_ns = None    # state hygiene (channel-2 ADVISORY-2 §6)
+        self._advance_pending = False
         self._abort_breach = 0
         self._term_abort_request = False
         self._last_seen_side = 1.0
