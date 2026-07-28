@@ -493,6 +493,32 @@ OPEN QUESTION for the owner: is the number of submission-mode runs
 limited before the deadline? If capped, A2/A3 must be rationed; if
 unlimited, submit freely. Confirm from the Team Portal before A2.
 
+### A1 — THE R2 REALITY (2026-07-28, the hard truth)
+
+Frozen baseline on the REAL R2 course (r2training): **0/8 gates, max
+gate index 0 in every run.** Detection WORKS (500-1200 dets/run, 97%+
+high-conf — not the problem). The drone sees a gate, commits, and
+COLLIDES WITH ENVIRONMENT STRUCTURE (id 1002, not gate frame) within
+17-33s — 4/8 first-collisions occur DURING commit toward a gate. R1's
+~35% gate-1 does NOT transfer: on R1's empty arena an imprecise
+approach merely misses; on R2's dense 3D-scanned course the same
+imprecision hits surrounding structure and ends the flight. The
+FUNDAMENTAL GAP: the drone is BLIND TO OBSTACLES — it perceives only
+gates (red detection), nothing else, so it cannot avoid the walls and
+structure it flies into. Gate chaining (ADVANCE) is moot until gate 1
+is passable on R2 — the C1 runs never triggered advance (no pass).
+
+OWNER DECISION POINT: winning = top-10 on R2, and the current build is
+0 gates on R2 with ~6 days left. The obstacle-blindness gap is large
+and there is no obstacle sensing to build on quickly. Options recorded
+for the owner (RESPONSE to owner in chat): (a) attempt a conservative/
+slower R2 approach to thread gate 1 without hitting structure — cheap
+to try, low ceiling; (b) invest in crude obstacle-awareness from the
+same camera (non-gate structure looming) — higher value, higher risk,
+tight on time; (c) accept the current build, validate the submission
+pipeline, and bank whatever R2 runs achieve. The lead recommends (a)
+first as a fast probe, then (c), with (b) only if (a) shows promise.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
