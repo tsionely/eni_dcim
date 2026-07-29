@@ -649,6 +649,45 @@ reappears in commit_exit_reason_counts (>0 in the block);
 translation search); (e) any gate-2 pass extends this config to a
 10-run consistency block (R2G) as the submission candidate.
 
+R2E VERDICT (8 flown, 2 void): runs 4-5 died at t=0 on a sim-side
+IMU stream stall (imu 0.604s before takeoff — launch procedure, not
+flight). Of the 6 real flights: 1/6 gate-1 (run 6), corridor_abort
+FIRED (run 6 — prediction (b) confirmed, the escape works), IBVS
+engaged 1-25 ticks/run with no harm signal. But commit-phase deaths
+persist (runs 1,2,3,6), and the collision GEOMETRY finally names
+the class: in 4 of 6 readable commit deaths the drone was laterally
+CENTERED but 0.24-0.90m BELOW the gate line (true_dz -0.24, -0.51,
+-0.90; plus one level-centered far case), mostly semi-blind (age
+0.6-0.9s). On R1's empty arena a low arrival passes under; on R2
+the space below the opening IS the mounting structure. The slow R2C
+speeds stretch the commit to 2-5s and give the known blind-stretch
+sag (no altimeter; vision-velocity SNR collapse at low speed) time
+to accumulate past the 0.3 aim-up floor. The kill class is
+LOW-ARRIVAL-INTO-PEDESTAL, and it is a vertical-aim problem, not
+obstacle-blindness.
+
+## Phase R2F — fly the gate line (registered before results)
+
+R2E config + three vertical patches, CONFIG-ONLY (no code):
+  planner.approach.aim_up_floor_m 0.3 -> 0.6   (hold the aim high
+    through the final taper instead of decaying toward the center)
+  planner.commit.blind_climb_bias_mps 0.1 -> 0.4  (blind stretches
+    climb hard enough to beat the measured sag)
+  planner.commit.vz_deadband_m 0.15 -> 0.05  (the trim engages on
+    small vertical errors instead of sleeping through them)
+8 runs r2training, labels raceprep-r2f-runN. Sim RELAUNCHED before
+the block (kills the t=0 imu-stall class of runs 4-5).
+PREDICTIONS: (a) low-arrival commit deaths (true_dz < -0.2 at
+collision) 4 -> <=1; (b) gate-1 >=2/8; (c) if arrivals center on
+the gate line and deaths move to the FRAME (clips/0.3-0.7m hits),
+the vertical fix landed and the next lever is terminal precision,
+not altitude; (d) the run-6-style chain (gate-2 commit) recurs in
+>=1 run — any gate-2 pass -> R2G consistency block as submission
+candidate. FAILURE READ: if arrivals are STILL low with the 0.6
+floor, the vertical CHAIN loses commanded climb (tracking, not
+aim) and the fix is code (blind climb via IBVS pixel vertical or
+a stronger vz authority), not config.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
