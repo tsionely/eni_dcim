@@ -1,0 +1,238 @@
+{"mono_ns": 1007853126206700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853136754100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853147513400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853158281400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853169334400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853179952200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853191022600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853199022500, "topic": "heartbeat", "data": {"ts_ns": 1785331180638215800, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853201435700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853212513700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853223567000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853234056200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853245171600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853255443000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853266552500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853278183700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853289198300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853299350100, "topic": "heartbeat", "data": {"ts_ns": 1785331180738334196, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853300753700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853310900800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853322259000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853324804100, "topic": "race", "data": {"ts_ns": 1785331180763848700, "sim_boot_time_ms": 689922, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007853332401700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853343397500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853354061100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853365101200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853375769700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853386787500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853398374100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853400886100, "topic": "heartbeat", "data": {"ts_ns": 1785331180839935100, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853408577600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853419235300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853430599800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853442180000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853453215800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853464259400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853474854600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853486010300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853496429000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853501465200, "topic": "heartbeat", "data": {"ts_ns": 1785331180940585932, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853507446100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853518469100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853529572200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853540155400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853550922100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853562038100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853573096100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853575067500, "topic": "race", "data": {"ts_ns": 1785331181014113800, "sim_boot_time_ms": 690173, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007853584268100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853595270300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853602311700, "topic": "heartbeat", "data": {"ts_ns": 1785331181041356800, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853605882200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853616378200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853626947300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853637566100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853648729300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853659086600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853670164000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853680918500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853692368300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853703092400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853703168600, "topic": "heartbeat", "data": {"ts_ns": 1785331181142296032, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853714101600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853725226100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853735355700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853746425900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853757985100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853768084000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853778432100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853789294400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853800836600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853803316500, "topic": "heartbeat", "data": {"ts_ns": 1785331181242517900, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853811413500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853822424400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853825448900, "topic": "race", "data": {"ts_ns": 1785331181264629904, "sim_boot_time_ms": 690423, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007853833185600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853844151900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853855254500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853865830200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853876449100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853887775200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853898824500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853903928400, "topic": "heartbeat", "data": {"ts_ns": 1785331181343103804, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007853910541200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853920902200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853931114900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853941209200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853952898400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853963850800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853974889000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853985461900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007853995635000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854004209000, "topic": "heartbeat", "data": {"ts_ns": 1785331181443408600, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854006709300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854018238400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854029274200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854040881100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854051142000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854062267700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854073356600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854075882000, "topic": "race", "data": {"ts_ns": 1785331181515104492, "sim_boot_time_ms": 690674, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007854085045700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854096137200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854105022700, "topic": "heartbeat", "data": {"ts_ns": 1785331181544245592, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854106517800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854117572700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854124027100, "topic": "fsm", "data": {"ts_ns": 1785331181563265400, "src": "IDLE", "dst": "ARMING", "reason": "flight start"}}
+{"mono_ns": 1007854128104500, "topic": "fsm", "data": {"ts_ns": 1785331181567345100, "src": "ARMING", "dst": "THROTTLE_DOWN", "reason": "armed"}}
+{"mono_ns": 1007854128148200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854128153000, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854129055800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854139442200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854144080500, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854144095600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854149548300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854160600100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854164076200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854164087800, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854170721700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854180844200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854184083200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854184097000, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854191060500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854202264500, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854204043000, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854204049700, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854206202300, "topic": "heartbeat", "data": {"ts_ns": 1785331181645447400, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854212248700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854222363700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854224047400, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854224058000, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854232735800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854243438700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854244067100, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854244080600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854253795000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854264073500, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854264085600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854264190700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854275149900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854284143200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854284159100, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854285632900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854296467300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854304101700, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854304116600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854307037300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854307187900, "topic": "heartbeat", "data": {"ts_ns": 1785331181746413492, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854318011300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854324019200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854324030200, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854326090500, "topic": "race", "data": {"ts_ns": 1785331181765335700, "sim_boot_time_ms": 690924, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007854328883900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854340400900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854344093900, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854344106200, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854350549800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854362698600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854364081500, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854364093000, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854373721000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854384114400, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854384126900, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854384531700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854394929400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854404050400, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854404062900, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854405560100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854408144900, "topic": "heartbeat", "data": {"ts_ns": 1785331181847392900, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854415686800, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854424128400, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854424144200, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854426703700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854438010200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854444063200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854444076800, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854448368100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854459487300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854464035800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854464046600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854470082000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854481214400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854484073000, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854484085100, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854492219100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854502505100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854504060100, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854504071500, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854508365800, "topic": "heartbeat", "data": {"ts_ns": 1785331181947590892, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854513411200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854524068800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854524082600, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854524433200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854535125400, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854544084800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854544099300, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854545946100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854556766200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854564106800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854564119500, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854568247700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854577043800, "topic": "race", "data": {"ts_ns": 1785331182016270300, "sim_boot_time_ms": 691175, "race_start_boot_time_ms": 130970, "race_finish_time_ns": -1, "active_gate_index": 0, "last_gate_race_time": -1}}
+{"mono_ns": 1007854578372200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854584121800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854584137800, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854588831000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854599409000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854604074300, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854604086300, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854608425400, "topic": "heartbeat", "data": {"ts_ns": 1785331182047671400, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854609965300, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854620189900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854624093000, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854624106200, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854631308600, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854641879900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854644064200, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854644077000, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854652849100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854663006700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854664046100, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854664056200, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854674006900, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854684056800, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854684070800, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854684890100, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854695093200, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854704116500, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854704132100, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854705211000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854709842700, "topic": "heartbeat", "data": {"ts_ns": 1785331182149064892, "armed": true, "src_system": 1, "src_component": 200}}
+{"mono_ns": 1007854715454000, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854724057100, "topic": "state", "data": {"ts_ns": 0, "q_att": [1.0, 0.0, 0.0, 0.0], "omega": [0.0, 0.0, 0.0], "v_world": [0.0, 0.0, 0.0], "gate_rel": null, "gate_rel_age_s": Infinity, "gate_center_px": null, "image_size": null, "healthy": false, "gate_center_age_s": Infinity, "level_roll": 0.0, "level_pitch": 0.0}}
+{"mono_ns": 1007854724071700, "topic": "setpoint", "data": {"phase": "hover", "v_body": [0.0, 0.0, 0.0], "yaw_rate": 0.0, "blind_hold": false, "ibvs": false}}
+{"mono_ns": 1007854725901700, "topic": "actuator", "data": {"ts_ns": 143842417000, "motors": [0.05000000819563866, 0.27442529797554016, 0.1167435571551323, 0.22330527007579803]}}
+{"mono_ns": 1007854727988600, "topic": "fsm", "data": {"ts_ns": 1785331182167231800, "src": "THROTTLE_DOWN", "dst": "ABORTED", "reason": "stale channels: imu(0.604s)"}}
+{"mono_ns": 1007854728002600, "topic": "fsm", "data": {"ts_ns": 1785331182167254600, "src": "ABORTED", "dst": "DONE", "reason": "flight over"}}
+{"mono_ns": 1007854728029900, "topic": "loop_stats", "data": {"ts_ns": 1785331182167276100, "ticks": 151, "overruns": 0, "max_late_us": 0}}
