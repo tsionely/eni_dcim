@@ -216,6 +216,7 @@ class App:
         det_cell = bus.cell(Topic.DETECTION)
         feat_cell = bus.cell(Topic.FEATURE)
         feat_side_cell = bus.cell(Topic.FEATURE_SIDE)
+        looming_cell = bus.cell("looming")
         frame_cell = bus.cell(Topic.FRAME)
         collision_q = bus.events(Topic.COLLISION)
 
@@ -382,7 +383,14 @@ class App:
 
             if loop.ticks % planner_div == 0 or setpoint is None:
                 state = estimator.state
+                loom, _ = looming_cell.get()
+                if loom is not None:
+                    planner.set_looming(loom["score"])
                 setpoint = planner.plan(now_ns, mode, state, race)
+                if planner.agent is not None \
+                        and planner.agent.last_decision is not None:
+                    bus.publish_latest("agent", planner.agent.last_decision)
+                    planner.agent.last_decision = None
                 bus.publish_latest(Topic.STATE, state)
                 bus.publish_latest(Topic.SETPOINT, setpoint)
                 # Terminal-channel SHADOW (release contract step 2):

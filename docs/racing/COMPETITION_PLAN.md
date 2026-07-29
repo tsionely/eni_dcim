@@ -688,6 +688,59 @@ floor, the vertical CHAIN loses commanded climb (tracking, not
 aim) and the fix is code (blind climb via IBVS pixel vertical or
 a stronger vz authority), not config.
 
+## PILOT-AI — the embedded autonomous pilot (owner directive 2026-07-29)
+
+The owner ended the config-lever era: "integrate an AI agent into
+the code itself — not another external agent — an autonomous pilot
+with vision and full control." Built (planning/pilot_agent.py +
+perception/looming.py), config-gated planner.agent.enable OFF:
+  - Utility-based maneuver arbitration: each decision tick the agent
+    rolls candidate maneuvers (CROSS/ADVANCE/CLIMB/BRAKE/SCAN/CHAIN)
+    forward through a first-order motion model and flies the argmax.
+  - The utility terms ARE the death census: low-arrival penalty
+    (pedestal class), blind-motion penalty scaled by evidence age,
+    looming penalty (new vision obstacle proxy: expansion of central
+    non-gate texture, gate bbox masked), asymmetric crossing corridor
+    (low = pedestal = tight; high = bar graze = loose), progress
+    discounted by evidence confidence (exp age decay).
+  - Crossing LATCH: once CROSS wins close-in on fresh evidence the
+    maneuver is committed through the blind final stretch (physics-
+    sized timer, live-steered while fresh, breach/pass/collision
+    exits) — the FSM's proven commit insight as an agent primitive.
+  - Full decision telemetry: every tick logs the chosen action and
+    the entire score table ("agent" topic) — censuses read WHY.
+  - Not an LLM-in-the-loop (latency 100-1000x the loop budget +
+    an external dependency on race day = disqualifying); this is
+    classical decision-theoretic autonomy embedded in flight code.
+BUILD LEDGER (honesty): the first mock flight FAILED and the
+decision log named both defects — a frame-mixing bug in the rollout
+(body-frame velocities integrating true-vertical positions through
+the 17.8deg rest tilt = phantom +3m climbs) and CROSS<->BRAKE
+oscillation at the staleness boundary (no commitment). Fixed both;
+agent then PASSED the gate on the faithful mock (ground truth),
+282 unit tests + 12 agent decision tests + 4 looming tests green.
+
+## Phase R2G — PILOT-AI first real-course A/B (registered before results)
+
+8 runs r2training, labels raceprep-r2g-runN. MINIMAL patch set (the
+agent replaces the FSM, so FSM levers are moot):
+  planner.agent.enable=true, perception.looming.enable=true,
+  planner.terminal.enable=false, safety.imu_stale_s=0.6,
+  estimation.vel_clamp_mps=12, safety.gate_clip_debounce_s=0.3
+Control = R2E (FSM+ports: 1/6 gate-1, 4 commit deaths, 8/8 env
+collisions across R2C-R2E).
+PREDICTIONS: (a) the agent matches or beats gate-1 (>=1/8) on its
+FIRST real-course block; (b) commit-phase deaths drop (the latch
+corridor + low-arrival utility + looming refuse the doomed dashes);
+(c) the decision log attributes every death to a named action with
+its score table — no unexplained deaths; (d) if looming vetoes
+correlate with the R2D forward-into-structure sites, the obstacle
+proxy is real and its weight is the next tuning surface. FAILURE
+READ: worse than 1/8 with deaths in LATCHED crossings = the latch
+corridor is mis-tuned (read cross_dz/cross_lat at breach); deaths
+in SCAN drift = port the R2F bounded-translation search into the
+agent's SCAN primitive.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

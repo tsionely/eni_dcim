@@ -20,6 +20,7 @@ from aigp.core.messages import TerminalFeature, Topic
 from aigp.core.params import ParamSet
 from aigp.perception.close_tracker import GateCloseTracker
 from aigp.perception.interface import GateDetector
+from aigp.perception.looming import LoomingSensor
 
 
 class PerceptionAgent(Agent):
@@ -39,6 +40,18 @@ class PerceptionAgent(Agent):
             default=3.5)) if params is not None else 3.5
         if params is not None and hasattr(detector, "red_mask"):
             self.tracker = GateCloseTracker(params, detector)
+        # Looming obstacle proxy for the PilotAgent (config-gated OFF).
+        self.looming = None
+        if params is not None and bool(params.get(
+                "perception.looming.enable", default=False)):
+            self.looming = LoomingSensor(
+                base_s=float(params.get("perception.looming.base_s",
+                                        default=0.3)),
+                crop_frac=float(params.get("perception.looming.crop_frac",
+                                           default=0.5)),
+                scale=float(params.get("perception.looming.scale",
+                                       default=1.08)),
+                ema=float(params.get("perception.looming.ema", default=0.4)))
 
     @staticmethod
     def anchor_consistent(prior: float | None, r_fix: float) -> bool:
@@ -69,6 +82,16 @@ class PerceptionAgent(Agent):
                     and state.gate_rel_age_s < 1.0:
                 prior = float(np.linalg.norm(state.gate_rel.t))
             detection = self.detector.detect(frame, prior)
+            if self.looming is not None:
+                bbox = None
+                if detection is not None and detection.corners_px is not None:
+                    c = np.asarray(detection.corners_px, dtype=np.float64)
+                    bbox = (float(c[:, 0].min()), float(c[:, 1].min()),
+                            float(c[:, 0].max()), float(c[:, 1].max()))
+                score = self.looming.update(frame.image, frame.ts_ns, bbox)
+                if score is not None:
+                    self.bus.publish_latest("looming", {
+                        "ts_ns": frame.ts_ns, "score": score})
             if detection is not None and detection.rel_pose is not None:
                 self.detections += 1
                 if detection.confidence >= 0.55:   # exact quad or box fallback

@@ -207,3 +207,27 @@ def test_first_gate_pass_with_second_gate_visible(sim_and_app):
         result = app.fly(params, max_duration_s=40.0)
 
     assert result["gates_passed"] >= 1, f"lost the first gate: {result}"
+
+
+def test_agent_gate_pass(sim_and_app):
+    """PilotAgent ground-truth validation: the embedded AI pilot must
+    thread a gate on the faithful mock before it may fly the real sim
+    (the discipline that caught every bad build this campaign)."""
+    gate = Gate(pos=np.array([7.0, 0.0, -1.5]), travel_yaw=0.0,
+                width=1.6, height=1.6)
+    sim, app = sim_and_app([gate], image_size=(320, 180), video_hz=20.0)
+
+    params = base_params().patch({
+        "planner.takeoff.duration_s": 1.6,
+        "planner.agent.enable": True,
+        "perception.looming.enable": True,
+        "safety.flight_timeout_s": 30.0,
+    })
+    result = app.fly(params, max_duration_s=30.0)
+    if result["gates_passed"] < 1:            # same one-retry policy
+        app.mavlink.sim_reset()
+        import time
+        time.sleep(1.0)
+        result = app.fly(params, max_duration_s=30.0)
+
+    assert result["gates_passed"] >= 1, f"agent never passed: {result}"

@@ -25,6 +25,7 @@ from aigp.core.params import ParamSet
 from aigp.planning import approach as ap
 from aigp.planning.ibvs import (IbvsConfig, VisibilityConfig, ibvs_centering,
                                 visibility_speed)
+from aigp.planning.pilot_agent import PilotAgent
 
 
 class RacePlanner:
@@ -256,6 +257,13 @@ class RacePlanner:
         self.cam_fov_deg = float(p.get("perception.camera.fov_deg"))
         self.cam_mount_pitch = float(p.get("perception.camera.mount_pitch_deg",
                                            default=0.0))
+        # Embedded autonomous AI pilot (owner directive 2026-07-29): when
+        # enabled, race-mode planning is DELEGATED to the PilotAgent —
+        # utility-scored maneuver arbitration with forward rollout —
+        # instead of the phase FSM below. Config-gated, default OFF.
+        self.agent_enable = bool(p.get("planner.agent.enable", default=False))
+        self.agent = PilotAgent(p) if self.agent_enable else None
+        self.looming = 0.0     # latest looming score, fed by app each tick
 
         self._commit_until_ns: int | None = None
         self._commit_v_body: np.ndarray | None = None
@@ -318,6 +326,9 @@ class RacePlanner:
 
     # -- external events ------------------------------------------------------
 
+    def set_looming(self, score: float) -> None:
+        self.looming = float(score)
+
     def on_gate_passed(self) -> None:
         if self._commit_until_ns is not None:
             self.commit_exit_reason = "pass"
@@ -334,8 +345,11 @@ class RacePlanner:
         # spinning blind and colliding — gate 2 never reached. Arm the
         # forward advance-and-seek state (started with now_ns in plan()).
         self._advance_pending = True
+        self._agent_pass_pending = True
 
     def on_collision(self, now_ns: int) -> None:
+        if self.agent is not None:
+            self.agent.on_collision(now_ns)
         self._recover_until_ns = now_ns + int(self.recover_brake_s * 1e9)
         self._commit_until_ns = None
         self._commit_v_body = None
@@ -425,6 +439,14 @@ class RacePlanner:
             # force_hover (planner.force_hover, via --patch) isolates pure
             # stabilization: no search spin, no approach — hold still.
             return Setpoint(phase="hover", v_body=np.zeros(3), yaw_rate=0.0)
+
+        if self.agent is not None:
+            # AI-pilot delegation: the pass event has no clock, so the
+            # pending flag is converted to the agent's chain window here.
+            if getattr(self, "_agent_pass_pending", False):
+                self._agent_pass_pending = False
+                self.agent.on_gate_passed(now_ns)
+            return self.agent.decide(now_ns, state, self.looming)
 
         # Arm the post-pass advance (on_gate_passed has no clock).
         if self._advance_pending:

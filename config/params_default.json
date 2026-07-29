@@ -86,6 +86,13 @@
     "gate": {
       "height_m": 1.6,
       "width_m": 1.6
+    },
+    "looming": {
+      "enable": false,
+      "base_s": 0.3,
+      "crop_frac": 0.5,
+      "scale": 1.08,
+      "ema": 0.4
     }
   },
   "planner": {
@@ -176,6 +183,33 @@
       "min_speed_mps": 0.8,
       "panic_ttc_s": 0.6,
       "panic_scale": 0.5
+    },
+    "agent": {
+      "enable": false,
+      "cross_speed_mps": 1.2,
+      "advance_speed_mps": 2.0,
+      "climb_fwd_mps": 0.4,
+      "aim_up_m": 0.35,
+      "corridor_m": 0.55,
+      "cross_max_age_s": 0.35,
+      "horizon_s": 3.0,
+      "dt_s": 0.25,
+      "tau_s": 0.4,
+      "low_margin_m": 0.15,
+      "w_progress": 1.0,
+      "w_cross": 6.0,
+      "w_low": 4.0,
+      "w_loom": 30.0,
+      "w_blind": 1.2,
+      "w_lat": 1.5,
+      "w_switch": 0.8,
+      "chain_s": 3.0,
+      "scan_yaw_rps": 0.6,
+      "brake_s": 0.8,
+      "vz_cap_mps": 1.0,
+      "cross_low_m": 0.15,
+      "cross_high_m": 0.65,
+      "conf_tau_s": 0.5
     }
   },
   "safety": {
