@@ -1,0 +1,16 @@
+{
+  "label": "raceprep-r2g-run6",
+  "stage": "r2g-pilot-agent-looming",
+  "run": 6,
+  "event": "r2training",
+  "sim_exe": "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+  "sim_version": "1.0.3390",
+  "exact_head_flown": "5f1e198a49724d4709791a1b3e0c2a064d6ae502",
+  "flight_id": "20260729T141637-9f2db2ec",
+  "sim_relaunched_before_block": true,
+  "patch_typo_corrections": [
+    "planer.agent.enable -> planner.agent.enable=true",
+    "planer.terminal.enable -> planner.terminal.enable=false"
+  ],
+  "command": "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py raceprep-r2g-run6 r2training -- --max-duration 300 --patch planner.agent.enable=true --patch perception.looming.enable=true --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.6 --patch estimation.vel_clamp_mps=12 --patch safety.gate_clip_debounce_s=0.3"
+}
