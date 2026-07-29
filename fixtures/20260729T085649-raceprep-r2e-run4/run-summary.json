@@ -1,0 +1,34 @@
+{
+  "run": 4,
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "stale channels: imu(0.604s)",
+  "gates_passed": 0,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 0,
+  "duration_s": 0.6039794000098482,
+  "loop_overrun_frac": 0.0,
+  "loop_stats": {
+    "ticks": 151,
+    "overruns": 0,
+    "overrun_frac": 0.0,
+    "max_late_us": 0
+  },
+  "flight_id": "20260729T085629-99df9106",
+  "log_dir": "logs\\20260729T085629-99df9106",
+  "orchestrator_exit_code": 1,
+  "race_click_fired": false,
+  "step5_returned_to_main_menu": false,
+  "orchestrator_stop": "[STOP] fly_once exited before the RACE click (exit 0).",
+  "event": "r2training",
+  "phase_counts": {
+    "hover": 31
+  },
+  "last_phase": "hover",
+  "ibvs_setpoint_count": 0,
+  "ibvs_engaged": false,
+  "commit_exit_count": 0,
+  "commit_exit_reason_counts": {},
+  "commit_exits": []
+}
