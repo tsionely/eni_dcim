@@ -688,6 +688,19 @@ floor, the vertical CHAIN loses commanded climb (tracking, not
 aim) and the fix is code (blind climb via IBVS pixel vertical or
 a stronger vz authority), not config.
 
+R2F VERDICT (8 flown, 3 void on sim-side channel stalls — the sim
+degrades over successive runs and needs relaunching per block): 0/8
+gates, but the REGISTERED read (c) fired exactly: the vertical fix
+LANDED — commit arrivals are now CENTERED and LEVEL (runs 1,2,8:
+|lateral| <= 0.05m, true_dz +0.09/+0.06/-0.13 at fwd 0.28-0.74m)
+— and the deaths moved to ENVIRONMENT collisions 0.3-0.7m short of
+a centered gate. Structure sits ON the approach line immediately
+before the believed plane (or the lock is a gate seen past an
+occluder). No gate-relative logic can see this class — it is the
+precise target the looming sensor + PilotAgent were built for.
+The low-arrival class itself: 4 -> 1 (run 3, -0.30m), prediction
+(a) confirmed. Sequence: R2G flies PILOT-AI on this exact wall.
+
 ## PILOT-AI — the embedded autonomous pilot (owner directive 2026-07-29)
 
 The owner ended the config-lever era: "integrate an AI agent into
