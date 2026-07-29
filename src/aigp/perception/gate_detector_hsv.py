@@ -105,7 +105,36 @@ class HsvGateDetector(GateDetector):
         self.prior_boost_max_range = float(params.get(
             "perception.detector.prior_boost_max_range", default=6.0))
         self.ty_max = float(params.get("perception.detector.ty_max_m", default=6.0))
+        # Target identity — the HOLE check (R2H census, banner hypothesis
+        # CONFIRMED): a traversable ring shows the SCENE through its
+        # opening, so the inner region of a real gate quad is mostly
+        # NOT red; a banner/signage rectangle is red throughout. The
+        # primary quad path otherwise accepts any convex red rectangle —
+        # R2F/R2G/R2H all died flying into "centered gates" that were
+        # wall-hung red rectangles. Config-gated, default OFF.
+        self.hole_check = bool(params.get(
+            "perception.detector.hole_check_enable", default=False))
+        self.hole_max_red = float(params.get(
+            "perception.detector.hole_max_red_frac", default=0.4))
+        self.hole_shrink = float(params.get(
+            "perception.detector.hole_shrink", default=0.55))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+
+    def _hole_ok(self, mask: np.ndarray, poly: np.ndarray) -> bool:
+        """True if the quad's inner region is mostly non-red (a real
+        opening). poly: (N,1,2) or (N,2) corner array."""
+        if not self.hole_check:
+            return True
+        pts = poly.reshape(-1, 2).astype(np.float64)
+        center = pts.mean(axis=0)
+        inner = (center + (pts - center) * self.hole_shrink).astype(np.int32)
+        m = np.zeros(mask.shape, dtype=np.uint8)
+        cv2.fillPoly(m, [inner], 255)
+        inner_area = cv2.countNonZero(m)
+        if inner_area < 16:
+            return True                  # too small to judge — do not veto
+        red_inner = cv2.countNonZero(cv2.bitwise_and(mask, m))
+        return red_inner / inner_area <= self.hole_max_red
 
     def _mask(self, img: np.ndarray) -> np.ndarray:
         if self.mode == "bright":
@@ -198,6 +227,8 @@ class HsvGateDetector(GateDetector):
             confidence = min(1.0, rectangularity) * min(1.0, frac / self.min_area_frac / 4.0 + 0.5)
             if confidence < self.min_confidence:
                 continue
+            if not self._hole_ok(mask, approx):
+                continue                 # solid red rectangle = banner
             # Several gates are visible along the track. Base score: area
             # (largest = nearest). Cyan prior: the racing line threads the
             # NEXT gate's opening, so a candidate with cyan inside its
@@ -235,6 +266,8 @@ class HsvGateDetector(GateDetector):
                 if area < self.box_min_fill * box_area:
                     continue
                 box = cv2.boxPoints(rect)
+                if not self._hole_ok(mask, box):
+                    continue             # solid red box = banner, not ring
                 score = cyan_score(box_area, box)
                 score = prior_score(score, max(bw, bh))
                 if best is None or score > best[0]:

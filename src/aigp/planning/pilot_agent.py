@@ -285,12 +285,18 @@ class PilotAgent:
                     level_quat(state.level_roll, state.level_pitch),
                     state.q_att)
                 d_true = quat_rotate(q_true, ap.cam_to_body(gate.t))
-                breach = (d_true[0] > 0.2 and d_true[0] < 1.5
+                # Breach only in the OUTER latch: inside ~0.85m nothing
+                # can change (momentum carries to the plane regardless) and
+                # a brake there coasts INTO the frame — the FSM's no-abort
+                # braking band, relearned on the mock (2026-07-29: a
+                # tightened low bound breached at 1.2m and the brake slid
+                # into the gate).
+                breach = (0.85 < d_true[0] < 1.5
                           and (abs(float(d_true[1])) > self.corridor_m
                                # Asymmetric: LOW (gate above, d2<0) is the
                                # pedestal side — tight; HIGH is a bar
                                # graze at worst — loose.
-                               or float(d_true[2]) < -(self.cross_low_m + 0.2)
+                               or float(d_true[2]) < -(self.cross_low_m + 0.3)
                                or float(d_true[2]) > self.cross_high_m + 0.2))
                 self._latch_breach = self._latch_breach + 1 if breach else 0
                 if self._latch_breach >= 4:
@@ -298,6 +304,10 @@ class PilotAgent:
                     self._brake_until_ns = now_ns + int(self.brake_s * 1e9)
                     self._emit(now_ns, BRAKE, [], looming,
                                reflex="latch_breach")
+                    self.last_decision["breach_geom"] = {
+                        "fwd": round(float(d_true[0]), 2),
+                        "lat": round(float(d_true[1]), 2),
+                        "dz": round(float(d_true[2]), 2)}
                     return Setpoint(phase="recover", v_body=np.zeros(3),
                                     yaw_rate=0.0)
                 # Live-steer while fresh: refresh the latched vector.

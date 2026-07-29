@@ -81,7 +81,10 @@
       "washed_red": true,
       "washed_rg_min": 20,
       "washed_sat_min": 20,
-      "washed_val_min": 150
+      "washed_val_min": 150,
+      "hole_check_enable": false,
+      "hole_max_red_frac": 0.4,
+      "hole_shrink": 0.55
     },
     "gate": {
       "height_m": 1.6,

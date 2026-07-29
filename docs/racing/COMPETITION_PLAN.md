@@ -806,6 +806,49 @@ day (Aug 2-3) flies r2submission repeatedly with it — leaderboard
 takes the BEST run, so submission attempts are the scarce resource
 that must not be left unspent.
 
+R2H VERDICT (8 flown, 2 void on launch stalls): 0/6 gates. The
+fixes all FIRED as designed (fiction reflex 19-156 ticks/run — no
+more fiction chases; latch IBVS steered 46-185 ticks) and the
+registered prediction (c) resolved: run 5 died 0.37m short of a
+CENTERED believed target while PIXEL-STEERED, no pass, no clip —
+**the banner/decoy hypothesis is CONFIRMED**. The locked target is
+frequently a red rectangle that is not a traversable ring. This is
+the same class as the FSM's R2F wall (died 0.3-0.7m short of
+"centered gates") — ONE perception defect has been killing BOTH
+stacks.
+
+## TARGET IDENTITY — the hole check (the banner killer, 2026-07-29)
+
+Root cause in the detector: the primary path accepts ANY convex red
+quad — a solid banner and a hollow ring have identical outer
+contours (RETR_EXTERNAL). Fix: a real gate shows the SCENE through
+its opening, so the quad's inner region (shrunk 0.55) must be
+mostly non-red; a banner is red throughout. Config-gated
+perception.detector.hole_check_enable (default OFF), applied to
+both the exact-quad and box-fallback paths. Synthetic validation:
+ring accepted, banner rejected, ring beats a BIGGER banner in the
+same scene, default-off preserves behavior. Also: latch breach
+band restricted to the outer latch (0.85-1.5m — a brake inside the
+no-reverse band coasts into the frame, relearned on the mock) and
+breach geometry now logged.
+
+## Phases R2I + R2J — the hole-check A/B on both stacks (registered)
+
+Both blocks 8 runs r2training, sim relaunched before EACH block,
+and relaunched after any t=0 stale-channel void.
+R2I (FSM, the proven baseline + the banner killer): R2C patches
+  (all speed/vertical/safety/ports) + hole_check_enable=true.
+  Control = R2C/R2E (2/8, 1/6). PREDICTION: if banner-locks were
+  the R2F wall, gate-1 jumps ABOVE 2/8 and the die-centered-short
+  class vanishes; any run with zero locks at all (scan-only) means
+  the check is too strict on real frames -> lower hole_max_red 0.4
+  -> 0.55 as the first knob.
+R2J (agent + the banner killer): R2H patches + hole_check_enable.
+  PREDICTION: the latched-IBVS crossings now aim at REAL rings;
+  >=1 pass from a latched crossing; agent matches or beats R2I.
+SUBMISSION RULE unchanged: best gate rate of {R2I, R2J} is the
+submission config for Aug 2-3.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
