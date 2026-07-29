@@ -102,6 +102,21 @@ class PilotAgent:
         # suspended until plane-cross/pass/breach/timer.
         self.latch_range_m = float(g("latch_range_m", 2.5))
         self.latch_margin_s = float(g("latch_margin_s", 0.8))
+        # Latch overrun: fly THROUGH the believed plane by this much (the
+        # believed plane runs ahead of the physical one — T2f ledger).
+        self.latch_overrun_m = float(g("latch_overrun_m", 0.8))
+        # Safe-default floor (R2G run-4: post-collision attitude fiction
+        # made EVERY candidate score -24 and the argmax still flew at
+        # 2 m/s toward a 31m phantom). When the best prediction is this
+        # bad, the right maneuver is to stop, not "least bad".
+        self.score_floor = float(g("score_floor", -1.5))
+        # Fiction guards (imported from the FSM's hard-won rules): a gate
+        # reading >2m above us is attitude/estimator fiction on this
+        # course (R2G run-1 climbed 2m into overhead structure chasing
+        # one); a target beyond this range is a far-gate relock, not a
+        # target to fly at.
+        self.fiction_high_m = float(g("fiction_high_m", 2.0))
+        self.fiction_far_m = float(g("fiction_far_m", 12.0))
         self.scan_yaw = float(g("scan_yaw_rps", 0.6))
         self.brake_s = float(g("brake_s", 0.8))
         self.vz_cap = float(g("vz_cap_mps", 1.0))
@@ -292,9 +307,21 @@ class PilotAgent:
                 if n > 1e-6:
                     self._latch_v = aim_l / n * self.cross_speed
                 self._latch_yaw = ap.yaw_rate_to_bearing(gate, 1.2)
+            elif (state.gate_center_px is not None
+                  and state.image_size is not None
+                  and state.gate_center_age_s <= self.center_fresh_s):
+                # 3D stale but the blob is live (run-8: the ring left the
+                # detector at 1.3m while far gates kept firing; the pixel
+                # track is the only honest steering left) — IBVS-refine
+                # the latched vector through the blind crossing.
+                vy, vz, yw = ibvs_centering(
+                    state.gate_center_px, state.image_size,
+                    self.cam_fov, self.cam_pitch, self.ibvs_cfg)
+                self._latch_v = np.array([self.cross_speed, vy, vz])
+                self._latch_yaw = yw
             self._emit(now_ns, CROSS, [], looming, reflex="latch")
             return Setpoint(phase="commit", v_body=self._latch_v,
-                            yaw_rate=self._latch_yaw)
+                            yaw_rate=self._latch_yaw, ibvs=True)
 
         # No gate belief: chain after a pass, otherwise scan from a stand.
         if gate is None:
@@ -312,6 +339,20 @@ class PilotAgent:
                             yaw_rate=self.scan_yaw * self._last_seen_side,
                             blind_hold=self.blind_hold)
         self._chain_until_ns = None
+
+        # Fiction guards BEFORE deliberation: never fly at fiction.
+        d_body_pre = ap.cam_to_body(gate.t)
+        q_true_pre = quat_multiply(level_quat(state.level_roll,
+                                              state.level_pitch), state.q_att)
+        d_true_pre = quat_rotate(q_true_pre, d_body_pre)
+        dist_pre = float(np.linalg.norm(d_body_pre))
+        if (float(d_true_pre[2]) < -self.fiction_high_m
+                or dist_pre > self.fiction_far_m):
+            self._set_action(SCAN)
+            self._emit(now_ns, SCAN, [], looming, reflex="fiction")
+            return Setpoint(phase=_PHASE[SCAN], v_body=np.zeros(3),
+                            yaw_rate=self.scan_yaw * self._last_seen_side,
+                            blind_hold=self.blind_hold)
 
         # World belief for the rollout — in the TRUE (gravity-referenced)
         # frame. The body frame rides the airframe's 17.8deg rest tilt;
@@ -364,6 +405,13 @@ class PilotAgent:
             v_true = quat_rotate(q_true, c.v_body)
             self._score(c, d_true, age0, looming, can_cross, v_true)
         best = max(cands, key=lambda c: c.score)
+        if best.score < self.score_floor:
+            # Every prediction is bad: uncertainty stops (never argmax of
+            # garbage — the R2G run-4 death).
+            self._set_action(BRAKE)
+            self._emit(now_ns, BRAKE, cands, looming, reflex="floor")
+            return Setpoint(phase=_PHASE[BRAKE], v_body=np.zeros(3),
+                            yaw_rate=0.0)
         self._set_action(best.action)
         self._emit(now_ns, best.action, cands, looming)
         if (best.action == CROSS and dist <= self.latch_range_m
@@ -373,8 +421,8 @@ class PilotAgent:
             self._latch_yaw = best.yaw_rate
             self._latch_breach = 0
             self._latch_until_ns = now_ns + int(
-                (dist / max(self.cross_speed, 0.1) + self.latch_margin_s)
-                * 1e9)
+                ((dist + self.latch_overrun_m) / max(self.cross_speed, 0.1)
+                 + self.latch_margin_s) * 1e9)
         return Setpoint(phase=_PHASE[best.action], v_body=best.v_body,
                         yaw_rate=best.yaw_rate,
                         ibvs=(best.action == CROSS and ibvs_terms is not None))

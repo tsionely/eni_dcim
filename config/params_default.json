@@ -209,7 +209,11 @@
       "vz_cap_mps": 1.0,
       "cross_low_m": 0.15,
       "cross_high_m": 0.65,
-      "conf_tau_s": 0.5
+      "conf_tau_s": 0.5,
+      "latch_overrun_m": 0.8,
+      "score_floor": -1.5,
+      "fiction_high_m": 2.0,
+      "fiction_far_m": 12.0
     }
   },
   "safety": {

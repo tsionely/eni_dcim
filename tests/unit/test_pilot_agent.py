@@ -147,3 +147,51 @@ def test_hysteresis_no_dither():
     sp2 = a.decide(int(0.05e9),
                    make_state(gate_t=[0.0, 0.21, 3.98], age_s=0.05), 0.0)
     assert sp1.phase == sp2.phase
+
+
+def test_score_floor_brakes_on_garbage():
+    # R2G run-4: post-collision fiction scored every candidate ~-24 and
+    # the argmax still flew. Below the floor the agent must stop (the
+    # floor is a second line behind the fiction guards; tested directly
+    # by raising it above any achievable score).
+    a = agent(**{"planner.agent.score_floor": 100.0})
+    sp = a.decide(0, make_state(gate_t=[0.0, 0.5, 3.0], age_s=0.05), 0.0)
+    assert sp.phase == "recover"
+    assert float(np.linalg.norm(sp.v_body)) == 0.0
+    assert a.last_decision["reflex"] == "floor"
+
+
+def test_fiction_high_never_chased():
+    # R2G run-1: a "gate 2m above" reading was chased into overhead
+    # structure. Fiction guard: scan, never climb at it.
+    a = agent()
+    sp = a.decide(0, make_state(gate_t=[0.0, -2.5, 1.5], age_s=0.05), 0.0)
+    assert sp.phase == "search"
+    assert a.last_decision["reflex"] == "fiction"
+
+
+def test_fiction_far_never_chased():
+    # R2G runs 4/5: 31m relock targets flown at. Beyond fiction_far_m
+    # the reading is a far-gate relock, not a target.
+    a = agent()
+    sp = a.decide(0, make_state(gate_t=[0.0, 0.0, 20.0], age_s=0.05), 0.0)
+    assert sp.phase == "search"
+    assert a.last_decision["reflex"] == "fiction"
+
+
+def test_latch_ibvs_steers_blind_crossing():
+    # R2G run-8: the ring left the detector at 1.3m while far gates kept
+    # firing; the latched crossing must steer on the live pixel track.
+    a = agent()
+    st = make_state(gate_t=[0.0, 0.1, 2.0], age_s=0.05,
+                    center_px=(320.0, 340.0), center_age_s=0.05)
+    sp = a.decide(0, st, 0.0)
+    assert sp.phase == "commit"
+    assert a._latch_until_ns is not None
+    # Now 3D goes stale; pixel stays live: the latch keeps flying IBVS.
+    blind = make_state(gate_t=[0.0, 0.1, 1.2], age_s=0.6,
+                       center_px=(380.0, 340.0), center_age_s=0.05)
+    sp2 = a.decide(int(0.3e9), blind, 0.0)
+    assert sp2.phase == "commit"
+    assert sp2.ibvs
+    assert sp2.v_body[1] > 0.0     # steering toward the pixel bearing

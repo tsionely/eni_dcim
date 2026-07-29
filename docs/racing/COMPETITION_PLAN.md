@@ -754,6 +754,58 @@ corridor is mis-tuned (read cross_dz/cross_lat at breach); deaths
 in SCAN drift = port the R2F bounded-translation search into the
 agent's SCAN primitive.
 
+R2G VERDICT (8/8 flown): 0/8 gates — the agent's first block
+underperformed the FSM baseline, AND prediction (c) held: the
+decision log attributed EVERY death. The census names four agent
+defects, each now fixed (R2H build):
+  1. run 1: chased a "gate 2m ABOVE" reading (fiction) up into
+     overhead structure with CROSS at +7.8 — the agent lacked the
+     FSM's hard-won fiction guards. FIXED: fiction_high_m /
+     fiction_far_m — such readings scan, never chase.
+  2. run 4: post-collision attitude fiction put a 31m phantom at
+     16m lateral in the true frame; every candidate scored ~-24 and
+     the argmax STILL flew at 2 m/s. FIXED: score_floor — when the
+     best prediction is that bad, stop.
+  3. runs 3/6/8 (the near-misses): textbook centered+level
+     approaches (run 8: |lat| 0.01m, tdz 0.05 at the plane) that
+     went dead-reckoned from ~1.3m — the detection stream shows the
+     RING leaving the detector at 1.3m while FAR gates (9-17m) kept
+     firing high-conf; the lock rightly rejected them; the believed
+     crossed with no pass event and no clip. The blind final meter
+     flew unsteered and the crossing missed the scoring volume.
+     FIXED: IBVS pixel steering INSIDE the latch (the blob track
+     outlives the PnP) + latch overrun (+0.8m through the believed
+     plane). Unified R2F+R2G suspicion recorded: some locks may be
+     non-gate red rectangles (banners/signage) — the run-8 close
+     track + R2F's die-0.3-0.7m-short-of-a-"centered-gate" both fit
+     a wall-hung red rectangle; geometric identity work is the
+     filed successor stack if R2H repeats the signature.
+  4. Looming stayed quiet (avg 0.01, max 0.14) at the deaths — the
+     obstacle proxy as built did NOT see the killers. Honest: no
+     looming credit claimed; weight/crop iteration deferred.
+Positives: impulses low (median ~2.3), zero retreat deaths, the
+approach geometry is the best ever flown (run 8). One run died
+pre-race in takeoff (run 2, no decisions — orchestrator class).
+
+## Phase R2H — agent defect-fix block (registered before results)
+
+Same minimal patch set as R2G (agent + looming + safety), on the
+R2H code (fiction guards, score floor, latch IBVS + overrun).
+8 runs r2training, labels raceprep-r2h-runN, SIM RELAUNCHED first.
+PREDICTIONS: (a) zero fiction-chase deaths (reflex=fiction appears
+in logs instead); (b) latched crossings that go blind now steer on
+pixels (setpoint.ibvs=true inside latch windows) and >=1 run scores
+a PASS from a latched crossing; (c) if a run again "crosses" the
+believed plane centered with no pass/clip while pixel-steered, the
+banner/decoy hypothesis is CONFIRMED and target identity (hole
+check / geometric exclusion) becomes the next build; (d) agent
+matches or beats the FSM's 2/8 R2C gate-1 rate. DECISION RULE
+(deadline logistics): whichever of {FSM R2C-config, agent R2H}
+shows the better gate rate becomes the SUBMISSION config; the last
+day (Aug 2-3) flies r2submission repeatedly with it — leaderboard
+takes the BEST run, so submission attempts are the scarce resource
+that must not be left unspent.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
