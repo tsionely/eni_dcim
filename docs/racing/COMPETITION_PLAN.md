@@ -849,6 +849,41 @@ R2J (agent + the banner killer): R2H patches + hole_check_enable.
 SUBMISSION RULE unchanged: best gate rate of {R2I, R2J} is the
 submission config for Aug 2-3.
 
+R2I/R2J VERDICT (2026-07-30): R2I 6/8 VOID on t=0 imu stalls (the
+sim-launch failure the owner reported persisted through the block;
+its 2 real flights 0/2). R2J 7 real flights, 0/7 — and the census
+convicts MY OWN FIX: with the hole check on, every R2J run
+approached to ~1m, THEN LOST THE LOCK (age pinned 1.47-1.5) and
+scanned itself into structure beside the target (250-1296 scan
+ticks/run). Mechanism: at terminal range the exact quad fails
+(ring clipped by FOV) and the BOX FALLBACK is the only fix source —
+but a partial ring's box is mostly red bars, so the hole check
+vetoed exactly the fixes the terminal stretch lives on. The R2H
+latch could steer to 0.37m; R2J starved at 1m. REFINED (this
+commit): the hole check applies ONLY at selection scale (quad
+< 10% of frame — where banner-locks are born); the box fallback
+keeps partial-ring rescue and gets a solid-slab guard instead
+(fill > 0.85 of box = banner at any range). Synthetic suite: ring
+accepted, banner rejected at selection scale, close-range partial
+shapes exempt, slab rejected in fallback.
+SIM HEALTH (escalating): 13 of the last 32 runs died at t=0 on
+imu(0.6s) stalls. Mitigation for every block from here: relaunch
+FlightSim before the block AND after any t=0 stale abort.
+
+## Phase R2K — the decisive pre-submission block (registered)
+
+FSM R2C-config + REFINED hole check, 8 runs r2training, labels
+raceprep-r2k-runN. This is the last training iteration before the
+submission decision: control = R2C (2/8). PREDICTION: mid-range
+banner-locks die (selection-scale check) while terminal fixes
+survive (fallback intact) -> gate-1 >= 2/8 and the die-centered-
+short-of-target class shrinks. DECISION (deadline): whatever R2K
+yields, the submission config is the best measured config to date
+({R2C 2/8} vs {R2K}) and Aug 1-2 must fly r2submission repeatedly
+with it (owner approval required to unlock the orchestrator's
+r2submission block — leaderboards take the BEST run; unspent
+submission attempts are points left on the table).
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

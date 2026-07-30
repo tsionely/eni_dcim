@@ -84,7 +84,8 @@
       "washed_val_min": 150,
       "hole_check_enable": false,
       "hole_max_red_frac": 0.4,
-      "hole_shrink": 0.55
+      "hole_shrink": 0.55,
+      "hole_apply_max_frac": 0.1
     },
     "gate": {
       "height_m": 1.6,

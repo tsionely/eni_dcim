@@ -24,7 +24,7 @@ def scene():
     return np.full((360, 640, 3), GREY, dtype=np.uint8)
 
 
-def draw_ring(img, x0=200, y0=60, size=220, bar=26):
+def draw_ring(img, x0=250, y0=100, size=140, bar=18):
     """Hollow red ring (a real gate): red frame, scene visible inside."""
     x1, y1 = x0 + size, y0 + size
     img[y0:y1, x0:x1] = RED
@@ -32,7 +32,7 @@ def draw_ring(img, x0=200, y0=60, size=220, bar=26):
     return img
 
 
-def draw_banner(img, x0=200, y0=60, size=220):
+def draw_banner(img, x0=250, y0=100, size=140):
     """Solid red rectangle (signage/banner on a wall)."""
     img[y0:y0 + size, x0:x0 + size] = RED
     return img
@@ -69,9 +69,21 @@ def test_ring_beats_banner_in_same_scene():
     # Both visible: with the check on, only the ring may win.
     det = detector(**{"perception.detector.hole_check_enable": True})
     img = scene()
-    draw_banner(img, x0=40, y0=80, size=200)      # bigger area, solid
-    draw_ring(img, x0=360, y0=100, size=170)
+    draw_banner(img, x0=40, y0=100, size=150)     # bigger area, solid
+    draw_ring(img, x0=400, y0=120, size=130)
     d = det.detect(frame(img))
     assert d is not None
     cx = d.center_px[0]
     assert cx > 320          # locked the ring (right side), not the banner
+
+
+def test_close_range_exempt_from_hole_check():
+    # R2J lesson: at terminal range a partial/clipped ring's box is
+    # mostly red bars — the check must NOT veto large-in-frame shapes
+    # (identity was decided at selection range). A huge solid rectangle
+    # (>10% of the image) is accepted even with the check on.
+    det = detector(**{"perception.detector.hole_check_enable": True})
+    img = scene()
+    img[40:320, 150:490] = RED               # ~41% of the frame
+    d = det.detect(frame(img))
+    assert d is not None

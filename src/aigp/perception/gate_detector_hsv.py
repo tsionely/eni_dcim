@@ -118,14 +118,28 @@ class HsvGateDetector(GateDetector):
             "perception.detector.hole_max_red_frac", default=0.4))
         self.hole_shrink = float(params.get(
             "perception.detector.hole_shrink", default=0.55))
+        # The check applies ONLY at target-SELECTION scale (quad smaller
+        # than this image fraction). R2J relearned the close-range lesson:
+        # a partial/clipped ring's box is mostly red bars — vetoing it
+        # killed every terminal fix and the drone scanned itself into
+        # structure 1m from real gates. Banner-locks are born at mid
+        # range; that is where identity is decided.
+        self.hole_apply_max_frac = float(params.get(
+            "perception.detector.hole_apply_max_frac", default=0.10))
         self._kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
     def _hole_ok(self, mask: np.ndarray, poly: np.ndarray) -> bool:
         """True if the quad's inner region is mostly non-red (a real
-        opening). poly: (N,1,2) or (N,2) corner array."""
+        opening). poly: (N,1,2) or (N,2) corner array. Applies only at
+        selection scale (small-in-frame candidates); close-range shapes
+        are partial rings whose boxes are legitimately red-filled."""
         if not self.hole_check:
             return True
         pts = poly.reshape(-1, 2).astype(np.float64)
+        w_px = float(pts[:, 0].max() - pts[:, 0].min())
+        h_px = float(pts[:, 1].max() - pts[:, 1].min())
+        if w_px * h_px > self.hole_apply_max_frac * mask.shape[0] * mask.shape[1]:
+            return True                  # terminal range: identity already decided
         center = pts.mean(axis=0)
         inner = (center + (pts - center) * self.hole_shrink).astype(np.int32)
         m = np.zeros(mask.shape, dtype=np.uint8)
@@ -265,9 +279,14 @@ class HsvGateDetector(GateDetector):
                 # almost nothing and must not become a giant phantom box.
                 if area < self.box_min_fill * box_area:
                     continue
+                # Solid-slab guard (hole-check companion, R2J-refined): a
+                # broken ring paints ~25-50% of its box; a SOLID red
+                # rectangle (banner) paints nearly all of it. The upper
+                # fill bound rejects slabs at any range without touching
+                # the partial-ring rescue this path exists for.
+                if self.hole_check and area > 0.85 * box_area:
+                    continue
                 box = cv2.boxPoints(rect)
-                if not self._hole_ok(mask, box):
-                    continue             # solid red box = banner, not ring
                 score = cyan_score(box_area, box)
                 score = prior_score(score, max(bw, bh))
                 if best is None or score > best[0]:
