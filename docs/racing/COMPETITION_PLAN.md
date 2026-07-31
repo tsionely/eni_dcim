@@ -884,6 +884,32 @@ with it (owner approval required to unlock the orchestrator's
 r2submission block — leaderboards take the BEST run; unspent
 submission attempts are points left on the table).
 
+R2K VERDICT (8 flown, 3 void on t=0 stalls): 1/5 gate-1 (run 1 —
+which also took a non-fatal hit at 16.8s, recovered, passed at
+19.7s, and reached a GATE-2 COMMIT again before dying). The hole
+check neither raised nor sank the FSM rate (R2C 2/8 = 25% vs R2K
+1/5 = 20%, statistically flat at these n). Campaign totals: 72
+runs, 56 real, 5 gate-1 passes, 0 gate-2; the t=0 sim stall ate
+~30% of all attempts.
+
+## SUBMISSION CONFIG + LOGISTICS (the endgame, 2026-07-31)
+
+The math that governs the last 3 days: the leaderboard takes the
+BEST single run and partial gate progress ranks. At a ~20-25%
+per-run gate-1 rate, ten submission runs give ~90%+ odds of at
+least one scored gate — while further training iterations have
+been yielding ~0 marginal rate for a week. VOLUME OF SCORED RUNS
+now dominates any remaining tuning.
+SUBMISSION CONFIG (frozen as of R2K): the R2K patch line — FSM +
+ports + vertical block + refined hole check. Statistically tied
+with R2C, mechanically superior (banner rejection at selection
+scale, centered+level terminal arrivals, no-retreat discipline,
+corridor brake escape).
+UNLOCK MECHANISM (this commit): run_one_flight.py accepts
+r2submission ONLY with an explicit --allow-submission flag (double
+gate: event arg + flag; an accidental scored run is impossible).
+The flag appears in no instruction until the owner authorizes.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;

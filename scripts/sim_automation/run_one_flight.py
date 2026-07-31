@@ -40,14 +40,22 @@ def main() -> int:
         print("ERROR: missing <label> before --", flush=True)
         return 64
     label = head[0]
-    # Optional second positional: the event key. Training events only —
-    # r2submission is the REAL RACE and stays blocked here regardless of
-    # any flag (the legacy launcher's --allow-submission has no analog
-    # in this orchestrator on purpose).
+    # Optional second positional: the event key. Training events fly
+    # freely; r2submission is the SCORED RACE and requires BOTH the
+    # explicit event argument AND the --allow-submission flag (owner
+    # authorization per instruction block — the double gate makes an
+    # accidental scored run impossible: a stray label or copied command
+    # cannot reach it).
+    allow_submission = "--allow-submission" in head
+    head = [h for h in head if h != "--allow-submission"]
     event = head[1] if len(head) > 1 else "r2training"
-    if event not in ("r1", "r2training"):
-        print(f"REFUSING: event {event!r} — only 'r1' and 'r2training' "
-              "may be flown by this orchestrator.", flush=True)
+    if event == "r2submission" and not allow_submission:
+        print("REFUSING: r2submission is the SCORED event — it flies only "
+              "with an explicit --allow-submission (owner authorization).",
+              flush=True)
+        return 66
+    if event not in ("r1", "r2training", "r2submission"):
+        print(f"REFUSING: unknown event {event!r}.", flush=True)
         return 66
 
     # Guard: the venv python only. The system 'python'/'py' are broken in this
