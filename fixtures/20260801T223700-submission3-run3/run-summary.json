@@ -1,0 +1,54 @@
+{
+  "run": 3,
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=4.4)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 1,
+  "env_hits": 2,
+  "duration_s": 24.992002199869603,
+  "loop_overrun_frac": 0.028489116517285532,
+  "loop_stats": {
+    "ticks": 6248,
+    "overruns": 178,
+    "overrun_frac": 0.028489116517285532,
+    "max_late_us": 16420
+  },
+  "flight_id": "20260801T223617-56d2cb5b",
+  "log_dir": "logs\\20260801T223617-56d2cb5b",
+  "event": "r2submission",
+  "scored_event": true,
+  "sim_relaunched_before_run": false,
+  "race_click_fired": true,
+  "step5_returned_to_main_menu": true,
+  "detection_record_count": 650,
+  "phase_counts": {
+    "hover": 624,
+    "takeoff": 76,
+    "align": 49,
+    "commit": 252,
+    "recover": 41,
+    "approach": 38,
+    "search": 170
+  },
+  "last_phase": "recover",
+  "ibvs_setpoint_count": 0,
+  "commit_exit_count": 1,
+  "commit_exit_reason_counts": {
+    "relock_jump": 1
+  },
+  "commit_exits": [
+    {
+      "ts_ns": 1785623799748614950,
+      "reason": "relock_jump",
+      "gate_rel_t": [
+        4.016569996832795,
+        -1.452861192261401,
+        7.948626135579311
+      ],
+      "gate_rel_age_s": 0.00985416
+    }
+  ],
+  "relaunch_after_run": false
+}
