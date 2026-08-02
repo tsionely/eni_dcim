@@ -1,0 +1,85 @@
+{
+  "run": 8,
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=2.3)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 15,
+  "duration_s": 25.14800380007364,
+  "loop_overrun_frac": 0.04135517735008748,
+  "loop_stats": {
+    "ticks": 6287,
+    "overruns": 260,
+    "overrun_frac": 0.04135517735008748,
+    "max_late_us": 18781
+  },
+  "flight_id": "20260802T085418-b3fddafe",
+  "log_dir": "logs\\20260802T085418-b3fddafe",
+  "event": "r2submission",
+  "scored_event": true,
+  "sim_relaunched_before_run": false,
+  "race_click_fired": true,
+  "step5_returned_to_main_menu": true,
+  "detection_record_count": 652,
+  "phase_counts": {
+    "hover": 625,
+    "takeoff": 76,
+    "align": 56,
+    "commit": 347,
+    "recover": 145,
+    "advance": 2,
+    "approach": 7
+  },
+  "last_phase": "recover",
+  "ibvs_setpoint_count": 0,
+  "commit_exit_count": 4,
+  "commit_exit_reason_counts": {
+    "pass": 1,
+    "stale_budget": 3
+  },
+  "commit_exits": [
+    {
+      "ts_ns": 1785660877256391200,
+      "reason": "pass",
+      "gate_rel_t": [
+        -0.0087065767077642,
+        -0.281267275687591,
+        0.14660515352911427
+      ],
+      "gate_rel_age_s": 0.238527728
+    },
+    {
+      "ts_ns": 1785660879948959100,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        0.015476172851125009,
+        -0.8228554931699058,
+        2.171814706393659
+      ],
+      "gate_rel_age_s": 0.907258224
+    },
+    {
+      "ts_ns": 1785660882148756650,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        0.009779000185397376,
+        -0.058944158777491595,
+        2.4141232559771764
+      ],
+      "gate_rel_age_s": 0.900296232
+    },
+    {
+      "ts_ns": 1785660883988772150,
+      "reason": "stale_budget",
+      "gate_rel_t": [
+        -1.5206304822405272,
+        -0.9841959117662816,
+        1.026325649556898
+      ],
+      "gate_rel_age_s": 0.912930696
+    }
+  ],
+  "relaunch_after_run": false
+}
