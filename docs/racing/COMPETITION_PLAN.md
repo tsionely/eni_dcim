@@ -931,6 +931,24 @@ axis arrival through denser structure) is the next wall — out of
 reach of safe config tweaks in the remaining window, so the
 endgame is VOLUME on the frozen config: every gate-1 pass is
 another draw at threading gate 2.
+SUB-4 (12 runs, frozen): 3/11 gate-1 (runs 7/10/12); run 10 died
+0.14m from gate 2 — centimeters from a 2-gate run. Gate-2 death
+profile over 8 samples: 5/8 CENTERED and level 0.14-3.5m short,
+3 of those blind (age 0.9-1.5) — the gate-2 final stretch goes
+blind at ~1.7-2m out.
+SUB-5 (12 runs, ONE lever: blind_budget 1.5 -> 0.9): gate-1 HELD
+at 4/12 (prediction (a) confirmed — gate-1 crossings are fresh and
+untouched by the budget), and the blind deaths became brakes as
+predicted — run 6 passed gate 1 and then survived 103 further
+seconds with zero collisions. But the brake landed ~1.7m short of
+gate 2, where the detector sees ~1 det/s — the drone hovered in a
+recover/search loop, never re-locked, timed out. VERDICT: the 0.9
+budget is SAFE but STERILE at gate 2 (the blind gap to its plane
+is ~1.7m; 0.9s at 1.2 m/s covers 1.1m); the 1.5 budget REACHES the
+plane (0.14m/0.70m/1.09m nearest misses). FINAL-BLOCK RULE: revert
+to the SUB-3/4 frozen config (budget 1.5) and fly maximum volume
+until the deadline — the 2-gate run comes from a centered blind
+drift threading the plane, and only the 1.5 budget gets there.
 
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
