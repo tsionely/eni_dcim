@@ -238,6 +238,12 @@ class RacePlanner:
         self.pp_entry_age_s = float(p.get("planner.postpass.entry_max_age_s",
                                           default=0.3))
         self.pp_brake_s = float(p.get("planner.postpass.brake_s", default=0.8))
+        # Which pass flips the regime: 1 = slow after the first gate;
+        # 2 = keep the PROVEN fast chain through gates 1-2 (3 scored
+        # 2-gate runs) and thread gate 3 from a stop (all three 2-gate
+        # runs overran gate 3's plane off-axis within 2-3s at momentum).
+        self.pp_after_gates = int(p.get("planner.postpass.after_gates",
+                                        default=1))
         self._postpass_active = False
         # IBVS pixel-bearing fallback (ported from the owner-supplied
         # "aigp_stack" FunnelPassController, mount-pitch corrected — see
@@ -475,7 +481,8 @@ class RacePlanner:
         # stop (gates_slow doctrine). Speeds/freshness swap ONCE; the
         # brake-first entry replaces the ADVANCE momentum burst.
         if (self.postpass_enable and not self._postpass_active
-                and race is not None and race.active_gate_index >= 1):
+                and race is not None
+                and race.active_gate_index >= self.pp_after_gates):
             self._postpass_active = True
             self.speed_far = self.pp_speed_far
             self.speed_near = self.pp_speed_near

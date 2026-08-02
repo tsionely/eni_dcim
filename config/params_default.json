@@ -225,7 +225,8 @@
       "speed_near_mps": 0.6,
       "commit_speed_mps": 1.0,
       "entry_max_age_s": 0.3,
-      "brake_s": 0.8
+      "brake_s": 0.8,
+      "after_gates": 1
     }
   },
   "safety": {
