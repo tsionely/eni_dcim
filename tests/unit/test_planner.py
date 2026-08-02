@@ -775,3 +775,36 @@ def test_commit_blind_budget_raised_lets_crossing_continue():
                                                age_s=0.8), None)
     assert sp.phase == "commit"
     assert p.commit_exit_reason is None
+
+
+def test_postpass_regime_slows_after_first_gate():
+    # gates_slow transplant: after the sim confirms a pass, thread the
+    # rest FROM A STOP — brake first, then slow fresh-evidence approach.
+    from aigp.core.messages import RaceStatus
+    p = RacePlanner(ParamSet.load("config/params_default.json").patch(
+        {"planner.postpass.enable": True}))
+    race1 = RaceStatus(ts_ns=0, sim_boot_time_ms=0, race_start_boot_time_ms=0,
+                       race_finish_time_ns=-1, active_gate_index=1,
+                       last_gate_race_time=0)
+    st = make_state(gate_t=[0.0, 0.0, 8.0], age_s=0.05)
+    sp = p.plan(int(1e9), "race", st, race1)
+    assert sp.phase == "recover"            # brake-first entry
+    assert float(np.linalg.norm(sp.v_body)) == 0.0
+    # After the brake window: slow approach speeds govern.
+    sp2 = p.plan(int(3e9), "race", st, race1)
+    assert sp2.phase == "approach"
+    assert float(np.linalg.norm(sp2.v_body)) <= 1.2
+    assert p.commit_speed == 1.0
+    assert p.entry_max_age_s == 0.3
+
+
+def test_postpass_disabled_keeps_behavior():
+    from aigp.core.messages import RaceStatus
+    p = RacePlanner(ParamSet.load("config/params_default.json"))
+    race1 = RaceStatus(ts_ns=0, sim_boot_time_ms=0, race_start_boot_time_ms=0,
+                       race_finish_time_ns=-1, active_gate_index=1,
+                       last_gate_race_time=0)
+    st = make_state(gate_t=[0.0, 0.0, 8.0], age_s=0.05)
+    sp = p.plan(int(1e9), "race", st, race1)
+    assert sp.phase == "approach"           # no regime, no brake
+    assert p.commit_speed == 2.5            # untouched defaults

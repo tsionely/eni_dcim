@@ -218,6 +218,27 @@ class RacePlanner:
         self.retreat_enabled = bool(p.get("planner.retreat.enabled", default=True))
         self.recover_brake_s = float(p.get("planner.recover.brake_s"))
         self.force_hover = bool(p.get("planner.force_hover", default=False))
+        # POST-PASS REGIME (transplanted from the team's parallel
+        # "gates_slow" stack, the one that threads 3 gates): its doctrine
+        # threads every gate FROM A STOP — stop, scan, aim, approach in
+        # gentle pulses, re-aiming continuously; off-line means stop and
+        # re-aim, never carry momentum at a gate. Our submission census
+        # says the same thing from the other side: every gate-2 death was
+        # momentum into structure 0.14-2m short. After the FIRST pass this
+        # regime slows everything and demands fresh evidence to commit.
+        # Config-gated, default OFF.
+        self.postpass_enable = bool(p.get("planner.postpass.enable",
+                                          default=False))
+        self.pp_speed_far = float(p.get("planner.postpass.speed_far_mps",
+                                        default=1.0))
+        self.pp_speed_near = float(p.get("planner.postpass.speed_near_mps",
+                                         default=0.6))
+        self.pp_commit_speed = float(p.get("planner.postpass.commit_speed_mps",
+                                           default=1.0))
+        self.pp_entry_age_s = float(p.get("planner.postpass.entry_max_age_s",
+                                          default=0.3))
+        self.pp_brake_s = float(p.get("planner.postpass.brake_s", default=0.8))
+        self._postpass_active = False
         # IBVS pixel-bearing fallback (ported from the owner-supplied
         # "aigp_stack" FunnelPassController, mount-pitch corrected — see
         # planning/ibvs.py). Steers lateral/vertical/yaw on the PIXEL
@@ -298,6 +319,7 @@ class RacePlanner:
         self._term_abort_request = True
 
     def reset(self) -> None:
+        self._postpass_active = False
         self._commit_until_ns = None
         self._commit_v_body = None
         self._commit_prev_z = None
@@ -447,6 +469,21 @@ class RacePlanner:
                 self._agent_pass_pending = False
                 self.agent.on_gate_passed(now_ns)
             return self.agent.decide(now_ns, state, self.looming)
+
+        # POST-PASS REGIME switch: the sim's authoritative gate index
+        # says at least one gate is behind us — thread the rest from a
+        # stop (gates_slow doctrine). Speeds/freshness swap ONCE; the
+        # brake-first entry replaces the ADVANCE momentum burst.
+        if (self.postpass_enable and not self._postpass_active
+                and race is not None and race.active_gate_index >= 1):
+            self._postpass_active = True
+            self.speed_far = self.pp_speed_far
+            self.speed_near = self.pp_speed_near
+            self.commit_speed = self.pp_commit_speed
+            self.entry_max_age_s = self.pp_entry_age_s
+            self._advance_pending = False        # no momentum burst
+            self._advance_start_ns = None
+            self._recover_until_ns = now_ns + int(self.pp_brake_s * 1e9)
 
         # Arm the post-pass advance (on_gate_passed has no clock).
         if self._advance_pending:
