@@ -910,6 +910,28 @@ r2submission ONLY with an explicit --allow-submission flag (double
 gate: event arg + flag; an accidental scored run is impossible).
 The flag appears in no instruction until the owner authorizes.
 
+## SUBMISSION CAMPAIGN LEDGER (owner authorized 2026-07-31)
+
+SUB-1 (10 runs, R2K config): 0 gates, but FIVE runs clipped gate
+1's frame at the SAME spot — believed fwd 0.13-0.42m, centered,
+tdz scatter leaning HIGH (+0.1 mean). Diagnosis: the R2F aim-high
+fix (right for the training course's sag) overshoots on the
+submission gate — the aim pushed crossings into the top bar.
+SUB-2 (10 runs, aim recentered: aim_up_m 0.15, blind_climb 0.2):
+**run 4 PASSED GATE 1 — the first scored gate on the VQ2
+leaderboard** — then re-locked gate 2 within 0.5s and died 0.7m
+short of it, centered, fresh. The registered prediction (recenter
+the miss distribution -> a pass materializes) held.
+SUB-3 (12 runs, config FROZEN): **4/11 real runs passed gate 1
+(36% — best block of the campaign)**; all four survived 6-10s
+after the pass, chained onto gate 2, and died 1-2m short of it
+(run 4: 1.09m, centered). Best banked: 1 gate. The funnel: takeoff
+-> gate-1 pass is a solved 36% formula; the gate-2 approach (off-
+axis arrival through denser structure) is the next wall — out of
+reach of safe config tweaks in the remaining window, so the
+endgame is VOLUME on the frozen config: every gate-1 pass is
+another draw at threading gate 2.
+
 ## Phase T2a — de-trigger the safety, re-baseline (flying; completes as T2b's imu-only control arm)
 
 Same 6-run block, ONE added patch: `safety.imu_stale_s=0.25` (250ms;
