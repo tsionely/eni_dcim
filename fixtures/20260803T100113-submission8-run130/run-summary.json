@@ -1,0 +1,41 @@
+﻿{
+    "run":  130,
+    "block":  "SUB-8",
+    "label":  "submission8-run130",
+    "finished":  false,
+    "aborted":  true,
+    "abort_reason":  "environment collision (impulse=2.5)",
+    "gates_passed":  0,
+    "lap_time_s":  null,
+    "gate_clips":  0,
+    "env_hits":  1,
+    "duration_s":  20.795983900083229,
+    "loop_stats":  {
+                       "ticks":  5199,
+                       "overruns":  41,
+                       "overrun_frac":  0.007886131948451626,
+                       "max_late_us":  17123
+                   },
+    "flight_id":  "20260803T100037-71e14262",
+    "log_dir":  "logs\\20260803T100037-71e14262",
+    "event":  "r2submission",
+    "scored_event":  true,
+    "sim_relaunched_before_run":  false,
+    "race_click_fired":  true,
+    "step5_returned_to_main_menu":  true,
+    "stale_t0":  false,
+    "run_one_flight_rc":  0,
+    "detection_record_count":  394,
+    "ibvs_setpoint_count":  0,
+    "phase_counts":  {
+                         "align":  16,
+                         "recover":  40,
+                         "takeoff":  75,
+                         "commit":  133,
+                         "hover":  576,
+                         "search":  200
+                     },
+    "commit_exit_reason_counts":  {
+                                      "stale_budget":  1
+                                  }
+}
