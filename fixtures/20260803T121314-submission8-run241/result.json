@@ -1,0 +1,19 @@
+{
+  "finished": false,
+  "aborted": true,
+  "abort_reason": "environment collision (impulse=2.1)",
+  "gates_passed": 1,
+  "lap_time_s": null,
+  "gate_clips": 0,
+  "env_hits": 12,
+  "duration_s": 27.519977800082415,
+  "loop_overrun_frac": 0.015116279069767442,
+  "loop_stats": {
+    "ticks": 6880,
+    "overruns": 104,
+    "overrun_frac": 0.015116279069767442,
+    "max_late_us": 12678
+  },
+  "flight_id": "20260803T121231-71e14262",
+  "log_dir": "logs\\20260803T121231-71e14262"
+}
