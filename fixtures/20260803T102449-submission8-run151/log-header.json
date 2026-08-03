@@ -1,0 +1,15 @@
+﻿{
+    "label":  "submission8-run151",
+    "stage":  "sub-8-scored",
+    "run":  151,
+    "event":  "r2submission",
+    "scored_event":  true,
+    "sim_exe":  "C:\\Users\\tsion\\Downloads\\AI-GP Simulator v1.0.3390\\FlightSim.exe",
+    "sim_version":  "1.0.3390",
+    "exact_head_flown":  "3a4a568051edce6f056855e0ed9ed5c34e31de13",
+    "flight_id":  "20260803T102414-71e14262",
+    "sim_relaunched_before_run":  false,
+    "authorization_flag":  "--allow-submission",
+    "config":  "SUB-8 scored; postpass.after_gates=2; blind_budget_s=1.5",
+    "command":  "C:\\Users\\tsion\\Projects\\eni_dcim\\.venv\\Scripts\\python.exe scripts\\sim_automation\\run_one_flight.py submission8-run151 r2submission --allow-submission -- --max-duration 300 --patch perception.detector.hole_check_enable=true --patch planner.commit.speed_mps=1.2 --patch planner.commit.vz_cap_mps=1.2 --patch planner.terminal.enable=false --patch safety.imu_stale_s=0.6 --patch estimation.vel_clamp_mps=12 --patch safety.gate_clip_debounce_s=0.3 --patch planner.commit.abort_offset_m=0.7 --patch planner.commit.blind_budget_s=1.5 --patch planner.approach.speed_far_mps=2.0 --patch planner.approach.speed_near_mps=1.0 --patch planner.retreat.enabled=false --patch planner.search.blind_hold_enable=true --patch planner.ibvs.enable=true --patch planner.visibility.enable=true --patch planner.approach.aim_up_m=0.15 --patch planner.commit.blind_climb_bias_mps=0.2 --patch planner.commit.vz_deadband_m=0.05 --patch planner.postpass.enable=true --patch planner.postpass.after_gates=2"
+}
